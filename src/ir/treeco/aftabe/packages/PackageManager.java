@@ -1,4 +1,4 @@
-package ir.treeco.packages;
+package ir.treeco.aftabe.packages;
 
 import org.yaml.snakeyaml.Yaml;
 
