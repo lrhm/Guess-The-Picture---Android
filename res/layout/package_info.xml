@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:id="@+id/front_card">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/front_image"
+            android:adjustViewBounds="true"/>
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:id="@+id/package_name"
+                  android:layout_gravity="center"
+                  android:shadowColor="#000000"
+                  android:shadowDx="0"
+                  android:shadowDy="0"
+                  android:shadowRadius="3"
+                  android:gravity="center"
+                  />
+    </FrameLayout>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:id="@+id/back_card"
+                 android:visibility="gone">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/back_image"
+            android:adjustViewBounds="true"/>
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:id="@+id/package_info"
+                  android:layout_gravity="center" android:gravity="center"/>
+    </FrameLayout>
+</FrameLayout>
