@@ -59,6 +59,9 @@ public class ImageManager {
     };
 
     public static Bitmap loadImageFromResource(Context activity, int resourceId, int outWidth, int outHeight) {
+        if (outWidth == -1) outWidth = LengthManager.getWidthWithFixedHeight(resourceId, outHeight);
+        if (outHeight == -1) outHeight = LengthManager.getHeightWithFixedWidth(resourceId, outWidth);
+
         ImageKey key = new ImageKey(resourceId, outWidth, outHeight);
 
         Bitmap him = cache.get(key);

@@ -1,15 +1,17 @@
 package ir.treeco.aftabe;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.*;
+import ir.treeco.aftabe.utils.FontsHolder;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
 
 /**
  * Created by hamed on 8/12/14.
@@ -39,11 +41,11 @@ class PackagesListScrollListener implements  AbsListView.OnScrollListener {
         updateAdViewPadding();
         int barTop = 0;
         if (i == 0) {
-            LinearLayout linearLayout = (LinearLayout) packages.getChildAt(0);
-            if (linearLayout != null) {
-                View innerView = linearLayout.getChildAt(0);
-                innerView.setPadding(0, - linearLayout.getTop(), 0, 0);
-                barTop = Math.max(linearLayout.getTop() + innerView.getHeight(), barTop);
+            RelativeLayout relativeLayout = (RelativeLayout) packages.getChildAt(0);
+            if (relativeLayout != null) {
+                View innerView = relativeLayout.getChildAt(0);
+                innerView.setPadding(0, - relativeLayout.getTop(), 0, 0);
+                barTop = Math.max(relativeLayout.getTop() + innerView.getHeight(), barTop);
             }
         }
         try {
@@ -62,35 +64,36 @@ public class PackageListFragment extends Fragment {
         final FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_packages_list, container, false);
         final ListView packages =  (ListView) layout.findViewById(R.id.package_list);
         final View tabBar = layout.findViewById(R.id.tab_bar);
+        tabBar.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.tabbar_background, LengthManager.getScreenWidth(), LengthManager.getTabBarHeight())));
+        tabBar.setLayoutParams(new FrameLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarHeight()));
 
         final PackageListAdapter adapter = new PackageListAdapter(getActivity());
         packages.setAdapter(adapter);
+        adapter.setFilter(0);
         adapter.notifyDataSetChanged();
 
 
         packages.setOnScrollListener(new PackagesListScrollListener(packages, tabBar));
 
-        layout.findViewById(R.id.tab_1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.setFilter(0);
-                packages.scrollTo(0, 0);
-            }
-        });
-        layout.findViewById(R.id.tab_2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.setFilter(1);
-                packages.scrollTo(0, 0);
-            }
-        });
-        layout.findViewById(R.id.tab_3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.setFilter(0);
-                packages.scrollTo(0, 0);
-            }
-        });
+        TextView[] textViews = new TextView[] {
+                (TextView) layout.findViewById(R.id.tab_1),
+                (TextView) layout.findViewById(R.id.tab_2),
+                (TextView) layout.findViewById(R.id.tab_3)
+        };
+
+        for (TextView textView: textViews) {
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    adapter.setFilter(0);
+                    packages.setSelection(0);
+                }
+            });
+            textView.setTypeface(FontsHolder.getTabBarFont(layout.getContext()));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getScreenWidth() / 17);
+            textView.setTranslationY(-LengthManager.getScreenWidth() / 80);
+        }
+
 
         return layout;
     }

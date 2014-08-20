@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
 
 /**
  * Created by hamed on 8/17/14.
@@ -33,14 +36,22 @@ public class AdItemAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Log.e("Aftabe+", "Inja ham umade!");
-        ImageView imageView = (ImageView) inflater.inflate(R.layout.ad_image, null);
+        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.ad_image, null);
+        ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
         imageView.setImageResource(R.drawable.ad);
-        container.addView(imageView);
-        return imageView;
+
+        ImageView topShadow = (ImageView) relativeLayout.getChildAt(1);
+        ImageView bottomShadow = (ImageView) relativeLayout.getChildAt(2);
+
+        topShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_top, LengthManager.getScreenWidth(), -1));
+        bottomShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_bottom, LengthManager.getScreenWidth(), -1));
+
+        container.addView(relativeLayout);
+        return relativeLayout;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ((ViewPager) container).removeView((ImageView) object);
+        ((ViewPager) container).removeView((RelativeLayout) object);
     }
 }

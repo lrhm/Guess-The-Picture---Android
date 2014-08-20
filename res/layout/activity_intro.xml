@@ -3,10 +3,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#232323">
+    android:background="#232323"
+    android:id="@+id/main_view">
+    <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/header_image"/>
     <fragment
         android:name="ir.treeco.aftabe.PackageListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="fill_parent" />
 </LinearLayout>
 

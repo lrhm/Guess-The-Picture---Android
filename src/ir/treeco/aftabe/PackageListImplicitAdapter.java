@@ -90,7 +90,7 @@ public class PackageListImplicitAdapter {
         });
 
         int myWidth = LengthManager.getScreenWidth() / 2;
-        int myHeight = myWidth * 430 / 410;
+        int myHeight = LengthManager.getHeightWithFixedWidth(R.drawable.pack, myWidth);
 
         final PackageInfoTag tag = (PackageInfoTag) packageInfo.getTag();
         final View finalPackageInfo = packageInfo;
@@ -134,8 +134,8 @@ public class PackageListImplicitAdapter {
         });
 
         Bitmap[] bitmaps = new Bitmap[] {
-                ImageManager.loadImageFromResource(context, R.drawable.aftab, myWidth, myHeight),
-                ImageManager.loadImageFromResource(context, R.drawable.chaman, myWidth, myHeight)
+                ImageManager.loadImageFromResource(context, R.drawable.pack, myWidth, myHeight),
+                ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
         };
 
         tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);

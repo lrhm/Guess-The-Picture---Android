@@ -5,9 +5,7 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.*;
 import ir.treeco.aftabe.utils.LengthManager;
 
 /**
@@ -48,7 +46,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     void refreshData() {
-        mCount = (mAdapter.getCount() + COLUMN_COUNT - 1) / COLUMN_COUNT;
+        mCount = (mAdapter.getCount() + COLUMN_COUNT - 1) / COLUMN_COUNT + 2;
     }
 
 
@@ -92,21 +90,24 @@ public class PackageListAdapter extends BaseAdapter {
         if (rowView != null)
             return rowView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.ad_item, null);
-        AutoScrollViewPager viewPager = (AutoScrollViewPager) linearLayout.findViewById(R.id.ad_view_pager);
+        RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.ad_item, null);
+        AutoScrollViewPager viewPager = (AutoScrollViewPager) adHolder.findViewById(R.id.ad_view_pager);
         viewPager.setAdapter(new AdItemAdapter(context));
         viewPager.setInterval(5000);
         viewPager.startAutoScroll(5000);
-        viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getScreenWidth() / 2));
+        viewPager.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 579 / 1248));
         viewPager.setOffscreenPageLimit(1);
-        return linearLayout;
+        adHolder.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 579 / 1248));
+        return adHolder;
     }
 
     @Override
     public View getView(int i, View rowView, ViewGroup viewGroup) {
         if (i == 0)
             return getAdView(rowView);
-        i--;
+        if (i == 1)
+            return getSpaceView(rowView);
+        i -= 2;
 
         if (rowView == null) {
             //Log.d("Aftabe+", "new row!");
@@ -114,7 +115,7 @@ public class PackageListAdapter extends BaseAdapter {
             rowView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         LinearLayout linearLayout = (LinearLayout) rowView;
-        for (int j = i * COLUMN_COUNT, index = 0; j < (i + 1) * COLUMN_COUNT; j++, index++) {
+        for (int j = i * COLUMN_COUNT, index = 0; index < COLUMN_COUNT; j++, index++) {
             if (j < mAdapter.getCount()) {
                 if (index < linearLayout.getChildCount()) {
                     View child = linearLayout.getChildAt(index);
@@ -131,14 +132,22 @@ public class PackageListAdapter extends BaseAdapter {
         return linearLayout;
     }
 
+    private View getSpaceView(View rowView) {
+        if (rowView != null)
+            return rowView;
+        rowView = new View(context);
+        rowView.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarHeight()));
+        return rowView;
+    }
+
     @Override
     public int getItemViewType(int i) {
-        return i == 0? 0: 1;
+        return Math.min(i, 2);
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 3;
     }
 
     @Override

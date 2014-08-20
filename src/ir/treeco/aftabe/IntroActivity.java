@@ -1,9 +1,12 @@
 package ir.treeco.aftabe;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 
 public class IntroActivity extends FragmentActivity {
@@ -21,5 +24,33 @@ public class IntroActivity extends FragmentActivity {
         LengthManager.initialize(IntroActivity.this);
         // Load Layout
         setContentView(R.layout.activity_intro);
+
+        ImageView header = (ImageView) findViewById(R.id.header_image);
+        header.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160));
+        header.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header_background, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160)));
+
+
+
     }
+
+    /*private void loadBackground() {
+        View mainView = findViewById(R.id.main_view);
+        Bitmap background = ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.background, LengthManager.getScreenWidth() / 2, LengthManager.getScreenHeight() / 2);
+        if (Build.VERSION.SDK_INT >= 16)
+            setBackgroundV16Plus(mainView, background);
+        else
+            setBackgroundV16Minus(mainView, background);
+    }
+
+    @TargetApi(16)
+    private void setBackgroundV16Plus(View view, Bitmap bitmap) {
+        view.setBackground(new BitmapDrawable(getResources(), bitmap));
+
+    }
+
+    @SuppressWarnings("deprecation")
+    private void setBackgroundV16Minus(View view, Bitmap bitmap) {
+        view.setBackgroundDrawable(new BitmapDrawable(bitmap));
+    }*/
+
 }
