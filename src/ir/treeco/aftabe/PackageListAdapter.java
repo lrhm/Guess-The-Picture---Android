@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 
 /**
@@ -17,9 +18,9 @@ public class PackageListAdapter extends BaseAdapter {
     static final int COLUMN_COUNT = 2;
     private int mCount;
 
-    public PackageListAdapter(Context context) {
+    public PackageListAdapter(Context context, PackageManager pManager) {
         this.context = context;
-        mAdapter = new PackageListImplicitAdapter(context);
+        mAdapter = new PackageListImplicitAdapter(context, pManager);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {

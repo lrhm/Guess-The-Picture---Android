@@ -35,7 +35,6 @@ public class AdItemAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Log.e("Aftabe+", "Inja ham umade!");
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.ad_image, null);
         ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
         imageView.setImageResource(R.drawable.ad);

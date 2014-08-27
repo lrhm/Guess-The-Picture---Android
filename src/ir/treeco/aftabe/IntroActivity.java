@@ -1,18 +1,30 @@
 package ir.treeco.aftabe;
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 
 public class IntroActivity extends FragmentActivity {
     /**
      * Called when the activity is first created.
      */
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,8 +40,6 @@ public class IntroActivity extends FragmentActivity {
         ImageView header = (ImageView) findViewById(R.id.header_image);
         header.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160));
         header.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header_background, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160)));
-
-
 
     }
 

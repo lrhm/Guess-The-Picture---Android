@@ -3,16 +3,20 @@ package ir.treeco.aftabe;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import ir.treeco.aftabe.packages.*;
+import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,7 @@ import java.util.List;
  */
 public class PackageListImplicitAdapter {
     private android.content.Context context;
+    private PackageManager pManager;
 
     public void flip(int i, View view) {
         if (!itemData[i].enabled)
@@ -39,8 +44,9 @@ public class PackageListImplicitAdapter {
 
     ItemData[] itemData;
 
-    public PackageListImplicitAdapter(Context context) {
+    public PackageListImplicitAdapter(Context context, PackageManager pManager) {
         this.context = context;
+        this.pManager = pManager;
         setFilter(0);
     }
 
@@ -133,10 +139,28 @@ public class PackageListImplicitAdapter {
             }
         });
 
-        Bitmap[] bitmaps = new Bitmap[] {
-                ImageManager.loadImageFromResource(context, R.drawable.pack, myWidth, myHeight),
-                ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
-        };
+        Package[] packages = pManager.getPackages();
+        Bitmap[] bitmaps=null;
+        if(packages==null)
+            Log.d("ride","ride");
+        Log.e("why",""+packages.length);
+//        Log.d("pkg",packages[0].getName());
+        if(i<packages.length) {
+            try {
+                bitmaps = new Bitmap[]{
+                        ImageManager.loadImageFromInputStream(packages[i].getThumbnail(),myWidth,myHeight),
+                        ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
+                };
+            } catch (FileNotFoundException e) {
+                Log.e("aksrid","ridam",e);
+            }
+        }
+        else {
+                bitmaps = new Bitmap[] {
+                        ImageManager.loadImageFromResource(context, R.drawable.pack, myWidth, myHeight),
+                        ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
+                };
+        }
 
         tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
         tag.backImage.setImageBitmap(bitmaps[1 - itemData[i].shape]);

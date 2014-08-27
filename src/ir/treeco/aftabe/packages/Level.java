@@ -1,54 +1,61 @@
 package ir.treeco.aftabe.packages;
 
+import android.content.Context;
 import ir.treeco.aftabe.utils.Encryption;
+import ir.treeco.aftabe.utils.Utils;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by hossein on 7/31/14.
  */
 public class Level {
     private String soultion, author;
-    private Package context;
+    private Package wrapperPackage;
     private int id;
+    private Context context;
 
     public String getSoultion() {
         return Encryption.decrypt(soultion);
-    }
-
-    public String getImagePath() {
-        return id+".jpg";
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public Package getContext() {
-        return context;
+    public Package getWrapperPackage() {
+        return wrapperPackage;
     }
 
     public int getId() {
         return id;
     }
 
-    public InputStream getImage() throws FileNotFoundException {
-        ZipEntry entry = this.context.getData().getEntry(getImagePath());
-        try {
-            return this.context.getData().getInputStream(entry);
-        } catch (IOException e) {
-            throw new FileNotFoundException("can't find level's image");
+    public InputStream getImage() throws Exception {
+        if(wrapperPackage.getState() == PackageState.builtIn) {
+            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
+                            ,"zip"));
+            for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
+                if(e.getName().equals(id+".jpg"))
+                    break;
+            }
+            return zipInputStream;
+        }
+        else {
+            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
+            return this.wrapperPackage.getData().getInputStream(entry);
         }
     }
 
-    public Level(String author, String solution, Package context, int id) {
+    public Level(Context context, String author, String solution, Package wPackage, int id) {
+        this.context = context;
         this.author = author;
         this.soultion = solution;
-        this.context = context;
+        this.wrapperPackage = wPackage;
         this.id = id;
     }
 }

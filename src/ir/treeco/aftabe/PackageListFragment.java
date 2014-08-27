@@ -3,12 +3,14 @@ package ir.treeco.aftabe;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.*;
+import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
@@ -67,7 +69,18 @@ public class PackageListFragment extends Fragment {
         tabBar.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.tabbar_background, LengthManager.getScreenWidth(), LengthManager.getTabBarHeight())));
         tabBar.setLayoutParams(new FrameLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarHeight()));
 
-        final PackageListAdapter adapter = new PackageListAdapter(getActivity());
+        Log.e("dude","brah");
+        PackageManager pManager = new PackageManager(getActivity());
+        try {
+            pManager.refresh();
+        } catch (Exception e) {
+            Log.e("alak", "dolak");
+            Log.d("suck", "can't refresh pManager");
+
+//            e.printStackTrace();
+        }
+        Log.e("suck","muck");
+        final PackageListAdapter adapter = new PackageListAdapter(getActivity(), pManager);
         packages.setAdapter(adapter);
         adapter.setFilter(0);
         adapter.notifyDataSetChanged();
