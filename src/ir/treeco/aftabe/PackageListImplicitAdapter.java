@@ -26,6 +26,9 @@ import java.util.List;
 public class PackageListImplicitAdapter {
     private android.content.Context context;
     private PackageManager pManager;
+    private Package[] packages;
+
+    public final static int NEW_TAB_ADAPTER=0, LOCAL_TAB_ADAPTER=1, HOT_TAB_ADAPTER=2;
 
     public void flip(int i, View view) {
         if (!itemData[i].enabled)
@@ -44,14 +47,25 @@ public class PackageListImplicitAdapter {
 
     ItemData[] itemData;
 
-    public PackageListImplicitAdapter(Context context, PackageManager pManager) {
+    public PackageListImplicitAdapter(Context context, PackageManager pManager, int mod) {
         this.context = context;
         this.pManager = pManager;
+        switch (mod) {
+            case NEW_TAB_ADAPTER:
+                this.packages = pManager.getNewPackages();
+                break;
+            case LOCAL_TAB_ADAPTER:
+                this.packages = pManager.getLocalPackages();
+                break;
+            case HOT_TAB_ADAPTER:
+                this.packages = pManager.getHotPackages();
+                break;
+        }
         setFilter(0);
     }
 
     void setFilter(int shape) {
-        itemData = new ItemData[shape == 1? 3: 55];
+        itemData = new ItemData[packages.length+20];
         for (int i = 0; i < itemData.length; i++) {
             itemData[i] = new ItemData();
             itemData[i].toMiddle = AnimationUtils.loadAnimation(context, R.anim.to_middle);
@@ -81,10 +95,12 @@ public class PackageListImplicitAdapter {
             packageInfo = inflater.inflate(R.layout.package_info, null);
             final PackageInfoTag tag = new PackageInfoTag();
             tag.packageName = (TextView) packageInfo.findViewById(R.id.package_name);
+            tag.packageInfo = (TextView) packageInfo.findViewById(R.id.package_info);
             tag.frontCard = (FrameLayout) packageInfo.findViewById(R.id.front_card);
             tag.backCard = (FrameLayout) packageInfo.findViewById(R.id.back_card);
             tag.frontImage = (ImageView) packageInfo.findViewById(R.id.front_image);
             tag.backImage = (ImageView) packageInfo.findViewById(R.id.back_image);
+            tag.frontButton = (Button) packageInfo.findViewById(R.id.front_button);
             packageInfo.setTag(tag);
         }
 
@@ -139,12 +155,7 @@ public class PackageListImplicitAdapter {
             }
         });
 
-        Package[] packages = pManager.getPackages();
         Bitmap[] bitmaps=null;
-        if(packages==null)
-            Log.d("ride","ride");
-        Log.e("why",""+packages.length);
-//        Log.d("pkg",packages[0].getName());
         if(i<packages.length) {
             try {
                 bitmaps = new Bitmap[]{
@@ -169,6 +180,42 @@ public class PackageListImplicitAdapter {
 
         tag.frontCard.setVisibility(itemData[i].flipped? View.GONE: View.VISIBLE);
         tag.backCard.setVisibility(itemData[i].flipped? View.VISIBLE: View.GONE);
+
+        if(i<packages.length) {
+            tag.packageInfo.setText(packages[i].getDescription());
+            tag.packageName.setText(packages[i].getName());
+        }
+
+        //configure font card view layout-params
+        if(i<packages.length) {
+            if(packages[i].getState() == PackageState.remote)
+                tag.frontButton.setText("خرید " + packages[i].getCost());
+            else if(packages[i].getState() == PackageState.downloading)
+                tag.frontButton.setText("در حال دانلود");
+            else
+                tag.frontButton.setText("ورود");
+            float textSize = myWidth/10.0f;
+            tag.frontButton.setTextSize(textSize);
+            tag.frontButton.setPadding((int) textSize, 0, (int) textSize, 0);
+            FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
+            params.setMargins(0,0,0,3*(int)textSize/2);
+            Log.e("parSize",""+textSize);
+            tag.packageName.setTextSize(textSize);
+            params = (FrameLayout.LayoutParams) tag.packageName.getLayoutParams();
+            params.setMargins(0,(int)textSize,0,0);
+
+            tag.frontButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(packages[i].getState() == PackageState.remote) {
+                        // buy the package
+                    }
+                    else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
+                        // start the game
+                    }
+                }
+            });
+        }
 
         return packageInfo;
     }

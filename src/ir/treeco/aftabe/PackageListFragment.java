@@ -69,35 +69,43 @@ public class PackageListFragment extends Fragment {
         tabBar.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.tabbar_background, LengthManager.getScreenWidth(), LengthManager.getTabBarHeight())));
         tabBar.setLayoutParams(new FrameLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarHeight()));
 
-        Log.e("dude","brah");
         PackageManager pManager = new PackageManager(getActivity());
         try {
             pManager.refresh();
         } catch (Exception e) {
-            Log.e("alak", "dolak");
-            Log.d("suck", "can't refresh pManager");
-
-//            e.printStackTrace();
+            e.printStackTrace();
         }
-        Log.e("suck","muck");
-        final PackageListAdapter adapter = new PackageListAdapter(getActivity(), pManager);
-        packages.setAdapter(adapter);
-        adapter.setFilter(0);
-        adapter.notifyDataSetChanged();
+
+        final PackageListAdapter newAdapter = new PackageListAdapter(getActivity(), pManager, PackageListImplicitAdapter.NEW_TAB_ADAPTER);
+        final PackageListAdapter localAdapter = new PackageListAdapter(getActivity(), pManager, PackageListImplicitAdapter.LOCAL_TAB_ADAPTER);
+        final PackageListAdapter hotAdapter = new PackageListAdapter(getActivity(), pManager, PackageListImplicitAdapter.HOT_TAB_ADAPTER);
+
+        packages.setAdapter(newAdapter);
+        newAdapter.setFilter(0);
+        newAdapter.notifyDataSetChanged();
 
 
         packages.setOnScrollListener(new PackagesListScrollListener(packages, tabBar));
 
         TextView[] textViews = new TextView[] {
-                (TextView) layout.findViewById(R.id.tab_1),
-                (TextView) layout.findViewById(R.id.tab_2),
-                (TextView) layout.findViewById(R.id.tab_3)
+                (TextView) layout.findViewById(R.id.tab_1), // HOT tab
+                (TextView) layout.findViewById(R.id.tab_2), // Local tab
+                (TextView) layout.findViewById(R.id.tab_3)  // New tab
         };
 
-        for (TextView textView: textViews) {
+        final PackageListAdapter[] adpaters = new PackageListAdapter[] {
+                hotAdapter,
+                localAdapter,
+                newAdapter
+        };
+
+        for (int i=0;i<3;++i) {
+            TextView textView = textViews[i];
+            final PackageListAdapter adapter = adpaters[i];
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    packages.setAdapter(adapter);
                     adapter.setFilter(0);
                     packages.setSelection(0);
                 }

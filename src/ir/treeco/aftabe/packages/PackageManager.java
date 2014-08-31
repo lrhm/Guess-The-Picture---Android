@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,10 +27,12 @@ public class PackageManager {
     private final static String pkgNameKey= "Package Name",
                           numberOfLevelsKey = "number of levels",
                           dataUrlKey = "Data url",
-                          pkgDescriptionKey = "Package Description";
+                          pkgDescriptionKey = "Package Description",
+                          costKey = "cost";
     Context context;
 
     private Package[] packages;
+    private Package[] newPackages,localPackages,hotPackages; // for 3 tabs
 
     public  Package[] getPackages() {
         return packages;
@@ -74,8 +77,9 @@ public class PackageManager {
                 String name = (String) pkgInfo.get(pkgNameKey);
                 String desc = (String) pkgInfo.get(pkgDescriptionKey);
                 int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
+                int cost = (Integer) pkgInfo.get(costKey);
                 String dataUrl = (String) pkgInfo.get(dataUrlKey);
-                outPackages[cnt] = Package.getPackage(cnt + inPackages.length, context, name, desc, numberOfLevels, dataUrl);
+                outPackages[cnt] = Package.getPackage(cnt + inPackages.length, context, name, desc, numberOfLevels, dataUrl, cost);
 //            //download thumbnail            !!!!!!!!!!!!!!!!!!SYNCHRONIZER SHOULD DOWNLOAD THUMBNAILS
 //            try {
 ////                download((String) hmap.get(thumbnailUrlKey),packages[cnt].getThumbnailPath());
@@ -93,6 +97,43 @@ public class PackageManager {
 //        for (int i=0; i<outPackages.length; ++i) {
 //            packages[i+inPackages.length] = outPackages[i];
 //        }
+        generateAdapterResourceArrays();
+    }
+
+    public void generateAdapterResourceArrays() {
+        ArrayList<Package> newPackagelist = new ArrayList<Package>();
+        ArrayList<Package> hotPackagelist = new ArrayList<Package>();
+        ArrayList<Package> localPackagelist = new ArrayList<Package>();
+        for(Package pkg : packages) {
+            if(pkg.getState()==PackageState.builtIn || pkg.getState()==PackageState.local)
+                localPackagelist.add(pkg);
+            if(pkg.getState()==PackageState.remote || pkg.getState()==PackageState.downloading)
+                newPackagelist.add(pkg);
+            /**
+             *
+             *       how to determine HOTNESS of a package?
+             *           maybe in the header file!
+             *
+             */
+        }
+        hotPackagelist.add(packages[0]);//   JUST FOR TEST
+
+        //convert Arraylist to Arrays for better performance
+        newPackages = newPackagelist.toArray(new Package[newPackagelist.size()]);
+        localPackages = localPackagelist.toArray(new Package[localPackagelist.size()]);
+        hotPackages = hotPackagelist.toArray(new Package[hotPackagelist.size()]);
+    }
+
+    public Package[] getHotPackages() {
+        return hotPackages;
+    }
+
+    public Package[] getLocalPackages() {
+        return localPackages;
+    }
+
+    public Package[] getNewPackages() {
+        return newPackages;
     }
 
 //    public void copyFromRawToInternal(String name){
@@ -132,5 +173,6 @@ public class PackageManager {
             throw new Exception("can't download "+pkg.getName()+"'s data");
         }
         pkg.becomeLocal();
+        generateAdapterResourceArrays(); // well :-\ not the best option ...
     }
 }

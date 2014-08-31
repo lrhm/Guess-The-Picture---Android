@@ -15,8 +15,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="snakeyaml-1.10-android" level="project" />
-    <orderEntry type="library" name="android-support-v4" level="project" />
-    <orderEntry type="library" name="guice-3.0-no_aop" level="project" />
   </component>
 </module>
 

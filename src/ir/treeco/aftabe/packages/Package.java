@@ -17,7 +17,7 @@ import java.util.zip.ZipInputStream;
  */
 public class Package {
     private PackageState state;
-    private int numberOfLevels;
+    private int numberOfLevels, cost;
     private String name, description, dataUrl;
     private ZipFile zipFile;
     private List<HashMap<String, Object>> levelsInfo;
@@ -48,6 +48,10 @@ public class Package {
         return name;
     }
 
+    public int getCost() {
+        return this.cost;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -75,7 +79,7 @@ public class Package {
         return  aPackage;
     }
 
-    public static Package getPackage(int id, Context context, String name, String description, int numberOfLevels, String dataUrl) {
+    public static Package getPackage(int id, Context context, String name, String description, int numberOfLevels, String dataUrl, int cost) {
         Package aPackage = new Package(id, context, name, description, numberOfLevels);
         aPackage.dataUrl = dataUrl;
         File dataFile = new File(aPackage.context.getFilesDir(),name+".zip");
@@ -83,6 +87,7 @@ public class Package {
             aPackage.state = PackageState.local;
         else
             aPackage.state = PackageState.remote;
+        aPackage.cost = cost;
         try {
             if(aPackage.state == PackageState.local)
                 aPackage.load();
