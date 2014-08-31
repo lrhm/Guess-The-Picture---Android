@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,6 +43,13 @@ public class IntroActivity extends FragmentActivity {
         header.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160));
         header.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header_background, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160)));
 
+        // List fragment transaction
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        PackageListFragment listFragment = new PackageListFragment();
+        fragmentTransaction.add(R.id.fragment_container,listFragment);
+        fragmentTransaction.commit();
     }
 
     /*private void loadBackground() {
