@@ -7,9 +7,16 @@
     android:id="@+id/main_view">
     <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:id="@+id/header_image"/>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/fragment_container">
+    </FrameLayout>
+    <!--
     <fragment
         android:name="ir.treeco.aftabe.PackageListFragment"
         android:layout_width="match_parent"
         android:layout_height="fill_parent" />
+        -->
 </LinearLayout>
 
