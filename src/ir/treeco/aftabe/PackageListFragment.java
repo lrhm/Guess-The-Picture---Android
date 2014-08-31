@@ -3,7 +3,6 @@ package ir.treeco.aftabe;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +66,10 @@ public class PackageListFragment extends Fragment {
         final ListView packages =  (ListView) layout.findViewById(R.id.package_list);
         final View tabBar = layout.findViewById(R.id.tab_bar);
         tabBar.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.tabbar_background, LengthManager.getScreenWidth(), LengthManager.getTabBarHeight())));
-        tabBar.setLayoutParams(new FrameLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarHeight()));
+        FrameLayout.LayoutParams tabBarLayoutParams = (FrameLayout.LayoutParams) tabBar.getLayoutParams();
+        tabBarLayoutParams.width = LengthManager.getScreenWidth();
+        tabBarLayoutParams.height = LengthManager.getTabBarHeight();
+        tabBar.setLayoutParams(tabBarLayoutParams);
 
         PackageManager pManager = new PackageManager(getActivity());
         try {

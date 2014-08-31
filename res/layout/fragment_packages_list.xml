@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="دنلود شده"
+                android:text="دانلود شده"
                 android:textColor="#4c4224"
                 android:id="@+id/tab_2"
                 android:textSize="25dp"/>
