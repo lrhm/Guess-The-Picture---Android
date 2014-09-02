@@ -3,32 +3,29 @@ package ir.treeco.aftabe;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import ir.treeco.aftabe.packages.*;
+import android.widget.LinearLayout;
+import ir.treeco.aftabe.packages.Package;
 
 /**
  * Created by hossein on 8/31/14.
  */
 public class PackageFragment extends Fragment {
-    TextView log;
-    String logStr;
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_package, container, false);
-        log = (TextView) layout.findViewById(R.id.log_textview);
-        log.setText(logStr);
-        return layout;
+    private Package mPackage;
+
+    public static PackageFragment newInstance(Package mPackage) {
+        PackageFragment packageFragment = new PackageFragment();
+        packageFragment.mPackage = mPackage;
+        return packageFragment;
     }
 
-    public void setLog(ir.treeco.aftabe.packages.Package pkg) {
-        logStr="";
-        for(Level level:pkg.getLevels()) {
-            logStr += level.getSoultion()+"\n";
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_package, container, false);
+        ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
+        viewPager.setAdapter(new LevelsViewPagerAdapter(mPackage));
+        return layout;
     }
 }

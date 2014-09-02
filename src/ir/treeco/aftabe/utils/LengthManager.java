@@ -94,4 +94,16 @@ public class LengthManager {
     public static int getTabBarHeight() {
         return LengthManager.getHeightWithFixedWidth(R.drawable.tabbar_background, LengthManager.getScreenWidth());
     }
+
+    public static int getPageLevelCount() {
+        return 16;
+    }
+
+    public static int getPageColumnCount() {
+        return 4;
+    }
+
+    public static int getLevelThumbnailSize() {
+        return getScreenWidth() / getPageColumnCount();
+    }
 }

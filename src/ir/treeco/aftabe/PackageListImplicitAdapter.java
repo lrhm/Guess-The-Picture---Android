@@ -1,10 +1,8 @@
 package ir.treeco.aftabe;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -217,13 +215,11 @@ public class PackageListImplicitAdapter {
                         // buy the package
                     }
                     else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
-                        PackageFragment fragment = new PackageFragment();
-                        FragmentActivity tmp = (FragmentActivity) context;
-                        FragmentTransaction transaction = tmp.getSupportFragmentManager().beginTransaction();
+                        PackageFragment fragment = PackageFragment.newInstance(packages[i]);
+                        FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, fragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
-                        fragment.setLog(packages[i]);
                     }
                 }
             });

@@ -3,8 +3,6 @@ package ir.treeco.aftabe;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,12 +61,6 @@ class PackagesListScrollListener implements  AbsListView.OnScrollListener {
 }
 
 public class PackageListFragment extends Fragment {
-//    public FragmentActivity fragmentActivity;
-//
-//    public static PackageListFragment getNewInstance(FragmentActivity fragmentActivity) {
-//        PackageListFragment listFragment = new PackageListFragment();
-//    }
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_packages_list, container, false);
         final ListView packages =  (ListView) layout.findViewById(R.id.package_list);
@@ -122,7 +114,6 @@ public class PackageListFragment extends Fragment {
             });
             textView.setTypeface(FontsHolder.getTabBarFont(layout.getContext()));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getScreenWidth() / 17);
-            textView.setTranslationY(-LengthManager.getScreenWidth() / 80);
         }
 
 
