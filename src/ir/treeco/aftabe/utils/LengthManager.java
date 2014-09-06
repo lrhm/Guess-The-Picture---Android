@@ -91,8 +91,16 @@ public class LengthManager {
         return getHeightWithFixedWidth(R.drawable.header, getScreenWidth());
     }
 
-    public static int getTabBarHeight() {
+    public static int getTabsHeight() {
         return LengthManager.getHeightWithFixedWidth(R.drawable.tabbar_background, LengthManager.getScreenWidth());
+    }
+
+    public static int getTabBarShadeHeight() {
+        return LengthManager.getHeightWithFixedWidth(R.drawable.shadow_top, LengthManager.getScreenWidth());
+    }
+
+    public static int getTabBarHeight() {
+        return getTabsHeight() + getTabBarShadeHeight();
     }
 
     public static int getPageLevelCount() {
@@ -105,5 +113,21 @@ public class LengthManager {
 
     public static int getLevelThumbnailSize() {
         return getScreenWidth() / getPageColumnCount();
+    }
+
+    public static int getAlphabetButtonSize() {
+        return getScreenWidth() / 8;
+    }
+
+    public static float getAlphabetFontSize() {
+        return getScreenWidth() / 14;
+    }
+
+    public static int getSolutionButtonSize() {
+        return getScreenWidth() / 12;
+    }
+
+    public static float getSolutionFontSize() {
+        return getScreenWidth() / 24;
     }
 }

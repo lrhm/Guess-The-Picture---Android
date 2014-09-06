@@ -172,8 +172,8 @@ public class PackageListImplicitAdapter {
             }
         } else {
             bitmaps = new Bitmap[]{
-                    ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight),
-                    ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight)
+                    ImageManager.loadImageFromResource(context, R.drawable.pack, myWidth, myHeight),
+                    ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
             };
         }
 
@@ -215,7 +215,7 @@ public class PackageListImplicitAdapter {
                         // buy the package
                     }
                     else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
-                        PackageFragment fragment = PackageFragment.newInstance(packages[i]);
+                        PackageFragment fragment = PackageFragment.newInstance(packages[i], (FragmentActivity) context);
                         FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, fragment);
                         transaction.addToBackStack(null);
@@ -223,6 +223,9 @@ public class PackageListImplicitAdapter {
                     }
                 }
             });
+            tag.frontButton.setVisibility(View.VISIBLE);
+        } else {
+            tag.frontButton.setVisibility(View.INVISIBLE);
         }
 
         return packageInfo;

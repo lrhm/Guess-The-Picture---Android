@@ -161,7 +161,6 @@ public class Package {
         levels = new Level[this.numberOfLevels];
         int cnt=0;
         for(HashMap<String, Object> hmap : levelsInfo) {
-            Log.d("xxx", "solution: " + (String) hmap.get(levelSolutionKey));
             levels[cnt] = new Level(context, (String) hmap.get(levelAuthorKey),(String) hmap.get(levelSolutionKey),this, cnt);
             cnt++;
         }

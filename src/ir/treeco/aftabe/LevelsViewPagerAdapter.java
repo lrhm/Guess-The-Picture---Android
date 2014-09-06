@@ -1,10 +1,14 @@
 package ir.treeco.aftabe;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.*;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.GridView;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.LengthManager;
 
@@ -15,11 +19,13 @@ import java.util.Arrays;
  */
 public class LevelsViewPagerAdapter extends PagerAdapter {
     private final Package mPackage;
+    private final FragmentActivity fragmentActivity;
     private int timesClicked;
     private LayoutInflater inflater;
 
-    public LevelsViewPagerAdapter(Package mPackage) {
+    public LevelsViewPagerAdapter(Package mPackage, FragmentActivity fragmentActivity) {
         this.mPackage = mPackage;
+        this.fragmentActivity = fragmentActivity;
     }
 
     @Override
@@ -79,12 +85,12 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
         LevelsGridViewAdapter cellAdapter = new LevelsGridViewAdapter(levelIDs, mPackage);
         gridView.setAdapter(cellAdapter);
 
-        /*gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (levelIDs[i] == -1)
                     return;
-                if (LevelDataOrganizer.getLevel(levelIDs[i]).isLocked(preferences)) {
+                /*if (LevelDataOrganizer.getLevel(levelIDs[i]).isLocked(preferences)) {
                     timesClicked++;
                     if (timesClicked == 4) Toast.makeText(BoxActivity.this, "قفله برادر!", Toast.LENGTH_LONG).show();
                     if (timesClicked == 7) Toast.makeText(BoxActivity.this, "گفتم که قفله :|", Toast.LENGTH_LONG).show();
@@ -100,14 +106,14 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
                     }
                     // if (timesClicked == ?) Toast.makeText(BoxActivity.this, "", Toast.LENGTH_LONG).show();
                     return;
-                }
-                final Intent intent = new Intent(Intent.ACTION_VIEW, null, BoxActivity.this, LevelActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("level", levelIDs[i]);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                }*/
+                LevelFragment fragment = LevelFragment.newInstance(mPackage.getLevel(levelIDs[i]));
+                FragmentTransaction transaction = ((FragmentActivity) fragmentActivity).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
-        });*/
+        });
 
         container.addView(viewLayout);
 
