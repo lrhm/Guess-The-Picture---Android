@@ -1,6 +1,8 @@
 package ir.treeco.aftabe;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -11,20 +13,32 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.Utils;
+
+import java.io.FileNotFoundException;
+import java.util.Set;
 
 /**
  * Created by hamed on 8/17/14.
  */
 public class AdItemAdapter extends PagerAdapter {
     Context context;
+    public final static String ADS_KEY = "number_of_ads";
+    private int num_of_ads;
 
     public AdItemAdapter(Context context) {
         this.context = context;
+        update_ads();
+    }
+
+    public void update_ads() {
+        SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), context.MODE_PRIVATE);
+        num_of_ads = preferences.getInt(ADS_KEY,0);
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return num_of_ads;
     }
 
     @Override
@@ -37,7 +51,13 @@ public class AdItemAdapter extends PagerAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.ad_image, null);
         ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
-        imageView.setImageResource(R.drawable.ad);
+        try {
+            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad"+position),LengthManager.getScreenWidth(),-1));
+        } catch (FileNotFoundException e) {
+            imageView.setImageResource(R.drawable.ad);
+            e.printStackTrace();
+        }
+//        imageView.setImageResource(R.drawable.ad);
 
         ImageView topShadow = (ImageView) relativeLayout.getChildAt(1);
         ImageView bottomShadow = (ImageView) relativeLayout.getChildAt(2);
