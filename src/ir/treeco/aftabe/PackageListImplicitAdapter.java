@@ -185,6 +185,7 @@ public class PackageListImplicitAdapter {
         tag.frontCard.setVisibility(itemData[i].flipped? View.GONE: View.VISIBLE);
         tag.backCard.setVisibility(itemData[i].flipped? View.VISIBLE: View.GONE);
 
+
         if(i<packages.length) {
             tag.packageInfo.setText(packages[i].getDescription());
             tag.packageName.setText(packages[i].getName());

@@ -30,6 +30,12 @@ public class Utils {
     }
 
     public static void download(Context context, String url, String path) throws Exception {
+        /**
+         *
+         *          THIS method should overwrite the existing FILE.
+         *                      BUT does IT???????
+         *
+         */
         URL source = null;
         try {
             source = new URL(url);
@@ -48,5 +54,9 @@ public class Utils {
             os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
         }
         os.close();
+    }
+
+    public static String sharedPrefrencesTag() {
+        return "GOLVAZHE_XEJDIWE";
     }
 }
