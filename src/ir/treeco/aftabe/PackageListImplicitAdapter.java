@@ -1,21 +1,21 @@
 package ir.treeco.aftabe;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
-import ir.treeco.aftabe.packages.*;
 import ir.treeco.aftabe.packages.Package;
+import ir.treeco.aftabe.packages.PackageManager;
+import ir.treeco.aftabe.packages.PackageState;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
@@ -32,7 +32,7 @@ public class PackageListImplicitAdapter {
     private PackageManager pManager;
     private Package[] packages;
 
-    public final static int NEW_TAB_ADAPTER=0, LOCAL_TAB_ADAPTER=1, HOT_TAB_ADAPTER=2;
+    public final static int NEW_TAB_ADAPTER = 0, LOCAL_TAB_ADAPTER = 1, HOT_TAB_ADAPTER = 2;
 
     public void flip(int i, View view) {
         if (!itemData[i].enabled)
@@ -69,7 +69,7 @@ public class PackageListImplicitAdapter {
     }
 
     void setFilter(int shape) {
-        itemData = new ItemData[packages.length+20];
+        itemData = new ItemData[packages.length + 20];
         for (int i = 0; i < itemData.length; i++) {
             itemData[i] = new ItemData();
             itemData[i].toMiddle = AnimationUtils.loadAnimation(context, R.anim.to_middle);
@@ -80,11 +80,12 @@ public class PackageListImplicitAdapter {
     }
 
     public void notifyDataSetChanged() {
-        for (DataSetObserver observer: observers)
+        for (DataSetObserver observer : observers)
             observer.onChanged();
     }
 
     List<DataSetObserver> observers = new ArrayList<DataSetObserver>();
+
     public void registerDataSetObserver(DataSetObserver dataSetObserver) {
         observers.add(dataSetObserver);
     }
@@ -116,7 +117,7 @@ public class PackageListImplicitAdapter {
         });
 
         int myWidth = LengthManager.getScreenWidth() / 2;
-        int myHeight = LengthManager.getHeightWithFixedWidth(R.drawable.pack, myWidth);
+        int myHeight = myWidth;
 
         final PackageInfoTag tag = (PackageInfoTag) packageInfo.getTag();
         final View finalPackageInfo = packageInfo;
@@ -159,22 +160,21 @@ public class PackageListImplicitAdapter {
             }
         });
 
-        Bitmap[] bitmaps=null;
-        if(i<packages.length) {
+        Bitmap[] bitmaps = null;
+        if (i < packages.length) {
             try {
                 bitmaps = new Bitmap[]{
-                        ImageManager.loadImageFromInputStream(packages[i].getThumbnail(),myWidth,myHeight),
-                        ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
+                        ImageManager.loadImageFromInputStream(packages[i].getThumbnail(), myWidth, myHeight),
+                        ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight)
                 };
             } catch (FileNotFoundException e) {
-                Log.e("aksrid","ridam",e);
+                Log.e("aksrid", "ridam", e);
             }
-        }
-        else {
-                bitmaps = new Bitmap[] {
-                        ImageManager.loadImageFromResource(context, R.drawable.pack, myWidth, myHeight),
-                        ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
-                };
+        } else {
+            bitmaps = new Bitmap[]{
+                    ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight),
+                    ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight)
+            };
         }
 
         tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
@@ -182,47 +182,44 @@ public class PackageListImplicitAdapter {
 
         packageInfo.setLayoutParams(new LinearLayout.LayoutParams(myWidth, myHeight));
 
-        tag.frontCard.setVisibility(itemData[i].flipped? View.GONE: View.VISIBLE);
-        tag.backCard.setVisibility(itemData[i].flipped? View.VISIBLE: View.GONE);
+        tag.frontCard.setVisibility(itemData[i].flipped ? View.GONE : View.VISIBLE);
+        tag.backCard.setVisibility(itemData[i].flipped ? View.VISIBLE : View.GONE);
 
-
-        if(i<packages.length) {
+        if (i < packages.length) {
             tag.packageInfo.setText(packages[i].getDescription());
             tag.packageName.setText(packages[i].getName());
         }
 
         //configure font card view layout-params
-        if(i<packages.length) {
-            if(packages[i].getState() == PackageState.remote)
+        if (i < packages.length) {
+            if (packages[i].getState() == PackageState.remote)
                 tag.frontButton.setText("خرید " + packages[i].getCost());
-            else if(packages[i].getState() == PackageState.downloading)
+            else if (packages[i].getState() == PackageState.downloading)
                 tag.frontButton.setText("در حال دانلود");
             else
                 tag.frontButton.setText("ورود");
-            float textSize = myWidth/10.0f;
-            tag.frontButton.setTextSize(textSize);
+            float textSize = myWidth / 10.0f;
+            tag.frontButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             tag.frontButton.setPadding((int) textSize, 0, (int) textSize, 0);
-            FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
-            params.setMargins(0,0,0,3*(int)textSize/2);
-            Log.e("parSize",""+textSize);
-            tag.packageName.setTextSize(textSize);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
+            params.setMargins(0, 0, 0, 3 * (int) textSize / 2);
+            Log.e("parSize", "" + textSize);
+            tag.packageName.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             params = (FrameLayout.LayoutParams) tag.packageName.getLayoutParams();
-            params.setMargins(0,(int)textSize,0,0);
+            params.setMargins(0, (int) textSize, 0, 0);
 
             tag.frontButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(packages[i].getState() == PackageState.remote) {
+                    if (packages[i].getState() == PackageState.remote) {
                         // buy the package
                     }
                     else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
-                        PackageFragment fragment = new PackageFragment();
-                        FragmentActivity tmp = (FragmentActivity) context;
-                        FragmentTransaction transaction = tmp.getSupportFragmentManager().beginTransaction();
+                        PackageFragment fragment = PackageFragment.newInstance(packages[i]);
+                        FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, fragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
-                        fragment.setLog(packages[i]);
                     }
                 }
             });
