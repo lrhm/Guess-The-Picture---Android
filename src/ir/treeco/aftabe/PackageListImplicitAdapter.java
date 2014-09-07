@@ -51,10 +51,12 @@ public class PackageListImplicitAdapter {
 
     ItemData[] itemData;
 
-    public PackageListImplicitAdapter(Context context, PackageManager pManager, int mod) {
+    int mode;
+    public PackageListImplicitAdapter(Context context, PackageManager pManager, int mode) {
+        this.mode = mode;
         this.context = context;
         this.pManager = pManager;
-        switch (mod) {
+        switch (mode) {
             case NEW_TAB_ADAPTER:
                 this.packages = pManager.getNewPackages();
                 break;
@@ -69,6 +71,7 @@ public class PackageListImplicitAdapter {
     }
 
     void setFilter(int shape) {
+        Log.d("vamDaneshjuyi",packages+" "+mode);
         itemData = new ItemData[packages.length + 20];
         for (int i = 0; i < itemData.length; i++) {
             itemData[i] = new ItemData();
@@ -162,14 +165,10 @@ public class PackageListImplicitAdapter {
 
         Bitmap[] bitmaps = null;
         if (i < packages.length) {
-            try {
                 bitmaps = new Bitmap[]{
-                        ImageManager.loadImageFromInputStream(packages[i].getThumbnail(), myWidth, myHeight),
-                        ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight)
+                        ImageManager.loadImageFromInputStream(packages[i].getFront(), myWidth, myHeight),
+                        ImageManager.loadImageFromInputStream(packages[i].getBack(), myWidth, myHeight),
                 };
-            } catch (FileNotFoundException e) {
-                Log.e("aksrid", "ridam", e);
-            }
         } else {
             bitmaps = new Bitmap[]{
                     ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight),
@@ -177,6 +176,19 @@ public class PackageListImplicitAdapter {
             };
         }
 
+//        Log.d("vamDaneshjuyi", i+" "+packages.length+" "+packages[i].getName()+" "+packages[i].getState());
+//        try {
+//            Log.d("vamDaneshjuyi", packages[i].getFront().toString());
+//        } catch (FileNotFoundException e) {
+//            Log.d("vamDaneshjuyi","why??????????!!!!");
+//            e.printStackTrace();
+//        }
+//        Log.d("vamDaneshjuyi", bitmaps+"bitbit");
+//        Log.d("vamDaneshjuyi", bitmaps.length+"lenlen");
+//        Log.d("vamDaneshjuyi", itemData[i]+" ");
+//        Log.d("vamDaneshjuyi", itemData[i].shape+" ");
+//        Log.d("vamDaneshjuyi", bitmaps[itemData[i].shape]+" ");
+//        Log.d("vamDaneshjuyi",itemData[i] + " " + itemData[i].shape + " " +bitmaps[itemData[i].shape]);
         tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
         tag.backImage.setImageBitmap(bitmaps[1 - itemData[i].shape]);
 
@@ -212,7 +224,7 @@ public class PackageListImplicitAdapter {
                 @Override
                 public void onClick(View v) {
                     if (packages[i].getState() == PackageState.remote) {
-                        // buy the package
+                        packages[i].becomeLocal();
                     }
                     else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
                         PackageFragment fragment = PackageFragment.newInstance(packages[i]);

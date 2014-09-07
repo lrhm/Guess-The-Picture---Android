@@ -39,7 +39,7 @@ import java.util.UUID;
  */
 public class Synchronizer extends BroadcastReceiver{
 
-    private static final String tasksFileUrl = "http://192.168.1.5/tasks.yml";
+    private static final String tasksFileUrl = "http://192.168.0.111/sofre/tasks.yml";
     private final String PREFS_TAG = "ad_data";
     private final static String AD_UPDATE_TAG = "last_ad_update";
     private static boolean firstConnect = true;
@@ -70,7 +70,6 @@ public class Synchronizer extends BroadcastReceiver{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("synch","onThread run method");
                 String lastTime = preferences.getString(AD_UPDATE_TAG, "2000-01-01");
                 String nowTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
                 {
@@ -80,28 +79,7 @@ public class Synchronizer extends BroadcastReceiver{
                 }
                 //TODO uncomment below
 //                if (lastTime.equals(nowTime)) return;
-//                String data = loadAdData();
-                String data = "Token: this is new token\n" +
-                        "Files:\n" +
-                        "  - URL: http://192.168.1.5/hello.yml\n" +
-                        "    name: hello.yml\n" +
-                        "Notifications:\n" +
-                        "  - Image URL: http://192.168.1.5/notif.jpg\n" +
-                        "    Title: This is Title\n" +
-                        "    Text: This is Text\n" +
-                        "    onClick: this is onClick\n" +
-                        "    Promote: London baby!\n" +
-                        "    Prize: 1243\n" +
-                        "  - Image URL: http://192.168.1.5/notif.jpg\n" +
-                        "    Title: This is Title\n" +
-                        "    Text: This is Text\n" +
-                        "    onClick: this is onClick\n" +
-                        "    Promote: London baby!\n" +
-                        "    Prize: 1243\n" +
-                        "Ads:\n" +
-                        "  - URL: http://192.168.1.5/aftabe.jpg\n" +
-                        "  - URL: http://192.168.1.5/tantak.jpg";
-                Log.d("synch","data received " + data);
+                String data = loadAdData();
 
                 if (data == null)
                     return;
@@ -112,14 +90,12 @@ public class Synchronizer extends BroadcastReceiver{
                 tasks = (HashMap<String, Object>) yaml.load(data);
 
                 token = (String) tasks.get("Token");
-                Log.d("synch","token read: " + token);
 
-                Log.d("synch","doing File tasks");
-                do_Task_Files_Download_And_Update((List<HashMap<String,String>>) tasks.get(TASK_FILE_KEY));
-                Log.d("synch","doing notif tasks");
                 do_Task_Notifs((List<HashMap<String, String>>) tasks.get(TASK_NOTIFICATION_KEY));
-                Log.d("synch","doing ads tasks");
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
+                do_Task_Files_Download_And_Update((List<HashMap<String,String>>) tasks.get(TASK_FILE_KEY));
+
+                //TODO  header.yml File most Update at LAST after Downloading thumbnails
 
                 //TODO uncomment below
 //                setToken(token);
@@ -130,8 +106,9 @@ public class Synchronizer extends BroadcastReceiver{
                 HttpGet request = new HttpGet();
 
                 try {
-                    request.setURI(new URI(tasksFileUrl + getCurrentToken()));
-                    Log.d("synch","requesting data from: "+tasksFileUrl + getCurrentToken());
+                    //TODO uncomment below
+//                    request.setURI(new URI(tasksFileUrl + getCurrentToken()));
+                    request.setURI(new URI(tasksFileUrl));
                 } catch (URISyntaxException e) {
                     //Log.w("GOLVAZHE", "Failed to load ad! (URI)");
                     return null;
@@ -162,11 +139,10 @@ public class Synchronizer extends BroadcastReceiver{
                 for(HashMap<String,String> file : files) {
                     String url = file.get("URL");
                     String name = file.get("name");
-                    Log.d("synch","A new File task " +name+" "+url);
                     try {
                         Utils.download(context,url,name);
                     } catch (Exception e) {
-                        Log.d("synch","Error in downloading File",e);
+//                        Log.d("synch","Error in downloading File",e);
                         e.printStackTrace();
                     }
                 }
@@ -180,7 +156,6 @@ public class Synchronizer extends BroadcastReceiver{
                     String onClick = notif.get("onClick");
                     String promote = "hello"; //notif.get("Promote");
                     int prize = 2;//Integer.parseInt(notif.get("Prize"));
-                    Log.d("synch","A notif task "+ title);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(context)
                                     .setSmallIcon(R.drawable.tiny)
@@ -221,7 +196,7 @@ public class Synchronizer extends BroadcastReceiver{
 
                 NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                int mId = 1;
+                int mId = (int) (Math.random()*1000);
                 mNotificationManager.notify(mId, mBuilder.build());
             }
 
@@ -229,9 +204,8 @@ public class Synchronizer extends BroadcastReceiver{
                 int cnt=0;
                 for(HashMap<String,String> ad : ads) {
                     String url = ad.get("URL");
-                    Log.d("synch","An ad task "+ url);
                     try {
-                        Utils.download(context,url,"ad"+cnt);
+                        Utils.download(context, url, "ad" + cnt);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

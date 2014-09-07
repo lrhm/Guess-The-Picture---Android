@@ -16,6 +16,7 @@ import java.util.zip.ZipInputStream;
 public class Level {
     private String soultion, author;
     private Package wrapperPackage;
+    private InputStream Image;
     private int id;
     private Context context;
 
@@ -35,20 +36,24 @@ public class Level {
         return id;
     }
 
+    public void setImage(InputStream inputStream) {
+        Image = inputStream;
+    }
     public InputStream getImage() throws Exception {
-        if(wrapperPackage.getState() == PackageState.builtIn) {
-            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
-                            ,"zip"));
-            for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
-                if(e.getName().equals(id+".jpg"))
-                    break;
-            }
-            return zipInputStream;
-        }
-        else {
-            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
-            return this.wrapperPackage.getData().getInputStream(entry);
-        }
+//        if(wrapperPackage.getState() == PackageState.builtIn) {
+//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
+//                            ,"zip"));
+//            for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
+//                if(e.getName().equals(id+".jpg"))
+//                    break;
+//            }
+//            return zipInputStream;
+//        }
+//        else {
+//            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
+//            return this.wrapperPackage.getData().getInputStream(entry);
+//        }
+        return Image;
     }
 
     public Level(Context context, String author, String solution, Package wPackage, int id) {

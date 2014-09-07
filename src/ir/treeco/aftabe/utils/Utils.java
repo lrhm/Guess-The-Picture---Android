@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import java.io.FileOutputStream;
@@ -36,21 +37,37 @@ public class Utils {
          *                      BUT does IT???????
          *
          */
-        URL source = null;
-        try {
-            source = new URL(url);
-        } catch (MalformedURLException e) {
-            throw new Exception("Bad url",e);
-        }
-        ReadableByteChannel rbc = Channels.newChannel(source.openStream());
-        FileOutputStream fos = context.openFileOutput(path,0);
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        Log.d("localing",url + " " + path);
+        InputStream is = new URL(url).openStream();
+        Log.d("localing", "is creater");
+        OutputStream os = context.openFileOutput(path,0);
+        Log.d("localing","before piping");
+        pipe(is,os);
+        os.close();
+//        URL source = null;
+//        try {
+//            Log.d("synch",url+" try "+path);
+//            source = new URL(url);
+//        } catch (MalformedURLException e) {
+//            Log.d("synch",url+" catch "+path);
+//            throw new Exception("Bad url",e);
+//        }
+//        Log.d("synch",url+" rbc "+path);
+//        ReadableByteChannel rbc = Channels.newChannel(source.openStream());
+//        Log.d("synch",url+" fos "+path);
+//        FileOutputStream fos = context.openFileOutput(path,0);
+//        Log.d("synch",url+" transfer "+path);
+//        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+//        Log.d("synch","end of download" + url+ " " + path);
     }
 
     public static void pipe(InputStream is, OutputStream os) throws IOException {
         int n;
         byte[] buffer = new byte[1024];
+        int sum=0;
         while ((n = is.read(buffer)) > -1) {
+            sum += n;
+            Log.d("localing","downloading " + sum);
             os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
         }
         os.close();

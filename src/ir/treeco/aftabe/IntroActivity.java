@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -50,6 +51,13 @@ public class IntroActivity extends FragmentActivity {
         PackageListFragment listFragment = new PackageListFragment();
         fragmentTransaction.add(R.id.fragment_container,listFragment);
         fragmentTransaction.commit();
+
+//        try {
+//            Utils.download(this, "http://127.0.0.1/tasks.yml", "tasks.yml");
+//        } catch (Exception e) {
+//            Log.d("dling","can't download from local host");
+//            e.printStackTrace();
+//        }
     }
 
     /*private void loadBackground() {
