@@ -1,26 +1,17 @@
 package ir.treeco.aftabe;
 
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.Utils;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
 
 public class IntroActivity extends FragmentActivity {
     /**
@@ -42,7 +33,6 @@ public class IntroActivity extends FragmentActivity {
 
         ImageView header = (ImageView) findViewById(R.id.header_image);
         header.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160));
-        header.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header_background, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 714 / 2160)));
 
         // List fragment transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -52,12 +42,20 @@ public class IntroActivity extends FragmentActivity {
         fragmentTransaction.add(R.id.fragment_container,listFragment);
         fragmentTransaction.commit();
 
-//        try {
-//            Utils.download(this, "http://127.0.0.1/tasks.yml", "tasks.yml");
-//        } catch (Exception e) {
-//            Log.d("dling","can't download from local host");
-//            e.printStackTrace();
-//        }
+        FrameLayout mainView = (FrameLayout) findViewById(R.id.main_view);
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[] {
+                Color.parseColor("#F3C81D"),
+                Color.parseColor("#F3C01E"),
+                Color.parseColor("#F49C14")
+        });
+        gradientDrawable.mutate();
+        gradientDrawable.setGradientRadius(LengthManager.getHeaderHeight() * 3);
+        gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+        gradientDrawable.setGradientCenter(0.5F, 0.5F);
+        mainView.setBackground(gradientDrawable);
+
+        ImageView background = (ImageView) findViewById(R.id.background);
+        background.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.circles, LengthManager.getScreenWidth(), LengthManager.getScreenHeight()));
     }
 
     /*private void loadBackground() {

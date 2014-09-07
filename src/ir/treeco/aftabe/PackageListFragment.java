@@ -1,6 +1,5 @@
 package ir.treeco.aftabe;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
@@ -63,13 +62,20 @@ class PackagesListScrollListener implements  AbsListView.OnScrollListener {
 public class PackageListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_packages_list, container, false);
-        final ListView packages =  (ListView) layout.findViewById(R.id.package_list);
-        final View tabBar = layout.findViewById(R.id.tab_bar);
-        tabBar.setBackground(new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.tabbar_background, LengthManager.getScreenWidth(), LengthManager.getTabBarHeight())));
+        final AutoCropListView packages =  (AutoCropListView) layout.findViewById(R.id.package_list);
+        final LinearLayout tabBar = (LinearLayout) layout.findViewById(R.id.tab_bar);
+
         FrameLayout.LayoutParams tabBarLayoutParams = (FrameLayout.LayoutParams) tabBar.getLayoutParams();
         tabBarLayoutParams.width = LengthManager.getScreenWidth();
         tabBarLayoutParams.height = LengthManager.getTabBarHeight();
         tabBar.setLayoutParams(tabBarLayoutParams);
+
+        LinearLayout tabs = (LinearLayout) tabBar.getChildAt(0);
+        tabs.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabsHeight()));
+
+        ImageView shade = (ImageView) tabBar.getChildAt(1);
+        shade.setImageBitmap(ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.shadow_top, LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight()));
+        shade.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight()));
 
         PackageManager pManager = new PackageManager(getActivity());
         try {

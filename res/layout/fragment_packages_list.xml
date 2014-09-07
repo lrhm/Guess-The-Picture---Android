@@ -3,7 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
-    <ListView
+    <ir.treeco.aftabe.AutoCropListView
         android:id="@+id/package_list"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -13,53 +13,42 @@
         android:divider="@null"
         android:scrollbars="none"
         android:fadingEdge="none"
-        android:overScrollMode="never"
-        android:background="#A96700" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:id="@+id/tab_bar"
-        android:clickable="true"
-        android:orientation="horizontal">
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+        android:overScrollMode="never"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:id="@+id/tab_bar">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="محبوب ترین"
-                android:id="@+id/tab_1"
-                android:textColor="#4c4224"
-                android:textSize="25dp"/>
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="دانلود شده"
-                android:textColor="#4c4224"
-                android:id="@+id/tab_2"
-                android:textSize="25dp"/>
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="تازه ها"
-                android:textColor="#4c4224"
-                android:id="@+id/tab_3"
-                android:textSize="25dp"/>
-                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="محبوب ترین"
+                    android:id="@+id/tab_1"
+                    android:textColor="#4c4224"
+                    android:textSize="25dp"/>
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="دانلود شده"
+                    android:textColor="#4c4224"
+                    android:id="@+id/tab_2"
+                    android:textSize="25dp"/>
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="تازه ها"
+                    android:textColor="#4c4224"
+                    android:id="@+id/tab_3"
+                    android:textSize="25dp"/>
+        </LinearLayout>
+        <ImageView android:layout_width="match_parent" android:layout_height="wrap_content" />
     </LinearLayout>
 </FrameLayout>

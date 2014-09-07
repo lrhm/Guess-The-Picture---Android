@@ -3,6 +3,7 @@ package ir.treeco.aftabe.utils;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,6 +72,15 @@ public class Utils {
             os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
         }
         os.close();
+    }
+
+    public static void reverseLinearLayout(LinearLayout linearLayout) {
+        View views[] = new View[linearLayout.getChildCount()];
+        for (int i = 0; i < views.length; i++)
+            views[i] = linearLayout.getChildAt(i);
+        linearLayout.removeAllViews();
+        for (int i = views.length - 1; i >= 0; i--)
+            linearLayout.addView(views[i]);
     }
 
     public static String sharedPrefrencesTag() {
