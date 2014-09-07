@@ -44,7 +44,7 @@ public class Level {
     public void setImage(InputStream inputStream) {
         Image = inputStream;
     }
-    public InputStream getImage() throws Exception {
+    public InputStream getImage() {
 //        if(wrapperPackage.getState() == PackageState.builtIn) {
 //            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
 //                            ,"zip"));
