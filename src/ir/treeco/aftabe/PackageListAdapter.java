@@ -18,9 +18,9 @@ public class PackageListAdapter extends BaseAdapter {
     static final int COLUMN_COUNT = 2;
     private int mCount;
 
-    public PackageListAdapter(Context context, PackageManager pManager, int mod) {
+    public PackageListAdapter(Context context, PackageManager pManager, int mode) {
         this.context = context;
-        mAdapter = new PackageListImplicitAdapter(context, pManager,mod);
+        mAdapter = new PackageListImplicitAdapter(context, pManager,mode);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {

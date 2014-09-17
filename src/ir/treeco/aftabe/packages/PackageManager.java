@@ -42,7 +42,7 @@ public class PackageManager {
         this.context = context;
     }
 
-    public void refresh() throws Exception {
+    public void refresh() {
         Package[] inPackages=null, outPackages=null;
         //load builtIn Packages
         InputStream inputStream = context.getResources().openRawResource(R.raw.header);
@@ -54,49 +54,38 @@ public class PackageManager {
             String name = (String) pkgInfo.get(pkgNameKey);
             String desc = (String) pkgInfo.get(pkgDescriptionKey);
             int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
-            inPackages[cnt] = Package.getBuiltInPackage(cnt, context, name, desc, numberOfLevels);
+            inPackages[cnt] = Package.getBuiltInPackage(this, cnt, context, name, desc, numberOfLevels);
             cnt++;
-            Log.d("kos",inPackages[cnt-1].toString());
         }
-
-
-//        //download header.yml             !!!!!!!!!!!!!!!!!SYNCHRONIZER SHOULD DOWNLOAD FILES
-//        try {
-//            //download(headerURL, headerFilePath);
-//        } catch (Exception e) {
-//            throw new Exception("problem in downloading header.yml");
-//        }
-
-        if(false) {
-            //load non builtIn Packages
-            yaml = new Yaml();
+        //load non builtIn Packages
+        yaml = new Yaml();
+        try {
             headerInfo = (List<HashMap<String, Object>>) yaml.load(context.openFileInput("header.yml"));
+        } catch (FileNotFoundException e) {
+            headerInfo = null;
+        }
+        if(headerInfo!=null) {
             outPackages = new Package[headerInfo.size()];
             cnt = 0;
             for (HashMap<String, Object> pkgInfo : headerInfo) {
                 String name = (String) pkgInfo.get(pkgNameKey);
                 String desc = (String) pkgInfo.get(pkgDescriptionKey);
                 int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
-                int cost = (Integer) pkgInfo.get(costKey);
+                int cost = 0; //(Integer) pkgInfo.get(costKey);
                 String dataUrl = (String) pkgInfo.get(dataUrlKey);
-                outPackages[cnt] = Package.getPackage(cnt + inPackages.length, context, name, desc, numberOfLevels, dataUrl, cost);
-//            //download thumbnail            !!!!!!!!!!!!!!!!!!SYNCHRONIZER SHOULD DOWNLOAD THUMBNAILS
-//            try {
-////                download((String) hmap.get(thumbnailUrlKey),packages[cnt].getThumbnailPath());
-//            } catch (Exception e) {
-//                throw new Exception("problem in downloading "+cnt+"th thumbnail");
-//            }
+                outPackages[cnt] = Package.getPackage(this, cnt + inPackages.length, context, name, desc, numberOfLevels, dataUrl, cost);
                 cnt++;
             }
         }
-//        packages = new Package[inPackages.length + outPackages.length];
-        packages = new Package[inPackages.length];
+        packages = new Package[inPackages.length + (outPackages!=null?outPackages.length:0)];
         for (int i=0;i<inPackages.length;++i) {
             packages[i] = inPackages[i];
         }
-//        for (int i=0; i<outPackages.length; ++i) {
-//            packages[i+inPackages.length] = outPackages[i];
-//        }
+        if(outPackages!=null) {
+            for (int i = 0; i < outPackages.length; ++i) {
+                packages[i + inPackages.length] = outPackages[i];
+            }
+        }
         generateAdapterResourceArrays();
     }
 

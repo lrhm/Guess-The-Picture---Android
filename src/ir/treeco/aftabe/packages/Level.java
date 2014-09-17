@@ -21,6 +21,7 @@ import java.util.zip.ZipInputStream;
 public class Level {
     private String solution, author;
     private Package wrapperPackage;
+    private InputStream Image;
     private int id;
     private Context context;
 
@@ -40,31 +41,50 @@ public class Level {
         return id;
     }
 
-    public InputStream getImage() {
-        if(wrapperPackage.getState() == PackageState.builtIn) {
-            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
-                            ,"zip"));
-            long startTime = System.currentTimeMillis();
-            try {
-                for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
-                    if(e.getName().equals(id+".jpg"))
-                        break;
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Log.e("aftabe_plus", "iteration took: " + (System.currentTimeMillis() - startTime));
-            return zipInputStream;
-        }
-        else {
-            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
-            try {
-                return this.wrapperPackage.getData().getInputStream(entry);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void setImage(InputStream inputStream) {
+        Image = inputStream;
     }
+    public InputStream getImage() {
+//        if(wrapperPackage.getState() == PackageState.builtIn) {
+//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
+//                            ,"zip"));
+//            for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
+//                if(e.getName().equals(id+".jpg"))
+//                    break;
+//            }
+//            return zipInputStream;
+//        }
+//        else {
+//            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
+//            return this.wrapperPackage.getData().getInputStream(entry);
+//        }
+        return Image;
+    }
+//    public InputStream getImage() {
+//        if(wrapperPackage.getState() == PackageState.builtIn) {
+//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
+//                            ,"zip"));
+//            long startTime = System.currentTimeMillis();
+//            try {
+//                for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
+//                    if(e.getName().equals(id+".jpg"))
+//                        break;
+//                }
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            Log.e("aftabe_plus", "iteration took: " + (System.currentTimeMillis() - startTime));
+//            return zipInputStream;
+//        }
+//        else {
+//            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
+//            try {
+//                return this.wrapperPackage.getData().getInputStream(entry);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
     public Level(Context context, String author, String solution, Package wPackage, int id) {
         this.context = context;
