@@ -7,18 +7,48 @@
     <ImageView android:layout_width="match_parent"
                android:layout_height="match_parent"
                android:id="@+id/background"
-            android:alpha="0.23"/>
+               android:contentDescription="@string/background"/>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
-                   android:id="@+id/header_image"/>
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/header">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/coin_box"
+                    android:contentDescription="@string/coin_box"/>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/digits"
+                    android:orientation="horizontal"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/logo"
+                    android:contentDescription="@string/logo"/>
+        </RelativeLayout>
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/fragment_container">
         </FrameLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/loading"
+            android:visibility="invisible"
+            android:clickable="true"
+            android:background="#000">
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/nothing"/>
     </LinearLayout>
 </FrameLayout>
 

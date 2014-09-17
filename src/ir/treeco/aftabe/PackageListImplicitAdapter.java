@@ -5,20 +5,18 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.packages.PackageState;
-import ir.treeco.aftabe.utils.ImageManager;
-import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.Utils;
+import ir.treeco.aftabe.utils.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -99,13 +97,11 @@ public class PackageListImplicitAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             packageInfo = inflater.inflate(R.layout.package_info, null);
             final PackageInfoTag tag = new PackageInfoTag();
-            tag.packageName = (TextView) packageInfo.findViewById(R.id.package_name);
-            tag.packageInfo = (TextView) packageInfo.findViewById(R.id.package_info);
             tag.frontCard = (FrameLayout) packageInfo.findViewById(R.id.front_card);
             tag.backCard = (FrameLayout) packageInfo.findViewById(R.id.back_card);
             tag.frontImage = (ImageView) packageInfo.findViewById(R.id.front_image);
             tag.backImage = (ImageView) packageInfo.findViewById(R.id.back_image);
-            tag.frontButton = (Button) packageInfo.findViewById(R.id.front_button);
+            tag.frontButton = (ImageView) packageInfo.findViewById(R.id.front_button);
             packageInfo.setTag(tag);
         }
 
@@ -160,15 +156,15 @@ public class PackageListImplicitAdapter {
             }
         });
 
-        Bitmap[] bitmaps = null;
+        Bitmap[] bitmaps;
         if (i < packages.length) {
             try {
                 bitmaps = new Bitmap[]{
-                        ImageManager.loadImageFromInputStream(packages[i].getThumbnail(), myWidth, myHeight),
-                        ImageManager.loadImageFromResource(context, R.drawable.package_item_bg, myWidth, myHeight)
+                        ImageManager.loadImageFromInputStream(packages[i].getFront(), myWidth, myHeight),
+                        ImageManager.loadImageFromInputStream(packages[i].getBack(), myWidth, myHeight)
                 };
             } catch (FileNotFoundException e) {
-                Log.e("aksrid", "ridam", e);
+                throw new RuntimeException(e);
             }
         } else {
             bitmaps = new Bitmap[]{
@@ -185,28 +181,19 @@ public class PackageListImplicitAdapter {
         tag.frontCard.setVisibility(itemData[i].flipped ? View.GONE : View.VISIBLE);
         tag.backCard.setVisibility(itemData[i].flipped ? View.VISIBLE : View.GONE);
 
-        if (i < packages.length) {
-            tag.packageInfo.setText(packages[i].getDescription());
-            tag.packageName.setText(packages[i].getName());
-        }
-
         //configure font card view layout-params
         if (i < packages.length) {
-            if (packages[i].getState() == PackageState.remote)
+            /*if (packages[i].getState() == PackageState.remote)
                 tag.frontButton.setText("خرید " + packages[i].getCost());
             else if (packages[i].getState() == PackageState.downloading)
                 tag.frontButton.setText("در حال دانلود");
             else
-                tag.frontButton.setText("ورود");
-            float textSize = myWidth / 10.0f;
-            tag.frontButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            tag.frontButton.setPadding((int) textSize, 0, (int) textSize, 0);
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
-            params.setMargins(0, 0, 0, 3 * (int) textSize / 2);
-            Log.e("parSize", "" + textSize);
-            tag.packageName.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            params = (FrameLayout.LayoutParams) tag.packageName.getLayoutParams();
-            params.setMargins(0, (int) textSize, 0, 0);
+                tag.frontButton.setText("ورود");*/
+            int buttonWidth = myWidth * 3 / 8;
+            tag.frontButton.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.package_item_play, buttonWidth, LengthManager.getHeightWithFixedWidth(R.drawable.package_item_play, buttonWidth)));
+            FrameLayout.LayoutParams buttonLayoutParams = (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
+            buttonLayoutParams.bottomMargin = myWidth / 7;
+            tag.frontButton.setLayoutParams(buttonLayoutParams);
 
             tag.frontButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -215,17 +202,19 @@ public class PackageListImplicitAdapter {
                         // buy the package
                     }
                     else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
-                        PackageFragment fragment = PackageFragment.newInstance(packages[i], (FragmentActivity) context);
-                        FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
+                        LoadingManager.startTask(new TaskStartedListener() {
+                            @Override
+                            public void taskStarted() {
+                                PackageFragment fragment = PackageFragment.newInstance(packages[i], (FragmentActivity) context);
+                                FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.fragment_container, fragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                        });
                     }
                 }
             });
-            tag.frontButton.setVisibility(View.VISIBLE);
-        } else {
-            tag.frontButton.setVisibility(View.INVISIBLE);
         }
 
         return packageInfo;

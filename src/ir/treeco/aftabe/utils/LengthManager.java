@@ -27,6 +27,7 @@ public class LengthManager {
         initialized = true;
     }
 
+    @SuppressWarnings("all")
     private static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -42,6 +43,7 @@ public class LengthManager {
         return point.x;
     }
 
+    @SuppressWarnings("all")
     private static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -88,7 +90,7 @@ public class LengthManager {
     }
 
     public static int getHeaderHeight() {
-        return getHeightWithFixedWidth(R.drawable.header, getScreenWidth());
+        return getScreenWidth() / 4;
     }
 
     public static int getTabsHeight() {
@@ -104,15 +106,15 @@ public class LengthManager {
     }
 
     public static int getPageLevelCount() {
-        return 16;
+        return getPageRowCount() * getPageColumnCount();
     }
 
     public static int getPageColumnCount() {
         return 4;
     }
 
-    public static int getLevelThumbnailSize() {
-        return getScreenWidth() / getPageColumnCount();
+    public static int getPageRowCount() {
+        return 4;
     }
 
     public static int getAlphabetButtonSize() {
@@ -130,4 +132,58 @@ public class LengthManager {
     public static float getSolutionFontSize() {
         return getScreenWidth() / 24;
     }
+
+    public static int getFragmentHeight() {
+        return getScreenHeight() - getHeaderHeight();
+    }
+
+    public static int getLevelsBackTopHeight() {
+        return LengthManager.getHeightWithFixedWidth(R.drawable.levels_back_top, LengthManager.getScreenWidth());
+    }
+
+    public static int getLevelsBackBottomHeight() {
+        return LengthManager.getHeightWithFixedWidth(R.drawable.levels_back_bottom, LengthManager.getScreenWidth());
+    }
+
+    public static int getLevelsViewpagerHeight() {
+        return getPageRowCount() * getLevelFrameHeight() + 2 * getLevelsGridViewTopAndBottomPadding();
+    }
+
+    public static int getLevelsGridViewLeftRightPadding() { return getScreenWidth() / 20; }
+
+    public static int getLevelFrameWidth() {
+        return (getScreenWidth() - 2 * getLevelsGridViewLeftRightPadding()) / 4;
+    }
+
+    public static int getLevelFrameHeight() {
+        return getHeightWithFixedWidth(R.drawable.level_unlocked, getLevelFrameWidth());
+    }
+
+    public static int getLevelImageFrameWidth() {
+        return getScreenWidth() * 93 / 100;
+    }
+
+    public static int getLevelImageFrameHeight() {
+        return getHeightWithFixedWidth(R.drawable.frame, getLevelImageFrameWidth());
+    }
+
+
+    public static int getLevelThumbnailPadding() {
+        return getLevelFrameWidth() / 7;
+    }
+
+    public static int getLevelsGridViewTopAndBottomPadding() {
+        return 0;
+    }
+
+    public static int getLevelImageWidth() {
+        return getLevelImageFrameWidth() * 927 / 997;
+    }
+
+    public static int getLevelImageHeight() {
+        return getLevelImageFrameHeight() * 642 / 704;
+    }
+
+    public static int getIndicatorBigSize() { return getScreenWidth() / 15; }
+    public static int getIndicatorSmallSize() { return getScreenWidth() / 30; }
 }

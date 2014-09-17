@@ -2,4 +2,10 @@
 <resources>
     <string name="app_name">Aftabe+</string>
     <string name="default_package_name">Package</string>
+    <string name="coin_box">Coins</string>
+    <string name="background">Background</string>
+    <string name="logo">Aftabe</string>
+    <string name="levels_package">Package</string>
+    <string name="play">Play</string>
+    <string name="nothing"/>
 </resources>

@@ -80,7 +80,7 @@ public class ImageManager {
 
     public static Bitmap loadImageFromInputStream(InputStream inputStream, int outWidth, int outHeight) {
         Bitmap unscaledBitmap = decodeInputStream(inputStream);
-        Bitmap scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.FIT);
+        Bitmap scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP);
         if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
         return scaledBitmap;

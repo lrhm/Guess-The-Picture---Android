@@ -170,11 +170,18 @@ public class Package {
         return levels[lev];
     }
 
-    public InputStream getThumbnail() throws FileNotFoundException {
+    public InputStream getFront() throws FileNotFoundException {
         if(this.state == PackageState.builtIn)
-            return Utils.getInputStreamFromRaw(this.context, this.name+"_thumb","jpg");
+            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
         else
-            return context.openFileInput(this.name+"_thumb.jpg");
+            return context.openFileInput(this.name+"_front.jpg");
+    }
+
+    public InputStream getBack() throws FileNotFoundException {
+        if(this.state == PackageState.builtIn)
+            return Utils.getInputStreamFromRaw(this.context, this.name+"_back","jpg");
+        else
+            return context.openFileInput(this.name+"_back.jpg");
     }
 
     public void becomeLocal() {

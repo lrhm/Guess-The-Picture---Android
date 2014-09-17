@@ -9,28 +9,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/front_image"
-            android:adjustViewBounds="true"/>
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/package_name"
-                  android:shadowColor="#000000"
-                  android:shadowDx="-3"
-                  android:shadowDy="2"
-                  android:shadowRadius="1"
-                  android:layout_gravity="center|top"
-                  android:textColor="#000000"
-                  android:text=""
-                  android:gravity="center"
-                  android:layout_marginTop="50dp"
-                  />
-        <Button android:id="@+id/front_button"
+            android:contentDescription="@string/levels_package"/>
+        <ImageView
+                android:id="@+id/front_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/front_button_shape"
                 android:layout_gravity="bottom|center_horizontal"
-                android:text="play"
-                android:layout_marginBottom="50dp"
-                />
+                android:contentDescription="@string/play"/>
     </FrameLayout>
     <FrameLayout android:layout_width="match_parent"
                  android:layout_height="match_parent"
@@ -41,36 +26,5 @@
             android:layout_height="match_parent"
             android:id="@+id/back_image"
             android:adjustViewBounds="true"/>
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@id/package_name"
-                  android:layout_gravity="top|right"
-                  android:textColor="#FFFFFF"
-                  android:text=""
-                  android:textSize="50dp"
-                  android:gravity="center"
-                  android:layout_marginTop="50dp"
-                  android:layout_marginRight="50dp"
-                  android:shadowColor="#000000"
-                  android:shadowDx="-3"
-                  android:shadowDy="2"
-                  android:shadowRadius="1"
-                />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/package_info"
-                  android:textColor="#FFFFFF"
-                  android:textSize="30dp"
-                  android:layout_margin="50dp"
-                  android:text=""
-                  android:layout_gravity="right|center_vertical"
-                  android:shadowColor="#000000"
-                  android:shadowDx="-3"
-                  android:shadowDy="2"
-                  android:shadowRadius="1"
-                  />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                />
     </FrameLayout>
 </FrameLayout>

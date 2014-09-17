@@ -4,13 +4,16 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.LoadingManager;
+import ir.treeco.aftabe.utils.TaskStartedListener;
 
 import java.util.Arrays;
 
@@ -26,6 +29,7 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
     public LevelsViewPagerAdapter(Package mPackage, FragmentActivity fragmentActivity) {
         this.mPackage = mPackage;
         this.fragmentActivity = fragmentActivity;
+        this.inflater = (LayoutInflater) fragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -52,11 +56,14 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
         for (int current = begin; current < end; current++)
             levelIDs[current - begin] = current;
 
-        // TODO move this into constructor
-        inflater = (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewLayout = inflater.inflate(R.layout.levels_list_view, container, false);
+        GridView gridView = (GridView) inflater.inflate(R.layout.levels_list_view, container, false);
+        gridView.setNumColumns(LengthManager.getPageColumnCount());
+        gridView.setColumnWidth(LengthManager.getLevelFrameWidth());
+        gridView.setStretchMode(GridView.NO_STRETCH);
+        gridView.setPadding(LengthManager.getLevelsGridViewLeftRightPadding(), LengthManager.getLevelsGridViewTopAndBottomPadding(), LengthManager.getLevelsGridViewLeftRightPadding(), LengthManager.getLevelsGridViewTopAndBottomPadding());
 
-        GridView gridView = (GridView) viewLayout.findViewById(R.id.grid_view);
+        gridView.setAdapter(new LevelsGridViewAdapter(levelIDs, mPackage));
+
         gridView.setOnTouchListener(new GridView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -64,30 +71,9 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
             }
         });
 
-        gridView.setNumColumns(LengthManager.getPageColumnCount());
-        gridView.setColumnWidth(LengthManager.getLevelThumbnailSize());
-        gridView.setStretchMode(GridView.NO_STRETCH);
-        //gridView.setPadding(0, (int) heightManager.getGridViewTopAndBottomPadding(), 0, (int) heightManager.getGridViewTopAndBottomPadding());
-        //gridView.setVerticalSpacing((int) heightManager.getGridViewVerticalSpacing());
-        //gridView.setHorizontalSpacing((int) heightManager.getGridViewHorizontalSpacing());
-
-        //final float gridViewWidth = heightManager.getGridViewHorizontalSpacing() * (HeightManager.BOX_NUM_OF_COLUMNS - 1) + heightManager.getLevelThumbnailSize() * HeightManager.BOX_NUM_OF_COLUMNS;
-        //final float gridViewHeight = heightManager.getGridViewVerticalSpacing() * (BOX_NUM_OF_ROWS - 1) + heightManager.getLevelThumbnailSize() * BOX_NUM_OF_ROWS + 10;
-        //Log.e("GOLVAZHE", "gvHeight " + gridViewHeight + 2 * heightManager.getGridViewTopAndBottomPadding());
-
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) gridView.getLayoutParams();
-        //layoutParams.width = (int) gridViewWidth;
-        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-        gridView.setLayoutParams(layoutParams);
-
-        LevelsGridViewAdapter cellAdapter = new LevelsGridViewAdapter(levelIDs, mPackage);
-        gridView.setAdapter(cellAdapter);
-
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 if (levelIDs[i] == -1)
                     return;
                 /*if (LevelDataOrganizer.getLevel(levelIDs[i]).isLocked(preferences)) {
@@ -107,26 +93,26 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
                     // if (timesClicked == ?) Toast.makeText(BoxActivity.this, "", Toast.LENGTH_LONG).show();
                     return;
                 }*/
-                LevelFragment fragment = LevelFragment.newInstance(mPackage.getLevel(levelIDs[i]));
-                FragmentTransaction transaction = ((FragmentActivity) fragmentActivity).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                LoadingManager.startTask(new TaskStartedListener() {
+                    @Override
+                    public void taskStarted() {
+                        LevelFragment fragment = LevelFragment.newInstance(mPackage.getLevel(levelIDs[i]));
+                        FragmentTransaction transaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
             }
         });
 
-        container.addView(viewLayout);
-
-        return viewLayout;
+        container.addView(gridView);
+        return gridView;
     }
 
     @Override
     synchronized public void destroyItem(ViewGroup container, int position, Object object) {
-        FrameLayout frameLayout = (FrameLayout) object;
-        //Log.e("GOLVAZHE", "Destroy called on " + position);
-        GridView gridView = (GridView) frameLayout.findViewById(R.id.grid_view);
-        //((LevelsGridViewAdapter) gridView.getAdapter()).killThreads();
-        ((ViewPager) container).removeView(frameLayout);
+        container.removeView((GridView) object);
     }
 }
 

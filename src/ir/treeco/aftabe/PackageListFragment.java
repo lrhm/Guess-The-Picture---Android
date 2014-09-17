@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.*;
 import ir.treeco.aftabe.packages.PackageManager;
-import ir.treeco.aftabe.utils.FontsHolder;
-import ir.treeco.aftabe.utils.ImageManager;
-import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.*;
+
+import java.util.UUID;
 
 /**
  * Created by hamed on 8/12/14.
@@ -122,7 +122,16 @@ public class PackageListFragment extends Fragment {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getScreenWidth() / 17);
         }
 
-
         return layout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LoadingManager.endTask();
+    }
+
+    public static PackageListFragment newInstance() {
+        return new PackageListFragment();
     }
 }
