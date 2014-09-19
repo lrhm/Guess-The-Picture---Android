@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.Utils;
 
 /**
  * Created by hamed on 9/2/14.
@@ -33,18 +35,20 @@ class LevelsGridViewAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout frameLayout;
         ImageView imageView;
+
         if (oldFrameLayout == null) {
             frameLayout = (FrameLayout) inflater.inflate(R.layout.level_thumbnail, null);
-            //frameLayout.setLayoutParams(new GridView.LayoutParams((int) heightManager.getLevelThumbnailSize(), (int) heightManager.getLevelThumbnailSize()));
-            imageView = (ImageView) frameLayout.findViewById(R.id.thumbnailImageView);
-            //int myPadding = (int) heightManager.convertLength(1);
-            //imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
-            final ImageView cageView = (ImageView) frameLayout.findViewById(R.id.cageImageView);
-            cageView.setImageResource(R.drawable.cage);
-            //cageView.setImageBitmap(ImageManager.loadImageFromResource(BoxActivity.this, R.drawable.cage, (int) heightManager.getLevelThumbnailSize(), (int) heightManager.getLevelThumbnailSize()));
+            frameLayout.setLayoutParams(new GridView.LayoutParams(LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
+            imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);
+            int myPadding = LengthManager.getLevelThumbnailPadding();
+            imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
+
+            final ImageView frame = (ImageView) frameLayout.findViewById(R.id.frame);
+            //frame.setImageBitmap(ImageManager.loadImageFromResource(viewGroup.getContext(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
+            frame.setImageBitmap(Utils.updateHSV(ImageManager.loadImageFromResource(viewGroup.getContext(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), 337, -0.23F, 0F));
         } else {
             frameLayout = (FrameLayout) oldFrameLayout;
-            imageView = (ImageView) frameLayout.findViewById(R.id.thumbnailImageView);
+            imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);
         }
 
 
@@ -52,7 +56,7 @@ class LevelsGridViewAdapter extends BaseAdapter {
 
         if (levelID != -1) {
             try {
-                imageView.setImageBitmap(ImageManager.loadImageFromInputStream(mPackage.getLevel(levelID).getImage(), 100, 100));
+                //imageView.setImageBitmap(ImageManager.loadImageFromInputStream(mPackage.getLevel(levelID).getImage(), LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -80,10 +84,4 @@ class LevelsGridViewAdapter extends BaseAdapter {
     public long getItemId(int i) {
         return 0;
     }
-
-    /*public void killThreads() {
-        for (int i: levelIDs)
-            if (i != -1)
-                ThumbnailCreator.cancelThread(i);
-    }*/
 }

@@ -204,7 +204,22 @@ public class Package {
         return levels[lev];
     }
 
-    public InputStream getFront(){
+    public InputStream getFront() throws FileNotFoundException {
+        if(this.state == PackageState.builtIn)
+            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
+        else
+            return context.openFileInput(this.name+"_front.jpg");
+    }
+
+    public InputStream getBack() throws FileNotFoundException {
+        if (this.state == PackageState.builtIn)
+            return Utils.getInputStreamFromRaw(this.context, this.name + "_back", "jpg");
+        else
+            return context.openFileInput(this.name + "_back.jpg");
+    }
+
+
+    /*public InputStream getFront(){
         if(this.state == PackageState.builtIn)
             return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
         else
@@ -224,7 +239,7 @@ public class Package {
             } catch (FileNotFoundException e) {
                 return null;
             }
-    }
+    }*/
 
     public void becomeLocal() {
         this.state = PackageState.local;
