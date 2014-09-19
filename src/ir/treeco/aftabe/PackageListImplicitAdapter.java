@@ -176,19 +176,6 @@ public class PackageListImplicitAdapter {
             };
         }
 
-//        Log.d("vamDaneshjuyi", i+" "+packages.length+" "+packages[i].getName()+" "+packages[i].getState());
-//        try {
-//            Log.d("vamDaneshjuyi", packages[i].getFront().toString());
-//        } catch (FileNotFoundException e) {
-//            Log.d("vamDaneshjuyi","why??????????!!!!");
-//            e.printStackTrace();
-//        }
-//        Log.d("vamDaneshjuyi", bitmaps+"bitbit");
-//        Log.d("vamDaneshjuyi", bitmaps.length+"lenlen");
-//        Log.d("vamDaneshjuyi", itemData[i]+" ");
-//        Log.d("vamDaneshjuyi", itemData[i].shape+" ");
-//        Log.d("vamDaneshjuyi", bitmaps[itemData[i].shape]+" ");
-//        Log.d("vamDaneshjuyi",itemData[i] + " " + itemData[i].shape + " " +bitmaps[itemData[i].shape]);
         tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
         tag.backImage.setImageBitmap(bitmaps[1 - itemData[i].shape]);
 

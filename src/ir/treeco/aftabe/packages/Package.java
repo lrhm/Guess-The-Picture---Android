@@ -2,6 +2,8 @@ package ir.treeco.aftabe.packages;
 
 import android.content.Context;
 import android.util.Log;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
@@ -168,6 +170,8 @@ public class Package {
             cnt++;
         }
         //set Levels Images
+        int myWidth = LengthManager.getScreenWidth() / 2;
+        int myHeight = myWidth;
         if(this.state == PackageState.builtIn) {
             ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(this.context,name,"zip"));
             ZipEntry confFile;
@@ -182,6 +186,7 @@ public class Package {
                     while ((count = zipInputStream.read(buffer)) != -1) {
                         baos.write(buffer, 0, count);
                     }
+//                    levels[idx].setImage(ImageManager.loadImageFromInputStream(new ByteArrayInputStream(baos.toByteArray()),myWidth,myHeight));
                     levels[idx].setImage(new ByteArrayInputStream(baos.toByteArray()));
                 }
             }
@@ -189,6 +194,7 @@ public class Package {
         if(this.state == PackageState.local) {
             for(int i=0; i<this.numberOfLevels; ++i) {
                 ZipEntry entry = this.getData().getEntry(i + ".jpg");
+//                levels[i].setImage(ImageManager.loadImageFromInputStream(getData().getInputStream(entry),myWidth,myHeight));
                 levels[i].setImage(this.getData().getInputStream(entry));
             }
         }

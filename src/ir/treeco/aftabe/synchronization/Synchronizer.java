@@ -40,7 +40,7 @@ import java.util.UUID;
 public class Synchronizer extends BroadcastReceiver{
 
     private static final String tasksFileUrl = "http://192.168.0.111/sofre/tasks.yml";
-    private final String PREFS_TAG = "ad_data";
+//    private final String PREFS_TAG = "ad_data";
     private final static String AD_UPDATE_TAG = "last_ad_update";
     private static boolean firstConnect = true;
     private HashMap<String, Object> tasks;
@@ -66,7 +66,7 @@ public class Synchronizer extends BroadcastReceiver{
 
         Log.d("synch","passed network state ifs");
 
-        final SharedPreferences preferences = context.getSharedPreferences(PREFS_TAG, Context.MODE_PRIVATE);
+        final SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -77,7 +77,7 @@ public class Synchronizer extends BroadcastReceiver{
                     editor.putString(AD_UPDATE_TAG, nowTime);
                     editor.commit();
                 }
-                //TODO uncomment below
+//                TODO uncomment below
 //                if (lastTime.equals(nowTime)) return;
                 String data = loadAdData();
 
@@ -92,6 +92,7 @@ public class Synchronizer extends BroadcastReceiver{
                 token = (String) tasks.get("Token");
 
                 do_Task_Notifs((List<HashMap<String, String>>) tasks.get(TASK_NOTIFICATION_KEY));
+                //TODO ads should take a url
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
                 do_Task_Files_Download_And_Update((List<HashMap<String,String>>) tasks.get(TASK_FILE_KEY));
 
@@ -139,6 +140,7 @@ public class Synchronizer extends BroadcastReceiver{
                 for(HashMap<String,String> file : files) {
                     String url = file.get("URL");
                     String name = file.get("name");
+                    int version = Integer.parseInt(file.get("version"));
                     try {
                         Utils.download(context,url,name);
                     } catch (Exception e) {
@@ -202,6 +204,7 @@ public class Synchronizer extends BroadcastReceiver{
 
             public void do_Task_Ads(List<HashMap<String,String>> ads) {
                 int cnt=0;
+                //TODO add tmp to name
                 for(HashMap<String,String> ad : ads) {
                     String url = ad.get("URL");
                     try {

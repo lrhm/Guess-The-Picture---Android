@@ -2,6 +2,7 @@ package ir.treeco.aftabe.packages;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.util.Log;
 import ir.treeco.aftabe.utils.Encryption;
 import ir.treeco.aftabe.utils.Utils;
@@ -22,6 +23,7 @@ public class Level {
     private String solution, author;
     private Package wrapperPackage;
     private InputStream Image;
+//    private Bitmap Image;
     private int id;
     private Context context;
 
@@ -41,8 +43,8 @@ public class Level {
         return id;
     }
 
-    public void setImage(InputStream inputStream) {
-        Image = inputStream;
+    public void setImage(InputStream bitmap) {
+        Image = bitmap;
     }
     public InputStream getImage() {
 //        if(wrapperPackage.getState() == PackageState.builtIn) {
