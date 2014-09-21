@@ -203,6 +203,12 @@ public class PackageListImplicitAdapter {
             tag.frontButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("migmig",packages[i].getName());
+                    if(packages[i].getName().equals("girls")) {
+                        Log.d("migmig",packages[i].getName() + " onClick");
+                        packages[i].becomeLocal();
+                        return;
+                    }
                     if (packages[i].getState() == PackageState.remote) {
                         packages[i].becomeLocal();
                     }

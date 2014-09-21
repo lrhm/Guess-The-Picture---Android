@@ -89,8 +89,6 @@ public class Synchronizer extends BroadcastReceiver{
                 Yaml yaml = new Yaml();
                 tasks = (HashMap<String, Object>) yaml.load(data);
 
-                token = (String) tasks.get("Token");
-
                 do_Task_Notifs((List<HashMap<String, String>>) tasks.get(TASK_NOTIFICATION_KEY));
                 //TODO ads should take a url
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
@@ -141,17 +139,28 @@ public class Synchronizer extends BroadcastReceiver{
                     String url = file.get("URL");
                     String name = file.get("name");
                     int version = Integer.parseInt(file.get("version"));
-                    try {
-                        Utils.download(context,url,name);
-                    } catch (Exception e) {
+                    int lastVersion = preferences.getInt(name + "_VERSION", -1);
+                    if(lastVersion == -1 || lastVersion > version) {
+                        try {
+                            Utils.download(context, url, name);
+                        } catch (Exception e) {
 //                        Log.d("synch","Error in downloading File",e);
-                        e.printStackTrace();
+                            e.printStackTrace();
+                        }
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt(name+"_VERSION",version);
+                        editor.commit();
                     }
                 }
             }
 
             public void do_Task_Notifs(List<HashMap<String,String>> notifs) {
                 for(HashMap<String,String> notif : notifs) {
+                    int lastToken = preferences.getInt("TOKEN",-1);
+                    if(notif.get("token") != null) {
+                        int token = Integer.parseInt(notif.get("token"));
+//                        if(lastToken==-1 || token>lastToken)
+                    }
                     String imageUrl = notif.get("Image URL");
                     String title = notif.get("Title");
                     String text = notif.get("Text");
@@ -215,7 +224,6 @@ public class Synchronizer extends BroadcastReceiver{
                     cnt++;
                 }
 
-                SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt(AdItemAdapter.ADS_KEY,cnt);
                 editor.commit();

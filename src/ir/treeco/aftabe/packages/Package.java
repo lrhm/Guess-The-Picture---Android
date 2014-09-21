@@ -244,13 +244,10 @@ public class Package {
     public void becomeLocal() {
         this.state = PackageState.local;
         try {
-            Log.d("localing",dataUrl + " ");
-            Utils.download(this.context, dataUrl, this.getName()+".zip");
-            Log.d("localing", "downloaded");
+//            Utils.download(this.context, dataUrl, this.getName()+".zip", new NotificationProgressListener(context, this));
+            Utils.download(this.context, "http://static.treeco.ir/packages/remoteAftabe.zip", this.getName()+".zip", new NotificationProgressListener(context, this));
             this.load();
-            Log.d("localing", "loaded");
         } catch (Exception e) {
-            Log.d("localing","can't become Local",e);
             e.printStackTrace();
             this.state = PackageState.remote;
         }
