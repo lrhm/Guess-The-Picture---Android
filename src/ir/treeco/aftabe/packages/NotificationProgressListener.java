@@ -14,7 +14,8 @@ public class NotificationProgressListener {
     private NotificationCompat.Builder mBuilder;
     private Context context;
 
-    public NotificationProgressListener(Context context, Package mPackage) {
+//    public NotificationProgressListener(Context context, Package mPackage) {
+    public NotificationProgressListener(Context context, MetaPackage mPackage) {
         this.context = context;
         id = (int) (Math.random()*1000);
         mNotifyManager =

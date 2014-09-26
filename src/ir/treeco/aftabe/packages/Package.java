@@ -18,96 +18,115 @@ import java.util.zip.ZipInputStream;
  * Created by hossein on 7/31/14.
  */
 public class Package {
-    private PackageState state;
-    private int numberOfLevels, cost;
-    private String name, description, dataUrl;
+//    private PackageState state;
+//    private int cost;
+//    private String name, description, dataUrl;
     private ZipFile zipFile;
     private List<HashMap<String, Object>> levelsInfo;
     private Level[] levels;
-    private int id;
+//    private int id;
     private String  levelSolutionKey = "Level Solution",
                     levelAuthorKey = "Level Author";
-    private Context context;
-    private PackageManager pManager;
+//    private Context context;
+//    private PackageManager pManager;
+
+    public MetaPackage meta;
 
     @Override
     public String toString() {
-        return state + " " + numberOfLevels + " " + name + " " + description + " " + dataUrl;
-    }
-
-    public PackageState getState() {
-        return state;
-    }
-
-    public ZipFile getData() {
-        return this.zipFile;
+        return meta.toString();
     }
 
     public int getNumberOfLevels() {
-        return numberOfLevels;
+        return levels.length;
     }
 
-    public String getName() {
-        return name;
+//    public PackageState getState() {
+//        return state;
+//    }
+//
+    public ZipFile getData() {
+        return this.zipFile;
     }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public int getCost() {
+//        return this.cost;
+//    }
+//
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public Level[] getLevels() {
+//        return levels;
+//    }
+//
+//    public String getDataUrl() {
+//        return dataUrl;
+//    }
 
-    public int getCost() {
-        return this.cost;
-    }
+//    public static Package getBuiltInPackage(PackageManager pManager, int id, Context context, String name, String description, int numberOfLevels) {
+//        Package aPackage = new Package(pManager, id, context, name, description, numberOfLevels);
+//        aPackage.state = PackageState.builtIn;
+//        try {
+//            aPackage.load();
+//        } catch (Exception e) {
+//            Log.d("Package","Problem in loading "+name+" package");
+//        }
+//        return  aPackage;
+//    }
 
-    public String getDescription() {
-        return description;
-    }
+//    public static Package getPackage(PackageManager pManager, int id, Context context, String name, String description, int numberOfLevels, String dataUrl, int cost) {
+//        Log.d("inMetro","int Package factory: "+ name);
+//        Package aPackage = new Package(pManager, id, context, name, description, numberOfLevels);
+//        aPackage.dataUrl = dataUrl;
+//        File dataFile = new File(aPackage.context.getFilesDir(),name+".zip");
+//        if(dataFile.exists())
+//            aPackage.state = PackageState.local;
+//        else
+//            aPackage.state = PackageState.remote;
+//        aPackage.cost = cost;
+//        try {
+//            if(aPackage.state == PackageState.local)
+//                aPackage.load();
+//        } catch (Exception e) {
+//            Log.d("Package","Problem in loading "+name+" package");
+//        }
+//        return  aPackage;
+//    }
 
-    public int getId() {
-        return id;
-    }
+//    private Package(PackageManager pManager, int id, Context context, String name, String description, int numberOfLevels) {
+//        this.pManager = pManager;
+//        this.context = context;
+//        this.name = name;
+//        this.id = id;
+//        this.description = description;
+//        this.numberOfLevels = numberOfLevels;
+//    }
 
-    public Level[] getLevels() {
-        return levels;
-    }
-
-    public String getDataUrl() {
-        return dataUrl;
-    }
-
-    public static Package getBuiltInPackage(PackageManager pManager, int id, Context context, String name, String description, int numberOfLevels) {
-        Package aPackage = new Package(pManager, id, context, name, description, numberOfLevels);
-        aPackage.state = PackageState.builtIn;
+    public Package(MetaPackage meta) {
+//        this.pManager = meta.getPackageManager();
+//        this.context = meta.getContext();
+//        this.name = meta.getName();
+//        this.id = meta.getId();
+//        this.description = meta.getDescription();
+//        this.cost = meta.getCost();
+//        this.dataUrl = meta.getDataUrl();
+        this.meta = meta;
         try {
-            aPackage.load();
+            load();
         } catch (Exception e) {
-            Log.d("Package","Problem in loading "+name+" package");
+            // shit happened!
+            e.printStackTrace();
         }
-        return  aPackage;
-    }
-
-    public static Package getPackage(PackageManager pManager, int id, Context context, String name, String description, int numberOfLevels, String dataUrl, int cost) {
-        Log.d("inMetro","int Package factory: "+ name);
-        Package aPackage = new Package(pManager, id, context, name, description, numberOfLevels);
-        aPackage.dataUrl = dataUrl;
-        File dataFile = new File(aPackage.context.getFilesDir(),name+".zip");
-        if(dataFile.exists())
-            aPackage.state = PackageState.local;
-        else
-            aPackage.state = PackageState.remote;
-        aPackage.cost = cost;
-        try {
-            if(aPackage.state == PackageState.local)
-                aPackage.load();
-        } catch (Exception e) {
-            Log.d("Package","Problem in loading "+name+" package");
-        }
-        return  aPackage;
-    }
-
-    private Package(PackageManager pManager, int id, Context context, String name, String description, int numberOfLevels) {
-        this.pManager = pManager;
-        this.context = context;
-        this.name = name;
-        this.id = id;
-        this.description = description;
-        this.numberOfLevels = numberOfLevels;
     }
 
 //    public Package(Context context, String name, String description, int nuumberOfLevels, String url, int id)
@@ -133,12 +152,13 @@ public class Package {
 //        state = PackageState.local;
 //    }
 
+    // 'this' replaced with 'meta' after changes
     public void load() throws Exception {
 
         InputStream yamlStream=null;
 
-        if(this.state == PackageState.builtIn) {
-            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(this.context,name,"zip"));
+        if(meta.getState() == PackageState.builtIn) {
+            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(),meta.getName(),"zip"));
             ZipEntry confFile;
             while ((confFile = zipInputStream.getNextEntry()) != null) {
                 if (confFile.getName().equals("config.yml"))
@@ -151,29 +171,65 @@ public class Package {
             yamlStream = zipInputStream;
         }
 
-        if(this.state == PackageState.local) {
-            zipFile = new ZipFile(new File(context.getFilesDir(),name+".zip"));
+        if(meta.getState() == PackageState.local) {
+            zipFile = new ZipFile(new File(meta.getContext().getFilesDir(),meta.getName()+".zip"));
             ZipEntry confFile = zipFile.getEntry("config.yml");
             yamlStream = zipFile.getInputStream(confFile);
         }
 
-        if(this.state != PackageState.builtIn && this.state != PackageState.local) {
+        if(meta.getState() != PackageState.builtIn && meta.getState() != PackageState.local) {
             return;
         }
 
         Yaml yaml = new Yaml();
         levelsInfo = (List<HashMap<String, Object>>) yaml.load(yamlStream);
-        levels = new Level[this.numberOfLevels];
+//        levels = new Level[this.numberOfLevels];
+        levels = new Level[levelsInfo.size()];
         int cnt=0;
         for(HashMap<String, Object> hmap : levelsInfo) {
-            levels[cnt] = new Level(context, (String) hmap.get(levelAuthorKey),(String) hmap.get(levelSolutionKey),this, cnt);
+            levels[cnt] = new Level(meta.getContext(), (String) hmap.get(levelAuthorKey),(String) hmap.get(levelSolutionKey),this, cnt);
             cnt++;
         }
-        //set Levels Images
+
+        reloadInputStreams();
+
+//        //set Levels Images
+//        int myWidth = LengthManager.getScreenWidth() / 2;
+//        int myHeight = myWidth;
+//        if(meta.getState() == PackageState.builtIn) {
+//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(),meta.getName(),"zip"));
+//            ZipEntry confFile;
+//            while ((confFile = zipInputStream.getNextEntry()) != null) {
+//                String fname = confFile.getName();
+//                if (fname.matches("\\d+[.]jpg")) {
+//                    fname = fname.split("[.]")[0];
+//                    int idx = Integer.parseInt(fname);
+//                    byte[] buffer = new byte[1024];
+//                    int count;
+//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                    while ((count = zipInputStream.read(buffer)) != -1) {
+//                        baos.write(buffer, 0, count);
+//                    }
+////                    levels[idx].setImage(ImageManager.loadImageFromInputStream(new ByteArrayInputStream(baos.toByteArray()),myWidth,myHeight));
+//                    levels[idx].setImage(new ByteArrayInputStream(baos.toByteArray()));
+//                }
+//            }
+//        }
+//        if(meta.getState() == PackageState.local) {
+////            for(int i=0; i<this.numberOfLevels; ++i) {
+//            for(int i=0; i<levels.length; ++i) {
+//                ZipEntry entry = this.getData().getEntry(i + ".jpg");
+////                levels[i].setImage(ImageManager.loadImageFromInputStream(getData().getInputStream(entry),myWidth,myHeight));
+//                levels[i].setImage(this.getData().getInputStream(entry));
+//            }
+//        }
+    }
+
+    public void reloadInputStreams() throws IOException {
         int myWidth = LengthManager.getScreenWidth() / 2;
         int myHeight = myWidth;
-        if(this.state == PackageState.builtIn) {
-            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(this.context,name,"zip"));
+        if(meta.getState() == PackageState.builtIn) {
+            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(),meta.getName(),"zip"));
             ZipEntry confFile;
             while ((confFile = zipInputStream.getNextEntry()) != null) {
                 String fname = confFile.getName();
@@ -191,8 +247,9 @@ public class Package {
                 }
             }
         }
-        if(this.state == PackageState.local) {
-            for(int i=0; i<this.numberOfLevels; ++i) {
+        if(meta.getState() == PackageState.local) {
+//            for(int i=0; i<this.numberOfLevels; ++i) {
+            for(int i=0; i<levels.length; ++i) {
                 ZipEntry entry = this.getData().getEntry(i + ".jpg");
 //                levels[i].setImage(ImageManager.loadImageFromInputStream(getData().getInputStream(entry),myWidth,myHeight));
                 levels[i].setImage(this.getData().getInputStream(entry));
@@ -204,19 +261,19 @@ public class Package {
         return levels[lev];
     }
 
-    public InputStream getFront() throws FileNotFoundException {
-        if(this.state == PackageState.builtIn)
-            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
-        else
-            return context.openFileInput(this.name+"_front.jpg");
-    }
-
-    public InputStream getBack() throws FileNotFoundException {
-        if (this.state == PackageState.builtIn)
-            return Utils.getInputStreamFromRaw(this.context, this.name + "_back", "jpg");
-        else
-            return context.openFileInput(this.name + "_back.jpg");
-    }
+//    public InputStream getFront() throws FileNotFoundException {
+//        if(this.state == PackageState.builtIn)
+//            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
+//        else
+//            return context.openFileInput(this.name+"_front.jpg");
+//    }
+//
+//    public InputStream getBack() throws FileNotFoundException {
+//        if (this.state == PackageState.builtIn)
+//            return Utils.getInputStreamFromRaw(this.context, this.name + "_back", "jpg");
+//        else
+//            return context.openFileInput(this.name + "_back.jpg");
+//    }
 
 
     /*public InputStream getFront(){
@@ -241,16 +298,16 @@ public class Package {
             }
     }*/
 
-    public void becomeLocal() {
-        this.state = PackageState.local;
-        try {
-//            Utils.download(this.context, dataUrl, this.getName()+".zip", new NotificationProgressListener(context, this));
-            Utils.download(this.context, "http://static.treeco.ir/packages/remoteAftabe.zip", this.getName()+".zip", new NotificationProgressListener(context, this));
-            this.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.state = PackageState.remote;
-        }
-        pManager.generateAdapterResourceArrays();
-    }
+//    public void becomeLocal() {
+//        this.state = PackageState.local;
+//        try {
+////            Utils.download(this.context, dataUrl, this.getName()+".zip", new NotificationProgressListener(context, this));
+//            Utils.download(this.context, "http://static.treeco.ir/packages/remoteAftabe.zip", this.getName()+".zip", new NotificationProgressListener(context, this));
+//            this.load();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            this.state = PackageState.remote;
+//        }
+//        pManager.generateAdapterResourceArrays();
+//    }
 }

@@ -182,11 +182,11 @@ public class Level {
     }
 
     private String alphabetGoneTag() {
-        return "package_" + getWrapperPackage().getId() + "level_" + id + "_alphabet_gone";
+        return "package_" + getWrapperPackage().meta.getId() + "level_" + id + "_alphabet_gone";
     }
 
     private String placeHolderTag() {
-        return "package_" + getWrapperPackage().getId() + "level_" + id + "_place_holder";
+        return "package_" + getWrapperPackage().meta.getId() + "level_" + id + "_place_holder";
     }
 
     public void save(AlphabetState[] alphabetGone, int[] placeHolder, SharedPreferences preferences) {
@@ -249,7 +249,7 @@ public class Level {
     }
 
     private String levelSolvedTag() {
-        return "package_" + getWrapperPackage().getId() + "level_" + id + "_is_solved";
+        return "package_" + getWrapperPackage().meta.getId() + "level_" + id + "_is_solved";
     }
 
     public boolean isLocked(SharedPreferences preferences) {
