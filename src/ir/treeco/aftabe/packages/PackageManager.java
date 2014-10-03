@@ -58,11 +58,25 @@ public class PackageManager {
 //        inPackages = new Package[headerInfo.size()];
         inPackages = new MetaPackage[headerInfo.size()];
         int cnt=0;
+        Log.d("jijing", "pos"+1);
         for(HashMap<String,Object> pkgInfo : headerInfo) {
             String name = (String) pkgInfo.get(pkgNameKey);
+            Log.d("jijing", "pos"+2);
+            List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
+            Log.d("jijing", colorList.toString());
+            Log.d("jijing", "pos"+3);
+            int[] color = Utils.intListToArray(colorList);
+            Log.d("jijing", "pos"+4);
+            List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
+            Log.d("jijing", bgHSVList.toString());
+            float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
+            Log.d("jijing", backgroundHSV.length+"");
+            List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
+            float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
+            Log.d("jijing", "pos"+5);
 //            int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
 //            inPackages[cnt] = Package.getBuiltInPackage(this, cnt, context, name, desc, numberOfLevels);
-            inPackages[cnt] = new MetaPackage(context, name, cnt, PackageState.builtIn, this);
+            inPackages[cnt] = new MetaPackage(context,color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.builtIn, this);
             cnt++;
         }
 
@@ -91,7 +105,13 @@ public class PackageManager {
                     state = PackageState.local;
                 else
                     state = PackageState.remote;
-                outPackages[cnt] = new MetaPackage(context, name, cnt+inPackages.length, state, this);
+                List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
+                int[] color = Utils.intListToArray(colorList);
+                List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
+                float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
+                List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
+                float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
+                outPackages[cnt] = new MetaPackage(context,color, backgroundHSV, cheatButtonHSV, name, cnt+inPackages.length, state, this);
                 outPackages[cnt].setCost(cost);
                 outPackages[cnt].setDataUrl(dataUrl);
                 outPackages[cnt].setDataVersion(version);

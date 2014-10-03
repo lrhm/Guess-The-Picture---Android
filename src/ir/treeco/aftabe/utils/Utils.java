@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,6 +30,27 @@ import java.util.Random;
  */
 public class Utils {
     public static String SHARED_PREFRENCES_TAG = "aftabe_plus";
+
+    public static int[] intListToArray(List<Integer> list) {
+        int[] arr = new int[list.size()];
+        for(int i=0; i<list.size(); ++i)
+            arr[i] = list.get(i);
+        return arr;
+    }
+
+    public static float[] floatListToArray(List<Float> list) {
+        String str = list.toString();
+        String[] items = str.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+
+        float[] results = new float[items.length];
+
+        for (int i = 0; i < items.length; i++) {
+            try {
+                results[i] = Float.parseFloat(items[i]);
+            } catch (NumberFormatException nfe) {};
+        }
+        return results;
+    }
 
     public static String getAESkey(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
