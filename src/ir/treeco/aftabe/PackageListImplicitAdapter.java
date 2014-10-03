@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import ir.treeco.aftabe.packages.MetaPackage;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.packages.PackageState;
@@ -29,7 +30,8 @@ import java.util.List;
 public class PackageListImplicitAdapter {
     private android.content.Context context;
     private PackageManager pManager;
-    private Package[] packages;
+//    private Package[] packages;
+    private MetaPackage[] packages;
 
     public final static int NEW_TAB_ADAPTER = 0, LOCAL_TAB_ADAPTER = 1, HOT_TAB_ADAPTER = 2;
 
@@ -70,7 +72,6 @@ public class PackageListImplicitAdapter {
     }
 
     void setFilter(int shape) {
-        Log.d("vamDaneshjuyi", packages + " " + mode);
         itemData = new ItemData[packages.length + 20];
         for (int i = 0; i < itemData.length; i++) {
             itemData[i] = new ItemData();
@@ -216,6 +217,13 @@ public class PackageListImplicitAdapter {
             tag.frontButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    Log.d("migmig",packages[i].getName());
+//                    if(packages[i].getName().equals("girls")) {
+//                        Log.d("migmig",packages[i].getName() + " onClick");
+//                        packages[i].becomeLocal();
+//                        return;
+//                    }
+                    //TODO check if package data is outdated
                     if (packages[i].getState() == PackageState.remote) {
                         packages[i].becomeLocal();
                     }
@@ -223,7 +231,7 @@ public class PackageListImplicitAdapter {
                         LoadingManager.startTask(new TaskStartedListener() {
                             @Override
                             public void taskStarted() {
-                                PackageFragment fragment = PackageFragment.newInstance(packages[i], (FragmentActivity) context);
+                                PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]), (FragmentActivity) context);
                                 FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.fragment_container, fragment);
                                 transaction.addToBackStack(null);

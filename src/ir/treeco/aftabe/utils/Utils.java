@@ -5,15 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import ir.treeco.aftabe.packages.NotificationProgressListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Random;
 
 /**
@@ -21,6 +29,21 @@ import java.util.Random;
  */
 public class Utils {
     public static String SHARED_PREFRENCES_TAG = "aftabe_plus";
+
+    public static String getAESkey(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String str = telephonyManager.getDeviceId();
+        if(str==null)
+            return "1234567812345678"; // for users without deviceID
+        byte[] key = new byte[16];
+        byte[] strBytes = str.getBytes();
+        int i=0;
+        while (i<16 && i<strBytes.length)
+            key[i] = strBytes[i++];
+        while (i<16)
+            key[i++] = 100;
+        return new String(key);
+    }
 
     public static void toggleVisibility(View view) {
         if (view.getVisibility() == View.VISIBLE)
@@ -36,46 +59,61 @@ public class Utils {
     }
 
     public static void download(Context context, String url, String path) throws Exception {
+        download(context, url, path, null);
+    }
+
+    public static void download(final Context context, final String url, final String path, final NotificationProgressListener listener) {
         /**
          *
          *          THIS method should overwrite the existing FILE.
          *                      BUT does IT???????
          *
          */
-        Log.d("localing",url + " " + path);
-        InputStream is = new URL(url).openStream();
-        Log.d("localing", "is creater");
-        OutputStream os = context.openFileOutput(path,0);
-        Log.d("localing","before piping");
-        pipe(is,os);
-        os.close();
-//        URL source = null;
-//        try {
-//            Log.d("synch",url+" try "+path);
-//            source = new URL(url);
-//        } catch (MalformedURLException e) {
-//            Log.d("synch",url+" catch "+path);
-//            throw new Exception("Bad url",e);
-//        }
-//        Log.d("synch",url+" rbc "+path);
-//        ReadableByteChannel rbc = Channels.newChannel(source.openStream());
-//        Log.d("synch",url+" fos "+path);
-//        FileOutputStream fos = context.openFileOutput(path,0);
-//        Log.d("synch",url+" transfer "+path);
-//        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-//        Log.d("synch","end of download" + url+ " " + path);
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.d("migmig","position " +1);
+                    URLConnection conection = new URL(url).openConnection();
+                    conection.connect();
+                    Log.d("migmig","position " +2);
+                    int lenghtOfFile = conection.getContentLength();
+                    InputStream is = new URL(url).openStream();
+                    Log.d("migmig","position " +3);
+                    OutputStream os = context.openFileOutput(path, 0);
+                    Log.d("migmig","position " +4);
+                    pipe(is, os, listener, lenghtOfFile);
+                    Log.d("migmig","position " +5);
+                    os.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("migmig","position ",e);
+                    listener.failure();
+                }
+            }
+        }).start();
     }
 
-    public static void pipe(InputStream is, OutputStream os) throws IOException {
+    public static void pipe(InputStream is, OutputStream os) {
+        pipe(is, os, null, 0);
+    }
+
+    public static void pipe(InputStream is, OutputStream os, NotificationProgressListener listener, int size) {
         int n;
         byte[] buffer = new byte[1024];
         int sum=0;
-        while ((n = is.read(buffer)) > -1) {
-            sum += n;
-            Log.d("localing","downloading " + sum);
-            os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
+        try {
+            while ((n = is.read(buffer)) > -1) {
+                sum += n;
+                if (listener != null)
+                listener.updateBar((sum * 100) / size);
+                os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
+            }
+            os.close();
+            listener.success();
+        } catch (IOException e) {
+            listener.failure();
         }
-        os.close();
     }
 
     public static void reverseLinearLayout(LinearLayout linearLayout) {

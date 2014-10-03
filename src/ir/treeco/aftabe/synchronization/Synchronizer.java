@@ -40,7 +40,7 @@ import java.util.UUID;
 public class Synchronizer extends BroadcastReceiver{
 
     private static final String tasksFileUrl = "http://192.168.0.111/sofre/tasks.yml";
-    private final String PREFS_TAG = "ad_data";
+//    private final String PREFS_TAG = "ad_data";
     private final static String AD_UPDATE_TAG = "last_ad_update";
     private static boolean firstConnect = true;
     private HashMap<String, Object> tasks;
@@ -52,7 +52,7 @@ public class Synchronizer extends BroadcastReceiver{
     @Override
     public void onReceive(final Context context, Intent intent) {
         Log.d("synch","onRecieve");
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
         if (activeNetwork == null || activeNetwork.getType() != ConnectivityManager.TYPE_WIFI || !activeNetwork.isConnected()) {
@@ -66,7 +66,7 @@ public class Synchronizer extends BroadcastReceiver{
 
         Log.d("synch","passed network state ifs");
 
-        final SharedPreferences preferences = context.getSharedPreferences(PREFS_TAG, Context.MODE_PRIVATE);
+        final SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -77,19 +77,16 @@ public class Synchronizer extends BroadcastReceiver{
                     editor.putString(AD_UPDATE_TAG, nowTime);
                     editor.commit();
                 }
-                //TODO uncomment below
+//                TODO uncomment below
 //                if (lastTime.equals(nowTime)) return;
                 String data = loadAdData();
 
                 if (data == null)
                     return;
-                String token;
 
                 //download task File
                 Yaml yaml = new Yaml();
                 tasks = (HashMap<String, Object>) yaml.load(data);
-
-                token = (String) tasks.get("Token");
 
                 do_Task_Notifs((List<HashMap<String, String>>) tasks.get(TASK_NOTIFICATION_KEY));
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
@@ -97,8 +94,6 @@ public class Synchronizer extends BroadcastReceiver{
 
                 //TODO  header.yml File most Update at LAST after Downloading thumbnails
 
-                //TODO uncomment below
-//                setToken(token);
             }
 
             private String loadAdData() {
@@ -106,8 +101,6 @@ public class Synchronizer extends BroadcastReceiver{
                 HttpGet request = new HttpGet();
 
                 try {
-                    //TODO uncomment below
-//                    request.setURI(new URI(tasksFileUrl + getCurrentToken()));
                     request.setURI(new URI(tasksFileUrl));
                 } catch (URISyntaxException e) {
                     //Log.w("GOLVAZHE", "Failed to load ad! (URI)");
@@ -135,27 +128,65 @@ public class Synchronizer extends BroadcastReceiver{
                 editor.putString("token", token);
                 editor.commit();
             }
+
+            /**
+             *
+             * - URL: http://url/to/file
+             *   name: file.frmt
+             *   version: 1
+             *
+             */
             public void do_Task_Files_Download_And_Update(List<HashMap<String,String>> files) {
                 for(HashMap<String,String> file : files) {
                     String url = file.get("URL");
                     String name = file.get("name");
-                    try {
-                        Utils.download(context,url,name);
-                    } catch (Exception e) {
+                    int version = Integer.parseInt(file.get("version"));
+                    int lastVersion = preferences.getInt(name + "_VERSION", -1);
+                    if(lastVersion == -1 || lastVersion > version) {
+                        try {
+                            Utils.download(context, url, name);
+                        } catch (Exception e) {
 //                        Log.d("synch","Error in downloading File",e);
-                        e.printStackTrace();
+                            e.printStackTrace();
+                        }
+                        preferences.edit().putInt(name+"_VERSION",version).commit();
                     }
                 }
             }
 
+            /**
+             *
+             * - Image URL: http://url/to/image          //Notif_Image will be shown in notif bar and also ad_activity
+             *   Title: notif title
+             *   Text: notif text
+             *   onClick: notif on Click
+             *   Promote: notif Promote        OPTIONAL
+             *   Prize: notif Prize            OPTIONAL
+             *   min version: 4		           OPTIONAL
+             *   max version: 5		           OPTIONAL
+             *   token: 4			           OPTIONAL FOR IMPORTANT NOTIFS
+             *   to token: 5			       OPTIONAL
+             *
+             */
             public void do_Task_Notifs(List<HashMap<String,String>> notifs) {
                 for(HashMap<String,String> notif : notifs) {
+                    int lastToken = preferences.getInt("TOKEN",-1);
+                    if(notif.get("token") != null) {
+                        int token = Integer.parseInt(notif.get("token"));
+                        if(token<=lastToken) // old notification
+                            return;
+                        int toToken = Integer.parseInt(notif.get("to token"));
+                        preferences.edit().putInt("TOKEN",toToken).commit();
+                    }
+                    int minVersion = notif.get("min version")==null?-1000:Integer.parseInt(notif.get("min version"));
+                    int maxVersion = notif.get("max version")==null?+1000:Integer.parseInt(notif.get("max version"));
+                    //TODO check version
                     String imageUrl = notif.get("Image URL");
                     String title = notif.get("Title");
                     String text = notif.get("Text");
                     String onClick = notif.get("onClick");
-                    String promote = "hello"; //notif.get("Promote");
-                    int prize = 2;//Integer.parseInt(notif.get("Prize"));
+                    String promote = notif.get("Promote");
+                    int prize = notif.get("Prize")==null?0:Integer.parseInt(notif.get("Prize"));
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(context)
                                     .setSmallIcon(R.drawable.tiny)
@@ -200,21 +231,36 @@ public class Synchronizer extends BroadcastReceiver{
                 mNotificationManager.notify(mId, mBuilder.build());
             }
 
+            /**
+             *
+             * - URL: http://url/to/ad/image
+             *   onClick: http://url/when/clicked
+             *
+             */
             public void do_Task_Ads(List<HashMap<String,String>> ads) {
                 int cnt=0;
+                String[] onClicks = new String[ads.size()];
                 for(HashMap<String,String> ad : ads) {
                     String url = ad.get("URL");
+                    onClicks[cnt] = ad.get("onClick");
                     try {
-                        Utils.download(context, url, "ad" + cnt);
+                        Utils.download(context, url, "tmp_ad" + cnt);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        return; // to avoid broken synch
                     }
                     cnt++;
                 }
-
-                SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), context.MODE_PRIVATE);
+                //successful synch hence rename tmp_ad to ad
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt(AdItemAdapter.ADS_KEY,cnt);
+                for(int i=0; i<cnt; ++i) {
+                    File oldOne = new File(context.getFilesDir(),"tmp_ad"+i);
+                    File newOne = new File(context.getFilesDir(),"ad"+i);
+                    oldOne.renameTo(newOne);
+                    editor.putString("ad_onClick"+i, onClicks[i]);
+                }
+
+                editor.putInt(AdItemAdapter.ADS_KEY, cnt);
                 editor.commit();
             }
         });
