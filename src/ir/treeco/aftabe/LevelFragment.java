@@ -83,22 +83,28 @@ public class LevelFragment extends Fragment {
     }
 
     private void setupCheatButton(View layout) {
-        ImageView cheatButton = (ImageView) getActivity().findViewById(R.id.cheat_button);
+        final Bitmap cheatBitmap = ImageManager.loadImageFromResource(layout.getContext(), R.drawable.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize());
+        final Bitmap backBitmap = ImageManager.loadImageFromResource(layout.getContext(), R.drawable.back_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize());
+
+        final ImageView cheatButton = (ImageView) getActivity().findViewById(R.id.cheat_button);
         cheatButton.setVisibility(View.VISIBLE);
         cheatButton.setOnClickListener(new View.OnClickListener() {
             boolean on = false;
 
             @Override
             public void onClick(View _view) {
-                if (!on)
+                if (!on) {
+                    cheatButton.setImageBitmap(backBitmap);
                     showCheats();
-                else
+                } else {
+                    cheatButton.setImageBitmap(cheatBitmap);
                     hideCheats();
+                }
                 on = !on;
             }
         });
 
-        cheatButton.setImageBitmap(ImageManager.loadImageFromResource(layout.getContext(), R.id.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize()));
+        cheatButton.setImageBitmap(cheatBitmap);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
         layoutParams.leftMargin = (int) (0.7 * LengthManager.getScreenWidth());
         layoutParams.topMargin = (int) (0.03 * LengthManager.getScreenWidth());

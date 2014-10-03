@@ -91,6 +91,7 @@ public class PackageFragment extends Fragment {
     }
 
     void updateIndicators(LinearLayout indicatorList, float position) {
+        Log.d("indicator", "is called");
         float extra = LengthManager.getIndicatorBigSize() - LengthManager.getIndicatorSmallSize();
         float base = LengthManager.getIndicatorSmallSize();
         for (int i = 0; i < indicatorList.getChildCount(); i++) {
