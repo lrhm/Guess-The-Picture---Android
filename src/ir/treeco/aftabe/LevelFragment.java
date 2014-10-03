@@ -89,7 +89,7 @@ public class LevelFragment extends Fragment {
 
     private void setUpImagePlace(View view) {
         ImageView levelImageView = (ImageView) view.findViewById(R.id.image);
-        levelImageView.setImageBitmap(ImageManager.loadImageFromInputStream(mLevel.getImage(), LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
+        levelImageView.setImageBitmap(ImageManager.loadImageFromInputStream(mLevel.getThumbnail(), LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
         levelImageView.setBackgroundColor(Color.RED);
         Utils.resizeView(levelImageView, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight());
 

@@ -3,16 +3,14 @@ package ir.treeco.aftabe.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.NotificationProgressListener;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -24,6 +22,22 @@ import java.util.Random;
  * Created by hamed on 8/12/14.
  */
 public class Utils {
+
+    public static String getAESkey(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String str = telephonyManager.getDeviceId();
+        if(str==null)
+            return "1234567812345678"; // for users without deviceID
+        byte[] key = new byte[16];
+        byte[] strBytes = str.getBytes();
+        int i=0;
+        while (i<16 && i<strBytes.length)
+            key[i] = strBytes[i++];
+        while (i<16)
+            key[i++] = 100;
+        return new String(key);
+    }
+
     public static void toggleVisibility(View view) {
         if (view.getVisibility() == View.VISIBLE)
             view.setVisibility(View.GONE);

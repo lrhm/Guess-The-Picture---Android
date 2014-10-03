@@ -24,11 +24,10 @@ public class PackageManager {
 
 
     private List<HashMap<String, Object>> headerInfo;
-    private final static String pkgNameKey= "Package Name",
-                          numberOfLevelsKey = "number of levels",
-                          dataUrlKey = "Data url",
-                          pkgDescriptionKey = "Package Description",
-                          costKey = "cost";
+    private final static String pkgNameKey= "Name",
+                          dataUrlKey = "Data URL",
+                          costKey = "Cost",
+                          dataVersionKey = "Data Version";
     Context context;
 
 //    private Package[] packages;
@@ -50,6 +49,8 @@ public class PackageManager {
     public void refresh() {
 //        Package[] inPackages=null, outPackages=null;
         MetaPackage[] inPackages=null, outPackages=null;
+
+
         //load builtIn Packages
         InputStream inputStream = context.getResources().openRawResource(R.raw.header);
         Yaml yaml = new Yaml();
@@ -59,12 +60,13 @@ public class PackageManager {
         int cnt=0;
         for(HashMap<String,Object> pkgInfo : headerInfo) {
             String name = (String) pkgInfo.get(pkgNameKey);
-            String desc = (String) pkgInfo.get(pkgDescriptionKey);
-            int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
+//            int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
 //            inPackages[cnt] = Package.getBuiltInPackage(this, cnt, context, name, desc, numberOfLevels);
-            inPackages[cnt] = new MetaPackage(context, name, desc, cnt, PackageState.builtIn, this);
+            inPackages[cnt] = new MetaPackage(context, name, cnt, PackageState.builtIn, this);
             cnt++;
         }
+
+
         //load non builtIn Packages
         yaml = new Yaml();
         try {
@@ -78,10 +80,9 @@ public class PackageManager {
             cnt = 0;
             for (HashMap<String, Object> pkgInfo : headerInfo) {
                 String name = (String) pkgInfo.get(pkgNameKey);
-                String desc = (String) pkgInfo.get(pkgDescriptionKey);
-                int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
-                //TODO uncomment below
-                int cost = 0; //(Integer) pkgInfo.get(costKey);
+//                int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
+                int cost = (Integer) pkgInfo.get(costKey);
+                int version = (Integer) pkgInfo.get(dataVersionKey);
                 String dataUrl = (String) pkgInfo.get(dataUrlKey);
 //                outPackages[cnt] = Package.getPackage(this, cnt + inPackages.length, context, name, desc, numberOfLevels, dataUrl, cost);
                 PackageState state;
@@ -90,9 +91,10 @@ public class PackageManager {
                     state = PackageState.local;
                 else
                     state = PackageState.remote;
-                outPackages[cnt] = new MetaPackage(context, name, desc, cnt+inPackages.length, state, this);
+                outPackages[cnt] = new MetaPackage(context, name, cnt+inPackages.length, state, this);
                 outPackages[cnt].setCost(cost);
                 outPackages[cnt].setDataUrl(dataUrl);
+                outPackages[cnt].setDataVersion(version);
                 cnt++;
             }
         }

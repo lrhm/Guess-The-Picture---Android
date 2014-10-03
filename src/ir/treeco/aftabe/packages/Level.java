@@ -2,19 +2,14 @@ package ir.treeco.aftabe.packages;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.util.Log;
+import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.utils.Encryption;
-import ir.treeco.aftabe.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by hossein on 7/31/14.
@@ -22,8 +17,11 @@ import java.util.zip.ZipInputStream;
 public class Level {
     private String solution, author;
     private Package wrapperPackage;
-    private InputStream Image;
-//    private Bitmap Image;
+    private InputStream thumbnail;
+    private String thumbnailName;
+    private Multimedia[] resources;
+    private int prize;
+//    private Bitmap image;
     private int id;
     private Context context;
 
@@ -43,10 +41,14 @@ public class Level {
         return id;
     }
 
-    public void setImage(InputStream bitmap) {
-        Image = bitmap;
+    public String getThumbnailName() {
+        return thumbnailName;
     }
-    public InputStream getImage() {
+
+    public void setThumbnail(InputStream thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+    public InputStream getThumbnail() {
 //        if(wrapperPackage.getState() == PackageState.builtIn) {
 //            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
 //                            ,"zip"));
@@ -60,7 +62,7 @@ public class Level {
 //            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
 //            return this.wrapperPackage.getData().getInputStream(entry);
 //        }
-        return Image;
+        return thumbnail;
     }
 //    public InputStream getImage() {
 //        if(wrapperPackage.getState() == PackageState.builtIn) {
@@ -88,12 +90,22 @@ public class Level {
 //        }
 //    }
 
-    public Level(Context context, String author, String solution, Package wPackage, int id) {
+    public Multimedia[] getResources() {
+        return resources;
+    }
+
+    public void setResources(Multimedia[] resources) {
+        this.resources = resources;
+    }
+
+    public Level(Context context, String author, String solution, String thumbnailName, Package wPackage, int id, int prize) {
         this.context = context;
         this.author = author;
-        this.solution = Encryption.decrypt(solution);
+        this.solution = Encryption.decryptBase64(solution);
         this.wrapperPackage = wPackage;
         this.id = id;
+        this.thumbnailName = thumbnailName;
+        this.prize = prize;
     }
 
     public void clearSolution(SharedPreferences preferences) {

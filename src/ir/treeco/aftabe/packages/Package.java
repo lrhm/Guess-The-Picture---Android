@@ -1,8 +1,7 @@
 package ir.treeco.aftabe.packages;
 
-import android.content.Context;
 import android.util.Log;
-import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
@@ -18,15 +17,18 @@ import java.util.zip.ZipInputStream;
  * Created by hossein on 7/31/14.
  */
 public class Package {
-//    private PackageState state;
+    //    private PackageState state;
 //    private int cost;
 //    private String name, description, dataUrl;
     private ZipFile zipFile;
     private List<HashMap<String, Object>> levelsInfo;
     private Level[] levels;
-//    private int id;
-    private String  levelSolutionKey = "Level Solution",
-                    levelAuthorKey = "Level Author";
+    //    private int id;
+    private String levelSolutionKey = "Solution",
+            levelAuthorKey = "Author",
+            levelThumbnailKey = "Thumbnail",
+            resourceInfoKey = "Resources",
+            levelPrizeKey = "Prize";
 //    private Context context;
 //    private PackageManager pManager;
 
@@ -41,7 +43,7 @@ public class Package {
         return levels.length;
     }
 
-//    public PackageState getState() {
+    //    public PackageState getState() {
 //        return state;
 //    }
 //
@@ -155,13 +157,13 @@ public class Package {
     // 'this' replaced with 'meta' after changes
     public void load() throws Exception {
 
-        InputStream yamlStream=null;
+        InputStream yamlStream = null;
 
-        if(meta.getState() == PackageState.builtIn) {
-            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(),meta.getName(),"zip"));
+        if (meta.getState() == PackageState.builtIn) {
+            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(), meta.getName(), "zip"));
             ZipEntry confFile;
             while ((confFile = zipInputStream.getNextEntry()) != null) {
-                if (confFile.getName().equals("config.yml"))
+                if (confFile.getName().equals("level_list.yml"))
                     break;
             }
             if (confFile == null) {
@@ -171,13 +173,13 @@ public class Package {
             yamlStream = zipInputStream;
         }
 
-        if(meta.getState() == PackageState.local) {
-            zipFile = new ZipFile(new File(meta.getContext().getFilesDir(),meta.getName()+".zip"));
-            ZipEntry confFile = zipFile.getEntry("config.yml");
+        if (meta.getState() == PackageState.local) {
+            zipFile = new ZipFile(new File(meta.getContext().getFilesDir(), meta.getName() + ".zip"));
+            ZipEntry confFile = zipFile.getEntry("level_list.yml");
             yamlStream = zipFile.getInputStream(confFile);
         }
 
-        if(meta.getState() != PackageState.builtIn && meta.getState() != PackageState.local) {
+        if (meta.getState() != PackageState.builtIn && meta.getState() != PackageState.local) {
             return;
         }
 
@@ -185,13 +187,68 @@ public class Package {
         levelsInfo = (List<HashMap<String, Object>>) yaml.load(yamlStream);
 //        levels = new Level[this.numberOfLevels];
         levels = new Level[levelsInfo.size()];
-        int cnt=0;
-        for(HashMap<String, Object> hmap : levelsInfo) {
-            levels[cnt] = new Level(meta.getContext(), (String) hmap.get(levelAuthorKey),(String) hmap.get(levelSolutionKey),this, cnt);
+        int cnt = 0;
+        for (HashMap<String, Object> aLevelInfo : levelsInfo) {
+
+            String author = (String) aLevelInfo.get(levelAuthorKey);
+            String solution = (String) aLevelInfo.get(levelSolutionKey);
+            String thumbnailName = (String) aLevelInfo.get(levelThumbnailKey);
+            int prize = aLevelInfo.get(levelPrizeKey)==null?30:Integer.parseInt((String) aLevelInfo.get(levelPrizeKey));
+            List<HashMap<String, String>> resourcesInfo = (List<HashMap<String, String>>) aLevelInfo.get(resourceInfoKey);
+            Multimedia[] resources = new Multimedia[resourcesInfo.size()];
+
+            levels[cnt] = new Level(meta.getContext(), author, solution, thumbnailName, this, cnt, prize);
+
+            int resCnt = 0;
+            if (meta.getState() == PackageState.builtIn) {
+                ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(), meta.getName(), "zip"));
+                ZipEntry zipFile;
+                for (HashMap<String, String> aResource : resourcesInfo) {
+                    while ((zipFile = zipInputStream.getNextEntry()) != null) {
+                        String fname = zipFile.getName();
+                        if (aResource.get("Name").equals(fname)) {
+                            byte[] buffer = new byte[1024];
+                            int count;
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            while ((count = zipInputStream.read(buffer)) != -1) {
+                                baos.write(buffer, 0, count);
+                            }
+                            int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
+                            resources[resCnt] = new Multimedia(aResource.get("Type"), new ByteArrayInputStream(baos.toByteArray()), cost);
+                            if (thumbnailName.equals(fname))
+                                levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
+                            resCnt++;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (meta.getState() == PackageState.local) {
+                for (HashMap<String, String> aResource : resourcesInfo) {
+                    ZipEntry entry = getData().getEntry(aResource.get("Name"));
+                    InputStream is = getData().getInputStream(entry);
+                    if (aResource.get("Name").equals(thumbnailName)) {
+                        //duplicate input stream
+                        byte[] buffer = new byte[1024];
+                        int count;
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        while ((count = is.read(buffer)) != -1) {
+                            baos.write(buffer, 0, count);
+                        }
+                        levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
+                        int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
+                        resources[resCnt] = new Multimedia(aResource.get("Type"), new ByteArrayInputStream(baos.toByteArray()),cost);
+                    } else {
+                        int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
+                        resources[resCnt] = new Multimedia(aResource.get("Type"), is, cost);
+                    }
+                    resCnt++;
+                }
+            }
+            levels[cnt].setResources(resources);
             cnt++;
         }
-
-        reloadInputStreams();
+//        loadInputStreams();
 
 //        //set Levels Images
 //        int myWidth = LengthManager.getScreenWidth() / 2;
@@ -225,37 +282,37 @@ public class Package {
 //        }
     }
 
-    public void reloadInputStreams() throws IOException {
-        int myWidth = LengthManager.getScreenWidth() / 2;
-        int myHeight = myWidth;
-        if(meta.getState() == PackageState.builtIn) {
-            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(),meta.getName(),"zip"));
-            ZipEntry confFile;
-            while ((confFile = zipInputStream.getNextEntry()) != null) {
-                String fname = confFile.getName();
-                if (fname.matches("\\d+[.]jpg")) {
-                    fname = fname.split("[.]")[0];
-                    int idx = Integer.parseInt(fname);
-                    byte[] buffer = new byte[1024];
-                    int count;
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    while ((count = zipInputStream.read(buffer)) != -1) {
-                        baos.write(buffer, 0, count);
-                    }
-//                    levels[idx].setImage(ImageManager.loadImageFromInputStream(new ByteArrayInputStream(baos.toByteArray()),myWidth,myHeight));
-                    levels[idx].setImage(new ByteArrayInputStream(baos.toByteArray()));
-                }
-            }
-        }
-        if(meta.getState() == PackageState.local) {
-//            for(int i=0; i<this.numberOfLevels; ++i) {
-            for(int i=0; i<levels.length; ++i) {
-                ZipEntry entry = this.getData().getEntry(i + ".jpg");
-//                levels[i].setImage(ImageManager.loadImageFromInputStream(getData().getInputStream(entry),myWidth,myHeight));
-                levels[i].setImage(this.getData().getInputStream(entry));
-            }
-        }
-    }
+//    public void loadInputStreams() throws IOException {
+//        int myWidth = LengthManager.getScreenWidth() / 2;
+//        int myHeight = myWidth;
+//        if(meta.getState() == PackageState.builtIn) {
+//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(),meta.getName(),"zip"));
+//            ZipEntry confFile;
+//            while ((confFile = zipInputStream.getNextEntry()) != null) {
+//                String fname = confFile.getName();
+//                if (fname.matches("\\d+[.]jpg")) {
+//                    fname = fname.split("[.]")[0];
+//                    int idx = Integer.parseInt(fname);
+//                    byte[] buffer = new byte[1024];
+//                    int count;
+//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                    while ((count = zipInputStream.read(buffer)) != -1) {
+//                        baos.write(buffer, 0, count);
+//                    }
+////                    levels[idx].setImage(ImageManager.loadImageFromInputStream(new ByteArrayInputStream(baos.toByteArray()),myWidth,myHeight));
+//                    levels[idx].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
+//                }
+//            }
+//        }
+//        if(meta.getState() == PackageState.local) {
+////            for(int i=0; i<this.numberOfLevels; ++i) {
+//            for(int i=0; i<levels.length; ++i) {
+//                ZipEntry entry = this.getData().getEntry(i + ".jpg");
+////                levels[i].setImage(ImageManager.loadImageFromInputStream(getData().getInputStream(entry),myWidth,myHeight));
+//                levels[i].setThumbnail(this.getData().getInputStream(entry));
+//            }
+//        }
+//    }
 
     public Level getLevel(int lev) {
         return levels[lev];

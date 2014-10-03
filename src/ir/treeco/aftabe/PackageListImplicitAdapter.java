@@ -210,6 +210,7 @@ public class PackageListImplicitAdapter {
 //                        packages[i].becomeLocal();
 //                        return;
 //                    }
+                    //TODO check if package data is outdated
                     if (packages[i].getState() == PackageState.remote) {
                         packages[i].becomeLocal();
                     }

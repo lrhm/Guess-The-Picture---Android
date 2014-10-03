@@ -170,6 +170,8 @@ public class IntroActivity extends FragmentActivity {
                 loadingView.startAnimation(fadeOut);
             }
         });
+        Log.d("paspas",Utils.getAESkey(this));
+        Log.d("paspas",Utils.getAESkey(this).getBytes().length+" ");
     }
 
     @Override
