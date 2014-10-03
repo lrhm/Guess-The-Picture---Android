@@ -19,6 +19,7 @@
     <orderEntry type="library" name="anjlab-iabv3-1.0.13" level="project" />
     <orderEntry type="library" name="android-inapp-billing-v3" level="project" />
     <orderEntry type="library" name="nineoldandroids" level="project" />
+    <orderEntry type="library" name="android-inapp-billing-v3" level="project" />
   </component>
 </module>
 

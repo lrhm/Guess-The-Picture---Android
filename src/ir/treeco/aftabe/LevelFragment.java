@@ -98,7 +98,7 @@ public class LevelFragment extends Fragment {
             }
         });
 
-        cheatButton.setImageBitmap(ImageManager.loadImageFromResource(layout.getContext(), R.id.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize()));
+        cheatButton.setImageBitmap(ImageManager.loadImageFromResource(layout.getContext(), R.drawable.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize()));
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
         layoutParams.leftMargin = (int) (0.7 * LengthManager.getScreenWidth());
         layoutParams.topMargin = (int) (0.03 * LengthManager.getScreenWidth());
