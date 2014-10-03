@@ -11,11 +11,13 @@ public class LoadingManager {
             someTaskStartedListener.someTaskStarted(new TaskCallback() {
                 @Override
                 public void done() {
-                    taskStartedListener.taskStarted();
+                    if (taskStartedListener != null)
+                        taskStartedListener.taskStarted();
                 }
             });
         } else {
-            taskStartedListener.taskStarted();
+            if (taskStartedListener != null)
+                taskStartedListener.taskStarted();
         }
     }
 

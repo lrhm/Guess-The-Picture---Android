@@ -11,21 +11,51 @@
               android:layout_width="fill_parent" android:layout_weight="2"/>
         <FrameLayout android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:id="@+id/image_place">
-            <ImageView
+                     android:id="@+id/level_view">
+            <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/image"
-                    android:scaleType="centerCrop"
-                    android:cropToPadding="true"
-                    android:adjustViewBounds="true"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:clipToPadding="true"
+                    android:id="@+id/box">
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/image"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/nothing"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/black_widow"
+                        android:background="#000"
+                        android:visibility="invisible"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cheat_remove_some_letters"
+                        android:visibility="invisible"
+                        android:layout_gravity="top"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cheat_reveal_a_letter"
+                        android:visibility="invisible"
+                        android:layout_gravity="center_vertical"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cheat_skip_level"
+                        android:visibility="invisible"
+                        android:layout_gravity="bottom"/>
+            </FrameLayout>
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:id="@+id/frame"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/nothing"/>
         </FrameLayout>
         <View android:layout_height="0dp"
               android:layout_width="fill_parent" android:layout_weight="3"/>

@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main_view">
-    <ImageView android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:id="@+id/background"
-               android:contentDescription="@string/background"/>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,6 +27,12 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/logo"
                     android:contentDescription="@string/logo"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:id="@+id/cheat_button"
+                    android:contentDescription="@string/nothing"/>
         </RelativeLayout>
         <FrameLayout
                 android:layout_width="match_parent"

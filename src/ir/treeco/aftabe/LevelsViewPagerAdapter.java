@@ -23,13 +23,15 @@ import java.util.Arrays;
 public class LevelsViewPagerAdapter extends PagerAdapter {
     private final Package mPackage;
     private final FragmentActivity fragmentActivity;
-    private int timesClicked;
     private LayoutInflater inflater;
+    //private GridView[] gridViews;
+    private int timesClicked;
 
     public LevelsViewPagerAdapter(Package mPackage, FragmentActivity fragmentActivity) {
         this.mPackage = mPackage;
         this.fragmentActivity = fragmentActivity;
         this.inflater = (LayoutInflater) fragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //this.gridViews = new GridView[getCount()];
     }
 
     @Override
@@ -49,6 +51,11 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        /*if (gridViews[position] != null) {
+            container.addView(gridViews[position]);
+            return gridViews[position];
+        }*/
+
         final int levelIDs[] = new int[LengthManager.getPageLevelCount()];
         Arrays.fill(levelIDs, -1);
         final int begin = position * LengthManager.getPageLevelCount();
@@ -106,6 +113,7 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
             }
         });
 
+        //gridViews[position] = gridView;
         container.addView(gridView);
         return gridView;
     }

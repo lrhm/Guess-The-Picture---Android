@@ -186,4 +186,65 @@ public class LengthManager {
 
     public static int getIndicatorBigSize() { return getScreenWidth() / 15; }
     public static int getIndicatorSmallSize() { return getScreenWidth() / 30; }
+
+    public static int getStoreDialogMargin() {
+        return getScreenWidth() / 20;
+    }
+
+    public static int getStoreDialogPadding() {
+        return getScreenWidth() / 15;
+    }
+
+    public static int getStoreItemsInnerWidth() {
+        return getScreenWidth() - 2 * (getStoreDialogMargin() + getStoreDialogPadding());
+    }
+
+    public static float getStoreItemFontSize() {
+        return getScreenWidth() / 15f;
+    }
+
+    public static int getStoreItemHeight() {
+        return getScreenWidth() / 6;
+    }
+
+    public static int getStoreItemWidth() {
+        return getStoreItemsInnerWidth() - 2 * getStoreItemHorizontalMargin();
+    }
+
+    public static int getStoreItemTitleWidth() {
+        return getStoreItemWidth() * 71 / 100;
+    }
+
+    public static int getStoreItemRevenueWidth() {
+        return getStoreItemWidth() * 29 / 100;
+    }
+    public static int getStoreItemHorizontalMargin() {
+        return getStoreItemsInnerWidth() / 45;
+    }
+
+    public static int getCheatButtonHeight() { return getHeightWithFixedWidth(R.drawable.cheat_right, getCheatButtonWidth()); }
+
+    public static int getCheatButtonWidth() {
+        return getLevelImageWidth();
+    }
+
+    public static float getCheatButtonFontSize() {
+        return getScreenWidth() / 15;
+    }
+
+    public static int getShopTitleWidth() {
+        return getScreenWidth() / 2;
+    }
+
+    public static int getToastWidth() {
+        return getScreenWidth() * 90 / 100;
+    }
+
+    public static float getToastFontSize() {
+        return getScreenWidth() / 15f;
+    }
+
+    public static int getCheatButtonSize() {
+        return getScreenWidth() / 7;
+    }
 }

@@ -191,7 +191,8 @@ public class PackageListImplicitAdapter {
 //        Log.d("vamDaneshjuyi", itemData[i].shape+" ");
 //        Log.d("vamDaneshjuyi", bitmaps[itemData[i].shape]+" ");
 //        Log.d("vamDaneshjuyi",itemData[i] + " " + itemData[i].shape + " " +bitmaps[itemData[i].shape]);
-        tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
+        tag.frontImage.setImageDrawable(new DownloadingDrawable(bitmaps[itemData[i].shape]));
+        //tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
         tag.backImage.setImageBitmap(bitmaps[1 - itemData[i].shape]);
 
         packageInfo.setLayoutParams(new LinearLayout.LayoutParams(myWidth, myHeight));
@@ -211,7 +212,6 @@ public class PackageListImplicitAdapter {
             tag.frontButton.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.package_item_play, buttonWidth, LengthManager.getHeightWithFixedWidth(R.drawable.package_item_play, buttonWidth)));
             FrameLayout.LayoutParams buttonLayoutParams = (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
             buttonLayoutParams.bottomMargin = myWidth / 7;
-            tag.frontButton.setLayoutParams(buttonLayoutParams);
 
             tag.frontButton.setOnClickListener(new View.OnClickListener() {
                 @Override

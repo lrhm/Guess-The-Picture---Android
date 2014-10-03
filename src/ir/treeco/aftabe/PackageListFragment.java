@@ -11,34 +11,18 @@ import android.widget.*;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.*;
 
-import java.util.UUID;
+public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener{
 
-/**
- * Created by hamed on 8/12/14.
- */
-
-class PackagesListScrollListener implements  AbsListView.OnScrollListener {
-
-    private ListView packages;
-    private View tabBar;
-
-    PackagesListScrollListener(ListView packages, View tabBar) {
-        this.packages = packages;
-        this.tabBar = tabBar;
-    }
-
-    public void updateAdViewPadding() {
-
-    }
+    private LinearLayout tabBar;
+    private AutoCropListView packages;
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int i) {
-        updateAdViewPadding();
+
     }
 
     @Override
     public void onScroll(AbsListView absListView, int i, int i2, int i3) {
-        updateAdViewPadding();
         int barTop = 0;
         if (i == 0) {
             RelativeLayout relativeLayout = (RelativeLayout) packages.getChildAt(0);
@@ -57,25 +41,22 @@ class PackagesListScrollListener implements  AbsListView.OnScrollListener {
             tabBar.startAnimation(anim);
         }
     }
-}
 
-public class PackageListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_packages_list, container, false);
-        final AutoCropListView packages =  (AutoCropListView) layout.findViewById(R.id.package_list);
-        final LinearLayout tabBar = (LinearLayout) layout.findViewById(R.id.tab_bar);
+        packages =  (AutoCropListView) layout.findViewById(R.id.package_list);
+        tabBar = (LinearLayout) layout.findViewById(R.id.tab_bar);
 
         FrameLayout.LayoutParams tabBarLayoutParams = (FrameLayout.LayoutParams) tabBar.getLayoutParams();
         tabBarLayoutParams.width = LengthManager.getScreenWidth();
         tabBarLayoutParams.height = LengthManager.getTabBarHeight();
-        tabBar.setLayoutParams(tabBarLayoutParams);
 
         LinearLayout tabs = (LinearLayout) tabBar.getChildAt(0);
-        tabs.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabsHeight()));
+        Utils.resizeView(tabs, LengthManager.getScreenWidth(), LengthManager.getTabsHeight());
 
         ImageView shade = (ImageView) tabBar.getChildAt(1);
         shade.setImageBitmap(ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.shadow_top, LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight()));
-        shade.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight()));
+        Utils.resizeView(shade, LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight());
 
         PackageManager pManager = new PackageManager(getActivity());
         try {
@@ -93,9 +74,9 @@ public class PackageListFragment extends Fragment {
         newAdapter.notifyDataSetChanged();
 
 
-        packages.setOnScrollListener(new PackagesListScrollListener(packages, tabBar));
+        packages.setOnScrollListener(this);
 
-        TextView[] textViews = new TextView[] {
+        final TextView[] textViews = new TextView[] {
                 (TextView) layout.findViewById(R.id.tab_1), // HOT tab
                 (TextView) layout.findViewById(R.id.tab_2), // Local tab
                 (TextView) layout.findViewById(R.id.tab_3)  // New tab
@@ -107,15 +88,18 @@ public class PackageListFragment extends Fragment {
                 newAdapter
         };
 
-        for (int i=0;i<3;++i) {
+        for (int i = 0; i < 3; ++i) {
             TextView textView = textViews[i];
             final PackageListAdapter adapter = adpaters[i];
+            final int finalI = i;
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     packages.setAdapter(adapter);
                     adapter.setFilter(0);
                     packages.setSelection(0);
+                    for (int i = 0; i < 3; i++)
+                        Utils.setViewBackground(textViews[i], i == finalI? new RoundedCornerDrawable(): null);
                 }
             });
             textView.setTypeface(FontsHolder.getTabBarFont(layout.getContext()));

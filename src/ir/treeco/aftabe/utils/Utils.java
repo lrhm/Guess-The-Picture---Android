@@ -3,25 +3,25 @@ package ir.treeco.aftabe.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Random;
 
 /**
  * Created by hamed on 8/12/14.
  */
 public class Utils {
+    public static String SHARED_PREFRENCES_TAG = "aftabe_plus";
+
     public static void toggleVisibility(View view) {
         if (view.getVisibility() == View.VISIBLE)
             view.setVisibility(View.GONE);
@@ -105,7 +105,6 @@ public class Utils {
         if (width != layoutParams.width || height != layoutParams.height) {
             layoutParams.width = width;
             layoutParams.height = height;
-            view.setLayoutParams(layoutParams);
         }
     }
 
@@ -162,4 +161,37 @@ public class Utils {
         return Bitmap.createBitmap(mapDestColor, w, h, Bitmap.Config.ARGB_8888);
 
     }
+
+    public static int[] getRandomOrder(int length, Random random) {
+        if (random == null)
+            random = new Random();
+        int order[] = new int[length];
+        for (int i = 0; i < length; i++)
+            order[i] = i;
+        for (int i = 1; i < length; i++) {
+            int j = random.nextInt(i);
+            int tmp = order[i];
+            order[i] = order[j];
+            order[j] = tmp;
+        }
+        return order;
+    }
+
+
+    public static void setViewBackground(View view, Drawable dialogDrawable) {
+        if (Build.VERSION.SDK_INT >= 16)
+            view.setBackground(dialogDrawable);
+        else
+            view.setBackgroundDrawable(dialogDrawable);
+    }
+
+    static String persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+
+    public static String numeralStringToPersianDigits(String s) {
+        char[] result = new char[s.length()];
+        for (int i = 0; i < s.length(); i++)
+            result[i] = persianDigits.charAt(s.charAt(i) - '0');
+        return new String(result);
+    }
+
 }

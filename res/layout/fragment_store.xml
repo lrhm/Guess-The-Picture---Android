@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/shop_title"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/nothing"/>
+    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/store_items"
+                android:contentDescription="@string/nothing"/>
+        <include layout="@layout/store_item" android:id="@+id/very_small_coin"/>
+        <include layout="@layout/store_item" android:id="@+id/small_coin"/>
+        <include layout="@layout/store_item" android:id="@+id/medium_coin"/>
+        <include layout="@layout/store_item" android:id="@+id/big_coin"/>
+    </FrameLayout>
+    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/store_extra_item"
+                android:contentDescription="@string/nothing"/>
+        <include layout="@layout/store_item" android:id="@+id/review_cafebazaar"/>
+    </FrameLayout>
+    <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+</LinearLayout>

@@ -2,6 +2,7 @@ package ir.treeco.aftabe;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -12,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.*;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -23,6 +22,8 @@ import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.utils.*;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -40,6 +41,8 @@ public class LevelFragment extends Fragment {
     private Context mContext;
     Typeface buttonFont;
     private FrameLayout flyingButton;
+    private View[] cheatButtons;
+    private View blackWidow;
 
     public static LevelFragment newInstance(Level mLevel) {
         LevelFragment levelFragment = new LevelFragment();
@@ -48,10 +51,12 @@ public class LevelFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().findViewById(R.id.logo).setVisibility(View.INVISIBLE);
+
         final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.fragment_level, container, false);
 
         mContext = container.getContext();
-        preferences = container.getContext().getSharedPreferences("levels", Context.MODE_PRIVATE);
+        preferences = container.getContext().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         buttonFont = FontsHolder.getTabBarFont(mContext);
 
         alphabet = mLevel.getAlphabetLabels();
@@ -71,11 +76,220 @@ public class LevelFragment extends Fragment {
         setUpSolutionLinearLayout(inflater, layout);
         setUpAlphabetLinearLayout(inflater, layout);
         setUpImagePlace(layout);
-        //setUpCheatLayout();
-
+        setUpCheatLayout(layout);
+        setupCheatButton(layout);
 
         return layout;
     }
+
+    private void setupCheatButton(View layout) {
+        ImageView cheatButton = (ImageView) getActivity().findViewById(R.id.cheat_button);
+        cheatButton.setVisibility(View.VISIBLE);
+        cheatButton.setOnClickListener(new View.OnClickListener() {
+            boolean on = false;
+
+            @Override
+            public void onClick(View _view) {
+                if (!on)
+                    showCheats();
+                else
+                    hideCheats();
+                on = !on;
+            }
+        });
+
+        cheatButton.setImageBitmap(ImageManager.loadImageFromResource(layout.getContext(), R.id.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize()));
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
+        layoutParams.leftMargin = (int) (0.7 * LengthManager.getScreenWidth());
+        layoutParams.topMargin = (int) (0.03 * LengthManager.getScreenWidth());
+    }
+
+    private void setUpCheatLayout(View layout) {
+        View[] buttons = new View[] {
+                layout.findViewById(R.id.cheat_remove_some_letters),
+                layout.findViewById(R.id.cheat_reveal_a_letter),
+                layout.findViewById(R.id.cheat_skip_level)
+        };
+        for (int i = 0; i < buttons.length; i++) {
+            final int finalI = i;
+            buttons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //doCheat(finalI);
+                }
+            });
+        }
+    }
+
+    void makeCheatFailedToast(String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+    }
+
+    void doCheat(int id) {
+        try {
+            if (id == 0) cheatAndRemoveSomeLetters();
+            if (id == 1) cheatAndRevealALetter();
+            if (id == 2) cheatAndSkipLevel();
+            //getActivity().onBackPressed();
+        } catch (NotEnoughMoneyException e) {
+            Log.e("COINS", "" + CoinManager.getCoinsCount(preferences));
+            makeCheatFailedToast("پول ندارید :(");
+            return;
+        } catch (JSONException e) {
+            makeCheatFailedToast("مشکل غیر منتظره‌ای پیش آمده است. لطفا آفتابه را به روز رسانی کنید.");
+            return;
+        } catch (ImpossibleCheatException e) {
+            makeCheatFailedToast("نمی‌شه دیگه!");
+            return;
+        }
+        if (id == 2 || id == 3) {
+            checkLevelCompleted(false);
+        }
+    }
+
+
+    public void cheatAndSkipLevel() throws JSONException, NotEnoughMoneyException {
+        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.SKIP_LEVEL_COST)
+            throw new NotEnoughMoneyException();
+
+        Arrays.fill(placeHolder, -1);
+        for (int i = 0; i < alphabetGone.length; i++)
+            alphabetGone[i] = Level.AlphabetState.IN_THERE;
+
+        for (int i = 0; i < alphabet.length; i++)
+            updateAlphabet(i);
+
+        int order[] = Utils.getRandomOrder(alphabet.length, null);
+
+        for (int i: order)
+            for (int j = 0; j < solution.length; j++)
+                if (placeHolder[j] == -1 && alphabet[i].equals(solution[j])) {
+                    placeHolder[j] = i;
+                    alphabetGone[i] = Level.AlphabetState.CLICKED;
+                    updateAlphabet(i);
+                    updateSolution(j);
+                    break;
+                }
+
+        if (!mLevel.isSolved(preferences)) {
+            CoinManager.spendCoins(CoinManager.SKIP_LEVEL_COST, preferences);
+        }
+
+        mLevel.save(alphabetGone, placeHolder, preferences);
+    }
+    public void cheatAndRemoveSomeLetters() throws JSONException, NotEnoughMoneyException, ImpossibleCheatException {
+        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.ALPHABET_HIDING_COST)
+            throw new NotEnoughMoneyException();
+
+        int order[] = Utils.getRandomOrder(alphabet.length, null);
+
+        int done = 0;
+
+        for (int i: order) {
+            if (alphabetGone[i] == Level.AlphabetState.FIXED || alphabetGone[i] == Level.AlphabetState.REMOVED)
+                continue;
+
+            int remainingCount = 0;
+            int neededCount = 0;
+
+            for (int j = 0; j < solution.length; j++) {
+                if (solution[j].equals(alphabet[i])) {
+                    if (placeHolder[j] != -1 && alphabetGone[placeHolder[j]] == Level.AlphabetState.FIXED)
+                        continue;
+                    neededCount++;
+                }
+            }
+
+            for (int j = 0; j < alphabet.length; j++) {
+                if (alphabetGone[j] == Level.AlphabetState.FIXED || alphabetGone[j] == Level.AlphabetState.REMOVED)
+                    continue;
+                if (alphabet[j].equals(alphabet[i]))
+                    remainingCount++;
+            }
+
+            assert neededCount <= remainingCount;
+
+            if (remainingCount == neededCount)
+                continue;
+
+            if (done < 7) {
+                for (int j = 0; j < placeHolder.length; j++)
+                    if (placeHolder[j] == i) {
+                        placeHolder[j] = -1;
+                        updateSolution(j);
+                    }
+                alphabetGone[i] = Level.AlphabetState.REMOVED;
+                updateAlphabet(i);
+                done++;
+            }
+        }
+
+        //String log = "Here is alphabetGone:";
+        //for (Level.AlphabetState state: alphabetGone)
+        //    log += " " + state;
+        //Log.i("GOLVAZHE", log);
+
+        if (done == 0)
+            throw new ImpossibleCheatException();
+
+        if (!mLevel.isSolved(preferences)) {
+            CoinManager.spendCoins(CoinManager.ALPHABET_HIDING_COST, preferences);
+        }
+
+        mLevel.save(alphabetGone, placeHolder, preferences);
+    }
+    public void cheatAndRevealALetter() throws JSONException, NotEnoughMoneyException, ImpossibleCheatException {
+        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.LETTER_REVEAL_COST)
+            throw new NotEnoughMoneyException();
+
+        Random random = new Random();
+        ArrayList<Integer> positions = new ArrayList<Integer>();
+
+        for (int i = 0; i < solution.length; i++) {
+            if (solution[i].equals(" ") || solution[i].equals("."))
+                continue;
+            if (placeHolder[i] != -1 && (alphabetGone[placeHolder[i]] != Level.AlphabetState.IN_THERE || alphabetGone[placeHolder[i]] != Level.AlphabetState.CLICKED))
+                continue;
+            positions.add(i);
+        }
+
+        if (positions.isEmpty())
+            throw new ImpossibleCheatException();
+
+        int position = positions.get(random.nextInt(positions.size()));
+        int place = -1;
+
+        for (int i = 0; i < alphabet.length; i++)
+            if ((alphabetGone[i] == Level.AlphabetState.IN_THERE || alphabetGone[i] == Level.AlphabetState.CLICKED) && solution[position].equals(alphabet[i])) {
+                place = i;
+                break;
+            }
+
+        int toBeUpdatedAlphabet = placeHolder[position];
+
+        assert place != -1;
+
+        for (int i = 0; i < placeHolder.length; i++)
+            if (placeHolder[i] == place) {
+                placeHolder[i] = -1;
+                updateSolution(i);
+            }
+
+        alphabetGone[place] = Level.AlphabetState.FIXED;
+        placeHolder[position] = place;
+
+        if (toBeUpdatedAlphabet != -1)
+            updateAlphabet(toBeUpdatedAlphabet);
+        updateAlphabet(place);
+        updateSolution(position);
+
+        if (!mLevel.isSolved(preferences)) {
+            CoinManager.spendCoins(CoinManager.LETTER_REVEAL_COST, preferences);
+        }
+
+        mLevel.save(alphabetGone, placeHolder, preferences);
+    }
+
 
     private void setUpFlyingButton(View view) {
         FrameLayout button = (FrameLayout) ((FrameLayout) view).getChildAt(1);
@@ -87,17 +301,102 @@ public class LevelFragment extends Fragment {
         this.flyingButton = button;
     }
 
-    private void setUpImagePlace(View view) {
+    private void setUpImagePlace(final View view) {
         ImageView levelImageView = (ImageView) view.findViewById(R.id.image);
         levelImageView.setImageBitmap(ImageManager.loadImageFromInputStream(mLevel.getImage(), LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
         levelImageView.setBackgroundColor(Color.RED);
-        Utils.resizeView(levelImageView, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight());
+
+        FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
+        Utils.resizeView(box, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight());
 
         ImageView frame = (ImageView) view.findViewById(R.id.frame);
         frame.setImageBitmap(ImageManager.loadImageFromResource(view.getContext(), R.drawable.frame, LengthManager.getLevelImageFrameWidth(), LengthManager.getLevelImageFrameHeight()));
         Utils.resizeView(frame, LengthManager.getLevelImageFrameWidth(), LengthManager.getLevelImageFrameHeight());
 
-        Utils.resizeView(view.findViewById(R.id.image_place), ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getLevelImageFrameHeight());
+        Utils.resizeView(view.findViewById(R.id.level_view), ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getLevelImageFrameHeight());
+
+        cheatButtons = new View[] {
+                view.findViewById(R.id.cheat_remove_some_letters),
+                view.findViewById(R.id.cheat_reveal_a_letter),
+                view.findViewById(R.id.cheat_skip_level)
+        };
+
+        for (View cheatView: cheatButtons) {
+            final ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
+            layoutParams.width = LengthManager.getCheatButtonWidth();
+            layoutParams.height = LengthManager.getCheatButtonHeight();
+        }
+
+        Bitmap cheatBack = ImageManager.loadImageFromResource(view.getContext(), R.drawable.cheat_right, LengthManager.getCheatButtonWidth(), -1);
+
+        String[] cheatTitles = new String[] {
+                "حذف چند حرف",
+                "نمایش یک حرف",
+                "رد کردن مرحله"
+        };
+
+        for (int i = 0; i < 3; i++)
+            Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], "۱۲۰"));
+
+        blackWidow = view.findViewById(R.id.black_widow);
+    }
+
+    public void showCheats() {
+        for (View view: cheatButtons)
+            view.setVisibility(View.VISIBLE);
+
+        AnimatorSet set = new AnimatorSet();
+
+        blackWidow.setVisibility(View.VISIBLE);
+
+        set.playTogether(
+                ObjectAnimator.ofFloat(blackWidow, "alpha", 0, 0.60f),
+                ObjectAnimator.ofFloat(cheatButtons[0], "translationX", -cheatButtons[0].getWidth(), 0),
+                ObjectAnimator.ofFloat(cheatButtons[1], "translationX", +cheatButtons[1].getWidth(), 0),
+                ObjectAnimator.ofFloat(cheatButtons[2], "translationX", -cheatButtons[2].getWidth(), 0)
+        );
+
+        set.setInterpolator(new DecelerateInterpolator());
+        set.setDuration(600).start();
+    }
+
+    public void hideCheats() {
+
+        AnimatorSet set = new AnimatorSet();
+
+        set.playTogether(
+                ObjectAnimator.ofFloat(blackWidow, "alpha", 0.60f, 0),
+                ObjectAnimator.ofFloat(cheatButtons[0], "translationX", 0, -cheatButtons[0].getWidth()),
+                ObjectAnimator.ofFloat(cheatButtons[1], "translationX", 0, +cheatButtons[1].getWidth()),
+                ObjectAnimator.ofFloat(cheatButtons[2], "translationX", 0, -cheatButtons[2].getWidth())
+        );
+
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                for (View view: cheatButtons)
+                    view.setVisibility(View.INVISIBLE);
+                blackWidow.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        set.setDuration(600).start();
     }
 
     private void setUpAlphabetLinearLayout(LayoutInflater inflater, View view) {
@@ -106,7 +405,6 @@ public class LevelFragment extends Fragment {
         linesLayout.removeAllViewsInLayout();
 
 
-        Random random = new Random();
         for (int i = 0; i < 3; i++) {
             LinearLayout currentRow = new LinearLayout(mContext);
             currentRow.addView(Utils.makeNewSpace(mContext));
@@ -114,7 +412,6 @@ public class LevelFragment extends Fragment {
                 final int id = i * 7 + j;
 
                 FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.button_alphabet, null);
-                //frameLayout.setBackgroundColor(Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256)));
                 TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
 
                 textView.setFocusable(false);
@@ -172,7 +469,7 @@ public class LevelFragment extends Fragment {
         } else {
             imageView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getSolutionButtonSize(), LengthManager.getSolutionButtonSize()));
             textView.setText(alphabet[placeHolder[id]]);
-            textView.setTextColor(alphabetGone[placeHolder[id]] == Level.AlphabetState.FIXED? Color.rgb(0, 180, 0): Color.rgb(102, 102, 102));
+            textView.setTextColor(alphabetGone[placeHolder[id]] == Level.AlphabetState.FIXED ? Color.rgb(0, 180, 0) : Color.rgb(102, 102, 102));
         }
     }
 
@@ -413,4 +710,17 @@ public class LevelFragment extends Fragment {
         LoadingManager.endTask();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().findViewById(R.id.logo).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.cheat_button).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.cheat_button).setOnClickListener(null);
+    }
+
+    private class NotEnoughMoneyException extends Exception {
+    }
+
+    private class ImpossibleCheatException extends Exception {
+    }
 }

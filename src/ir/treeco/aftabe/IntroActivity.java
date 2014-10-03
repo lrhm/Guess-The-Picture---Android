@@ -1,7 +1,8 @@
 package ir.treeco.aftabe;
 
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +22,8 @@ import android.widget.RelativeLayout;
 import ir.treeco.aftabe.utils.*;
 
 public class IntroActivity extends FragmentActivity {
+    private SharedPreferences preferences;
+
     /**
      * Called when the activity is first created.
      */
@@ -38,75 +41,36 @@ public class IntroActivity extends FragmentActivity {
         // Load Layout
         setContentView(R.layout.activity_intro);
 
+        preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+
         RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
         header.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         logo.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
 
-        {
-            ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
-            int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
-            int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
-            coinBox.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
+        setUpCoinBox();
 
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
-            layoutParams.topMargin = LengthManager.getScreenWidth() / 15;
-            layoutParams.leftMargin = LengthManager.getScreenWidth() / 50;
-            coinBox.setLayoutParams(layoutParams);
 
-            LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
-            String number = "399";
-            int[] digitResource = new int[] {
-                    R.drawable.digit_0,
-                    R.drawable.digit_1,
-                    R.drawable.digit_2,
-                    R.drawable.digit_3,
-                    R.drawable.digit_4,
-                    R.drawable.digit_5,
-                    R.drawable.digit_6,
-                    R.drawable.digit_7,
-                    R.drawable.digit_8,
-                    R.drawable.digit_9,
-            };
-            digits.addView(Utils.makeNewSpace(this));
-            for (int i = 0; i < number.length(); i++) {
-                int d = number.charAt(i) - '0';
-                ImageView digit = new ImageView(this);
-                int digitHeight = LengthManager.getScreenWidth() / 21;
-                digit.setImageBitmap(ImageManager.loadImageFromResource(this, digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
-                digits.addView(digit);
-            }
-            digits.addView(Utils.makeNewSpace(this));
-            RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-            digitsLayoutParams.topMargin = LengthManager.getScreenWidth() * 40 / 360;
-            digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
-            digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
-            digits.setLayoutParams(digitsLayoutParams);
-        }
 
         // List fragment transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        PackageListFragment listFragment = PackageListFragment.newInstance();
-        fragmentTransaction.add(R.id.fragment_container, listFragment);
-        fragmentTransaction.commit();
+        if (fragmentManager.getBackStackEntryCount() == 0) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            PackageListFragment listFragment = PackageListFragment.newInstance();
+            fragmentTransaction.add(R.id.fragment_container, listFragment);
+            fragmentTransaction.commit();
+        }
+
+
 
         FrameLayout mainView = (FrameLayout) findViewById(R.id.main_view);
-        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[] {
-                Color.parseColor("#F3C81D"),
-                Color.parseColor("#F3C01E"),
-                Color.parseColor("#F49C14")
-        });
-        gradientDrawable.mutate();
-        gradientDrawable.setGradientRadius(LengthManager.getHeaderHeight() * 3);
-        gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        gradientDrawable.setGradientCenter(0.5F, 0.5F);
-        mainView.setBackground(gradientDrawable);
+        Utils.setViewBackground(mainView, new BackgroundDrawable(this));
 
-        ImageView background = (ImageView) findViewById(R.id.background);
+
+        /*ImageView background = (ImageView) findViewById(R.id.background);
         background.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.circles, LengthManager.getScreenWidth(), LengthManager.getScreenHeight()));
-
+        */
 
         final View loadingView = findViewById(R.id.loading);
 
@@ -172,6 +136,73 @@ public class IntroActivity extends FragmentActivity {
         });
     }
 
+    private void setUpCoinBox() {
+        ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
+        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
+        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
+        coinBox.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
+        layoutParams.topMargin = LengthManager.getScreenWidth() / 15;
+        layoutParams.leftMargin = LengthManager.getScreenWidth() / 50;
+
+        LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
+        RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
+        digitsLayoutParams.topMargin = LengthManager.getScreenWidth() * 40 / 360;
+        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
+        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
+
+        coinBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoadingManager.startTask(new TaskStartedListener() {
+                    @Override
+                    public void taskStarted() {
+                        StoreFragment fragment = StoreFragment.getInstance();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
+            }
+        });
+
+
+        CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
+            @Override
+            public void changed(int newAmount) {
+                LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
+                digits.removeAllViews();
+
+                String number = "" + CoinManager.getCoinsCount(preferences);
+
+                int[] digitResource = new int[]{
+                        R.drawable.digit_0,
+                        R.drawable.digit_1,
+                        R.drawable.digit_2,
+                        R.drawable.digit_3,
+                        R.drawable.digit_4,
+                        R.drawable.digit_5,
+                        R.drawable.digit_6,
+                        R.drawable.digit_7,
+                        R.drawable.digit_8,
+                        R.drawable.digit_9,
+                };
+
+                digits.addView(Utils.makeNewSpace(IntroActivity.this));
+                for (int i = 0; i < number.length(); i++) {
+                    int d = number.charAt(i) - '0';
+                    ImageView digit = new ImageView(IntroActivity.this);
+                    int digitHeight = LengthManager.getScreenWidth() / 21;
+                    digit.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
+                    digits.addView(digit);
+                }
+                digits.addView(Utils.makeNewSpace(IntroActivity.this));
+            }
+        }, preferences);
+    }
+
     @Override
     public void onBackPressed() {
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
@@ -208,5 +239,11 @@ public class IntroActivity extends FragmentActivity {
     private void setBackgroundV16Minus(View view, Bitmap bitmap) {
         view.setBackgroundDrawable(new BitmapDrawable(bitmap));
     }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (StoreFragment.billingProcessor == null || !StoreFragment.billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
+    }
 
 }
