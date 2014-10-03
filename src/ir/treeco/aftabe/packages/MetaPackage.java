@@ -18,6 +18,8 @@ public class MetaPackage {
     private Context context;
     private PackageState state;
     private PackageManager packageManager;
+    private int[] color;
+    private float[] backgroundHSV, cheat‌ButtonHSV;
 
     @Override
     public String toString() {
@@ -28,12 +30,27 @@ public class MetaPackage {
         return context;
     }
 
-    public MetaPackage(Context context, String name, int id, PackageState state, PackageManager packageManager) {
+    public int[] getColor() {
+        return color;
+    }
+
+    public float[] getBackgroundHSV() {
+        return backgroundHSV;
+    }
+
+    public float[] getCheatButtonHSV() {
+        return cheat‌ButtonHSV;
+    }
+
+    public MetaPackage(Context context,int[] color, float[] backgroundHSV, float[] cheatButtonHSV, String name, int id, PackageState state, PackageManager packageManager) {
         this.context = context;
         this.name = name;
         this.id = id;
         this.state = state;
         this.packageManager = packageManager;
+        this.color = color;
+        this.backgroundHSV = backgroundHSV;
+        this.cheat‌ButtonHSV = cheat‌ButtonHSV;
     }
 
     public void setCost(int cost) {

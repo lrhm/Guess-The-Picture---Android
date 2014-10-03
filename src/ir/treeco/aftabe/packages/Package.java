@@ -30,6 +30,7 @@ public class Package {
             levelThumbnailKey = "Thumbnail",
             resourceInfoKey = "Resources",
             levelPrizeKey = "Prize";
+    private HashMap<String, InputStream> nameToInputStream = new HashMap<String, InputStream>();
 //    private Context context;
 //    private PackageManager pManager;
 
@@ -116,6 +117,29 @@ public class Package {
 //    }
 
     public InputStream[] getThumbnails() {
+        try {
+            int cnt = 0;
+            for (HashMap<String, Object> aLevelInfo : levelsInfo) {
+                List<HashMap<String, String>> resourcesInfo = (List<HashMap<String, String>>) aLevelInfo.get(resourceInfoKey);
+                for (HashMap<String, String> aResource : resourcesInfo) {
+                    if (aResource.get("Name").equals(levels[cnt].getThumbnailName())) {
+                        //duplicate inputStream
+                        InputStream is = nameToInputStream.get(aResource.get("Name"));
+                        byte[] buffer = new byte[1024];
+                        int count;
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        while ((count = is.read(buffer)) != -1) {
+                            baos.write(buffer, 0, count);
+                        }
+                        levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
+                        thumbnails[cnt] = new ByteArrayInputStream(baos.toByteArray());
+                    }
+                }
+                cnt++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return thumbnails;
     }
 
@@ -196,7 +220,7 @@ public class Package {
         thumbnails = new InputStream[levelsInfo.size()];
 
 
-        HashMap<String, InputStream> nameToInputStream = new HashMap<String, InputStream>();
+        nameToInputStream = new HashMap<String, InputStream>();
         if (meta.getState() == PackageState.builtIn) {
             ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(), meta.getName(), "zip"));
             ZipEntry zipFile;
@@ -227,8 +251,6 @@ public class Package {
 
             int resCnt = 0;
             if (meta.getState() == PackageState.builtIn) {
-                ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(), meta.getName(), "zip"));
-                ZipEntry zipFile;
                 for (HashMap<String, String> aResource : resourcesInfo) {
 //                    while ((zipFile = zipInputStream.getNextEntry()) != null) {
 //                        String fname = zipFile.getName();
