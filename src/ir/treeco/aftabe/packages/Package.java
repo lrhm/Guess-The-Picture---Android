@@ -23,6 +23,7 @@ public class Package {
     private ZipFile zipFile;
     private List<HashMap<String, Object>> levelsInfo;
     private Level[] levels;
+    private InputStream[] thumbnails;
     //    private int id;
     private String levelSolutionKey = "Solution",
             levelAuthorKey = "Author",
@@ -114,6 +115,11 @@ public class Package {
 //        this.numberOfLevels = numberOfLevels;
 //    }
 
+    public InputStream[] getThumbnails() {
+        return thumbnails;
+    }
+
+
     public Package(MetaPackage meta) {
 //        this.pManager = meta.getPackageManager();
 //        this.context = meta.getContext();
@@ -187,6 +193,26 @@ public class Package {
         levelsInfo = (List<HashMap<String, Object>>) yaml.load(yamlStream);
 //        levels = new Level[this.numberOfLevels];
         levels = new Level[levelsInfo.size()];
+        thumbnails = new InputStream[levelsInfo.size()];
+
+
+        HashMap<String, InputStream> nameToInputStream = new HashMap<String, InputStream>();
+        if (meta.getState() == PackageState.builtIn) {
+            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(), meta.getName(), "zip"));
+            ZipEntry zipFile;
+            while ((zipFile = zipInputStream.getNextEntry()) != null) {
+                String fname = zipFile.getName();
+                byte[] buffer = new byte[1024];
+                int count;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                while ((count = zipInputStream.read(buffer)) != -1) {
+                    baos.write(buffer, 0, count);
+                }
+                nameToInputStream.put(fname, new ByteArrayInputStream(baos.toByteArray()));
+            }
+        }
+
+
         int cnt = 0;
         for (HashMap<String, Object> aLevelInfo : levelsInfo) {
 
@@ -204,24 +230,35 @@ public class Package {
                 ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(meta.getContext(), meta.getName(), "zip"));
                 ZipEntry zipFile;
                 for (HashMap<String, String> aResource : resourcesInfo) {
-                    while ((zipFile = zipInputStream.getNextEntry()) != null) {
-                        String fname = zipFile.getName();
-                        if (aResource.get("Name").equals(fname)) {
-                            byte[] buffer = new byte[1024];
-                            int count;
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            while ((count = zipInputStream.read(buffer)) != -1) {
-                                baos.write(buffer, 0, count);
-                            }
-                            int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
-                            resources[resCnt] = new Multimedia(aResource.get("Type"), new ByteArrayInputStream(baos.toByteArray()), cost);
-                            if (thumbnailName.equals(fname))
-                                levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
-                            resCnt++;
-                            break;
+//                    while ((zipFile = zipInputStream.getNextEntry()) != null) {
+//                        String fname = zipFile.getName();
+//                        if (aResource.get("Name").equals(fname)) {
+//                            byte[] buffer = new byte[1024];
+//                            int count;
+//                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                            while ((count = zipInputStream.read(buffer)) != -1) {
+//                                baos.write(buffer, 0, count);
+//                            }
+                    int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
+                    if(aResource.get("Name").equals(thumbnailName)) {
+                        //duplicate inputStream
+                        InputStream is = nameToInputStream.get(aResource.get("Name"));
+                        byte[] buffer = new byte[1024];
+                        int count;
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        while ((count = is.read(buffer)) != -1) {
+                            baos.write(buffer, 0, count);
                         }
+                        levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
+                        thumbnails[cnt] = new ByteArrayInputStream(baos.toByteArray());
+                        resources[resCnt] = new Multimedia(aResource.get("Type"), new ByteArrayInputStream(baos.toByteArray()), cost);
                     }
-                }
+                    else {
+                        resources[resCnt] = new Multimedia(aResource.get("Type"), nameToInputStream.get(aResource.get("Name")), cost);
+                    }
+                    resCnt++;
+//                        }
+                    }
             }
             if (meta.getState() == PackageState.local) {
                 for (HashMap<String, String> aResource : resourcesInfo) {
@@ -236,6 +273,7 @@ public class Package {
                             baos.write(buffer, 0, count);
                         }
                         levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
+                        thumbnails[cnt] = new ByteArrayInputStream(baos.toByteArray());
                         int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
                         resources[resCnt] = new Multimedia(aResource.get("Type"), new ByteArrayInputStream(baos.toByteArray()),cost);
                     } else {
