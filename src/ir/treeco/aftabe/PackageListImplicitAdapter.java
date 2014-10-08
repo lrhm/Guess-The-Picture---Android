@@ -5,7 +5,6 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -231,7 +230,7 @@ public class PackageListImplicitAdapter {
                         LoadingManager.startTask(new TaskStartedListener() {
                             @Override
                             public void taskStarted() {
-                                PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]), (FragmentActivity) context);
+                                PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]));
                                 FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.fragment_container, fragment);
                                 transaction.addToBackStack(null);

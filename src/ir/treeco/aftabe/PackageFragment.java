@@ -1,9 +1,9 @@
 package ir.treeco.aftabe;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.Package;
+import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.LoadingManager;
 import ir.treeco.aftabe.utils.Utils;
@@ -21,23 +22,28 @@ import ir.treeco.aftabe.utils.Utils;
  */
 public class PackageFragment extends Fragment {
     private Package mPackage;
-    private FragmentActivity fragmentActivity;
+    private Bitmap levelLocked;
+    private Bitmap levelUnlocked;
 
-    public static PackageFragment newInstance(Package mPackage, FragmentActivity fragmentActivity) {
+    public static PackageFragment newInstance(Package mPackage) {
         PackageFragment packageFragment = new PackageFragment();
         packageFragment.mPackage = mPackage;
-        packageFragment.fragmentActivity = fragmentActivity;
         return packageFragment;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_package, container, false);
 
+        float[] cheatButtonHSV = mPackage.meta.getCheatButtonHSV();
+        levelLocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+        levelUnlocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+
         ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
-        viewPager.setAdapter(new LevelsViewPagerAdapter(mPackage, fragmentActivity));
+        viewPager.setAdapter(new LevelsViewPagerAdapter(this));
 
         ImageView levelsBackTop = (ImageView) layout.findViewById(R.id.levels_back_top);
         ImageView levelsBackBottom = (ImageView) layout.findViewById(R.id.levels_back_bottom);
+
 
         Utils.resizeView(viewPager, LengthManager.getScreenWidth(), LengthManager.getLevelsViewpagerHeight());
         Utils.resizeView(levelsBackTop, LengthManager.getScreenWidth(), LengthManager.getLevelsBackTopHeight());
@@ -91,6 +97,7 @@ public class PackageFragment extends Fragment {
     }
 
     void updateIndicators(LinearLayout indicatorList, float position) {
+        Log.d("indicator", "is called");
         float extra = LengthManager.getIndicatorBigSize() - LengthManager.getIndicatorSmallSize();
         float base = LengthManager.getIndicatorSmallSize();
         for (int i = 0; i < indicatorList.getChildCount(); i++) {
@@ -105,4 +112,18 @@ public class PackageFragment extends Fragment {
         super.onResume();
         LoadingManager.endTask();
     }
+
+    public Package getPackage() {
+        return mPackage;
+    }
+
+    public Bitmap getThumbnail(int levelID) {
+        return null;
+    }
+
+    public Bitmap getLevelLockedBitmap() {
+        return levelLocked;
+    }
+
+
 }
