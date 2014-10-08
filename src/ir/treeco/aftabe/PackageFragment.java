@@ -17,6 +17,8 @@ import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.LoadingManager;
 import ir.treeco.aftabe.utils.Utils;
 
+import java.io.InputStream;
+
 /**
  * Created by hossein on 8/31/14.
  */
@@ -24,6 +26,7 @@ public class PackageFragment extends Fragment {
     private Package mPackage;
     private Bitmap levelLocked;
     private Bitmap levelUnlocked;
+    private Bitmap[] thubmnails;
 
     public static PackageFragment newInstance(Package mPackage) {
         PackageFragment packageFragment = new PackageFragment();
@@ -37,6 +40,14 @@ public class PackageFragment extends Fragment {
         float[] cheatButtonHSV = mPackage.meta.getCheatButtonHSV();
         levelLocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
         levelUnlocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+
+        InputStream[] inputStreams = mPackage.getThumbnails();
+        thubmnails = new Bitmap[inputStreams.length];
+
+        for (int i = 0; i < inputStreams.length; i++) {
+            thubmnails[i] = ImageManager.loadImageFromInputStream(inputStreams[i], LengthManager.getLevelFrameWidth() / 2, LengthManager.getLevelFrameHeight() / 2);
+            inputStreams[i] = null;
+        }
 
         ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
         viewPager.setAdapter(new LevelsViewPagerAdapter(this));
@@ -118,7 +129,7 @@ public class PackageFragment extends Fragment {
     }
 
     public Bitmap getThumbnail(int levelID) {
-        return null;
+        return thubmnails[levelID];
     }
 
     public Bitmap getLevelLockedBitmap() {
@@ -126,4 +137,7 @@ public class PackageFragment extends Fragment {
     }
 
 
+    public Bitmap getLevelUnockedBitmap() {
+        return levelUnlocked;
+    }
 }

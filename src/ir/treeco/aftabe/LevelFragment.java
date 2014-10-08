@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -18,10 +19,12 @@ import android.widget.*;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.utils.*;
 import org.json.JSONException;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -43,6 +46,7 @@ public class LevelFragment extends Fragment {
     private FrameLayout flyingButton;
     private View[] cheatButtons;
     private View blackWidow;
+    private Multimedia[] resources;
 
     public static LevelFragment newInstance(Level mLevel) {
         LevelFragment levelFragment = new LevelFragment();
@@ -71,6 +75,8 @@ public class LevelFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
+        loadResources();
+
         //setUpTitleBar();
         setUpFlyingButton(layout);
         setUpSolutionLinearLayout(inflater, layout);
@@ -80,6 +86,25 @@ public class LevelFragment extends Fragment {
         setupCheatButton(layout);
 
         return layout;
+    }
+
+    private void loadResources() {
+        resources = mLevel.getResources();
+        int index = 0;
+        for (Multimedia resource: resources) {
+            try {
+                File file = new File(getActivity().getCacheDir(), "mm_" + index);
+                OutputStream os = new FileOutputStream(file);
+                InputStream is = resource.getMedia();
+                Utils.pipe(is, os);
+                os.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            index++;
+        }
     }
 
     private void setupCheatButton(View layout) {
@@ -308,9 +333,11 @@ public class LevelFragment extends Fragment {
     }
 
     private void setUpImagePlace(final View view) {
-        ImageView levelImageView = (ImageView) view.findViewById(R.id.image);
-        levelImageView.setImageBitmap(ImageManager.loadImageFromInputStream(mLevel.getThumbnail(), LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
-        levelImageView.setBackgroundColor(Color.RED);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.multimedia);
+        viewPager.setAdapter(new MultimediaAdapter(this));
+        //ImageView levelImageView = (ImageView) view.findViewById(R.id.image);
+
+        //levelImageView.setImageBitmap(ImageManager.loadImageFromInputStream(mLevel.getThumbnail(), LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
 
         FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
         Utils.resizeView(box, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight());
@@ -717,11 +744,22 @@ public class LevelFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        for (int i = 0; i < resources.length; i++)
+            getActivity().deleteFile("mm_" + i);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         getActivity().findViewById(R.id.logo).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.cheat_button).setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.cheat_button).setOnClickListener(null);
+    }
+
+    public Multimedia[] getMultimedia() {
+        return resources;
     }
 
     private class NotEnoughMoneyException extends Exception {
