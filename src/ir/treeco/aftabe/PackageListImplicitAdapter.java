@@ -202,9 +202,9 @@ public class PackageListImplicitAdapter {
 
         //configure font card view layout-params
         if (i < packages.length) {
-            /*if (packages[i].getState() == PackageState.remote)
+            /*if (packages[i].getState() == PackageState.REMOTE)
                 tag.frontButton.setText("خرید " + packages[i].getCost());
-            else if (packages[i].getState() == PackageState.downloading)
+            else if (packages[i].getState() == PackageState.DOWNLOADING)
                 tag.frontButton.setText("در حال دانلود");
             else
                 tag.frontButton.setText("ورود");*/
@@ -223,10 +223,10 @@ public class PackageListImplicitAdapter {
 //                        return;
 //                    }
                     //TODO check if package data is outdated
-                    if (packages[i].getState() == PackageState.remote) {
+                    if (packages[i].getState() == PackageState.REMOTE) {
                         packages[i].becomeLocal();
                     }
-                    else if(packages[i].getState() == PackageState.builtIn || packages[i].getState() == PackageState.local) {
+                    else if(packages[i].getState() == PackageState.LOCAL) {
                         LoadingManager.startTask(new TaskStartedListener() {
                             @Override
                             public void taskStarted() {

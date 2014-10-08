@@ -90,22 +90,17 @@ public class Utils {
             @Override
             public void run() {
                 try {
-                    Log.d("migmig","position " +1);
                     URLConnection conection = new URL(url).openConnection();
                     conection.connect();
-                    Log.d("migmig","position " +2);
                     int lenghtOfFile = conection.getContentLength();
                     InputStream is = new URL(url).openStream();
-                    Log.d("migmig","position " +3);
                     OutputStream os = context.openFileOutput(path, 0);
-                    Log.d("migmig","position " +4);
                     pipe(is, os, listener, lenghtOfFile);
-                    Log.d("migmig","position " +5);
                     os.close();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.d("migmig","position ",e);
-                    listener.failure();
+                    if(listener!=null)
+                        listener.failure();
                 }
             }
         }).start();
@@ -127,9 +122,11 @@ public class Utils {
                 os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
             }
             os.close();
-            listener.success();
+            if(listener!=null)
+                listener.success();
         } catch (IOException e) {
-            listener.failure();
+            if(listener!=null)
+                listener.failure();
         }
     }
 

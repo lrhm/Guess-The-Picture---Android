@@ -1,18 +1,12 @@
 package ir.treeco.aftabe.packages;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,25 +52,30 @@ public class PackageManager {
 //        inPackages = new Package[headerInfo.size()];
         inPackages = new MetaPackage[headerInfo.size()];
         int cnt=0;
-        Log.d("jijing", "pos"+1);
         for(HashMap<String,Object> pkgInfo : headerInfo) {
             String name = (String) pkgInfo.get(pkgNameKey);
-            Log.d("jijing", "pos"+2);
             List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
-            Log.d("jijing", colorList.toString());
-            Log.d("jijing", "pos"+3);
             int[] color = Utils.intListToArray(colorList);
-            Log.d("jijing", "pos"+4);
             List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
-            Log.d("jijing", bgHSVList.toString());
             float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
-            Log.d("jijing", backgroundHSV.length+"");
             List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
             float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
-            Log.d("jijing", "pos"+5);
 //            int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
 //            inPackages[cnt] = Package.getBuiltInPackage(this, cnt, context, name, desc, numberOfLevels);
-            inPackages[cnt] = new MetaPackage(context,color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.builtIn, this);
+            inPackages[cnt] = new MetaPackage(context,color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this);
+            //Copy data,Thumbnail to memory
+            File dataFile = new File(context.getFilesDir(), name+".zip");
+            File backThumb = new File(context.getFilesDir(), name+"_back.jpg");
+            File frontThumb = new File(context.getFilesDir(), name+"_front.jpg");
+            if(!dataFile.exists()) {
+                copyFromRawToInternal(name,"zip");
+            }
+            if(!backThumb.exists()) {
+                copyFromRawToInternal(name + "_back","jpg");
+            }
+            if(!frontThumb.exists()) {
+                copyFromRawToInternal(name + "_front","jpg");
+            }
             cnt++;
         }
 
@@ -102,9 +101,9 @@ public class PackageManager {
                 PackageState state;
                 File dataFile = new File(context.getFilesDir(),name+".zip");
                 if(dataFile.exists())
-                    state = PackageState.local;
+                    state = PackageState.LOCAL;
                 else
-                    state = PackageState.remote;
+                    state = PackageState.REMOTE;
                 List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
                 int[] color = Utils.intListToArray(colorList);
                 List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
@@ -140,9 +139,10 @@ public class PackageManager {
         ArrayList<MetaPackage> localPackagelist = new ArrayList<MetaPackage>();
 //        for(Package pkg : packages) {
         for (MetaPackage pkg : packages) {
-            if(pkg.getState()==PackageState.builtIn || pkg.getState()==PackageState.local)
+//            if(pkg.getState()==PackageState.builtIn || pkg.getState()==PackageState.LOCAL)
+            if(pkg.getState()==PackageState.LOCAL)
                 localPackagelist.add(pkg);
-            if(pkg.getState()==PackageState.remote || pkg.getState()==PackageState.downloading)
+            if(pkg.getState()==PackageState.REMOTE || pkg.getState()==PackageState.DOWNLOADING)
                 newPackagelist.add(pkg);
             /**
              *
@@ -151,7 +151,9 @@ public class PackageManager {
              *
              */
         }
-        hotPackagelist.add(packages[0]);//   JUST FOR TEST
+
+        //TODO delete below
+        hotPackagelist.add(packages[0]);
 
         //convert Arraylist to Arrays for better performance
 //        newPackages = newPackagelist.toArray(new Package[newPackagelist.size()]);
@@ -186,7 +188,7 @@ public class PackageManager {
         return newPackages;
     }
 
-//    public void copyFromRawToInternal(String name){
+    public void copyFromRawToInternal(String name, String type){
 //        R.raw r = new R.raw();
 //        Field field = null;
 //        try {
@@ -202,18 +204,15 @@ public class PackageManager {
 //            //don't care
 //        }
 //        InputStream inputStream = context.getResources().openRawResource(id);
-//        FileOutputStream fos = null;
-//        try {
-//            fos = context.openFileOutput(name+".zip",0);
-//        } catch (FileNotFoundException e) {
-//            Log.e("pManager","File doesn't exist in res/raw");
-//        }
-//        try {
-//            Utils.pipe(inputStream,fos);
-//        } catch (IOException e) {
-//            Log.e("pManager","problem in piping");
-//        }
-//    }
+        InputStream inputStream = Utils.getInputStreamFromRaw(context, name, type);
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput(name+"."+type,0);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Utils.pipe(inputStream,fos);
+    }
 
     public void downloadPackage(int id) throws Exception {
 //        Package pkg = this.packages[id];

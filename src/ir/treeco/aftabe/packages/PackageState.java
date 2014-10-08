@@ -5,5 +5,5 @@ package ir.treeco.aftabe.packages;
  */
 public enum PackageState {
     //TODO: fix names
-    local, remote, downloading, builtIn;
+    LOCAL, REMOTE, DOWNLOADING;
 }

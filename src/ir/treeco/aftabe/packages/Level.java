@@ -7,9 +7,11 @@ import ir.treeco.aftabe.utils.Encryption;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.zip.ZipEntry;
 
 /**
  * Created by hossein on 7/31/14.
@@ -45,10 +47,20 @@ public class Level {
         return thumbnailName;
     }
 
-    public void setThumbnail(InputStream thumbnail) {
-        this.thumbnail = thumbnail;
-    }
     public InputStream getThumbnail() {
+        try {
+            ZipEntry entry = wrapperPackage.getData().getEntry(thumbnailName);
+            return wrapperPackage.getData().getInputStream(entry);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+//    public void setThumbnail(InputStream thumbnail) {
+//        this.thumbnail = thumbnail;
+//    }
+//    public InputStream getThumbnail() {
 //        if(wrapperPackage.getState() == PackageState.builtIn) {
 //            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
 //                            ,"zip"));
@@ -62,8 +74,8 @@ public class Level {
 //            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
 //            return this.wrapperPackage.getData().getInputStream(entry);
 //        }
-        return thumbnail;
-    }
+//        return thumbnail;
+//    }
 //    public InputStream getImage() {
 //        if(wrapperPackage.getState() == PackageState.builtIn) {
 //            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()

@@ -102,23 +102,25 @@ public class MetaPackage {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.state = PackageState.local;
-        SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
-        preferences.edit().putInt(name+"_DATA_VERSION", dataVersion).commit();
+        this.state = PackageState.LOCAL;
+
+        //TODO handle Data Versions
+//        SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
+//        preferences.edit().putInt(name+"_DATA_VERSION", dataVersion).commit();
         packageManager.generateAdapterResourceArrays();
     }
 
     public InputStream getFront() throws FileNotFoundException {
-        if(this.state == PackageState.builtIn)
-            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
-        else
+//        if(this.state == PackageState.builtIn)
+//            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
+//        else
             return context.openFileInput(this.name+"_front.jpg");
     }
 
     public InputStream getBack() throws FileNotFoundException {
-        if (this.state == PackageState.builtIn)
-            return Utils.getInputStreamFromRaw(this.context, this.name + "_back", "jpg");
-        else
+//        if (this.state == PackageState.builtIn)
+//            return Utils.getInputStreamFromRaw(this.context, this.name + "_back", "jpg");
+//        else
             return context.openFileInput(this.name + "_back.jpg");
     }
 }

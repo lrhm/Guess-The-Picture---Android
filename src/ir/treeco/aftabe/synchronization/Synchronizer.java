@@ -146,7 +146,7 @@ public class Synchronizer extends BroadcastReceiver{
                         try {
                             Utils.download(context, url, name);
                         } catch (Exception e) {
-//                        Log.d("synch","Error in downloading File",e);
+//                        Log.d("synch","Error in DOWNLOADING File",e);
                             e.printStackTrace();
                         }
                         preferences.edit().putInt(name+"_VERSION",version).commit();
