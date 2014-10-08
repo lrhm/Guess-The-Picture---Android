@@ -18,12 +18,10 @@
                     android:layout_gravity="center"
                     android:clipToPadding="true"
                     android:id="@+id/box">
-                <ImageView
+                <android.support.v4.view.ViewPager
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/image"
-                        android:scaleType="centerCrop"
-                        android:contentDescription="@string/nothing"/>
+                        android:layout_height="wrap_content"
+                        android:id="@+id/multimedia"/>
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

@@ -42,7 +42,7 @@ class LevelsGridViewAdapter extends BaseAdapter {
 
             final ImageView frame = (ImageView) frameLayout.findViewById(R.id.frame);
             //frame.setImageBitmap(ImageManager.loadImageFromResource(viewGroup.getContext(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
-            frame.setImageBitmap(fragment.getLevelLockedBitmap());
+            frame.setImageBitmap(fragment.getLevelUnockedBitmap());
         } else {
             frameLayout = (FrameLayout) oldFrameLayout;
             imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);

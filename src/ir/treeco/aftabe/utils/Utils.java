@@ -127,9 +127,13 @@ public class Utils {
                 os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
             }
             os.close();
-            listener.success();
+            if (listener != null) {
+                listener.success();
+            }
         } catch (IOException e) {
-            listener.failure();
+            if (listener != null) {
+                listener.failure();
+            }
         }
     }
 
