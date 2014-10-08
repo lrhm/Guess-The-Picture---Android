@@ -116,6 +116,24 @@ public class Package {
 //        this.numberOfLevels = numberOfLevels;
 //    }
 
+    public InputStream getInputStreamByName(String name) {
+        ByteArrayOutputStream baos=null;
+        try {
+            InputStream is = nameToInputStream.get(name);
+            //duplicate inputStream
+            byte[] buffer = new byte[1024];
+            int count;
+            baos = new ByteArrayOutputStream();
+            while ((count = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, count);
+            }
+            nameToInputStream.put(name, new ByteArrayInputStream(baos.toByteArray()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ByteArrayInputStream(baos.toByteArray());
+    }
+
     public InputStream[] getThumbnails() {
         try {
             int cnt = 0;
@@ -124,7 +142,7 @@ public class Package {
                 for (HashMap<String, String> aResource : resourcesInfo) {
                     if (aResource.get("Name").equals(levels[cnt].getThumbnailName())) {
                         //duplicate inputStream
-                        InputStream is = nameToInputStream.get(aResource.get("Name"));
+                        InputStream is = getInputStreamByName(aResource.get("Name"));
                         byte[] buffer = new byte[1024];
                         int count;
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -133,6 +151,7 @@ public class Package {
                         }
                         levels[cnt].setThumbnail(new ByteArrayInputStream(baos.toByteArray()));
                         thumbnails[cnt] = new ByteArrayInputStream(baos.toByteArray());
+                        break;
                     }
                 }
                 cnt++;
@@ -264,7 +283,7 @@ public class Package {
                     int cost = aResource.get("Cost")==null?0:Integer.parseInt(aResource.get("Cost"));
                     if(aResource.get("Name").equals(thumbnailName)) {
                         //duplicate inputStream
-                        InputStream is = nameToInputStream.get(aResource.get("Name"));
+                        InputStream is = getInputStreamByName(aResource.get("Name"));
                         byte[] buffer = new byte[1024];
                         int count;
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -276,7 +295,7 @@ public class Package {
                         resources[resCnt] = new Multimedia(aResource.get("Type"), new ByteArrayInputStream(baos.toByteArray()), cost);
                     }
                     else {
-                        resources[resCnt] = new Multimedia(aResource.get("Type"), nameToInputStream.get(aResource.get("Name")), cost);
+                        resources[resCnt] = new Multimedia(aResource.get("Type"), getInputStreamByName(aResource.get("Name")), cost);
                     }
                     resCnt++;
 //                        }
