@@ -16,12 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 import java.util.Random;
 
@@ -170,8 +165,6 @@ public class Utils {
 
 
     public static Bitmap updateHSV(Bitmap src, float settingHue, float settingSat, float settingVal) {
-        settingHue = (new Random()).nextInt(360);
-
         int w = src.getWidth();
         int h = src.getHeight();
         int[] mapSrcColor = new int[w * h];

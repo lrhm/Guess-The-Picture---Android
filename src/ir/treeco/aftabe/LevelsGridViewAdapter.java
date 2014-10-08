@@ -8,21 +8,18 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import ir.treeco.aftabe.packages.Package;
-import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.Utils;
 
 /**
  * Created by hamed on 9/2/14.
  */
 class LevelsGridViewAdapter extends BaseAdapter {
     private final int[] levelIDs;
-    private final Package mPackage;
+    private final PackageFragment fragment;
 
-    public LevelsGridViewAdapter(int[] levelIDs, Package mPackage) {
+    public LevelsGridViewAdapter(int[] levelIDs, PackageFragment fragment) {
         this.levelIDs = levelIDs;
-        this.mPackage = mPackage;
+        this.fragment = fragment;
     }
 
     @Override
@@ -45,7 +42,7 @@ class LevelsGridViewAdapter extends BaseAdapter {
 
             final ImageView frame = (ImageView) frameLayout.findViewById(R.id.frame);
             //frame.setImageBitmap(ImageManager.loadImageFromResource(viewGroup.getContext(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
-            frame.setImageBitmap(Utils.updateHSV(ImageManager.loadImageFromResource(viewGroup.getContext(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), 337, -0.23F, 0F));
+            frame.setImageBitmap(fragment.getLevelLockedBitmap());
         } else {
             frameLayout = (FrameLayout) oldFrameLayout;
             imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);
@@ -55,11 +52,14 @@ class LevelsGridViewAdapter extends BaseAdapter {
         final int levelID = levelIDs[i];
 
         if (levelID != -1) {
+            imageView.setImageBitmap(fragment.getThumbnail(levelID));
+/*
             try {
                 //imageView.setImageBitmap(ImageManager.loadImageFromInputStream(mPackage.getLevel(levelID).getImage(), LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+*/
             /*if (LevelDataOrganizer.getLevel(levelID).isLocked(preferences))
                 imageView.setImageBitmap(ImageManager.loadImageFromResource(BoxActivity.this, R.drawable.lock, (int) heightManager.getLevelThumbnailSize(), (int) heightManager.getLevelThumbnailSize()));
             else {

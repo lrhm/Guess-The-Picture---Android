@@ -169,7 +169,7 @@ public class LengthManager {
 
 
     public static int getLevelThumbnailPadding() {
-        return getLevelFrameWidth() / 7;
+        return getLevelFrameWidth() * 10 / 100;
     }
 
     public static int getLevelsGridViewTopAndBottomPadding() {
