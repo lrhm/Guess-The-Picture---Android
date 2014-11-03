@@ -54,7 +54,7 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
         for (int current = begin; current < end; current++)
             levelIDs[current - begin] = current;
 
-        GridView gridView = (GridView) inflater.inflate(R.layout.levels_list_view, container, false);
+        GridView gridView = (GridView) inflater.inflate(R.layout.view_levels_list, container, false);
         gridView.setNumColumns(LengthManager.getPageColumnCount());
         gridView.setColumnWidth(LengthManager.getLevelFrameWidth());
         gridView.setStretchMode(GridView.NO_STRETCH);

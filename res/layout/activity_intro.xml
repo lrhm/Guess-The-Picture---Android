@@ -40,17 +40,5 @@
                 android:id="@+id/fragment_container">
         </FrameLayout>
     </LinearLayout>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/loading"
-            android:visibility="invisible"
-            android:clickable="true"
-            android:background="#000">
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/nothing"/>
-    </LinearLayout>
 </FrameLayout>
 

@@ -11,15 +11,15 @@ public class RoundedCornerDrawable extends Drawable {
 
     public RoundedCornerDrawable() {
         paint = new Paint();
-        paint.setColor(Color.GRAY);
+        paint.setColor(0x66666666);
         paint.setAntiAlias(true);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        final float rectRadius = getBounds().height() / 4;
         final float padding = getBounds().height() / 8;
-        canvas.drawRoundRect(new RectF(padding, padding, getBounds().width() - padding, getBounds().height() - padding), rectRadius, rectRadius, paint);
+        final float rectRadius = (getBounds().height() - padding * 3) / 2;
+        canvas.drawRoundRect(new RectF(padding, padding * 2, getBounds().width() - padding, getBounds().height() - padding), rectRadius, rectRadius, paint);
     }
 
     @Override

@@ -247,4 +247,33 @@ public class LengthManager {
     public static int getCheatButtonSize() {
         return getScreenWidth() / 7;
     }
+
+    public static int getVideoPlayButtonSize() {
+        return getLevelImageWidth() / 2;
+    }
+
+    public static int getShopTitleBottomMargin() {
+        return getShopTitleWidth() / 6;
+    }
+
+    public static int getTickViewSize() {
+        return getScreenWidth() / 3;
+    }
+
+    public static int getLevelFinishedButtonsSize() {
+        return getScreenWidth() / 6;
+    }
+
+    public static float getLevelSolutionTextSize() {
+        return getScreenWidth() / 15f;
+    }
+
+
+    public static float getLevelAuthorTextSize() {
+        return getScreenWidth() / 18f;
+    }
+
+    public static int getLevelFinishedDialogPadding() {
+        return getScreenWidth() / 10;
+    }
 }

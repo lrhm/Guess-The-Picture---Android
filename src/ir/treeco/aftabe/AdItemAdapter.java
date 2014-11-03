@@ -2,10 +2,8 @@ package ir.treeco.aftabe;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
 
 import java.io.FileNotFoundException;
-import java.util.Set;
 
 /**
  * Created by hamed on 8/17/14.
@@ -49,7 +46,7 @@ public class AdItemAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.ad_image, null);
+        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.view_ad_image, null);
         ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
         try {
             imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad"+position),LengthManager.getScreenWidth(),-1));

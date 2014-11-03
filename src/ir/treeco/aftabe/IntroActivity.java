@@ -58,13 +58,13 @@ public class IntroActivity extends FragmentActivity {
         if (fragmentManager.getBackStackEntryCount() == 0) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             PackageListFragment listFragment = PackageListFragment.newInstance();
-            fragmentTransaction.add(R.id.fragment_container, listFragment);
+            fragmentTransaction.replace(R.id.fragment_container, listFragment);
             fragmentTransaction.commit();
         }
 
 
 
-        FrameLayout mainView = (FrameLayout) findViewById(R.id.main_view);
+        mainView = (FrameLayout) findViewById(R.id.main_view);
         Utils.setViewBackground(mainView, new BackgroundDrawable(this));
 
 
@@ -72,10 +72,6 @@ public class IntroActivity extends FragmentActivity {
         background.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.circles, LengthManager.getScreenWidth(), LengthManager.getScreenHeight()));
         */
 
-        final View loadingView = findViewById(R.id.loading);
-
-        ImageView ehem = (ImageView) ((LinearLayout) loadingView).getChildAt(0);
-        ehem.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.load, LengthManager.getScreenWidth(), LengthManager.getHeightWithFixedWidth(R.drawable.load, LengthManager.getScreenWidth())));
 
         final Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator());
@@ -86,9 +82,16 @@ public class IntroActivity extends FragmentActivity {
         fadeOut.setStartOffset(200);
         fadeOut.setDuration(200);
 
+        final LinearLayout loadingView = (LinearLayout) getLayoutInflater().inflate(R.layout.view_ehem, null);
+
         LoadingManager.setSomeTaskStartedListener(new SomeTaskStartedListener() {
             @Override
             public void someTaskStarted(final TaskCallback callback) {
+                pushToViewStack(loadingView);
+
+                ImageView ehem = (ImageView) loadingView.getChildAt(0);
+                ehem.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.load, LengthManager.getScreenWidth(), LengthManager.getHeightWithFixedWidth(R.drawable.load, LengthManager.getScreenWidth())));
+
                 loadingView.setVisibility(View.VISIBLE);
                 fadeIn.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -123,6 +126,7 @@ public class IntroActivity extends FragmentActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         loadingView.setVisibility(View.INVISIBLE);
+                        popFromViewStack(loadingView);
                     }
 
                     @Override
@@ -248,4 +252,14 @@ public class IntroActivity extends FragmentActivity {
             super.onActivityResult(requestCode, resultCode, data);
     }
 
+    FrameLayout mainView;
+
+    void pushToViewStack(View view) {
+        mainView.addView(view);
+    }
+
+    void popFromViewStack(View view) {
+        Log.e("BACKSTACK", "Popping!");
+        mainView.removeView(view);
+    }
 }

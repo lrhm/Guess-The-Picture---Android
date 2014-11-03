@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -47,6 +49,8 @@ public class LevelFragment extends Fragment {
     private View[] cheatButtons;
     private View blackWidow;
     private Multimedia[] resources;
+    private LayoutInflater inflater;
+    private LinearLayout greetingsView = null;
 
     public static LevelFragment newInstance(Level mLevel) {
         LevelFragment levelFragment = new LevelFragment();
@@ -56,6 +60,7 @@ public class LevelFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().findViewById(R.id.logo).setVisibility(View.INVISIBLE);
+        this.inflater = inflater;
 
         final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.fragment_level, container, false);
 
@@ -444,7 +449,7 @@ public class LevelFragment extends Fragment {
             for (int j = 0; j < 7; j++) {
                 final int id = i * 7 + j;
 
-                FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.button_alphabet, null);
+                FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.view_alphabet_button, null);
                 TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
 
                 textView.setFocusable(false);
@@ -626,7 +631,155 @@ public class LevelFragment extends Fragment {
     }
 
     private void checkLevelCompleted(boolean b) {
+        for (int i = 0; i < solution.length; i++) {
+            if (solution[i].equals(" ") || solution[i].equals("."))
+                continue;
+            if (placeHolder[i] == -1)
+                return;
+            String text = alphabet[placeHolder[i]];
+            if (!solution[i].equals(text))
+                return;
+        }
 
+        mLevel.clearSolution(preferences);
+
+        addLevelFinishedLayout();
+
+        Toast.makeText(getActivity(), "Oh yeah!", Toast.LENGTH_LONG).show();
+
+
+        /*View finishedView = findViewById(R.id.finishedLayout);
+        finishedView.setVisibility(View.VISIBLE);
+
+        ImageView nextButton = (ImageView) findViewById(R.id.nextLevelButton);
+        final View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, null, LevelActivity.this, LevelActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("level", currentLevelId + 1);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+            }
+        };
+        nextButton.setOnClickListener(clickListener);
+
+        if (currentLevelId + 1 == LevelDataOrganizer.getLevelCount()) {
+            nextButton.setVisibility(View.GONE);
+            View spaceView = findViewById(R.id.separatorSpace);
+            spaceView.setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.tickView).setOnClickListener(clickListener);
+        }
+
+        ImageView homeButton = (ImageView) findViewById(R.id.homeLevelButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        MediaPlayer.create(LevelActivity.this, R.raw.sound_correct).start();
+
+        if (giveHimPrize && !levelData.isSolved(preferences)) {
+            CoinManager.earnCoins(CoinManager.LEVEL_COMPELETED_PRIZE, preferences);
+        } else {
+            View coinFrame = findViewById(R.id.coinFrame);
+            coinFrame.setVisibility(View.GONE);
+        }
+
+        levelData.yeahHeSolvedIt(preferences);*/
+    }
+
+    private void customizeTextView(TextView textView, String label, float textSize) {
+        textView.setText(label);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getStoreItemFontSize());
+        textView.setTextColor(Color.WHITE);
+        textView.setShadowLayer(1, 2, 2, Color.BLACK);
+        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
+    }
+
+
+    private void addLevelFinishedLayout() {
+        greetingsView = (LinearLayout) inflater.inflate(R.layout.view_level_finished, null);
+        FrameLayout mainView = (FrameLayout) getActivity().findViewById(R.id.main_view);
+        mainView.addView(greetingsView);
+
+        LinearLayout dialog = (LinearLayout) greetingsView.findViewById(R.id.dialog);
+
+        Utils.resizeView(dialog, ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getScreenWidth());
+
+        Utils.setViewBackground(dialog, new DialogDrawable(mContext));
+
+        {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dialog.getLayoutParams();
+            layoutParams.leftMargin = layoutParams.rightMargin = layoutParams.topMargin = layoutParams.bottomMargin = LengthManager.getStoreDialogMargin();
+        }
+
+        {
+            int padding = LengthManager.getLevelFinishedDialogPadding();
+            dialog.setPadding(padding, padding, padding, padding);
+        }
+
+        {
+            ImageView tickView = (ImageView) greetingsView.findViewById(R.id.tickView);
+            tickView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.correct, LengthManager.getTickViewSize(), LengthManager.getTickViewSize()));
+            Utils.resizeView(tickView, LengthManager.getTickViewSize(), LengthManager.getTickViewSize());
+        }
+
+        {
+            final ImageView nextButton = (ImageView) greetingsView.findViewById(R.id.next_level_button);
+            ImageView homeButton = (ImageView) greetingsView.findViewById(R.id.home_button);
+
+
+            if (mLevel.getId() + 1 < mLevel.getWrapperPackage().getNumberOfLevels()) {
+                nextButton.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.next_button, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize()));
+                Utils.resizeView(nextButton, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize());
+
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LoadingManager.startTask(new TaskStartedListener() {
+                            @Override
+                            public void taskStarted() {
+                                Level level = mLevel.getWrapperPackage().getLevel(mLevel.getId() + 1);
+                                LevelFragment newFragment = LevelFragment.newInstance(level);
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.remove(LevelFragment.this);
+                                transaction.replace(R.id.fragment_container, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                        });
+                    }
+                });
+            } else {
+                nextButton.setVisibility(View.GONE);
+                greetingsView.findViewById(R.id.separatorSpace).setVisibility(View.GONE);
+            }
+
+            homeButton.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.home_button, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize()));
+            Utils.resizeView(homeButton, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize());
+
+            homeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+
+        {
+            TextView levelSolution = (TextView) greetingsView.findViewById(R.id.level_solution);
+            TextView levelAuthor = (TextView) greetingsView.findViewById(R.id.author);
+
+            customizeTextView(levelSolution, mLevel.getSolution(), LengthManager.getLevelSolutionTextSize());
+            customizeTextView(levelAuthor, mLevel.getAuthor(), LengthManager.getLevelAuthorTextSize());
+        }
     }
 
     public void solutionClicked(final int id) {
@@ -695,7 +848,7 @@ public class LevelFragment extends Fragment {
                 continue;
             }
 
-            FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.button_solution, null);
+            FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.view_solution_button, null);
 
             frameLayout.setFocusable(false);
             frameLayout.setFocusableInTouchMode(false);
@@ -746,13 +899,18 @@ public class LevelFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         for (int i = 0; i < resources.length; i++)
             getActivity().deleteFile("mm_" + i);
+
+        if (greetingsView != null)
+            ((IntroActivity) getActivity()).popFromViewStack(greetingsView);
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         super.onDestroy();
+
         getActivity().findViewById(R.id.logo).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.cheat_button).setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.cheat_button).setOnClickListener(null);

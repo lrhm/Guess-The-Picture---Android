@@ -115,6 +115,7 @@ public class PackageFragment extends Fragment {
             float distance = 1 - Math.min(Math.abs(position - i), 1F);
             float size = distance * extra + base;
             Utils.resizeView(indicatorList.getChildAt(i), (int) size, (int) size);
+            indicatorList.getChildAt(i).setLayoutParams(indicatorList.getChildAt(i).getLayoutParams());
         }
     }
 

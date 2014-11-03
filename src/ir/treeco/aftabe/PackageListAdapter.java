@@ -91,7 +91,7 @@ public class PackageListAdapter extends BaseAdapter {
         if (rowView != null)
             return rowView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.ad_item, null);
+        RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.view_ad_item, null);
         AutoScrollViewPager viewPager = (AutoScrollViewPager) adHolder.findViewById(R.id.ad_view_pager);
         viewPager.setAdapter(new AdItemAdapter(context));
         viewPager.setInterval(5000);

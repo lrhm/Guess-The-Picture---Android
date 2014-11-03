@@ -34,7 +34,7 @@ class LevelsGridViewAdapter extends BaseAdapter {
         ImageView imageView;
 
         if (oldFrameLayout == null) {
-            frameLayout = (FrameLayout) inflater.inflate(R.layout.level_thumbnail, null);
+            frameLayout = (FrameLayout) inflater.inflate(R.layout.view_level_thumbnail, null);
             frameLayout.setLayoutParams(new GridView.LayoutParams(LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
             imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);
             int myPadding = LengthManager.getLevelThumbnailPadding();

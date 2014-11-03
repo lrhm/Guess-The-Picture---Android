@@ -99,7 +99,7 @@ public class PackageListImplicitAdapter {
     public View getView(final int i, View packageInfo, ViewGroup viewGroup) {
         if (packageInfo == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            packageInfo = inflater.inflate(R.layout.package_info, null);
+            packageInfo = inflater.inflate(R.layout.view_package_info, null);
             final PackageInfoTag tag = new PackageInfoTag();
             tag.frontCard = (FrameLayout) packageInfo.findViewById(R.id.front_card);
             tag.backCard = (FrameLayout) packageInfo.findViewById(R.id.back_card);
