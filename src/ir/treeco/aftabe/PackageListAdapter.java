@@ -36,7 +36,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     int getColumnCount() {
-        return 2;
+        return LengthManager.getPackagesListColumnCount();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     void refreshData() {
-        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount();
+        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount() + getColumnCount();
     }
 
 
