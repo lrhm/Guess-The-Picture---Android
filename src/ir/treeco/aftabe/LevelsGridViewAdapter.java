@@ -31,43 +31,33 @@ class LevelsGridViewAdapter extends BaseAdapter {
     public View getView(int i, View oldFrameLayout, ViewGroup viewGroup) {
         LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         FrameLayout frameLayout;
-        ImageView imageView;
+        ImageView thumbnail, frame;
 
         if (oldFrameLayout == null) {
-            frameLayout = (FrameLayout) inflater.inflate(R.layout.level_thumbnail, null);
+            frameLayout = (FrameLayout) inflater.inflate(R.layout.view_level_thumbnail, null);
             frameLayout.setLayoutParams(new GridView.LayoutParams(LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
-            imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);
+            thumbnail = (ImageView) frameLayout.findViewById(R.id.thumbnail);
             int myPadding = LengthManager.getLevelThumbnailPadding();
-            imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
-
-            final ImageView frame = (ImageView) frameLayout.findViewById(R.id.frame);
-            //frame.setImageBitmap(ImageManager.loadImageFromResource(viewGroup.getContext(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
-            frame.setImageBitmap(fragment.getLevelUnockedBitmap());
+            thumbnail.setPadding(myPadding, myPadding, myPadding, myPadding);
         } else {
             frameLayout = (FrameLayout) oldFrameLayout;
-            imageView = (ImageView) frameLayout.findViewById(R.id.thumbnail);
         }
 
+        thumbnail = (ImageView) frameLayout.findViewById(R.id.thumbnail);
+        frame = (ImageView) frameLayout.findViewById(R.id.frame);
 
         final int levelID = levelIDs[i];
 
         if (levelID != -1) {
-            imageView.setImageBitmap(fragment.getThumbnail(levelID));
-/*
-            try {
-                //imageView.setImageBitmap(ImageManager.loadImageFromInputStream(mPackage.getLevel(levelID).getImage(), LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-*/
-            /*if (LevelDataOrganizer.getLevel(levelID).isLocked(preferences))
-                imageView.setImageBitmap(ImageManager.loadImageFromResource(BoxActivity.this, R.drawable.lock, (int) heightManager.getLevelThumbnailSize(), (int) heightManager.getLevelThumbnailSize()));
-            else {
-                imageView.setImageResource(android.R.color.transparent);
-                LevelDataOrganizer.getLevel(levelID).createAndReplaceThumbnail(BoxActivity.this, (int) heightManager.getLevelThumbnailSize(), imageView);
-            }*/
+            frameLayout.setVisibility(View.VISIBLE);
 
-            // TODO add level image
+            if (fragment.getPackage().getLevel(levelID).isLocked()) {
+                thumbnail.setImageBitmap(null);
+                frame.setImageBitmap(fragment.getLevelLockedBitmap());
+            } else {
+                thumbnail.setImageBitmap(fragment.getThumbnail(levelID));
+                frame.setImageBitmap(fragment.getLevelUnockedBitmap());
+            }
         } else {
             frameLayout.setVisibility(View.INVISIBLE);
         }

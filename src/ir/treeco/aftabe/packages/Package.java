@@ -1,16 +1,15 @@
 package ir.treeco.aftabe.packages;
 
-import android.util.Log;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
-import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by hossein on 7/31/14.
@@ -90,7 +89,7 @@ public class Package {
             List<HashMap<String, String>> resourcesInfo = (List<HashMap<String, String>>) aLevelInfo.get(resourceInfoKey);
             Multimedia[] resources = new Multimedia[resourcesInfo.size()];
 
-            levels[cnt] = new Level(meta.getContext(), author, solution, thumbnailName, this, cnt, prize);
+            levels[cnt] = new Level(meta.getPreferences(), author, solution, thumbnailName, this, cnt, prize);
 
             int resCnt = 0;
             for( HashMap<String, String> aResource : resourcesInfo) {

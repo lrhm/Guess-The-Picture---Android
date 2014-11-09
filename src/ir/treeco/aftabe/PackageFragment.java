@@ -41,6 +41,21 @@ public class PackageFragment extends Fragment {
         levelLocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
         levelUnlocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
 
+        {
+            int[] backgroundColor = mPackage.meta.getColor();
+
+            {
+                String tmp = "colors: ";
+                for (int color: backgroundColor)
+                    tmp += " " + Integer.toHexString(color);
+                Log.e("COLORS", tmp);
+            }
+
+            View mainView = getActivity().findViewById(R.id.main_view);
+            Utils.setViewBackground(mainView, new BackgroundDrawable(getActivity(), backgroundColor));
+        }
+
+
         InputStream[] inputStreams = mPackage.getThumbnails();
         thubmnails = new Bitmap[inputStreams.length];
 
@@ -115,6 +130,7 @@ public class PackageFragment extends Fragment {
             float distance = 1 - Math.min(Math.abs(position - i), 1F);
             float size = distance * extra + base;
             Utils.resizeView(indicatorList.getChildAt(i), (int) size, (int) size);
+            indicatorList.getChildAt(i).setLayoutParams(indicatorList.getChildAt(i).getLayoutParams());
         }
     }
 

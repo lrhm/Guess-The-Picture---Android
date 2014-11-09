@@ -247,4 +247,76 @@ public class LengthManager {
     public static int getCheatButtonSize() {
         return getScreenWidth() / 7;
     }
+
+    public static int getVideoPlayButtonSize() {
+        return getLevelImageWidth() / 2;
+    }
+
+    public static int getShopTitleBottomMargin() {
+        return getShopTitleWidth() / 6;
+    }
+
+    public static int getTickViewSize() {
+        return getScreenWidth() / 3;
+    }
+
+    public static int getLevelFinishedButtonsSize() {
+        return getScreenWidth() / 6;
+    }
+
+    public static float getLevelSolutionTextSize() {
+        return getScreenWidth() / 15f;
+    }
+
+
+    public static float getLevelAuthorTextSize() {
+        return getScreenWidth() / 18f;
+    }
+
+    public static int getLevelFinishedDialogPadding() {
+        return getScreenWidth() / 10;
+    }
+
+    public static int getOneFingerDragWidth() {
+        return getLevelImageFrameWidth() / 4;
+    }
+
+    public static int getResourceLockWidth() {
+        return getLevelImageFrameWidth() / 3;
+    }
+
+    public static int getToastPadding() {
+        return getToastWidth() / 17;
+    }
+
+    public static float getPackagePurchaseTitleSize() {
+        return getScreenWidth() / 13f;
+    }
+
+    public static float getPackagePurchaseDescriptionSize() {
+        return getScreenWidth() / 19f;
+    }
+
+    public static float getPackagePurchaseItemTextSize() {
+        return getScreenWidth() / 22f;
+    }
+
+    public static int getPackagePurchaseItemWidth() {
+        return getScreenWidth() * 60 / 100;
+    }
+    public static int getPackagePurchaseItemHeight() {
+        return getPackagePurchaseItemWidth() * 504 / 1809;
+    }
+
+    public static int getLoadingEhemWidth() {
+        return getScreenWidth() / 3;
+    }
+
+    public static int getLoadingToiletWidth() {
+        return getScreenWidth() / 11;
+    }
+
+    public static int getLoadingEhemPadding() {
+        return getScreenWidth() / 11;
+    }
 }

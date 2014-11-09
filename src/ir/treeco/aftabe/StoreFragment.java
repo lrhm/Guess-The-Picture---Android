@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +47,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
 
     private static StoreFragment mInstance = null;
     final private String key = "MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwC6dLXqc+NjfwuF3l0DB3Z1xYH96j94DH76M0zI5SA1I/FLj7Ei/wq1tY3yu6pHb+V6GU/BcucICdXtqRBsW8JPxdzcqO9KlpUY0Nk/KBehwt5YSb1bugf3IX4/arXpLrJG1gah4rPAfhsofR5ZHhrkBrkVuZ6DEaA9+jHK4WojpMnD5CNd3A7mrmFanZnNEFvTBYAQ36rru1voJbADNH397NZZYp55rIXRzY6B89sCAwEAAQ==";
+    private View layout;
 
     public static StoreFragment getInstance() {
         if (mInstance == null)
@@ -56,7 +56,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View layout = inflater.inflate(R.layout.fragment_store, container, false);
+        layout = inflater.inflate(R.layout.fragment_store, container, false);
 
         Utils.setViewBackground(layout, new DialogDrawable(container.getContext()));
 
@@ -87,8 +87,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
         Bitmap shopTitleBitmap = ImageManager.loadImageFromResource(shopTitle.getContext(), R.drawable.shoptitle, LengthManager.getShopTitleWidth(),  -1);
         shopTitle.setImageBitmap(shopTitleBitmap);
         Utils.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
-
-        setupItemsList(layout);
+        ((LinearLayout.LayoutParams) shopTitle.getLayoutParams()).bottomMargin = LengthManager.getShopTitleBottomMargin();
 
         return layout;
     }
@@ -107,7 +106,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
 
         float[] titleTops = new float[] {0.03f, 0.355f, 0.68f};
         int[] revenues = new int[] {500, 2000, 5000};
-        int[] prices = new int[] {450, 1500, 3000};
+        int[] prices = new int[] {500, 1500, 3000};
         for (int i = 0; i < titleTops.length; i++) {
             final LinearLayout item = (LinearLayout) view.findViewById(buttonIds[i]);
             String persianPrice = Utils.numeralStringToPersianDigits("" + prices[i]);
@@ -176,7 +175,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
 
     @Override
     public void onBillingInitialized() {
-        Log.e("IAB", "initialized");
+        setupItemsList(layout);
         LoadingManager.endTask();
     }
 

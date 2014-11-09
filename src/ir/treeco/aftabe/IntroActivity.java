@@ -3,6 +3,7 @@ package ir.treeco.aftabe;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import ir.treeco.aftabe.utils.*;
+
+import java.util.ArrayList;
 
 public class IntroActivity extends FragmentActivity {
     private SharedPreferences preferences;
@@ -55,45 +58,52 @@ public class IntroActivity extends FragmentActivity {
 
         // List fragment transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() == 0) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            PackageListFragment listFragment = PackageListFragment.newInstance();
-            fragmentTransaction.replace(R.id.fragment_container, listFragment);
-            fragmentTransaction.commit();
-        }
+        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
+        if (fragmentManager.getBackStackEntryCount() != 0) throw new AssertionError();
 
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        PackageListFragment listFragment = PackageListFragment.newInstance();
+        fragmentTransaction.replace(R.id.fragment_container, listFragment);
+        fragmentTransaction.commit();
 
-        FrameLayout mainView = (FrameLayout) findViewById(R.id.main_view);
-        Utils.setViewBackground(mainView, new BackgroundDrawable(this));
+        mainView = (FrameLayout) findViewById(R.id.main_view);
+        Utils.setViewBackground(mainView, new BackgroundDrawable(this, new int[]{
+                Color.parseColor("#F3C81D"),
+                Color.parseColor("#F3C01E"),
+                Color.parseColor("#F49C14")
+        }));
 
 
         /*ImageView background = (ImageView) findViewById(R.id.background);
         background.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.circles, LengthManager.getScreenWidth(), LengthManager.getScreenHeight()));
         */
 
-        final View loadingView = findViewById(R.id.loading);
-
-        ImageView ehem = (ImageView) ((LinearLayout) loadingView).getChildAt(0);
-        ehem.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.load, LengthManager.getScreenWidth(), LengthManager.getHeightWithFixedWidth(R.drawable.load, LengthManager.getScreenWidth())));
-
-        final Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator());
-        fadeIn.setDuration(600);
-
-        final Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setStartOffset(200);
-        fadeOut.setDuration(200);
+        final RelativeLayout loadingView = (RelativeLayout) getLayoutInflater().inflate(R.layout.view_ehem, null);
 
         LoadingManager.setSomeTaskStartedListener(new SomeTaskStartedListener() {
             @Override
             public void someTaskStarted(final TaskCallback callback) {
+                pushToViewStack(loadingView, false);
+
+                ImageView ehem = (ImageView) loadingView.findViewById(R.id.ehem);
+                ehem.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.load, LengthManager.getLoadingEhemWidth(), -1));
+                ehem.getLayoutParams().width = LengthManager.getLoadingEhemWidth();
+                ehem.setPadding(0, LengthManager.getLoadingEhemPadding(), 0, 0);
+
+                ImageView toilet = (ImageView) loadingView.findViewById(R.id.toilet);
+                toilet.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.toilet, LengthManager.getLoadingToiletWidth(), -1));
+                toilet.getLayoutParams().width = LengthManager.getLoadingToiletWidth();
+
+
                 loadingView.setVisibility(View.VISIBLE);
+
+                final Animation fadeIn = new AlphaAnimation(0, 1);
+                fadeIn.setInterpolator(new DecelerateInterpolator());
+                fadeIn.setDuration(600);
                 fadeIn.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-
                     }
 
                     @Override
@@ -103,7 +113,6 @@ public class IntroActivity extends FragmentActivity {
 
                     @Override
                     public void onAnimationRepeat(Animation animation) {
-
                     }
                 });
                 loadingView.clearAnimation();
@@ -114,6 +123,11 @@ public class IntroActivity extends FragmentActivity {
         LoadingManager.setTasksFinishedListener(new TasksFinishedListener() {
             @Override
             public void tasksFinished() {
+                final Animation fadeOut = new AlphaAnimation(1, 0);
+                fadeOut.setInterpolator(new AccelerateInterpolator());
+                fadeOut.setStartOffset(200);
+                fadeOut.setDuration(200);
+
                 fadeOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -123,6 +137,7 @@ public class IntroActivity extends FragmentActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         loadingView.setVisibility(View.INVISIBLE);
+                        popFromViewStack(loadingView);
                     }
 
                     @Override
@@ -206,13 +221,28 @@ public class IntroActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (StoreFragment.billingProcessor == null || !StoreFragment.billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    FrameLayout mainView;
+
+    @Override
     public void onBackPressed() {
+        if (!currentlyPushedViews.isEmpty()) {
+            View view = currentlyPushedViews.get(currentlyPushedViews.size() - 1);
+            popFromViewStack(view);
+            return;
+        }
+
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        Log.d("entrycount", "" + backStackEntryCount);
+
         if (backStackEntryCount == 0) {
             super.onBackPressed();
             return;
         }
+
         LoadingManager.startTask(new TaskStartedListener() {
             @Override
             public void taskStarted() {
@@ -222,30 +252,16 @@ public class IntroActivity extends FragmentActivity {
         });
     }
 
-    /*private void loadBackground() {
-        View mainView = findViewById(R.id.main_view);
-        Bitmap background = ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.background, LengthManager.getScreenWidth() / 2, LengthManager.getScreenHeight() / 2);
-        if (Build.VERSION.SDK_INT >= 16)
-            setBackgroundV16Plus(mainView, background);
-        else
-            setBackgroundV16Minus(mainView, background);
+    ArrayList<View> currentlyPushedViews = new ArrayList<View>();
+
+    void pushToViewStack(View view, boolean popOnBackPressed) {
+        mainView.addView(view);
+        if (popOnBackPressed)
+            currentlyPushedViews.add(view);
     }
 
-    @TargetApi(16)
-    private void setBackgroundV16Plus(View view, Bitmap bitmap) {
-        view.setBackground(new BitmapDrawable(getResources(), bitmap));
-
+    void popFromViewStack(View view) {
+        currentlyPushedViews.remove(view);
+        mainView.removeView(view);
     }
-
-    @SuppressWarnings("deprecation")
-    private void setBackgroundV16Minus(View view, Bitmap bitmap) {
-        view.setBackgroundDrawable(new BitmapDrawable(bitmap));
-    }*/
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (StoreFragment.billingProcessor == null || !StoreFragment.billingProcessor.handleActivityResult(requestCode, resultCode, data))
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
 }

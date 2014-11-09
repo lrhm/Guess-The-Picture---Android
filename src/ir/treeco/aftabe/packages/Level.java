@@ -1,30 +1,25 @@
 package ir.treeco.aftabe.packages;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.utils.Encryption;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.zip.ZipEntry;
 
 /**
  * Created by hossein on 7/31/14.
  */
 public class Level {
+    private final SharedPreferences preferences;
     private String solution, author;
     private Package wrapperPackage;
-    private InputStream thumbnail;
     private String thumbnailName;
     private Multimedia[] resources;
     private int prize;
     private int id;
-    private Context context;
 
     public String getSolution() {
         return solution;
@@ -46,16 +41,6 @@ public class Level {
         return thumbnailName;
     }
 
-    public InputStream getThumbnail() {
-        try {
-            ZipEntry entry = wrapperPackage.getData().getEntry(thumbnailName);
-            return wrapperPackage.getData().getInputStream(entry);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public Multimedia[] getResources() {
         return resources;
     }
@@ -64,9 +49,9 @@ public class Level {
         this.resources = resources;
     }
 
-    public Level(Context context, String author, String solution, String thumbnailName, Package wPackage, int id, int prize) {
-        this.context = context;
+    public Level(SharedPreferences preferences, String author, String solution, String thumbnailName, Package wPackage, int id, int prize) {
         this.author = author;
+        this.preferences = preferences;
         this.solution = Encryption.decryptBase64(solution);
         this.wrapperPackage = wPackage;
         this.id = id;
@@ -90,14 +75,14 @@ public class Level {
         for (int i = 0; i < alphabetGone.length; i++)
             alphabetGone[i] = AlphabetState.IN_THERE;
 
-        save(alphabetGone, placeHolder, preferences);
+        save(alphabetGone, placeHolder);
     }
 
     public static enum AlphabetState {
         IN_THERE,
         CLICKED,
         REMOVED,
-        AlphabetState, FIXED
+        FIXED
     }
 
     public static final int BUTTON_COUNT = 21;
@@ -142,12 +127,7 @@ public class Level {
         for (int i = 0; i < array.length(); i++)
             alphabetGone[i] = AlphabetState.valueOf(array.getString(i));
 
-        serviceAlphabetGone(alphabetGone, preferences);
-
-        /*String log = "alphabetGone loaded:";
-        for (AlphabetState state: alphabetGone)
-            log += " " + state;
-        Log.i("GOLVAZHE", log);*/
+        serviceAlphabetGone(alphabetGone);
 
         return alphabetGone;
     }
@@ -160,14 +140,14 @@ public class Level {
     }
 
     private String alphabetGoneTag() {
-        return "package_" + getWrapperPackage().meta.getId() + "level_" + id + "_alphabet_gone";
+        return "package_" + getWrapperPackage().meta.getId() + "_level_" + id + "_alphabet_gone";
     }
 
     private String placeHolderTag() {
-        return "package_" + getWrapperPackage().meta.getId() + "level_" + id + "_place_holder";
+        return "package_" + getWrapperPackage().meta.getId() + "_level_" + id + "_place_holder";
     }
 
-    public void save(AlphabetState[] alphabetGone, int[] placeHolder, SharedPreferences preferences) {
+    public void save(AlphabetState[] alphabetGone, int[] placeHolder) {
         JSONArray alphabetArray = new JSONArray();
         for (AlphabetState b: alphabetGone)
             alphabetArray.put(b.toString());
@@ -182,8 +162,8 @@ public class Level {
         editor.commit();
     }
 
-    private void serviceAlphabetGone(AlphabetState[] alphabetGone, SharedPreferences preferences) {
-        if (!isSolved(preferences))
+    private void serviceAlphabetGone(AlphabetState[] alphabetGone) {
+        if (!isSolved())
             return;
         for (int i = 0; i < alphabetGone.length; i++)
             if (alphabetGone[i] == AlphabetState.REMOVED)
@@ -210,28 +190,51 @@ public class Level {
         return placeHolder;
     }
 
-    /*public void createAndReplaceThumbnail(Activity activity, int columnWidth, ImageView imageView) {
-        ThumbnailCreator createThumbnail =  new ThumbnailCreator(activity, columnWidth, this, imageView);
-        new Thread(createThumbnail).start();
-    }*/
-
-    public boolean isSolved(SharedPreferences preferences) {
-        //return true;
+    public boolean isSolved() {
         return preferences.getBoolean(levelSolvedTag(), false);
     }
 
-    public void yeahHeSolvedIt(SharedPreferences preferences) {
+    public void yeahHeSolvedIt() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(levelSolvedTag(), true);
         editor.commit();
     }
 
     private String levelSolvedTag() {
-        return "package_" + getWrapperPackage().meta.getId() + "level_" + id + "_is_solved";
+        return "package_" + getWrapperPackage().meta.getId() + "_level_" + id + "_is_solved";
     }
 
-    public boolean isLocked(SharedPreferences preferences) {
-        return id != 0 && !isSolved(preferences) && !getWrapperPackage().getLevel(id - 1).isSolved(preferences);
+    public boolean isLocked() {
+        return id != 0 && !isSolved() && !getWrapperPackage().getLevel(id - 1).isSolved();
     }
 
+
+    private String resourceTag(int resourceId) {
+        return "package_" + getWrapperPackage().meta.getId() + "_level_" + id + "_resource_" + resourceId + "is_unlocked";
+    }
+
+    public boolean isResourceUnlocked(int resourceId) {
+        return resourceId == 0 || isSolved() || preferences.getBoolean(resourceTag(resourceId), false);
+    }
+
+    public void unlockResource(int resourceId) {
+        if (isResourceUnlocked(resourceId))
+            return;
+
+        int currentPrizeChange = preferences.getInt(levelPrizeChangeTag(), 0);
+        currentPrizeChange -= resources[resourceId].getCost();
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(resourceTag(resourceId), true);
+        editor.putInt(levelPrizeChangeTag(), currentPrizeChange);
+        editor.commit();
+    }
+
+    private String levelPrizeChangeTag() {
+        return "package_" + getWrapperPackage().meta.getId() + "_level_" + id + "_prize_change";
+    }
+
+    public int getCurrentPrize() {
+        return prize + preferences.getInt(levelPrizeChangeTag(), 0);
+    }
 }

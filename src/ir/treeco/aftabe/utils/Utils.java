@@ -128,7 +128,7 @@ public class Utils {
                     listener.success();
             }
         } catch (IOException e) {
-            Log.d("tsst","wtf");
+            Log.d("tsst", "wtf");
             if(listeners!=null) {
                 for (DownloadProgressListener listener : listeners)
                     listener.failure();
@@ -250,4 +250,10 @@ public class Utils {
         return new String(result);
     }
 
+    public static String[] stringListToArray(List<String> list) {
+        String[] arr = new String[list.size()];
+        for(int i=0; i<list.size(); ++i)
+            arr[i] = list.get(i);
+        return arr;
+    }
 }

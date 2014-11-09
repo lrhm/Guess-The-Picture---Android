@@ -13,6 +13,7 @@ import java.io.InputStream;
  * Created by hossein on 9/21/14.
  */
 public class MetaPackage {
+    private final SharedPreferences preferences;
     private String name, dataUrl;
     private int id;
     private int cost;
@@ -44,7 +45,7 @@ public class MetaPackage {
         return cheat‌ButtonHSV;
     }
 
-    public MetaPackage(Context context,int[] color, float[] backgroundHSV, float[] cheatButtonHSV, String name, int id, PackageState state, PackageManager packageManager) {
+    public MetaPackage(Context context, SharedPreferences preferences, int[] color, float[] backgroundHSV, float[] cheatButtonHSV, String name, int id, PackageState state, PackageManager packageManager) {
         this.context = context;
         this.name = name;
         this.id = id;
@@ -52,6 +53,7 @@ public class MetaPackage {
         this.packageManager = packageManager;
         this.color = color;
         this.backgroundHSV = backgroundHSV;
+        this.preferences = preferences;
         this.cheat‌ButtonHSV = cheat‌ButtonHSV;
     }
 
@@ -131,10 +133,15 @@ public class MetaPackage {
     }
 
     public InputStream getFront() throws FileNotFoundException {
-            return context.openFileInput(this.name+"_front.jpg");
+            return context.openFileInput(this.name+"_front.png");
     }
 
+
     public InputStream getBack() throws FileNotFoundException {
-            return context.openFileInput(this.name + "_back.jpg");
+            return context.openFileInput(this.name + "_back.png");
+    }
+
+    public SharedPreferences getPreferences() {
+        return preferences;
     }
 }

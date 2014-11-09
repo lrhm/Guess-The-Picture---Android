@@ -12,12 +12,8 @@ public class BackgroundDrawable extends GradientDrawable {
     private Rect srcRect;
     private Rect dstRect;
 
-    public BackgroundDrawable(Context mContext) {
-        super(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{
-                Color.parseColor("#F3C81D"),
-                Color.parseColor("#F3C01E"),
-                Color.parseColor("#F49C14")
-        });
+    public BackgroundDrawable(Context mContext, int[] colors) {
+        super(GradientDrawable.Orientation.TOP_BOTTOM, colors);
         this.mutate();
         this.setGradientRadius(LengthManager.getHeaderHeight() * 3);
         this.setGradientType(GradientDrawable.RADIAL_GRADIENT);

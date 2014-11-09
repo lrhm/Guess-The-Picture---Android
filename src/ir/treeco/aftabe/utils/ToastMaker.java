@@ -21,8 +21,10 @@ public class ToastMaker {
         textView.setShadowLayer(1, 1, 1, Color.BLACK);
         textView.setTextColor(Color.WHITE);
         textView.setLayoutParams(new ViewGroup.LayoutParams(LengthManager.getToastWidth(), ViewGroup.LayoutParams.WRAP_CONTENT));
+        final int padding = LengthManager.getToastPadding();
+        textView.setPadding(padding, padding, padding, padding);
         Toast toast = new Toast(context);
-        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.setDuration(duration);
         toast.setView(textView);
         toast.show();

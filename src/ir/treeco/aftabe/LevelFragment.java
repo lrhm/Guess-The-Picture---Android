@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -47,6 +50,8 @@ public class LevelFragment extends Fragment {
     private View[] cheatButtons;
     private View blackWidow;
     private Multimedia[] resources;
+    private LayoutInflater inflater;
+    private LinearLayout greetingsView = null;
 
     public static LevelFragment newInstance(Level mLevel) {
         LevelFragment levelFragment = new LevelFragment();
@@ -56,6 +61,7 @@ public class LevelFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().findViewById(R.id.logo).setVisibility(View.INVISIBLE);
+        this.inflater = inflater;
 
         final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.fragment_level, container, false);
 
@@ -180,7 +186,7 @@ public class LevelFragment extends Fragment {
 
 
     public void cheatAndSkipLevel() throws JSONException, NotEnoughMoneyException {
-        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.SKIP_LEVEL_COST)
+        if (!mLevel.isSolved() && CoinManager.getCoinsCount(preferences) < CoinManager.SKIP_LEVEL_COST)
             throw new NotEnoughMoneyException();
 
         Arrays.fill(placeHolder, -1);
@@ -202,14 +208,14 @@ public class LevelFragment extends Fragment {
                     break;
                 }
 
-        if (!mLevel.isSolved(preferences)) {
+        if (!mLevel.isSolved()) {
             CoinManager.spendCoins(CoinManager.SKIP_LEVEL_COST, preferences);
         }
 
-        mLevel.save(alphabetGone, placeHolder, preferences);
+        mLevel.save(alphabetGone, placeHolder);
     }
     public void cheatAndRemoveSomeLetters() throws JSONException, NotEnoughMoneyException, ImpossibleCheatException {
-        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.ALPHABET_HIDING_COST)
+        if (!mLevel.isSolved() && CoinManager.getCoinsCount(preferences) < CoinManager.ALPHABET_HIDING_COST)
             throw new NotEnoughMoneyException();
 
         int order[] = Utils.getRandomOrder(alphabet.length, null);
@@ -263,14 +269,14 @@ public class LevelFragment extends Fragment {
         if (done == 0)
             throw new ImpossibleCheatException();
 
-        if (!mLevel.isSolved(preferences)) {
+        if (!mLevel.isSolved()) {
             CoinManager.spendCoins(CoinManager.ALPHABET_HIDING_COST, preferences);
         }
 
-        mLevel.save(alphabetGone, placeHolder, preferences);
+        mLevel.save(alphabetGone, placeHolder);
     }
     public void cheatAndRevealALetter() throws JSONException, NotEnoughMoneyException, ImpossibleCheatException {
-        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.LETTER_REVEAL_COST)
+        if (!mLevel.isSolved() && CoinManager.getCoinsCount(preferences) < CoinManager.LETTER_REVEAL_COST)
             throw new NotEnoughMoneyException();
 
         Random random = new Random();
@@ -314,11 +320,11 @@ public class LevelFragment extends Fragment {
         updateAlphabet(place);
         updateSolution(position);
 
-        if (!mLevel.isSolved(preferences)) {
+        if (!mLevel.isSolved()) {
             CoinManager.spendCoins(CoinManager.LETTER_REVEAL_COST, preferences);
         }
 
-        mLevel.save(alphabetGone, placeHolder, preferences);
+        mLevel.save(alphabetGone, placeHolder);
     }
 
 
@@ -372,6 +378,38 @@ public class LevelFragment extends Fragment {
             Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], "۱۲۰"));
 
         blackWidow = view.findViewById(R.id.black_widow);
+
+        if (resources.length > 1) {
+            final ImageView oneFingerDrag = (ImageView) view.findViewById(R.id.one_finger_drag);
+            oneFingerDrag.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.one_finger_drag, LengthManager.getOneFingerDragWidth(),  -1));
+            oneFingerDrag.setVisibility(View.VISIBLE);
+
+            int translationX = LengthManager.getOneFingerDragWidth() * 130 / 100;
+            ObjectAnimator animator = ObjectAnimator.ofFloat(oneFingerDrag, "translationX", +translationX, -translationX).setDuration(2000);
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    oneFingerDrag.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+
+            animator.start();
+        }
     }
 
     public void showCheats() {
@@ -444,7 +482,7 @@ public class LevelFragment extends Fragment {
             for (int j = 0; j < 7; j++) {
                 final int id = i * 7 + j;
 
-                FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.button_alphabet, null);
+                FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.view_alphabet_button, null);
                 TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
 
                 textView.setFocusable(false);
@@ -461,7 +499,7 @@ public class LevelFragment extends Fragment {
                 frameLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mLevel.save(alphabetGone, placeHolder, preferences);
+                        mLevel.save(alphabetGone, placeHolder);
                         alphabetClicked(id);
                     }
                 });
@@ -626,7 +664,128 @@ public class LevelFragment extends Fragment {
     }
 
     private void checkLevelCompleted(boolean b) {
+        for (int i = 0; i < solution.length; i++) {
+            if (solution[i].equals(" ") || solution[i].equals("."))
+                continue;
+            if (placeHolder[i] == -1)
+                return;
+            String text = alphabet[placeHolder[i]];
+            if (!solution[i].equals(text))
+                return;
+        }
 
+        mLevel.clearSolution(preferences);
+
+        addLevelFinishedLayout();
+
+        /*if (giveHimPrize && !levelData.isSolved(preferences)) {
+            CoinManager.earnCoins(CoinManager.LEVEL_COMPELETED_PRIZE, preferences);
+        } else {
+            View coinFrame = findViewById(R.id.coinFrame);
+            coinFrame.setVisibility(View.GONE);
+        }*/
+
+        MediaPlayer.create(getActivity(), R.raw.sound_correct).start();
+
+        mLevel.yeahHeSolvedIt();
+    }
+
+    private void customizeTextView(TextView textView, String label, float textSize) {
+        textView.setText(label);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getStoreItemFontSize());
+        textView.setTextColor(Color.WHITE);
+        textView.setShadowLayer(1, 2, 2, Color.BLACK);
+        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
+    }
+
+
+    private void addLevelFinishedLayout() {
+        greetingsView = (LinearLayout) inflater.inflate(R.layout.view_level_finished, null);
+
+        ((IntroActivity) getActivity()).pushToViewStack(greetingsView, true);
+
+        LinearLayout dialog = (LinearLayout) greetingsView.findViewById(R.id.dialog);
+
+        Utils.resizeView(dialog, ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getScreenWidth());
+
+        Utils.setViewBackground(dialog, new DialogDrawable(mContext));
+
+        {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dialog.getLayoutParams();
+            layoutParams.leftMargin = layoutParams.rightMargin = layoutParams.topMargin = layoutParams.bottomMargin = LengthManager.getStoreDialogMargin();
+        }
+
+        {
+            int padding = LengthManager.getLevelFinishedDialogPadding();
+            dialog.setPadding(padding, padding, padding, padding);
+        }
+
+        {
+            ImageView tickView = (ImageView) greetingsView.findViewById(R.id.tickView);
+            tickView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.correct, LengthManager.getTickViewSize(), LengthManager.getTickViewSize()));
+            Utils.resizeView(tickView, LengthManager.getTickViewSize(), LengthManager.getTickViewSize());
+        }
+
+        {
+            final ImageView nextButton = (ImageView) greetingsView.findViewById(R.id.next_level_button);
+            ImageView homeButton = (ImageView) greetingsView.findViewById(R.id.home_button);
+
+
+            if (mLevel.getId() + 1 < mLevel.getWrapperPackage().getNumberOfLevels()) {
+                nextButton.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.next_button, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize()));
+                Utils.resizeView(nextButton, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize());
+
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LoadingManager.startTask(new TaskStartedListener() {
+                            @Override
+                            public void taskStarted() {
+                                ((IntroActivity) getActivity()).popFromViewStack(greetingsView);
+
+                                Level level = mLevel.getWrapperPackage().getLevel(mLevel.getId() + 1);
+                                LevelFragment newFragment = LevelFragment.newInstance(level);
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.remove(LevelFragment.this);
+                                transaction.replace(R.id.fragment_container, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                        });
+                    }
+                });
+            } else {
+                nextButton.setVisibility(View.GONE);
+                greetingsView.findViewById(R.id.separatorSpace).setVisibility(View.GONE);
+            }
+
+            homeButton.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.home_button, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize()));
+            Utils.resizeView(homeButton, LengthManager.getLevelFinishedButtonsSize(), LengthManager.getLevelFinishedButtonsSize());
+
+            homeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LoadingManager.startTask(new TaskStartedListener() {
+                        @Override
+                        public void taskStarted() {
+                            ((IntroActivity) getActivity()).popFromViewStack(greetingsView);
+                            getActivity().onBackPressed();
+                            LoadingManager.endTask();
+                        }
+                    });
+                }
+            });
+        }
+
+        {
+            TextView levelSolution = (TextView) greetingsView.findViewById(R.id.level_solution);
+            TextView levelAuthor = (TextView) greetingsView.findViewById(R.id.author);
+
+            customizeTextView(levelSolution, mLevel.getSolution(), LengthManager.getLevelSolutionTextSize());
+            customizeTextView(levelAuthor, mLevel.getAuthor(), LengthManager.getLevelAuthorTextSize());
+        }
     }
 
     public void solutionClicked(final int id) {
@@ -695,7 +854,7 @@ public class LevelFragment extends Fragment {
                 continue;
             }
 
-            FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.button_solution, null);
+            FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.view_solution_button, null);
 
             frameLayout.setFocusable(false);
             frameLayout.setFocusableInTouchMode(false);
@@ -718,7 +877,7 @@ public class LevelFragment extends Fragment {
             frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mLevel.save(alphabetGone, placeHolder, preferences);
+                    mLevel.save(alphabetGone, placeHolder);
                     solutionClicked(id);
                 }
             });
@@ -746,13 +905,15 @@ public class LevelFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         for (int i = 0; i < resources.length; i++)
             getActivity().deleteFile("mm_" + i);
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         super.onDestroy();
+
         getActivity().findViewById(R.id.logo).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.cheat_button).setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.cheat_button).setOnClickListener(null);
@@ -760,6 +921,10 @@ public class LevelFragment extends Fragment {
 
     public Multimedia[] getMultimedia() {
         return resources;
+    }
+
+    public Level getLevel() {
+        return mLevel;
     }
 
     private class NotEnoughMoneyException extends Exception {

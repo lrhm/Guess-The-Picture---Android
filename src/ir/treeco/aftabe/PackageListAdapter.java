@@ -13,14 +13,14 @@ import ir.treeco.aftabe.utils.LengthManager;
  * Created by hamed on 8/14/14.
  */
 public class PackageListAdapter extends BaseAdapter {
-    private final Context context;
+    private final IntroActivity context;
     PackageListImplicitAdapter mAdapter;
     static final int COLUMN_COUNT = 2;
     private int mCount;
 
-    public PackageListAdapter(Context context, PackageManager pManager, int mode) {
-        this.context = context;
-        mAdapter = new PackageListImplicitAdapter(context, pManager,mode);
+    public PackageListAdapter(IntroActivity activity, PackageManager pManager) {
+        this.context = activity;
+        mAdapter = new PackageListImplicitAdapter(activity, pManager);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -85,13 +85,14 @@ public class PackageListAdapter extends BaseAdapter {
 
     void setFilter(int shape) {
         mAdapter.setFilter(shape);
+        notifyDataSetChanged();
     }
 
     public View getAdView(View rowView) {
         if (rowView != null)
             return rowView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.ad_item, null);
+        RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.view_ad_item, null);
         AutoScrollViewPager viewPager = (AutoScrollViewPager) adHolder.findViewById(R.id.ad_view_pager);
         viewPager.setAdapter(new AdItemAdapter(context));
         viewPager.setInterval(5000);

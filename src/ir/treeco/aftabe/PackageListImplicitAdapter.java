@@ -3,17 +3,17 @@ package ir.treeco.aftabe;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.support.v4.app.FragmentActivity;
+import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.TypedValue;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.*;
+import android.widget.TextView;
+import ir.treeco.aftabe.packages.MetaPackage;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.*;
 
@@ -25,7 +25,24 @@ import java.util.List;
  * Created by hamed on 8/12/14.
  */
 public class PackageListImplicitAdapter {
-    private android.content.Context context;
+    abstract class PackageInfoListener implements View.OnTouchListener, View.OnClickListener {
+        float x;
+        float y;
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            x = motionEvent.getX();
+            y = motionEvent.getY();
+            return false;
+        }
+    }
+    
+    class PackageInfoTag {
+        ImageView frontCard;
+        ImageView backCard;
+    }
+
+    private IntroActivity activity;
     private PackageManager pManager;
     private MetaPackage[] packages;
 
@@ -49,31 +66,30 @@ public class PackageListImplicitAdapter {
     ItemData[] itemData;
 
     int mode;
-    public PackageListImplicitAdapter(Context context, PackageManager pManager, int mode) {
+    public PackageListImplicitAdapter(IntroActivity activity, PackageManager pManager) {
         this.mode = mode;
-        this.context = context;
+        this.activity = activity;
         this.pManager = pManager;
-        switch (mode) {
-            case NEW_TAB_ADAPTER:
-                this.packages = pManager.getNewPackages();
-                break;
-            case LOCAL_TAB_ADAPTER:
-                this.packages = pManager.getLocalPackages();
-                break;
-            case HOT_TAB_ADAPTER:
-                this.packages = pManager.getHotPackages();
-                break;
-        }
         setFilter(0);
     }
 
-    void setFilter(int shape) {
-        itemData = new ItemData[packages.length + 20];
+    void setFilter(int category) {
+        switch (category) {
+            case NEW_TAB_ADAPTER:
+                packages = pManager.getNewPackages();
+                break;
+            case LOCAL_TAB_ADAPTER:
+                packages = pManager.getLocalPackages();
+                break;
+            case HOT_TAB_ADAPTER:
+                packages = pManager.getHotPackages();
+                break;
+        }
+        itemData = new ItemData[packages.length];
         for (int i = 0; i < itemData.length; i++) {
             itemData[i] = new ItemData();
-            itemData[i].toMiddle = AnimationUtils.loadAnimation(context, R.anim.to_middle);
-            itemData[i].fromMiddle = AnimationUtils.loadAnimation(context, R.anim.from_middle);
-            itemData[i].shape = shape;
+            itemData[i].toMiddle = AnimationUtils.loadAnimation(activity, R.anim.to_middle);
+            itemData[i].fromMiddle = AnimationUtils.loadAnimation(activity, R.anim.from_middle);
         }
         notifyDataSetChanged();
     }
@@ -95,26 +111,17 @@ public class PackageListImplicitAdapter {
 
     public View getView(final int i, View packageInfo, ViewGroup viewGroup) {
         if (packageInfo == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            packageInfo = inflater.inflate(R.layout.package_info, null);
+            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            packageInfo = inflater.inflate(R.layout.view_package_info, null);
+
             final PackageInfoTag tag = new PackageInfoTag();
-            tag.frontCard = (FrameLayout) packageInfo.findViewById(R.id.front_card);
-            tag.backCard = (FrameLayout) packageInfo.findViewById(R.id.back_card);
-            tag.frontImage = (ImageView) packageInfo.findViewById(R.id.front_image);
-            tag.backImage = (ImageView) packageInfo.findViewById(R.id.back_image);
-            tag.frontButton = (ImageView) packageInfo.findViewById(R.id.front_button);
+            tag.frontCard = (ImageView) packageInfo.findViewById(R.id.front_card);
+            tag.backCard = (ImageView) packageInfo.findViewById(R.id.back_card);
+
             packageInfo.setTag(tag);
         }
 
-        packageInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PackageListImplicitAdapter.this.flip(i, view);
-            }
-        });
-
-        int myWidth = LengthManager.getScreenWidth() / 2;
-        int myHeight = myWidth;
+        final int mySize = LengthManager.getScreenWidth() / 2;
 
         final PackageInfoTag tag = (PackageInfoTag) packageInfo.getTag();
         final View finalPackageInfo = packageInfo;
@@ -161,90 +168,161 @@ public class PackageListImplicitAdapter {
         if (i < packages.length) {
             try {
                 bitmaps = new Bitmap[]{
-                        ImageManager.loadImageFromInputStream(packages[i].getFront(), myWidth, myHeight),
-                        ImageManager.loadImageFromInputStream(packages[i].getBack(), myWidth, myHeight)
+                        ImageManager.loadImageFromInputStream(packages[i].getFront(), mySize, mySize),
+                        ImageManager.loadImageFromInputStream(packages[i].getBack(), mySize, mySize)
                 };
             } catch (FileNotFoundException e) {
                 throw new RuntimeException();
             }
-
         } else {
             bitmaps = new Bitmap[]{
-                    ImageManager.loadImageFromResource(context, R.drawable.pack, myWidth, myHeight),
-                    ImageManager.loadImageFromResource(context, R.drawable.packback, myWidth, myHeight)
+                    ImageManager.loadImageFromResource(activity, R.drawable.pack, mySize, mySize),
+                    ImageManager.loadImageFromResource(activity, R.drawable.packback, mySize, mySize)
             };
         }
 
-//        Log.d("vamDaneshjuyi", i+" "+packages.length+" "+packages[i].getName()+" "+packages[i].getState());
-//        try {
-//            Log.d("vamDaneshjuyi", packages[i].getFront().toString());
-//        } catch (FileNotFoundException e) {
-//            Log.d("vamDaneshjuyi","why??????????!!!!");
-//            e.printStackTrace();
-//        }
-//        Log.d("vamDaneshjuyi", bitmaps+"bitbit");
-//        Log.d("vamDaneshjuyi", bitmaps.length+"lenlen");
-//        Log.d("vamDaneshjuyi", itemData[i]+" ");
-//        Log.d("vamDaneshjuyi", itemData[i].shape+" ");
-//        Log.d("vamDaneshjuyi", bitmaps[itemData[i].shape]+" ");
-//        Log.d("vamDaneshjuyi",itemData[i] + " " + itemData[i].shape + " " +bitmaps[itemData[i].shape]);
         final DownloadingDrawable frontDrawable = new DownloadingDrawable(bitmaps[itemData[i].shape]);
-        tag.frontImage.setImageDrawable( frontDrawable );
-//        tag.frontImage.setImageDrawable(new DownloadingDrawable(bitmaps[itemData[i].shape]));
-        //tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
-        tag.backImage.setImageBitmap(bitmaps[1 - itemData[i].shape]);
+        tag.frontCard.setImageDrawable(frontDrawable);
+        tag.backCard.setImageBitmap(bitmaps[1 - itemData[i].shape]);
 
-        packageInfo.setLayoutParams(new LinearLayout.LayoutParams(myWidth, myHeight));
+        packageInfo.setLayoutParams(new LinearLayout.LayoutParams(mySize, mySize));
 
         tag.frontCard.setVisibility(itemData[i].flipped ? View.GONE : View.VISIBLE);
         tag.backCard.setVisibility(itemData[i].flipped ? View.VISIBLE : View.GONE);
 
-        //configure font card view layout-params
-        if (i < packages.length) {
-            /*if (packages[i].getState() == PackageState.REMOTE)
-                tag.frontButton.setText("خرید " + packages[i].getCost());
-            else if (packages[i].getState() == PackageState.DOWNLOADING)
-                tag.frontButton.setText("در حال دانلود");
-            else
-                tag.frontButton.setText("ورود");*/
-            int buttonWidth = myWidth * 3 / 8;
-            tag.frontButton.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.package_item_play, buttonWidth, LengthManager.getHeightWithFixedWidth(R.drawable.package_item_play, buttonWidth)));
-            FrameLayout.LayoutParams buttonLayoutParams = (FrameLayout.LayoutParams) tag.frontButton.getLayoutParams();
-            buttonLayoutParams.bottomMargin = myWidth / 7;
+        PackageInfoListener packageInfoListener = new PackageInfoListener() {
+            @Override
+            public void onClick(View view) {
+                if (itemData[i].flipped || x < mySize / 3 && y < mySize / 3) {
+                    PackageListImplicitAdapter.this.flip(i, view);
+                    return;
+                }
 
-            tag.frontButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Log.d("migmig",packages[i].getName());
-//                    if(packages[i].getName().equals("girls")) {
-//                        Log.d("migmig",packages[i].getName() + " onClick");
-//                        packages[i].becomeLocal();
-//                        return;
-//                    }
-                    //TODO check if package data is outdated
-                    if (packages[i].getState() == PackageState.REMOTE) {
-                        DownloadProgressListener[] dpl = new DownloadProgressListener[] {
+                if (/* true || */ packages[i].getState() == PackageState.REMOTE) {
+//                    createPackagePurchaseDialog(packages[i]);
+                    DownloadProgressListener[] dpl = new DownloadProgressListener[] {
                             new NotificationProgressListener(packages[i].getContext(), packages[i]),
                             new PackageListProgressListener(frontDrawable)
-                        };
-                        packages[i].becomeLocal(dpl);
-                    }
-                    else if(packages[i].getState() == PackageState.LOCAL) {
-                        LoadingManager.startTask(new TaskStartedListener() {
-                            @Override
-                            public void taskStarted() {
-                                PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]));
-                                FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.fragment_container, fragment);
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-                            }
-                        });
-                    }
+                    };
+                    packages[i].becomeLocal(dpl);
+                } else if(packages[i].getState() == PackageState.LOCAL) {
+                    LoadingManager.startTask(new TaskStartedListener() {
+                        @Override
+                        public void taskStarted() {
+                            PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]));
+                            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, fragment);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+                        }
+                    });
                 }
-            });
-        }
+            }
+        };
+
+        packageInfo.setOnClickListener(packageInfoListener);
+        packageInfo.setOnTouchListener(packageInfoListener);
 
         return packageInfo;
+    }
+
+    enum TextType {
+        TITLE,
+        DESCRIPTION,
+        ITEM_TEXT
+    }
+
+    private void customizeTextView(TextView textView, String label, TextType textType) {
+        textView.setText(label);
+        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
+
+        switch (textType) {
+            case TITLE: {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getPackagePurchaseTitleSize());
+                textView.setTextColor(Color.WHITE);
+                textView.setShadowLayer(1, 2, 2, Color.BLACK);
+                break;
+            }
+            case DESCRIPTION: {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getPackagePurchaseDescriptionSize());
+                textView.setTextColor(Color.GRAY);
+                break;
+            }
+            case ITEM_TEXT: {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getPackagePurchaseItemTextSize());
+                textView.setTextColor(Color.WHITE);
+                textView.setShadowLayer(1, 2, 2, Color.BLACK);
+                break;
+            }
+        }
+    }
+
+    private void createPackagePurchaseDialog(MetaPackage metaPackage) {
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout packagePurchase = (LinearLayout) inflater.inflate(R.layout.view_package_purchase, null);
+        activity.pushToViewStack(packagePurchase, true);
+
+        LinearLayout dialog = (LinearLayout) packagePurchase.findViewById(R.id.dialog);
+
+        {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dialog.getLayoutParams();
+            layoutParams.leftMargin = layoutParams.rightMargin = layoutParams.topMargin = layoutParams.bottomMargin = LengthManager.getStoreDialogMargin();
+        }
+
+        {
+            int padding = LengthManager.getLevelFinishedDialogPadding();
+            dialog.setPadding(padding, padding, padding, padding);
+        }
+
+        {
+            TextView title = (TextView) dialog.findViewById(R.id.title);
+            customizeTextView(title, (String) title.getText(), TextType.TITLE);
+        }
+
+        {
+            TextView description = (TextView) dialog.findViewById(R.id.description);
+            customizeTextView(description, (String) description.getText(), TextType.DESCRIPTION);
+        }
+
+        {
+            View purchaseFromBazaar = dialog.findViewById(R.id.purchase_from_bazaar);
+            setupStoreItem(purchaseFromBazaar, "خرید از بازار", "۱۲۳۴", R.drawable.single_button_green, true);
+        }
+
+        {
+            View purchaseByCoin = dialog.findViewById(R.id.purchase_by_coin);
+            setupStoreItem(purchaseByCoin, "خرید با سکه", "۱۲۳۴", R.drawable.single_button_red, false);
+        }
+
+        Utils.setViewBackground(dialog, new DialogDrawable(activity));
+    }
+
+    private void setupStoreItem(View storeItem, String label, String price, int resourceId, boolean reversed) {
+        {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) storeItem.getLayoutParams();
+            layoutParams.width = LengthManager.getPackagePurchaseItemWidth();
+            layoutParams.height = LengthManager.getPackagePurchaseItemHeight();
+            layoutParams.gravity = Gravity.CENTER;
+        }
+
+        if (reversed) {
+            LinearLayout textViews = (LinearLayout) storeItem.findViewById(R.id.text_views);
+            Utils.reverseLinearLayout(textViews);
+        }
+
+        {
+            TextView itemLabel = (TextView) storeItem.findViewById(R.id.label);
+            customizeTextView(itemLabel, label, TextType.ITEM_TEXT);
+        }
+
+        {
+            TextView itemPrice = (TextView)  storeItem.findViewById(R.id.price);
+            customizeTextView(itemPrice, price, TextType.ITEM_TEXT);
+        }
+
+        {
+            ImageView background = (ImageView) storeItem.findViewById(R.id.item_background);
+            background.setImageBitmap(ImageManager.loadImageFromResource(activity, resourceId, LengthManager.getPackagePurchaseItemWidth(), -1));
+        }
     }
 }

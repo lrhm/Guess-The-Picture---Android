@@ -26,7 +26,7 @@ public class AdActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ad_layout);
+        setContentView(R.layout.view_ad_layout);
 
         LengthManager LengthManager = new LengthManager();
 
