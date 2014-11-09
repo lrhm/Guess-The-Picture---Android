@@ -15,7 +15,6 @@ import ir.treeco.aftabe.utils.LengthManager;
 public class PackageListAdapter extends BaseAdapter {
     private final IntroActivity context;
     PackageListImplicitAdapter mAdapter;
-    static final int COLUMN_COUNT = 2;
     private int mCount;
 
     public PackageListAdapter(IntroActivity activity, PackageManager pManager, int mode) {
@@ -36,6 +35,10 @@ public class PackageListAdapter extends BaseAdapter {
         });
     }
 
+    int getColumnCount() {
+        return 2;
+    }
+
     @Override
     public boolean areAllItemsEnabled() {
         return true;
@@ -47,7 +50,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     void refreshData() {
-        mCount = (mAdapter.getCount() + COLUMN_COUNT - 1) / COLUMN_COUNT + 2;
+        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount();
     }
 
 
@@ -116,7 +119,7 @@ public class PackageListAdapter extends BaseAdapter {
             rowView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         LinearLayout linearLayout = (LinearLayout) rowView;
-        for (int j = i * COLUMN_COUNT, index = 0; index < COLUMN_COUNT; j++, index++) {
+        for (int j = i * getColumnCount(), index = 0; index < getColumnCount(); j++, index++) {
             if (j < mAdapter.getCount()) {
                 if (index < linearLayout.getChildCount()) {
                     View child = linearLayout.getChildAt(index);
