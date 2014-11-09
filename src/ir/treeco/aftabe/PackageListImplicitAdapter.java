@@ -11,11 +11,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import ir.treeco.aftabe.packages.*;
 import android.widget.TextView;
 import ir.treeco.aftabe.packages.MetaPackage;
 import ir.treeco.aftabe.packages.Package;
-import ir.treeco.aftabe.packages.PackageManager;
-import ir.treeco.aftabe.packages.PackageState;
 import ir.treeco.aftabe.utils.*;
 
 import java.io.FileNotFoundException;
@@ -67,31 +66,30 @@ public class PackageListImplicitAdapter {
     ItemData[] itemData;
 
     int mode;
-    public PackageListImplicitAdapter(IntroActivity activity, PackageManager pManager, int mode) {
+    public PackageListImplicitAdapter(IntroActivity activity, PackageManager pManager) {
         this.mode = mode;
         this.activity = activity;
         this.pManager = pManager;
-        switch (mode) {
-            case NEW_TAB_ADAPTER:
-                this.packages = pManager.getNewPackages();
-                break;
-            case LOCAL_TAB_ADAPTER:
-                this.packages = pManager.getLocalPackages();
-                break;
-            case HOT_TAB_ADAPTER:
-                this.packages = pManager.getHotPackages();
-                break;
-        }
         setFilter(0);
     }
 
-    void setFilter(int shape) {
+    void setFilter(int category) {
+        switch (category) {
+            case NEW_TAB_ADAPTER:
+                packages = pManager.getNewPackages();
+                break;
+            case LOCAL_TAB_ADAPTER:
+                packages = pManager.getLocalPackages();
+                break;
+            case HOT_TAB_ADAPTER:
+                packages = pManager.getHotPackages();
+                break;
+        }
         itemData = new ItemData[packages.length];
         for (int i = 0; i < itemData.length; i++) {
             itemData[i] = new ItemData();
             itemData[i].toMiddle = AnimationUtils.loadAnimation(activity, R.anim.to_middle);
             itemData[i].fromMiddle = AnimationUtils.loadAnimation(activity, R.anim.from_middle);
-            itemData[i].shape = shape;
         }
         notifyDataSetChanged();
     }
@@ -183,7 +181,8 @@ public class PackageListImplicitAdapter {
             };
         }
 
-        tag.frontCard.setImageDrawable(new DownloadingDrawable(bitmaps[itemData[i].shape]));
+        final DownloadingDrawable frontDrawable = new DownloadingDrawable(bitmaps[itemData[i].shape]);
+        tag.frontCard.setImageDrawable(frontDrawable);
         tag.backCard.setImageBitmap(bitmaps[1 - itemData[i].shape]);
 
         packageInfo.setLayoutParams(new LinearLayout.LayoutParams(mySize, mySize));
@@ -200,7 +199,12 @@ public class PackageListImplicitAdapter {
                 }
 
                 if (/* true || */ packages[i].getState() == PackageState.REMOTE) {
-                    createPackagePurchaseDialog(packages[i]);
+//                    createPackagePurchaseDialog(packages[i]);
+                    DownloadProgressListener[] dpl = new DownloadProgressListener[] {
+                            new NotificationProgressListener(packages[i].getContext(), packages[i]),
+                            new PackageListProgressListener(frontDrawable)
+                    };
+                    packages[i].becomeLocal(dpl);
                 } else if(packages[i].getState() == PackageState.LOCAL) {
                     LoadingManager.startTask(new TaskStartedListener() {
                         @Override

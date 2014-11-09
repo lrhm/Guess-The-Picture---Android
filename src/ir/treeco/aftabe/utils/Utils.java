@@ -8,9 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import ir.treeco.aftabe.packages.DownloadProgressListener;
 import ir.treeco.aftabe.packages.NotificationProgressListener;
 
 import java.io.IOException;
@@ -80,54 +82,59 @@ public class Utils {
         download(context, url, path, null);
     }
 
-    public static void download(final Context context, final String url, final String path, final NotificationProgressListener listener) {
+    public static void download(final Context context, final String url, final String path, final DownloadProgressListener[] listeners) {
         /**
          *
          *          THIS method should overwrite the existing FILE.
          *                      BUT does IT???????
          *
          */
-        new Thread( new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URLConnection conection = new URL(url).openConnection();
-                    conection.connect();
-                    int lenghtOfFile = conection.getContentLength();
-                    InputStream is = new URL(url).openStream();
-                    OutputStream os = context.openFileOutput(path, 0);
-                    pipe(is, os, listener, lenghtOfFile);
-                    os.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if(listener!=null)
-                        listener.failure();
-                }
-            }
-        }).start();
+        try {
+            URLConnection conection = new URL(url).openConnection();
+            conection.connect();
+            int lenghtOfFile = conection.getContentLength();
+            Log.d("tsst",url+" "+path+" "+lenghtOfFile);
+            InputStream is = new URL(url).openStream();
+            OutputStream os = context.openFileOutput(path, 0);
+            pipe(is, os, listeners, lenghtOfFile);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("tsst",url+" "+path);
+            if(listeners!=null)
+                for(DownloadProgressListener listener : listeners)
+                    listener.failure();
+        }
     }
 
     public static void pipe(InputStream is, OutputStream os) {
-        pipe(is, os, null, 0);
+        pipe(is, os, null, 100);
     }
 
-    public static void pipe(InputStream is, OutputStream os, NotificationProgressListener listener, int size) {
+    public static void pipe(InputStream is, OutputStream os, DownloadProgressListener[] listeners, int size) {
         int n;
         byte[] buffer = new byte[1024];
         int sum=0;
         try {
             while ((n = is.read(buffer)) > -1) {
                 sum += n;
-                if (listener != null)
-                listener.updateBar((sum * 100) / size);
+                if(listeners!=null)
+                    for( DownloadProgressListener listener : listeners) {
+                        listener.update((sum * 100) / size);
+                    }
                 os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
             }
             os.close();
-            if(listener!=null)
-                listener.success();
+            if (listeners != null) {
+                for (DownloadProgressListener listener : listeners)
+                    listener.success();
+            }
         } catch (IOException e) {
-            if(listener!=null)
-                listener.failure();
+            Log.d("tsst", "wtf");
+            if(listeners!=null) {
+                for (DownloadProgressListener listener : listeners)
+                    listener.failure();
+            }
         }
     }
 

@@ -17,9 +17,9 @@ public class PackageListAdapter extends BaseAdapter {
     PackageListImplicitAdapter mAdapter;
     private int mCount;
 
-    public PackageListAdapter(IntroActivity activity, PackageManager pManager, int mode) {
+    public PackageListAdapter(IntroActivity activity, PackageManager pManager) {
         this.context = activity;
-        mAdapter = new PackageListImplicitAdapter(activity, pManager, mode);
+        mAdapter = new PackageListImplicitAdapter(activity, pManager);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -88,6 +88,7 @@ public class PackageListAdapter extends BaseAdapter {
 
     void setFilter(int shape) {
         mAdapter.setFilter(shape);
+        notifyDataSetChanged();
     }
 
     public View getAdView(View rowView) {

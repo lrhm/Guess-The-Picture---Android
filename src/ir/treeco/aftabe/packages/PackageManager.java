@@ -29,16 +29,8 @@ public class PackageManager {
                           costKey = "Cost",
                           dataVersionKey = "Data Version";
     Context context;
-
-//    private Package[] packages;
-//    private Package[] newPackages,localPackages,hotPackages; // for 3 tabs
     private MetaPackage[] packages;
     private MetaPackage[] newPackages, localPackages, hotPackages;
-
-
-//    public  Package[] getPackages() {
-//        return packages;
-//    }
 
     public PackageManager(Context context) {
         this.context = context;
@@ -48,15 +40,12 @@ public class PackageManager {
     }
 
     public void refresh() {
-//        Package[] inPackages=null, outPackages=null;
         MetaPackage[] inPackages=null, outPackages=null;
-
 
         //load builtIn Packages
         InputStream inputStream = context.getResources().openRawResource(R.raw.header);
         Yaml yaml = new Yaml();
         headerInfo = (List<HashMap<String, Object>>) yaml.load(inputStream);
-//        inPackages = new Package[headerInfo.size()];
         inPackages = new MetaPackage[headerInfo.size()];
         int cnt=0;
         for(HashMap<String,Object> pkgInfo : headerInfo) {
@@ -79,11 +68,8 @@ public class PackageManager {
             float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
             List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
             float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
-//            int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
-//            inPackages[cnt] = Package.getBuiltInPackage(this, cnt, context, name, desc, numberOfLevels);
-
-
             inPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this);
+
             //Copy data,Thumbnail to memory
             File dataFile = new File(context.getFilesDir(), name+".zip");
             File backThumb = new File(context.getFilesDir(), name+"_back.png");
@@ -109,16 +95,13 @@ public class PackageManager {
             headerInfo = null;
         }
         if(headerInfo!=null) {
-//            outPackages = new Package[headerInfo.size()];
             outPackages = new MetaPackage[headerInfo.size()];
             cnt = 0;
             for (HashMap<String, Object> pkgInfo : headerInfo) {
                 String name = (String) pkgInfo.get(pkgNameKey);
-//                int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
                 int cost = (Integer) pkgInfo.get(costKey);
                 int version = (Integer) pkgInfo.get(dataVersionKey);
                 String dataUrl = (String) pkgInfo.get(dataUrlKey);
-//                outPackages[cnt] = Package.getPackage(this, cnt + inPackages.length, context, name, desc, numberOfLevels, dataUrl, cost);
                 PackageState state;
                 File dataFile = new File(context.getFilesDir(),name+".zip");
                 if(dataFile.exists())
@@ -138,7 +121,6 @@ public class PackageManager {
                 cnt++;
             }
         }
-//        packages = new Package[inPackages.length + (outPackages!=null?outPackages.length:0)];
         packages = new MetaPackage[inPackages.length + (outPackages!=null?outPackages.length:0)];
         for (int i=0;i<inPackages.length;++i) {
             packages[i] = inPackages[i];
@@ -152,15 +134,10 @@ public class PackageManager {
     }
 
     public void generateAdapterResourceArrays() {
-//        ArrayList<Package> newPackagelist = new ArrayList<Package>();
-//        ArrayList<Package> hotPackagelist = new ArrayList<Package>();
-//        ArrayList<Package> localPackagelist = new ArrayList<Package>();
         ArrayList<MetaPackage> newPackagelist = new ArrayList<MetaPackage>();
         ArrayList<MetaPackage> hotPackagelist = new ArrayList<MetaPackage>();
         ArrayList<MetaPackage> localPackagelist = new ArrayList<MetaPackage>();
-//        for(Package pkg : packages) {
         for (MetaPackage pkg : packages) {
-//            if(pkg.getState()==PackageState.builtIn || pkg.getState()==PackageState.LOCAL)
             if(pkg.getState()==PackageState.LOCAL)
                 localPackagelist.add(pkg);
             if(pkg.getState()==PackageState.REMOTE || pkg.getState()==PackageState.DOWNLOADING)
@@ -168,7 +145,7 @@ public class PackageManager {
             /**
              *
              *       how to determine HOTNESS of a package?
-             *           maybe in the header file!
+             *
              *
              */
         }
@@ -177,25 +154,10 @@ public class PackageManager {
         hotPackagelist.add(packages[0]);
 
         //convert Arraylist to Arrays for better performance
-//        newPackages = newPackagelist.toArray(new Package[newPackagelist.size()]);
-//        localPackages = localPackagelist.toArray(new Package[localPackagelist.size()]);
-//        hotPackages = hotPackagelist.toArray(new Package[hotPackagelist.size()]);
         newPackages = newPackagelist.toArray(new MetaPackage[newPackagelist.size()]);
         localPackages = localPackagelist.toArray(new MetaPackage[localPackagelist.size()]);
         hotPackages = hotPackagelist.toArray(new MetaPackage[hotPackagelist.size()]);
     }
-
-//    public Package[] getHotPackages() {
-//        return hotPackages;
-//    }
-//
-//    public Package[] getLocalPackages() {
-//        return localPackages;
-//    }
-//
-//    public Package[] getNewPackages() {
-//        return newPackages;
-//    }
 
     public MetaPackage[] getHotPackages() {
         return hotPackages;
@@ -210,21 +172,6 @@ public class PackageManager {
     }
 
     public void copyFromRawToInternal(String name, String type){
-//        R.raw r = new R.raw();
-//        Field field = null;
-//        try {
-//            field = R.raw.class.getDeclaredField(name);
-//        } catch (NoSuchFieldException e) {
-//            Log.e("pManager","field doesn't exist in R.raw class");
-//        }
-//        field.setAccessible(true);
-//        int id = 0;
-//        try {
-//            id = (Integer) field.get(r);
-//        } catch (IllegalAccessException e) {
-//            //don't care
-//        }
-//        InputStream inputStream = context.getResources().openRawResource(id);
         InputStream inputStream = Utils.getInputStreamFromRaw(context, name, type);
         FileOutputStream fos = null;
         try {
@@ -233,10 +180,10 @@ public class PackageManager {
             e.printStackTrace();
         }
         Utils.pipe(inputStream,fos);
+        Log.d("tsst","piped");
     }
 
     public void downloadPackage(int id) throws Exception {
-//        Package pkg = this.packages[id];
         MetaPackage pkg = this.packages[id];
         try {
             Utils.download(this.context, pkg.getDataUrl(),pkg.getName()+".zip");
@@ -244,6 +191,6 @@ public class PackageManager {
             throw new Exception("can't download "+pkg.getName()+"'s data");
         }
         pkg.becomeLocal();
-        generateAdapterResourceArrays(); // well :-\ not the best option ...
+        generateAdapterResourceArrays(); // well :\ not the best option ...
     }
 }

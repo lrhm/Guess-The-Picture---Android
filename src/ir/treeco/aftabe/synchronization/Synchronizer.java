@@ -39,7 +39,7 @@ import java.util.UUID;
  */
 public class Synchronizer extends BroadcastReceiver{
 
-    private static final String tasksFileUrl = "http://192.168.0.111/sofre/tasks.yml";
+    private static final String tasksFileUrl = "http://static.treeco.ir/packages/tasks.yml";
 //    private final String PREFS_TAG = "ad_data";
     private final static String AD_UPDATE_TAG = "last_ad_update";
     private static boolean firstConnect = true;
@@ -88,9 +88,9 @@ public class Synchronizer extends BroadcastReceiver{
                 Yaml yaml = new Yaml();
                 tasks = (HashMap<String, Object>) yaml.load(data);
 
-                do_Task_Notifs((List<HashMap<String, String>>) tasks.get(TASK_NOTIFICATION_KEY));
+                do_Task_Notifs((List<HashMap<String, Object>>) tasks.get(TASK_NOTIFICATION_KEY));
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
-                do_Task_Files_Download_And_Update((List<HashMap<String,String>>) tasks.get(TASK_FILE_KEY));
+                do_Task_Files_Download_And_Update((List<HashMap<String,Object>>) tasks.get(TASK_FILE_KEY));
 
                 //TODO  header.yml File most Update at LAST after Downloading thumbnails
 
@@ -136,20 +136,20 @@ public class Synchronizer extends BroadcastReceiver{
              *   version: 1
              *
              */
-            public void do_Task_Files_Download_And_Update(List<HashMap<String,String>> files) {
-                for(HashMap<String,String> file : files) {
-                    String url = file.get("URL");
-                    String name = file.get("name");
-                    int version = Integer.parseInt(file.get("version"));
+            public void do_Task_Files_Download_And_Update(List<HashMap<String,Object>> files) {
+                for(HashMap<String,Object> file : files) {
+                    String url = (String) file.get("URL");
+                    String name = (String) file.get("name");
+                    int version = (Integer)file.get("version");
                     int lastVersion = preferences.getInt(name + "_VERSION", -1);
                     if(lastVersion == -1 || lastVersion > version) {
                         try {
                             Utils.download(context, url, name);
+                            preferences.edit().putInt(name+"_VERSION",version).commit();
                         } catch (Exception e) {
 //                        Log.d("synch","Error in DOWNLOADING File",e);
                             e.printStackTrace();
                         }
-                        preferences.edit().putInt(name+"_VERSION",version).commit();
                     }
                 }
             }
@@ -168,25 +168,25 @@ public class Synchronizer extends BroadcastReceiver{
              *   to token: 5			       OPTIONAL
              *
              */
-            public void do_Task_Notifs(List<HashMap<String,String>> notifs) {
-                for(HashMap<String,String> notif : notifs) {
+            public void do_Task_Notifs(List<HashMap<String,Object>> notifs) {
+                for(HashMap<String,Object> notif : notifs) {
                     int lastToken = preferences.getInt("TOKEN",-1);
                     if(notif.get("token") != null) {
-                        int token = Integer.parseInt(notif.get("token"));
-                        if(token<=lastToken) // old notification
+                        int token = (Integer)notif.get("token");
+                        if(token<lastToken) // old notification
                             return;
-                        int toToken = Integer.parseInt(notif.get("to token"));
+                        int toToken = (Integer)notif.get("to token");
                         preferences.edit().putInt("TOKEN",toToken).commit();
                     }
-                    int minVersion = notif.get("min version")==null?-1000:Integer.parseInt(notif.get("min version"));
-                    int maxVersion = notif.get("max version")==null?+1000:Integer.parseInt(notif.get("max version"));
+                    int minVersion = notif.get("min version")==null?-1000:(Integer)notif.get("min version");
+                    int maxVersion = notif.get("max version")==null?+1000:(Integer)notif.get("max version");
                     //TODO check version
-                    String imageUrl = notif.get("Image URL");
-                    String title = notif.get("Title");
-                    String text = notif.get("Text");
-                    String onClick = notif.get("onClick");
-                    String promote = notif.get("Promote");
-                    int prize = notif.get("Prize")==null?0:Integer.parseInt(notif.get("Prize"));
+                    String imageUrl = (String) notif.get("Image URL");
+                    String title = (String) notif.get("Title");
+                    String text = (String) notif.get("Text");
+                    String onClick = (String) notif.get("onClick");
+                    String promote = (String) notif.get("Promote");
+                    int prize = notif.get("Prize")==null?0:(Integer)notif.get("Prize");
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(context)
                                     .setSmallIcon(R.drawable.tiny)
@@ -197,14 +197,14 @@ public class Synchronizer extends BroadcastReceiver{
                     if(imageUrl != null) {
                         try {
                             randomName = UUID.randomUUID().toString();
-                            Utils.download(context, imageUrl, randomName);
+                            Utils.download(context, imageUrl, randomName+".jpg");
                             Bitmap bitmap = BitmapFactory.decodeStream(context.openFileInput(randomName));
                             mBuilder.setLargeIcon(bitmap);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    sendNotification(mBuilder, onClick, promote, prize, randomName);
+                    sendNotification(mBuilder, onClick, promote, prize, randomName+".jpg");
                 }
             }
 
@@ -244,7 +244,7 @@ public class Synchronizer extends BroadcastReceiver{
                     String url = ad.get("URL");
                     onClicks[cnt] = ad.get("onClick");
                     try {
-                        Utils.download(context, url, "tmp_ad" + cnt);
+                        Utils.download(context, url, "ad" + cnt + ".jpg");
                     } catch (Exception e) {
                         e.printStackTrace();
                         return; // to avoid broken synch
@@ -254,10 +254,18 @@ public class Synchronizer extends BroadcastReceiver{
                 //successful synch hence rename tmp_ad to ad
                 SharedPreferences.Editor editor = preferences.edit();
                 for(int i=0; i<cnt; ++i) {
-                    File oldOne = new File(context.getFilesDir(),"tmp_ad"+i);
-                    File newOne = new File(context.getFilesDir(),"ad"+i);
-                    oldOne.renameTo(newOne);
-                    editor.putString("ad_onClick"+i, onClicks[i]);
+//                    File oldOne = new File(context.getFilesDir(),"tmp_ad"+i);
+//                    File newOne = new File(context.getFilesDir(),"ad"+i);
+//                    oldOne.renameTo(newOne);
+//                    try {
+//                        InputStream fis = context.openFileInput("tmp_ad" + i+ ".jpg");
+//                        FileOutputStream fos = context.openFileOutput("ad" + i + ".jpg", 0);
+////                        FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir(), "ad" + i));
+//                        Utils.pipe(fis, fos);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    editor.putString("ad_onClick" + i, onClicks[i]);
                 }
 
                 editor.putInt(AdItemAdapter.ADS_KEY, cnt);
