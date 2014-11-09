@@ -15,7 +15,9 @@ import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Set;
 
 /**
@@ -52,10 +54,11 @@ public class AdItemAdapter extends PagerAdapter {
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.ad_image, null);
         ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
         try {
-            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad"+position),LengthManager.getScreenWidth(),-1));
+            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad"+position+".jpg"),LengthManager.getScreenWidth(),-1));
         } catch (FileNotFoundException e) {
             imageView.setImageResource(R.drawable.ad);
             e.printStackTrace();
+            Log.d("tsst","zZz",e);
         }
 //        imageView.setImageResource(R.drawable.ad);
 

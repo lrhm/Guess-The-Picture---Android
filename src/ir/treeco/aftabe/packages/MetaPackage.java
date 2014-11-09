@@ -2,6 +2,8 @@ package ir.treeco.aftabe.packages;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.ImageView;
+import ir.treeco.aftabe.DownloadingDrawable;
 import ir.treeco.aftabe.utils.Utils;
 
 import java.io.FileNotFoundException;
@@ -94,33 +96,45 @@ public class MetaPackage {
         return state;
     }
 
-    public void becomeLocal() {
-        try {
-            Utils.download(this.context, dataUrl, this.getName()+".zip", new NotificationProgressListener(context, this));
-//            Utils.download(this.context, "http://static.treeco.ir/packages/remoteAftabe.zip", this.getName() + ".zip", new NotificationProgressListener(context, this));
-//            this.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.state = PackageState.LOCAL;
+    public void becomeLocal(final DownloadProgressListener[] dpl) {
+//        DownloadProgressListener[] dpl = new DownloadProgressListener[] {
+//                new NotificationProgressListener(context, this),
+//                new PackageListProgressListener(view)
+//        };
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.download(context, dataUrl, getName()+".zip", dpl);
+                state = PackageState.LOCAL;
+                packageManager.generateAdapterResourceArrays();
+            }
+        }).start();
+    }
 
-        //TODO handle Data Versions
+    public void becomeLocal() {
+        final MetaPackage metaPackage = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DownloadProgressListener[] dpl = new DownloadProgressListener[] {
+                        new NotificationProgressListener(context, metaPackage)
+                };
+                Utils.download(context, dataUrl, getName()+".zip", dpl);
+                state = PackageState.LOCAL;
+
+                //TODO handle Data Versions
 //        SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
 //        preferences.edit().putInt(name+"_DATA_VERSION", dataVersion).commit();
-        packageManager.generateAdapterResourceArrays();
+                packageManager.generateAdapterResourceArrays();
+            }
+        }).start();
     }
 
     public InputStream getFront() throws FileNotFoundException {
-//        if(this.state == PackageState.builtIn)
-//            return Utils.getInputStreamFromRaw(this.context, this.name+"_front","jpg");
-//        else
             return context.openFileInput(this.name+"_front.jpg");
     }
 
     public InputStream getBack() throws FileNotFoundException {
-//        if (this.state == PackageState.builtIn)
-//            return Utils.getInputStreamFromRaw(this.context, this.name + "_back", "jpg");
-//        else
             return context.openFileInput(this.name + "_back.jpg");
     }
 }

@@ -23,7 +23,6 @@ public class Level {
     private String thumbnailName;
     private Multimedia[] resources;
     private int prize;
-//    private Bitmap image;
     private int id;
     private Context context;
 
@@ -56,51 +55,6 @@ public class Level {
         }
         return null;
     }
-
-//    public void setThumbnail(InputStream thumbnail) {
-//        this.thumbnail = thumbnail;
-//    }
-//    public InputStream getThumbnail() {
-//        if(wrapperPackage.getState() == PackageState.builtIn) {
-//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
-//                            ,"zip"));
-//            for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
-//                if(e.getName().equals(id+".jpg"))
-//                    break;
-//            }
-//            return zipInputStream;
-//        }
-//        else {
-//            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
-//            return this.wrapperPackage.getData().getInputStream(entry);
-//        }
-//        return thumbnail;
-//    }
-//    public InputStream getImage() {
-//        if(wrapperPackage.getState() == PackageState.builtIn) {
-//            ZipInputStream zipInputStream = new ZipInputStream(Utils.getInputStreamFromRaw(context,wrapperPackage.getName()
-//                            ,"zip"));
-//            long startTime = System.currentTimeMillis();
-//            try {
-//                for(ZipEntry e; (e=zipInputStream.getNextEntry())!=null ; ) {
-//                    if(e.getName().equals(id+".jpg"))
-//                        break;
-//                }
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            Log.e("aftabe_plus", "iteration took: " + (System.currentTimeMillis() - startTime));
-//            return zipInputStream;
-//        }
-//        else {
-//            ZipEntry entry = this.wrapperPackage.getData().getEntry(id+".jpg");
-//            try {
-//                return this.wrapperPackage.getData().getInputStream(entry);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
 
     public Multimedia[] getResources() {
         return resources;

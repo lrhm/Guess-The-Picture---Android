@@ -58,7 +58,7 @@ public class IntroActivity extends FragmentActivity {
         if (fragmentManager.getBackStackEntryCount() == 0) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             PackageListFragment listFragment = PackageListFragment.newInstance();
-            fragmentTransaction.add(R.id.fragment_container, listFragment);
+            fragmentTransaction.replace(R.id.fragment_container, listFragment);
             fragmentTransaction.commit();
         }
 

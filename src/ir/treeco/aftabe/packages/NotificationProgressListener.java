@@ -8,13 +8,12 @@ import ir.treeco.aftabe.R;
 /**
  * Created by hossein on 9/19/14.
  */
-public class NotificationProgressListener {
+public class NotificationProgressListener implements DownloadProgressListener {
     private int id;
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
     private Context context;
 
-//    public NotificationProgressListener(Context context, Package mPackage) {
     public NotificationProgressListener(Context context, MetaPackage mPackage) {
         this.context = context;
         id = (int) (Math.random()*1000);
@@ -31,7 +30,8 @@ public class NotificationProgressListener {
 
 
     int last = 0;
-    public void updateBar(int progressInPercent) {
+
+    public void update(int progressInPercent) {
         if (last != progressInPercent) {
             mBuilder.setProgress(100, progressInPercent, false);
             mNotifyManager.notify(id, mBuilder.build());

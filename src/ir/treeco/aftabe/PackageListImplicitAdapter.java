@@ -13,10 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import ir.treeco.aftabe.packages.MetaPackage;
+import ir.treeco.aftabe.packages.*;
 import ir.treeco.aftabe.packages.Package;
-import ir.treeco.aftabe.packages.PackageManager;
-import ir.treeco.aftabe.packages.PackageState;
 import ir.treeco.aftabe.utils.*;
 
 import java.io.FileNotFoundException;
@@ -29,7 +27,6 @@ import java.util.List;
 public class PackageListImplicitAdapter {
     private android.content.Context context;
     private PackageManager pManager;
-//    private Package[] packages;
     private MetaPackage[] packages;
 
     public final static int NEW_TAB_ADAPTER = 0, LOCAL_TAB_ADAPTER = 1, HOT_TAB_ADAPTER = 2;
@@ -191,7 +188,9 @@ public class PackageListImplicitAdapter {
 //        Log.d("vamDaneshjuyi", itemData[i].shape+" ");
 //        Log.d("vamDaneshjuyi", bitmaps[itemData[i].shape]+" ");
 //        Log.d("vamDaneshjuyi",itemData[i] + " " + itemData[i].shape + " " +bitmaps[itemData[i].shape]);
-        tag.frontImage.setImageDrawable(new DownloadingDrawable(bitmaps[itemData[i].shape]));
+        final DownloadingDrawable frontDrawable = new DownloadingDrawable(bitmaps[itemData[i].shape]);
+        tag.frontImage.setImageDrawable( frontDrawable );
+//        tag.frontImage.setImageDrawable(new DownloadingDrawable(bitmaps[itemData[i].shape]));
         //tag.frontImage.setImageBitmap(bitmaps[itemData[i].shape]);
         tag.backImage.setImageBitmap(bitmaps[1 - itemData[i].shape]);
 
@@ -224,7 +223,11 @@ public class PackageListImplicitAdapter {
 //                    }
                     //TODO check if package data is outdated
                     if (packages[i].getState() == PackageState.REMOTE) {
-                        packages[i].becomeLocal();
+                        DownloadProgressListener[] dpl = new DownloadProgressListener[] {
+                            new NotificationProgressListener(packages[i].getContext(), packages[i]),
+                            new PackageListProgressListener(frontDrawable)
+                        };
+                        packages[i].becomeLocal(dpl);
                     }
                     else if(packages[i].getState() == PackageState.LOCAL) {
                         LoadingManager.startTask(new TaskStartedListener() {
