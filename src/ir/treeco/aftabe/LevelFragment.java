@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -185,7 +186,7 @@ public class LevelFragment extends Fragment {
 
 
     public void cheatAndSkipLevel() throws JSONException, NotEnoughMoneyException {
-        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.SKIP_LEVEL_COST)
+        if (!mLevel.isSolved() && CoinManager.getCoinsCount(preferences) < CoinManager.SKIP_LEVEL_COST)
             throw new NotEnoughMoneyException();
 
         Arrays.fill(placeHolder, -1);
@@ -207,14 +208,14 @@ public class LevelFragment extends Fragment {
                     break;
                 }
 
-        if (!mLevel.isSolved(preferences)) {
+        if (!mLevel.isSolved()) {
             CoinManager.spendCoins(CoinManager.SKIP_LEVEL_COST, preferences);
         }
 
-        mLevel.save(alphabetGone, placeHolder, preferences);
+        mLevel.save(alphabetGone, placeHolder);
     }
     public void cheatAndRemoveSomeLetters() throws JSONException, NotEnoughMoneyException, ImpossibleCheatException {
-        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.ALPHABET_HIDING_COST)
+        if (!mLevel.isSolved() && CoinManager.getCoinsCount(preferences) < CoinManager.ALPHABET_HIDING_COST)
             throw new NotEnoughMoneyException();
 
         int order[] = Utils.getRandomOrder(alphabet.length, null);
@@ -268,14 +269,14 @@ public class LevelFragment extends Fragment {
         if (done == 0)
             throw new ImpossibleCheatException();
 
-        if (!mLevel.isSolved(preferences)) {
+        if (!mLevel.isSolved()) {
             CoinManager.spendCoins(CoinManager.ALPHABET_HIDING_COST, preferences);
         }
 
-        mLevel.save(alphabetGone, placeHolder, preferences);
+        mLevel.save(alphabetGone, placeHolder);
     }
     public void cheatAndRevealALetter() throws JSONException, NotEnoughMoneyException, ImpossibleCheatException {
-        if (!mLevel.isSolved(preferences) && CoinManager.getCoinsCount(preferences) < CoinManager.LETTER_REVEAL_COST)
+        if (!mLevel.isSolved() && CoinManager.getCoinsCount(preferences) < CoinManager.LETTER_REVEAL_COST)
             throw new NotEnoughMoneyException();
 
         Random random = new Random();
@@ -319,11 +320,11 @@ public class LevelFragment extends Fragment {
         updateAlphabet(place);
         updateSolution(position);
 
-        if (!mLevel.isSolved(preferences)) {
+        if (!mLevel.isSolved()) {
             CoinManager.spendCoins(CoinManager.LETTER_REVEAL_COST, preferences);
         }
 
-        mLevel.save(alphabetGone, placeHolder, preferences);
+        mLevel.save(alphabetGone, placeHolder);
     }
 
 
@@ -377,6 +378,38 @@ public class LevelFragment extends Fragment {
             Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], "۱۲۰"));
 
         blackWidow = view.findViewById(R.id.black_widow);
+
+        if (resources.length > 1) {
+            final ImageView oneFingerDrag = (ImageView) view.findViewById(R.id.one_finger_drag);
+            oneFingerDrag.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.one_finger_drag, LengthManager.getOneFingerDragWidth(),  -1));
+            oneFingerDrag.setVisibility(View.VISIBLE);
+
+            int translationX = LengthManager.getOneFingerDragWidth() * 130 / 100;
+            ObjectAnimator animator = ObjectAnimator.ofFloat(oneFingerDrag, "translationX", +translationX, -translationX).setDuration(2000);
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    oneFingerDrag.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+
+            animator.start();
+        }
     }
 
     public void showCheats() {
@@ -466,7 +499,7 @@ public class LevelFragment extends Fragment {
                 frameLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mLevel.save(alphabetGone, placeHolder, preferences);
+                        mLevel.save(alphabetGone, placeHolder);
                         alphabetClicked(id);
                     }
                 });
@@ -645,52 +678,16 @@ public class LevelFragment extends Fragment {
 
         addLevelFinishedLayout();
 
-        Toast.makeText(getActivity(), "Oh yeah!", Toast.LENGTH_LONG).show();
-
-
-        /*View finishedView = findViewById(R.id.finishedLayout);
-        finishedView.setVisibility(View.VISIBLE);
-
-        ImageView nextButton = (ImageView) findViewById(R.id.nextLevelButton);
-        final View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, null, LevelActivity.this, LevelActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("level", currentLevelId + 1);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
-            }
-        };
-        nextButton.setOnClickListener(clickListener);
-
-        if (currentLevelId + 1 == LevelDataOrganizer.getLevelCount()) {
-            nextButton.setVisibility(View.GONE);
-            View spaceView = findViewById(R.id.separatorSpace);
-            spaceView.setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.tickView).setOnClickListener(clickListener);
-        }
-
-        ImageView homeButton = (ImageView) findViewById(R.id.homeLevelButton);
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        MediaPlayer.create(LevelActivity.this, R.raw.sound_correct).start();
-
-        if (giveHimPrize && !levelData.isSolved(preferences)) {
+        /*if (giveHimPrize && !levelData.isSolved(preferences)) {
             CoinManager.earnCoins(CoinManager.LEVEL_COMPELETED_PRIZE, preferences);
         } else {
             View coinFrame = findViewById(R.id.coinFrame);
             coinFrame.setVisibility(View.GONE);
-        }
+        }*/
 
-        levelData.yeahHeSolvedIt(preferences);*/
+        MediaPlayer.create(getActivity(), R.raw.sound_correct).start();
+
+        mLevel.yeahHeSolvedIt();
     }
 
     private void customizeTextView(TextView textView, String label, float textSize) {
@@ -704,8 +701,8 @@ public class LevelFragment extends Fragment {
 
     private void addLevelFinishedLayout() {
         greetingsView = (LinearLayout) inflater.inflate(R.layout.view_level_finished, null);
-        FrameLayout mainView = (FrameLayout) getActivity().findViewById(R.id.main_view);
-        mainView.addView(greetingsView);
+
+        ((IntroActivity) getActivity()).pushToViewStack(greetingsView, true);
 
         LinearLayout dialog = (LinearLayout) greetingsView.findViewById(R.id.dialog);
 
@@ -744,6 +741,8 @@ public class LevelFragment extends Fragment {
                         LoadingManager.startTask(new TaskStartedListener() {
                             @Override
                             public void taskStarted() {
+                                ((IntroActivity) getActivity()).popFromViewStack(greetingsView);
+
                                 Level level = mLevel.getWrapperPackage().getLevel(mLevel.getId() + 1);
                                 LevelFragment newFragment = LevelFragment.newInstance(level);
                                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -768,7 +767,14 @@ public class LevelFragment extends Fragment {
             homeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().onBackPressed();
+                    LoadingManager.startTask(new TaskStartedListener() {
+                        @Override
+                        public void taskStarted() {
+                            ((IntroActivity) getActivity()).popFromViewStack(greetingsView);
+                            getActivity().onBackPressed();
+                            LoadingManager.endTask();
+                        }
+                    });
                 }
             });
         }
@@ -871,7 +877,7 @@ public class LevelFragment extends Fragment {
             frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mLevel.save(alphabetGone, placeHolder, preferences);
+                    mLevel.save(alphabetGone, placeHolder);
                     solutionClicked(id);
                 }
             });
@@ -902,9 +908,6 @@ public class LevelFragment extends Fragment {
 
         for (int i = 0; i < resources.length; i++)
             getActivity().deleteFile("mm_" + i);
-
-        if (greetingsView != null)
-            ((IntroActivity) getActivity()).popFromViewStack(greetingsView);
     }
 
     @Override
@@ -918,6 +921,10 @@ public class LevelFragment extends Fragment {
 
     public Multimedia[] getMultimedia() {
         return resources;
+    }
+
+    public Level getLevel() {
+        return mLevel;
     }
 
     private class NotEnoughMoneyException extends Exception {

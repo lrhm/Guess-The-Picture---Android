@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.LoadingManager;
@@ -74,10 +75,13 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 if (levelIDs[i] == -1)
                     return;
+                final Level theLevel = mPackage.getLevel(levelIDs[i]);
+                if (theLevel.isLocked())
+                    return;
                 LoadingManager.startTask(new TaskStartedListener() {
                     @Override
                     public void taskStarted() {
-                        LevelFragment newFragment = LevelFragment.newInstance(mPackage.getLevel(levelIDs[i]));
+                        LevelFragment newFragment = LevelFragment.newInstance(theLevel);
                         FragmentTransaction transaction = fragment.getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, newFragment);
                         transaction.addToBackStack(null);

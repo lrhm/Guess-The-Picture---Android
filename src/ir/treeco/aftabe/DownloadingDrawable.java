@@ -25,7 +25,7 @@ public class DownloadingDrawable extends Drawable {
         ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
         desaturatedPaint.setColorFilter(colorFilter);
 
-        setPercentage(40);
+        setPercentage(100);
     }
 
     @Override

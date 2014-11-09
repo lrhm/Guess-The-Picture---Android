@@ -13,14 +13,14 @@ import ir.treeco.aftabe.utils.LengthManager;
  * Created by hamed on 8/14/14.
  */
 public class PackageListAdapter extends BaseAdapter {
-    private final Context context;
+    private final IntroActivity context;
     PackageListImplicitAdapter mAdapter;
     static final int COLUMN_COUNT = 2;
     private int mCount;
 
-    public PackageListAdapter(Context context, PackageManager pManager, int mode) {
-        this.context = context;
-        mAdapter = new PackageListImplicitAdapter(context, pManager,mode);
+    public PackageListAdapter(IntroActivity activity, PackageManager pManager, int mode) {
+        this.context = activity;
+        mAdapter = new PackageListImplicitAdapter(activity, pManager, mode);
         mAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {

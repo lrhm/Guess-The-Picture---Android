@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -244,4 +243,10 @@ public class Utils {
         return new String(result);
     }
 
+    public static String[] stringListToArray(List<String> list) {
+        String[] arr = new String[list.size()];
+        for(int i=0; i<list.size(); ++i)
+            arr[i] = list.get(i);
+        return arr;
+    }
 }

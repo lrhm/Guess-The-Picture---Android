@@ -1,5 +1,6 @@
 package ir.treeco.aftabe;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
@@ -65,11 +66,11 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
             e.printStackTrace();
         }
 
-        final PackageListAdapter newAdapter = new PackageListAdapter(getActivity(), pManager, PackageListImplicitAdapter.NEW_TAB_ADAPTER);
-        final PackageListAdapter localAdapter = new PackageListAdapter(getActivity(), pManager, PackageListImplicitAdapter.LOCAL_TAB_ADAPTER);
-        final PackageListAdapter hotAdapter = new PackageListAdapter(getActivity(), pManager, PackageListImplicitAdapter.HOT_TAB_ADAPTER);
+        final PackageListAdapter newAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.NEW_TAB_ADAPTER);
+        final PackageListAdapter localAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.LOCAL_TAB_ADAPTER);
+        final PackageListAdapter hotAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.HOT_TAB_ADAPTER);
 
-        packages.setAdapter(newAdapter);
+        packages.setAdapter(localAdapter);
         newAdapter.setFilter(0);
         newAdapter.notifyDataSetChanged();
 
@@ -112,6 +113,14 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
     @Override
     public void onResume() {
         super.onResume();
+
+        View mainView = getActivity().findViewById(R.id.main_view);
+        Utils.setViewBackground(mainView, new BackgroundDrawable(this.getActivity(), new int[]{
+                Color.parseColor("#F3C81D"),
+                Color.parseColor("#F3C01E"),
+                Color.parseColor("#F49C14")
+        }));
+
         LoadingManager.endTask();
     }
 

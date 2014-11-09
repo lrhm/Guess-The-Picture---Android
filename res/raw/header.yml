@@ -1,8 +1,8 @@
 - Name: aftabe
   Color:
-    - 0xFFFFFF
-    - 0x000000
-    - 0x111111
+    - "#FFFFFF"
+    - "#000000"
+    - "#111111"
   HSV Background:
     - 3.4
     - 2.1
@@ -11,3 +11,17 @@
     - 0
     - 0
     - 0
+- Name: sher
+  Color:
+    - "#29CDB8"
+    - "#1FB8AA"
+    - "#0A8A8C"
+  HSV Background:
+    - 3.4
+    - 2.1
+    - 1
+  HSV Cheat Button:
+    - 0
+    - 0
+    - 0
+

@@ -23,10 +23,10 @@
                         android:layout_height="match_parent"
                         android:id="@+id/store_items"
                         android:contentDescription="@string/nothing"/>
-                <include layout="@layout/view_store_item" android:id="@+id/very_small_coin"/>
-                <include layout="@layout/view_store_item" android:id="@+id/small_coin"/>
-                <include layout="@layout/view_store_item" android:id="@+id/medium_coin"/>
-                <include layout="@layout/view_store_item" android:id="@+id/big_coin"/>
+                <include layout="@layout/view_store_item_inner_layout" android:id="@+id/very_small_coin"/>
+                <include layout="@layout/view_store_item_inner_layout" android:id="@+id/small_coin"/>
+                <include layout="@layout/view_store_item_inner_layout" android:id="@+id/medium_coin"/>
+                <include layout="@layout/view_store_item_inner_layout" android:id="@+id/big_coin"/>
             </FrameLayout>
             <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
             <FrameLayout
@@ -37,7 +37,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/store_extra_item"
                         android:contentDescription="@string/nothing"/>
-                <include layout="@layout/view_store_item" android:id="@+id/review_cafebazaar"/>
+                <include layout="@layout/view_store_item_inner_layout" android:id="@+id/review_cafebazaar"/>
             </FrameLayout>
             <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
 

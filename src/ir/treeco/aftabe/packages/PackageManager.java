@@ -1,12 +1,17 @@
 package ir.treeco.aftabe.packages;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +22,7 @@ import java.util.List;
 public class PackageManager {
 
 
+    private final SharedPreferences preferences;
     private List<HashMap<String, Object>> headerInfo;
     private final static String pkgNameKey= "Name",
                           dataUrlKey = "Data URL",
@@ -36,6 +42,7 @@ public class PackageManager {
 
     public PackageManager(Context context) {
         this.context = context;
+        this.preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
         //TODO uncomment below
 //        refresh();
     }
@@ -54,27 +61,41 @@ public class PackageManager {
         int cnt=0;
         for(HashMap<String,Object> pkgInfo : headerInfo) {
             String name = (String) pkgInfo.get(pkgNameKey);
-            List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
-            int[] color = Utils.intListToArray(colorList);
+            List<String> colorList = (List<String>) pkgInfo.get("Color");
+
+            Log.e("COLORS", "" + colorList);
+
+            int[] color = new int[colorList.size()];
+
+            ArrayList<String> tmpColors = new ArrayList<String>();
+
+            for (String c: colorList)
+                tmpColors.add(c);
+
+            for (int i = 0;i < tmpColors.size(); i++)
+                color[i] = Color.parseColor(tmpColors.get(i));
+
             List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
             float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
             List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
             float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
 //            int numberOfLevels = (Integer) pkgInfo.get(numberOfLevelsKey);
 //            inPackages[cnt] = Package.getBuiltInPackage(this, cnt, context, name, desc, numberOfLevels);
-            inPackages[cnt] = new MetaPackage(context,color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this);
+
+
+            inPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this);
             //Copy data,Thumbnail to memory
             File dataFile = new File(context.getFilesDir(), name+".zip");
-            File backThumb = new File(context.getFilesDir(), name+"_back.jpg");
-            File frontThumb = new File(context.getFilesDir(), name+"_front.jpg");
+            File backThumb = new File(context.getFilesDir(), name+"_back.png");
+            File frontThumb = new File(context.getFilesDir(), name+"_front.png");
             if(!dataFile.exists()) {
                 copyFromRawToInternal(name,"zip");
             }
             if(!backThumb.exists()) {
-                copyFromRawToInternal(name + "_back","jpg");
+                copyFromRawToInternal(name + "_back","png");
             }
             if(!frontThumb.exists()) {
-                copyFromRawToInternal(name + "_front","jpg");
+                copyFromRawToInternal(name + "_front","png");
             }
             cnt++;
         }
@@ -110,7 +131,7 @@ public class PackageManager {
                 float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
                 List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
                 float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
-                outPackages[cnt] = new MetaPackage(context,color, backgroundHSV, cheatButtonHSV, name, cnt+inPackages.length, state, this);
+                outPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt+inPackages.length, state, this);
                 outPackages[cnt].setCost(cost);
                 outPackages[cnt].setDataUrl(dataUrl);
                 outPackages[cnt].setDataVersion(version);
