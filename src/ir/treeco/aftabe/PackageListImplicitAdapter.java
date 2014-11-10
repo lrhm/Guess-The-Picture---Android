@@ -121,7 +121,7 @@ public class PackageListImplicitAdapter {
             packageInfo.setTag(tag);
         }
 
-        final int mySize = LengthManager.getScreenWidth() / 2;
+        final int mySize = LengthManager.getScreenWidth() / LengthManager.getPackagesListColumnCount();
 
         final PackageInfoTag tag = (PackageInfoTag) packageInfo.getTag();
         final View finalPackageInfo = packageInfo;

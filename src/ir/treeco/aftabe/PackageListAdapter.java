@@ -36,7 +36,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     int getColumnCount() {
-        return 2;
+        return LengthManager.getPackagesListColumnCount();
     }
 
     @Override
