@@ -13,6 +13,7 @@ public class NotificationProgressListener implements DownloadProgressListener {
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
     private Context context;
+    private MetaPackage metaPackage;
 
     public NotificationProgressListener(Context context, MetaPackage mPackage) {
         this.context = context;
@@ -25,6 +26,7 @@ public class NotificationProgressListener implements DownloadProgressListener {
                 .setSmallIcon(R.drawable.tiny);
         mBuilder.setProgress(100, 0, false);
         mNotifyManager.notify(id, mBuilder.build());
+        metaPackage = mPackage;
         //TODO set onClick for notification
     }
 
@@ -43,11 +45,13 @@ public class NotificationProgressListener implements DownloadProgressListener {
         mBuilder.setContentText("آفتابه پر شد")
                 .setProgress(0,0,false);
         mNotifyManager.notify(id, mBuilder.build());
+        metaPackage.setState(PackageState.LOCAL);
     }
 
     public void failure() {
         mBuilder.setContentText("آب قطع شد")
                 .setProgress(0,0,false);
         mNotifyManager.notify(id, mBuilder.build());
+        metaPackage.setState(PackageState.REMOTE);
     }
 }

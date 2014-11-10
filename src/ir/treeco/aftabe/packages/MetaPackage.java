@@ -29,6 +29,10 @@ public class MetaPackage {
         return name + " " + id + " " + cost + " " + state;
     }
 
+    public void setState (PackageState state) {
+        this.state = state;
+    }
+
     public Context getContext() {
         return context;
     }
@@ -107,7 +111,7 @@ public class MetaPackage {
             @Override
             public void run() {
                 Utils.download(context, dataUrl, getName()+".zip", dpl);
-                state = PackageState.LOCAL;
+//                state = PackageState.LOCAL;
                 packageManager.generateAdapterResourceArrays();
             }
         }).start();
@@ -122,7 +126,7 @@ public class MetaPackage {
                         new NotificationProgressListener(context, metaPackage)
                 };
                 Utils.download(context, dataUrl, getName()+".zip", dpl);
-                state = PackageState.LOCAL;
+//                state = PackageState.LOCAL;
 
                 //TODO handle Data Versions
 //        SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);

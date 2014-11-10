@@ -46,7 +46,7 @@ public class PackageListImplicitAdapter {
     private PackageManager pManager;
     private MetaPackage[] packages;
 
-    public final static int NEW_TAB_ADAPTER = 0, LOCAL_TAB_ADAPTER = 1, HOT_TAB_ADAPTER = 2;
+    public final static int NEW_TAB_ADAPTER = 2, LOCAL_TAB_ADAPTER = 1, HOT_TAB_ADAPTER = 0;
 
     public void flip(int i, View view) {
         if (!itemData[i].enabled)
@@ -202,7 +202,37 @@ public class PackageListImplicitAdapter {
 //                    createPackagePurchaseDialog(packages[i]);
                     DownloadProgressListener[] dpl = new DownloadProgressListener[] {
                             new NotificationProgressListener(packages[i].getContext(), packages[i]),
-                            new PackageListProgressListener(frontDrawable)
+//                            new PackageListProgressListener(frontDrawable)
+//                            new PackageListProgressListener(tag.frontCard)
+                            new DownloadProgressListener() {
+                                DownloadingDrawable drawable = frontDrawable;
+                                ImageView imageView = tag.frontCard;
+
+                                int last=0;
+                                @Override
+                                public void update(int progressInPercentage) {
+                                    if(last != progressInPercentage) {
+                                        drawable.setPercentage(progressInPercentage);
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                imageView.setImageDrawable(drawable);
+                                            }
+                                        });
+                                    }
+                                    last = progressInPercentage;
+                                }
+
+                                @Override
+                                public void success() {
+                                    drawable.setPercentage(100);
+                                }
+
+                                @Override
+                                public void failure() {
+                                    drawable.setPercentage(100);
+                                }
+                            }
                     };
                     packages[i].becomeLocal(dpl);
                 } else if(packages[i].getState() == PackageState.LOCAL) {

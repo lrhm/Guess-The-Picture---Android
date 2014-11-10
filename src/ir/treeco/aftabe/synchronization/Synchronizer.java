@@ -196,15 +196,16 @@ public class Synchronizer extends BroadcastReceiver{
                     String randomName = null;
                     if(imageUrl != null) {
                         try {
-                            randomName = UUID.randomUUID().toString();
-                            Utils.download(context, imageUrl, randomName+".jpg");
+//                            randomName = UUID.randomUUID().toString();
+                            randomName = "NOTIFIMAGE_" + ((int) Math.random()*10000)+".jpg";
+                            Utils.download(context, imageUrl, randomName);
                             Bitmap bitmap = BitmapFactory.decodeStream(context.openFileInput(randomName));
                             mBuilder.setLargeIcon(bitmap);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    sendNotification(mBuilder, onClick, promote, prize, randomName+".jpg");
+                    sendNotification(mBuilder, onClick, promote, prize, randomName);
                 }
             }
 
@@ -247,7 +248,6 @@ public class Synchronizer extends BroadcastReceiver{
                         Utils.download(context, url, "ad" + cnt + ".jpg");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return; // to avoid broken synch
                     }
                     cnt++;
                 }

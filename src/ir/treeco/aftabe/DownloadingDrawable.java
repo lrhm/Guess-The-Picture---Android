@@ -62,5 +62,6 @@ public class DownloadingDrawable extends Drawable {
 
     public void setPercentage(int percentage) {
         this.percentage = percentage;
+        onBoundsChange(getBounds());
     }
 }
