@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.packages;
 
+import android.widget.ImageView;
 import ir.treeco.aftabe.DownloadingDrawable;
 
 /**
@@ -7,13 +8,21 @@ import ir.treeco.aftabe.DownloadingDrawable;
  */
 public class PackageListProgressListener implements DownloadProgressListener {
     DownloadingDrawable drawable;
-    public PackageListProgressListener( DownloadingDrawable drawable) {
-        this.drawable = drawable;
+    ImageView imageView;
+    public PackageListProgressListener( ImageView imageView) {
+        this.drawable = (DownloadingDrawable) imageView.getDrawable();
+        this.imageView = imageView;
     }
 
+
+    int last = 0;
     @Override
     public void update(int progressInPercentage) {
-        drawable.setPercentage(progressInPercentage);
+        if(last != progressInPercentage) {
+            drawable.setPercentage(progressInPercentage);
+            imageView.setImageDrawable(drawable);
+        }
+        last = progressInPercentage;
     }
 
     @Override

@@ -46,6 +46,7 @@ public class PackageManager {
         InputStream inputStream = context.getResources().openRawResource(R.raw.header);
         Yaml yaml = new Yaml();
         headerInfo = (List<HashMap<String, Object>>) yaml.load(inputStream);
+        Log.d("tsst-zz",headerInfo.toString());
         inPackages = new MetaPackage[headerInfo.size()];
         int cnt=0;
         for(HashMap<String,Object> pkgInfo : headerInfo) {
@@ -86,11 +87,13 @@ public class PackageManager {
             cnt++;
         }
 
+        Log.d("tsst","in loaded");
 
         //load non builtIn Packages
         yaml = new Yaml();
         try {
             headerInfo = (List<HashMap<String, Object>>) yaml.load(context.openFileInput("header.yml"));
+            Log.d("tsst", headerInfo.toString());
         } catch (FileNotFoundException e) {
             headerInfo = null;
         }
@@ -99,21 +102,37 @@ public class PackageManager {
             cnt = 0;
             for (HashMap<String, Object> pkgInfo : headerInfo) {
                 String name = (String) pkgInfo.get(pkgNameKey);
+                List<String> colorList = (List<String>) pkgInfo.get("Color");
+
+                Log.e("COLORS", "" + colorList);
+
+                int[] color = new int[colorList.size()];
+
+                ArrayList<String> tmpColors = new ArrayList<String>();
+
+                for (String c: colorList)
+                    tmpColors.add(c);
+
+                for (int i = 0;i < tmpColors.size(); i++)
+                    color[i] = Color.parseColor(tmpColors.get(i));
                 int cost = (Integer) pkgInfo.get(costKey);
                 int version = (Integer) pkgInfo.get(dataVersionKey);
                 String dataUrl = (String) pkgInfo.get(dataUrlKey);
+                Log.d("tsst",name + " " + cost + " " + version + " " + dataUrl);
                 PackageState state;
                 File dataFile = new File(context.getFilesDir(),name+".zip");
                 if(dataFile.exists())
                     state = PackageState.LOCAL;
                 else
                     state = PackageState.REMOTE;
-                List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
-                int[] color = Utils.intListToArray(colorList);
+                Log.d("tsst","state determined");
+//                List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
+//                int[] color = Utils.intListToArray(colorList);
                 List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
                 float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
                 List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
                 float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
+                Log.d("tsst"," color determined");
                 outPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt+inPackages.length, state, this);
                 outPackages[cnt].setCost(cost);
                 outPackages[cnt].setDataUrl(dataUrl);
@@ -183,14 +202,14 @@ public class PackageManager {
         Log.d("tsst","piped");
     }
 
-    public void downloadPackage(int id) throws Exception {
-        MetaPackage pkg = this.packages[id];
-        try {
-            Utils.download(this.context, pkg.getDataUrl(),pkg.getName()+".zip");
-        } catch (Exception e) {
-            throw new Exception("can't download "+pkg.getName()+"'s data");
-        }
-        pkg.becomeLocal();
-        generateAdapterResourceArrays(); // well :\ not the best option ...
-    }
+//    public void downloadPackage(int id) throws Exception {
+//        MetaPackage pkg = this.packages[id];
+//        try {
+//            Utils.download(this.context, pkg.getDataUrl(),pkg.getName()+".zip");
+//        } catch (Exception e) {
+//            throw new Exception("can't download "+pkg.getName()+"'s data");
+//        }
+//        pkg.becomeLocal();
+//        generateAdapterResourceArrays(); // well :\ not the best option ...
+//    }
 }

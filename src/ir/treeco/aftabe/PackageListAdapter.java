@@ -50,7 +50,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     void refreshData() {
-        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount();
+        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount() + 2;
     }
 
 
