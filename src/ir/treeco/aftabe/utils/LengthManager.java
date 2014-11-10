@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Display;
 import android.view.WindowManager;
@@ -322,7 +321,6 @@ public class LengthManager {
     }
 
     public static int getPackagesListColumnCount() {
-        Log.e("DPDP", "" + Utils.convertPixelsToDp(getScreenWidth(), context));
         return Math.max((int) (Utils.convertPixelsToDp(getScreenWidth(), context) / 150), 1);
     }
 }

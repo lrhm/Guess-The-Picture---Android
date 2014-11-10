@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,7 +47,7 @@ public class PackageFragment extends Fragment {
 
             {
                 String tmp = "colors: ";
-                for (int color: backgroundColor)
+                for (int color : backgroundColor)
                     tmp += " " + Integer.toHexString(color);
                 Log.e("COLORS", tmp);
             }
@@ -64,25 +65,37 @@ public class PackageFragment extends Fragment {
             inputStreams[i] = null;
         }
 
-        ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
-        viewPager.setAdapter(new LevelsViewPagerAdapter(this));
+        {
+            ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
+            Utils.resizeView(viewPager, LengthManager.getScreenWidth(), LengthManager.getLevelsViewpagerHeight());
+            viewPager.setAdapter(new LevelsViewPagerAdapter(this));
 
-        ImageView levelsBackTop = (ImageView) layout.findViewById(R.id.levels_back_top);
-        ImageView levelsBackBottom = (ImageView) layout.findViewById(R.id.levels_back_bottom);
+            int currentPage = 0;
+            while (16 * (currentPage + 1) < mPackage.getNumberOfLevels() && !mPackage.getLevel(16 * (currentPage + 1)).isLocked())
+                currentPage++;
 
+            viewPager.setCurrentItem(currentPage);
+            setUpIndicatorLayout(layout, viewPager);
+        }
 
-        Utils.resizeView(viewPager, LengthManager.getScreenWidth(), LengthManager.getLevelsViewpagerHeight());
-        Utils.resizeView(levelsBackTop, LengthManager.getScreenWidth(), LengthManager.getLevelsBackTopHeight());
-        Utils.resizeView(levelsBackBottom, LengthManager.getScreenWidth(), LengthManager.getLevelsBackBottomHeight());
+        {
+            ImageView levelsBackTop = (ImageView) layout.findViewById(R.id.levels_back_top);
+            levelsBackTop.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.levels_back_top, LengthManager.getScreenWidth(), LengthManager.getLevelsBackTopHeight()));
+            Utils.resizeView(levelsBackTop, LengthManager.getScreenWidth(), LengthManager.getLevelsBackTopHeight());
+        }
 
-        setUpIndicatorLayout(layout, viewPager);
+        {
+            ImageView levelsBackBottom = (ImageView) layout.findViewById(R.id.levels_back_bottom);
+            levelsBackBottom.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.levels_back_bottom, LengthManager.getScreenWidth(), LengthManager.getLevelsBackBottomHeight()));
+            Utils.resizeView(levelsBackBottom, LengthManager.getScreenWidth(), LengthManager.getLevelsBackBottomHeight());
+        }
+
 
         return layout;
     }
 
     private void setUpIndicatorLayout(View view, final ViewPager viewPager) {
         final int count = viewPager.getAdapter().getCount();
-        Log.d("indicator", "button_count " + count);
 
         final LinearLayout indicatorList = (LinearLayout) view.findViewById(R.id.indicator);
         Utils.resizeView(indicatorList, ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getIndicatorBigSize());
@@ -90,17 +103,18 @@ public class PackageFragment extends Fragment {
         for (int i = 0; i < count; i++) {
             ImageView indicator = new ImageView(view.getContext());
             final int finalI = i;
-            indicator.setOnClickListener(new View.OnClickListener() {
+            indicator.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View view) {
-                    viewPager.setCurrentItem(finalI);
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                        viewPager.setCurrentItem(finalI);
+                    return false;
                 }
             });
             indicator.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             indicator.setImageResource(R.drawable.indicator);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LengthManager.getIndicatorSmallSize(), LengthManager.getIndicatorSmallSize());
             layoutParams.leftMargin = layoutParams.rightMargin = LengthManager.getIndicatorSmallSize() / 4;
-            //indicator.setImageBitmap(ImageManager.loadImageFromResource(view.getContext(), R.drawable.digit_9, size, size));
             indicatorList.addView(indicator, layoutParams);
         }
 
@@ -120,10 +134,11 @@ public class PackageFragment extends Fragment {
 
             }
         });
+
+        updateIndicators(indicatorList, viewPager.getCurrentItem());
     }
 
     void updateIndicators(LinearLayout indicatorList, float position) {
-        Log.d("indicator", "is called");
         float extra = LengthManager.getIndicatorBigSize() - LengthManager.getIndicatorSmallSize();
         float base = LengthManager.getIndicatorSmallSize();
         for (int i = 0; i < indicatorList.getChildCount(); i++) {
