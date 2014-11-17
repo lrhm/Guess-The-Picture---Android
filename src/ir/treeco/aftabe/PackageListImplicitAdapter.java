@@ -217,6 +217,7 @@ public class PackageListImplicitAdapter {
                                             @Override
                                             public void run() {
                                                 imageView.setImageDrawable(drawable);
+                                                notifyDataSetChanged();
                                             }
                                         });
                                     }

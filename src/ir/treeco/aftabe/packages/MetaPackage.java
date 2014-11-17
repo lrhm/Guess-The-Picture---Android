@@ -115,6 +115,7 @@ public class MetaPackage {
                 packageManager.generateAdapterResourceArrays();
             }
         }).start();
+        packageManager.generateAdapterResourceArrays();
     }
 
     public void becomeLocal() {
@@ -134,6 +135,7 @@ public class MetaPackage {
                 packageManager.generateAdapterResourceArrays();
             }
         }).start();
+        packageManager.generateAdapterResourceArrays();
     }
 
     public InputStream getFront() throws FileNotFoundException {

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.*;
 import ir.treeco.aftabe.packages.PackageManager;
+import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.*;
 
 public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener{
@@ -60,22 +61,25 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         shade.setImageBitmap(ImageManager.loadImageFromResource(inflater.getContext(), R.drawable.shadow_top, LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight()));
         Utils.resizeView(shade, LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight());
 
-        PackageManager pManager = new PackageManager(getActivity());
+        PackageManager pManager = new PackageManager(getActivity(), layout);
+        Synchronizer.setPackageManager(pManager);
+        pManager.setActivity((IntroActivity) getActivity());
         try {
             pManager.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        final PackageListAdapter aAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager);
+        final PackageListAdapter adapter = new PackageListAdapter((IntroActivity) getActivity(), pManager);
+        pManager.setAdapter(adapter);
 
 //        final PackageListAdapter newAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.NEW_TAB_ADAPTER);
 //        final PackageListAdapter localAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.LOCAL_TAB_ADAPTER);
 //        final PackageListAdapter hotAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.HOT_TAB_ADAPTER);
 
-        packages.setAdapter(aAdapter);
-        aAdapter.setFilter(1);
-        aAdapter.notifyDataSetChanged();
+        packages.setAdapter(adapter);
+        adapter.setFilter(1);
+        adapter.notifyDataSetChanged();
 
 //        packages.setAdapter(localAdapter);
 //        newAdapter.setFilter(0);
@@ -105,7 +109,7 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
                 public void onClick(View view) {
 //                    packages.setAdapter(adapter);
 //                    adapter.setFilter(0);
-                    aAdapter.setFilter(finalI);
+                    adapter.setFilter(finalI);
                     packages.setSelection(0);
                     for (int i = 0; i < 3; i++)
                         Utils.setViewBackground(textViews[i], i == finalI ? new RoundedCornerDrawable() : null);

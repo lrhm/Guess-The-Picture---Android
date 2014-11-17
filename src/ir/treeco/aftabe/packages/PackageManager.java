@@ -1,9 +1,14 @@
 package ir.treeco.aftabe.packages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.FrameLayout;
+import ir.treeco.aftabe.IntroActivity;
+import ir.treeco.aftabe.PackageListAdapter;
+import ir.treeco.aftabe.PackageListImplicitAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
@@ -31,10 +36,27 @@ public class PackageManager {
     Context context;
     private MetaPackage[] packages;
     private MetaPackage[] newPackages, localPackages, hotPackages;
+    IntroActivity activity;
 
-    public PackageManager(Context context) {
+    private PackageListAdapter adapter;
+    private FrameLayout frameLayout;
+
+    public void setFrameLayout(FrameLayout frameLayout) {
+        this.frameLayout = frameLayout;
+    }
+
+    public void setActivity(IntroActivity activity) {
+        this.activity = activity;
+    }
+
+    public void setAdapter(PackageListAdapter adapter) {
+        this.adapter = adapter;
+    }
+
+    public PackageManager(Context context, FrameLayout frameLayout) {
         this.context = context;
         this.preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
+        this.frameLayout = frameLayout;
         //TODO uncomment below
 //        refresh();
     }
@@ -176,6 +198,14 @@ public class PackageManager {
         newPackages = newPackagelist.toArray(new MetaPackage[newPackagelist.size()]);
         localPackages = localPackagelist.toArray(new MetaPackage[localPackagelist.size()]);
         hotPackages = hotPackagelist.toArray(new MetaPackage[hotPackagelist.size()]);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                frameLayout.invalidate();
+            }
+        });
     }
 
     public MetaPackage[] getHotPackages() {
@@ -202,14 +232,4 @@ public class PackageManager {
         Log.d("tsst","piped");
     }
 
-//    public void downloadPackage(int id) throws Exception {
-//        MetaPackage pkg = this.packages[id];
-//        try {
-//            Utils.download(this.context, pkg.getDataUrl(),pkg.getName()+".zip");
-//        } catch (Exception e) {
-//            throw new Exception("can't download "+pkg.getName()+"'s data");
-//        }
-//        pkg.becomeLocal();
-//        generateAdapterResourceArrays(); // well :\ not the best option ...
-//    }
 }

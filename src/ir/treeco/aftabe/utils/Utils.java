@@ -1,6 +1,9 @@
 package ir.treeco.aftabe.utils;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -20,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +32,20 @@ import java.util.Random;
  */
 public class Utils {
     public static String SHARED_PREFRENCES_TAG = "aftabe_plus";
+
+    public static void updateLastTime(Context context) {
+        Intent intent = new Intent(context, UserStimulator.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DATE, 5);
+        calendar.add(Calendar.SECOND, 5);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent); // cancel the former alarm
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+    }
 
     public static int[] intListToArray(List<Integer> list) {
         int[] arr = new int[list.size()];

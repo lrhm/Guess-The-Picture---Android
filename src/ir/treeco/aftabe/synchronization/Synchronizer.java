@@ -16,6 +16,7 @@ import android.util.Log;
 import ir.treeco.aftabe.AdActivity;
 import ir.treeco.aftabe.AdItemAdapter;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.Utils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -47,7 +48,11 @@ public class Synchronizer extends BroadcastReceiver{
     private static final String TASK_FILE_KEY="Files",
                                 TASK_NOTIFICATION_KEY="Notifications",
                                 TASK_ADS_KEY="Ads";
+    static private PackageManager packageManager;
 
+    static public void setPackageManager(PackageManager pManager) {
+        packageManager = pManager;
+    }
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -91,6 +96,8 @@ public class Synchronizer extends BroadcastReceiver{
                 do_Task_Notifs((List<HashMap<String, Object>>) tasks.get(TASK_NOTIFICATION_KEY));
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
                 do_Task_Files_Download_And_Update((List<HashMap<String,Object>>) tasks.get(TASK_FILE_KEY));
+
+                packageManager.refresh();
 
                 //TODO  header.yml File most Update at LAST after Downloading thumbnails
 

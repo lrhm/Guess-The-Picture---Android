@@ -46,6 +46,8 @@ public class IntroActivity extends FragmentActivity {
 
         preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
+//        Utils.updateLastTime(this);
+
         RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
         header.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
 
