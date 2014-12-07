@@ -13,13 +13,8 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by hossein on 7/31/14.
@@ -32,7 +27,8 @@ public class PackageManager {
     private final static String pkgNameKey= "Name",
                           dataUrlKey = "Data URL",
                           costKey = "Cost",
-                          dataVersionKey = "Data Version";
+                          dataVersionKey = "Data Version",
+                          rateKey = "Rate";
     Context context;
     private MetaPackage[] packages;
     private MetaPackage[] newPackages, localPackages, hotPackages;
@@ -62,13 +58,16 @@ public class PackageManager {
     }
 
     public void refresh() {
+        Log.i("PackageManager","in Refresh");
         MetaPackage[] inPackages=null, outPackages=null;
 
+
         //load builtIn Packages
+        Log.i("PackageManager","load built in");
         InputStream inputStream = context.getResources().openRawResource(R.raw.header);
         Yaml yaml = new Yaml();
         headerInfo = (List<HashMap<String, Object>>) yaml.load(inputStream);
-        Log.d("tsst-zz",headerInfo.toString());
+        Log.i("PackageManager","load built in - got the header");
         inPackages = new MetaPackage[headerInfo.size()];
         int cnt=0;
         for(HashMap<String,Object> pkgInfo : headerInfo) {
@@ -91,20 +90,24 @@ public class PackageManager {
             float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
             List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
             float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
-            inPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this);
+            inPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this, 1000);
 
             //Copy data,Thumbnail to memory
             File dataFile = new File(context.getFilesDir(), name+".zip");
             File backThumb = new File(context.getFilesDir(), name+"_back.png");
             File frontThumb = new File(context.getFilesDir(), name+"_front.png");
+            Log.i("PackageManager","transfering files");
             if(!dataFile.exists()) {
                 copyFromRawToInternal(name,"zip");
+                Log.i("PackageManager","transfered files - zip");
             }
             if(!backThumb.exists()) {
                 copyFromRawToInternal(name + "_back","png");
+                Log.i("PackageManager","transfered files - back");
             }
             if(!frontThumb.exists()) {
                 copyFromRawToInternal(name + "_front","png");
+                Log.i("PackageManager","transfered files - front");
             }
             cnt++;
         }
@@ -112,6 +115,7 @@ public class PackageManager {
         Log.d("tsst","in loaded");
 
         //load non builtIn Packages
+        Log.i("PackageManager","load non-bu in");
         yaml = new Yaml();
         try {
             headerInfo = (List<HashMap<String, Object>>) yaml.load(context.openFileInput("header.yml"));
@@ -120,6 +124,7 @@ public class PackageManager {
             headerInfo = null;
         }
         if(headerInfo!=null) {
+            Log.i("PackageManager","load non-bu in - got the header");
             outPackages = new MetaPackage[headerInfo.size()];
             cnt = 0;
             for (HashMap<String, Object> pkgInfo : headerInfo) {
@@ -139,6 +144,7 @@ public class PackageManager {
                     color[i] = Color.parseColor(tmpColors.get(i));
                 int cost = (Integer) pkgInfo.get(costKey);
                 int version = (Integer) pkgInfo.get(dataVersionKey);
+                int rate = (Integer) pkgInfo.get(rateKey);
                 String dataUrl = (String) pkgInfo.get(dataUrlKey);
                 Log.d("tsst",name + " " + cost + " " + version + " " + dataUrl);
                 PackageState state;
@@ -147,15 +153,16 @@ public class PackageManager {
                     state = PackageState.LOCAL;
                 else
                     state = PackageState.REMOTE;
-                Log.d("tsst","state determined");
-//                List<Integer> colorList = (List<Integer>) pkgInfo.get("Color");
-//                int[] color = Utils.intListToArray(colorList);
+                if( state == PackageState.LOCAL ) {
+                    int curVersion = preferences.getInt(name+"_DATA_VERSION", -1);
+                    if(curVersion < version)
+                        state = PackageState.REMOTE;
+                }
                 List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
                 float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
                 List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
                 float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
-                Log.d("tsst"," color determined");
-                outPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt+inPackages.length, state, this);
+                outPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt+inPackages.length, state, this, rate);
                 outPackages[cnt].setCost(cost);
                 outPackages[cnt].setDataUrl(dataUrl);
                 outPackages[cnt].setDataVersion(version);
@@ -181,23 +188,27 @@ public class PackageManager {
         for (MetaPackage pkg : packages) {
             if(pkg.getState()==PackageState.LOCAL)
                 localPackagelist.add(pkg);
-            if(pkg.getState()==PackageState.REMOTE || pkg.getState()==PackageState.DOWNLOADING)
+            if(pkg.getState()==PackageState.REMOTE || pkg.getState()==PackageState.DOWNLOADING) {
                 newPackagelist.add(pkg);
-            /**
-             *
-             *       how to determine HOTNESS of a package?
-             *
-             *
-             */
+                hotPackagelist.add(pkg);
+            }
         }
-
-        //TODO delete below
-        hotPackagelist.add(packages[0]);
 
         //convert Arraylist to Arrays for better performance
         newPackages = newPackagelist.toArray(new MetaPackage[newPackagelist.size()]);
         localPackages = localPackagelist.toArray(new MetaPackage[localPackagelist.size()]);
         hotPackages = hotPackagelist.toArray(new MetaPackage[hotPackagelist.size()]);
+
+        Arrays.sort(hotPackages, new Comparator<MetaPackage>() {
+            @Override
+            public int compare(MetaPackage lhs, MetaPackage rhs) {
+                if(lhs.getRate() == rhs.getRate())
+                    return 0;
+                if(lhs.getRate() < rhs.getRate())
+                    return +1;
+                return -1;
+            }
+        });
 
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -228,8 +239,12 @@ public class PackageManager {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Utils.pipe(inputStream,fos);
-        Log.d("tsst","piped");
+        try {
+            Utils.pipe(inputStream,fos);
+            Log.i("PackageManager","piped: " + name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

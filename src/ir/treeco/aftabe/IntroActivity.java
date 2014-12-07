@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,7 +22,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import ir.treeco.aftabe.utils.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class IntroActivity extends FragmentActivity {
@@ -46,7 +52,7 @@ public class IntroActivity extends FragmentActivity {
 
         preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
-//        Utils.updateLastTime(this);
+        Utils.updateLastTime(this);
 
         RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
         header.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
@@ -153,6 +159,26 @@ public class IntroActivity extends FragmentActivity {
         });
         Log.d("paspas",Utils.getAESkey(this));
         Log.d("paspas",Utils.getAESkey(this).getBytes().length+" ");
+
+        // Backup
+        if( Utils.isExternalStorageWritable() ) {
+            File rootFolder = new File(Environment.getExternalStorageDirectory(),".aftabe");
+            rootFolder.mkdir();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("Coin Count", CoinManager.getCoinsCount(preferences));
+                Log.i("Backup", jsonObject.toString());
+                Log.i("Backup", Encryption.encryptAES(jsonObject.toString(), this));
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(rootFolder, "Backup"));
+                fileOutputStream.write(Encryption.encryptAES(jsonObject.toString(),this).getBytes());
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }catch ( JSONException e ) {
+                e.printStackTrace();
+            }catch ( IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void setUpCoinBox() {

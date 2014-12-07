@@ -1,10 +1,15 @@
 package ir.treeco.aftabe;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.view.animation.Animation;
@@ -193,17 +198,23 @@ public class PackageListImplicitAdapter {
         PackageInfoListener packageInfoListener = new PackageInfoListener() {
             @Override
             public void onClick(View view) {
+                Log.d("ImplicitAdapter::OnClick", " clicked general");
                 if (itemData[i].flipped || x < mySize / 3 && y < mySize / 3) {
                     PackageListImplicitAdapter.this.flip(i, view);
                     return;
                 }
 
+                if( packages[i].getIsDownloading() == true ) {
+                    DownloadCancelAlert dialog = new DownloadCancelAlert(packages[i]);
+                    dialog.show(activity.getSupportFragmentManager(), "CancelDownload");
+                    return;
+                }
+
                 if (/* true || */ packages[i].getState() == PackageState.REMOTE) {
+                    Log.d("ImplicitAdapter::OnClick", " clicked for dl");
 //                    createPackagePurchaseDialog(packages[i]);
                     DownloadProgressListener[] dpl = new DownloadProgressListener[] {
                             new NotificationProgressListener(packages[i].getContext(), packages[i]),
-//                            new PackageListProgressListener(frontDrawable)
-//                            new PackageListProgressListener(tag.frontCard)
                             new DownloadProgressListener() {
                                 DownloadingDrawable drawable = frontDrawable;
                                 ImageView imageView = tag.frontCard;
@@ -355,5 +366,31 @@ public class PackageListImplicitAdapter {
             ImageView background = (ImageView) storeItem.findViewById(R.id.item_background);
             background.setImageBitmap(ImageManager.loadImageFromResource(activity, resourceId, LengthManager.getPackagePurchaseItemWidth(), -1));
         }
+    }
+}
+
+class DownloadCancelAlert extends android.support.v4.app.DialogFragment {
+    private MetaPackage metaPackage;
+    public DownloadCancelAlert(MetaPackage metaPackage) {
+        this.metaPackage = metaPackage;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("از کرده خود پشیمانی؟")
+                .setPositiveButton("بلی", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        metaPackage.setIsDownloading(false);
+                    }
+                })
+                .setNegativeButton("خیر", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                });
+        return builder.create();
     }
 }

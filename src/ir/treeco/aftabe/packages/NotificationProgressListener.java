@@ -45,13 +45,11 @@ public class NotificationProgressListener implements DownloadProgressListener {
         mBuilder.setContentText("آفتابه پر شد")
                 .setProgress(0,0,false);
         mNotifyManager.notify(id, mBuilder.build());
-        metaPackage.setState(PackageState.LOCAL);
     }
 
     public void failure() {
         mBuilder.setContentText("آب قطع شد")
                 .setProgress(0,0,false);
         mNotifyManager.notify(id, mBuilder.build());
-        metaPackage.setState(PackageState.REMOTE);
     }
 }

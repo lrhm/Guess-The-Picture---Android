@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.synchronization;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -17,6 +18,8 @@ import ir.treeco.aftabe.AdActivity;
 import ir.treeco.aftabe.AdItemAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.packages.PackageManager;
+import ir.treeco.aftabe.utils.NotificationBuilder;
+import ir.treeco.aftabe.utils.UserStimulator;
 import ir.treeco.aftabe.utils.Utils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -30,10 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by hossein on 8/18/14.
@@ -94,12 +94,13 @@ public class Synchronizer extends BroadcastReceiver{
                 tasks = (HashMap<String, Object>) yaml.load(data);
 
                 do_Task_Notifs((List<HashMap<String, Object>>) tasks.get(TASK_NOTIFICATION_KEY));
+                Log.d("synch","after notifs");
                 do_Task_Ads((List<HashMap<String, String>>) tasks.get(TASK_ADS_KEY));
+                Log.d("synch","after ads");
                 do_Task_Files_Download_And_Update((List<HashMap<String,Object>>) tasks.get(TASK_FILE_KEY));
+                Log.d("synch","after files");
 
                 packageManager.refresh();
-
-                //TODO  header.yml File most Update at LAST after Downloading thumbnails
 
             }
 
@@ -147,9 +148,10 @@ public class Synchronizer extends BroadcastReceiver{
                 for(HashMap<String,Object> file : files) {
                     String url = (String) file.get("URL");
                     String name = (String) file.get("name");
+                    Log.d("synch","dling file: "+name);
                     int version = (Integer)file.get("version");
                     int lastVersion = preferences.getInt(name + "_VERSION", -1);
-                    if(lastVersion == -1 || lastVersion > version) {
+                    if(lastVersion == -1 || lastVersion < version || version == -1) {
                         try {
                             Utils.download(context, url, name);
                             preferences.edit().putInt(name+"_VERSION",version).commit();
@@ -176,67 +178,60 @@ public class Synchronizer extends BroadcastReceiver{
              *
              */
             public void do_Task_Notifs(List<HashMap<String,Object>> notifs) {
+                int dayOffset = 1;
                 for(HashMap<String,Object> notif : notifs) {
+                    Log.d("synch","notifing");
+                    int minVersion = notif.get("min version")==null?-1000:(Integer)notif.get("min version");
+                    int maxVersion = notif.get("max version")==null?+1000:(Integer)notif.get("max version");
+                    int version = 1;
+                    try {
+                        version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+                    } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+                        // Never gonna happen
+                        e.printStackTrace();
+                    }
+                    if(version < minVersion || version > maxVersion)
+                        continue;
                     int lastToken = preferences.getInt("TOKEN",-1);
                     if(notif.get("token") != null) {
                         int token = (Integer)notif.get("token");
-                        if(token<lastToken) // old notification
-                            return;
-                        int toToken = (Integer)notif.get("to token");
-                        preferences.edit().putInt("TOKEN",toToken).commit();
+                        if(token<lastToken) // expired notification
+                            continue;
                     }
-                    int minVersion = notif.get("min version")==null?-1000:(Integer)notif.get("min version");
-                    int maxVersion = notif.get("max version")==null?+1000:(Integer)notif.get("max version");
-                    //TODO check version
-                    String imageUrl = (String) notif.get("Image URL");
-                    String title = (String) notif.get("Title");
-                    String text = (String) notif.get("Text");
-                    String onClick = (String) notif.get("onClick");
-                    String promote = (String) notif.get("Promote");
-                    int prize = notif.get("Prize")==null?0:(Integer)notif.get("Prize");
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(context)
-                                    .setSmallIcon(R.drawable.tiny)
-                                    .setContentTitle(title)
-                                    .setContentText(text)
-                                    .setAutoCancel(true);
-                    String randomName = null;
-                    if(imageUrl != null) {
-                        try {
-//                            randomName = UUID.randomUUID().toString();
-                            randomName = "NOTIFIMAGE_" + ((int) Math.random()*10000)+".jpg";
-                            Utils.download(context, imageUrl, randomName);
-                            Bitmap bitmap = BitmapFactory.decodeStream(context.openFileInput(randomName));
-                            mBuilder.setLargeIcon(bitmap);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
+                    String time = (String) notif.get("time");
+                    String[] timeHourMinute = time.split(":");
+                    int hour = Integer.parseInt(timeHourMinute[0]);
+                    int minute = Integer.parseInt(timeHourMinute[1]);
+
+                    Intent intent = new Intent(context, NotificationBuilder.class);
+                    intent.putExtra("title" ,(String) notif.get("Title"));
+                    intent.putExtra("text" , (String) notif.get("Text"));
+                    intent.putExtra("onClick" , (String) notif.get("onClick"));
+                    intent.putExtra("promote", (String) notif.get("Promote"));
+                    intent.putExtra("prize", notif.get("Prize")==null?0:(Integer)notif.get("Prize"));
+                    String randomName = "NOTIFIMAGE_" + ((int) Math.random()*10000)+".jpg";
+                    try {
+                        Utils.download(context, (String) notif.get("Image URL"), randomName);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    sendNotification(mBuilder, onClick, promote, prize, randomName);
+                    intent.putExtra("imageName", randomName);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0, intent, 0);
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DATE, dayOffset);
+                    dayOffset++;
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                    calendar.set(Calendar.MINUTE, minute);
+
+                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+
+                    int toToken = (Integer)notif.get("to token");
+                    preferences.edit().putInt("TOKEN",toToken).commit();
                 }
-            }
-
-            private void sendNotification(NotificationCompat.Builder mBuilder, String onclick, String promote, int prize,
-                                          String imageName) {
-
-                Intent resultIntent = new Intent(context, AdActivity.class);
-                resultIntent.putExtra("onclick", onclick);
-                resultIntent.putExtra("promote", promote);
-                resultIntent.putExtra("prize", prize);
-                resultIntent.putExtra("imageName", imageName);
-
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-
-                stackBuilder.addParentStack(AdActivity.class);
-
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentIntent(resultPendingIntent);
-
-                NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                int mId = (int) (Math.random()*1000);
-                mNotificationManager.notify(mId, mBuilder.build());
             }
 
             /**
@@ -258,20 +253,8 @@ public class Synchronizer extends BroadcastReceiver{
                     }
                     cnt++;
                 }
-                //successful synch hence rename tmp_ad to ad
                 SharedPreferences.Editor editor = preferences.edit();
                 for(int i=0; i<cnt; ++i) {
-//                    File oldOne = new File(context.getFilesDir(),"tmp_ad"+i);
-//                    File newOne = new File(context.getFilesDir(),"ad"+i);
-//                    oldOne.renameTo(newOne);
-//                    try {
-//                        InputStream fis = context.openFileInput("tmp_ad" + i+ ".jpg");
-//                        FileOutputStream fos = context.openFileOutput("ad" + i + ".jpg", 0);
-////                        FileOutputStream fos = new FileOutputStream(new File(context.getFilesDir(), "ad" + i));
-//                        Utils.pipe(fis, fos);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                     editor.putString("ad_onClick" + i, onClicks[i]);
                 }
 

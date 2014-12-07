@@ -41,32 +41,6 @@ public class Multimedia {
         return cost;
     }
 
-//    public void setMedia(InputStream media) {
-//        media = this.media;
-//    }
-
-//    public Multimedia(MultimediaType type, InputStream media, int cost) {
-//        this.type = type;
-//        this.media = media;
-//        this.cost = cost;
-//    }
-//
-//    public Multimedia(String typeStr, InputStream media, int cost) {
-//        if(typeStr.equals("IMAGE"))
-//            this.type = MultimediaType.IMAGE;
-//        if(typeStr.equals("AUDIO"))
-//            this.type = MultimediaType.AUDIO;
-//        if(typeStr.equals("VIDEO"))
-//            this.type = MultimediaType.VIDEO;
-//        this.media = media;
-//        this.cost = cost;
-//    }
-
-//    public Multimedia(MultimediaType type, int cost) {
-//        this.type = type;
-//        this.cost = cost;
-//    }
-
     public Multimedia(Context context, ZipFile zipFile, String path, String typeStr, int cost) {
         this.context = context;
         this.cost = cost;

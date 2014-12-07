@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,8 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.DownloadProgressListener;
+import ir.treeco.aftabe.packages.MetaPackage;
 import ir.treeco.aftabe.packages.NotificationProgressListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,13 +36,29 @@ import java.util.Random;
 public class Utils {
     public static String SHARED_PREFRENCES_TAG = "aftabe_plus";
 
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
     public static void updateLastTime(Context context) {
         Intent intent = new Intent(context, UserStimulator.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
-//        calendar.add(Calendar.DATE, 5);
-        calendar.add(Calendar.SECOND, 5);
+        calendar.add(Calendar.DATE, 5);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent); // cancel the former alarm
@@ -97,50 +116,58 @@ public class Utils {
     }
 
     public static void download(Context context, String url, String path) throws Exception {
-        download(context, url, path, null);
+        download(context, url, path, null, null);
     }
 
-    public static void download(final Context context, final String url, final String path, final DownloadProgressListener[] listeners) {
-        /**
-         *
-         *          THIS method should overwrite the existing FILE.
-         *                      BUT does IT???????
-         *
-         */
+    public static void download(final Context context, final String url, final String path, final DownloadProgressListener[] listeners, MetaPackage metaPackage) throws IOException {
         try {
             URLConnection conection = new URL(url).openConnection();
+            conection.setConnectTimeout(10000);
+            conection.setReadTimeout(10000);
             conection.connect();
             int lenghtOfFile = conection.getContentLength();
             Log.d("tsst",url+" "+path+" "+lenghtOfFile);
             InputStream is = new URL(url).openStream();
+//            InputStream is = conection.getInputStream();
             OutputStream os = context.openFileOutput(path, 0);
-            pipe(is, os, listeners, lenghtOfFile);
+            pipe(is, os, listeners, lenghtOfFile, metaPackage);
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d("tsst",url+" "+path);
             if(listeners!=null)
                 for(DownloadProgressListener listener : listeners)
                     listener.failure();
+            new File(context.getFilesDir(), path).delete();
+            throw e;
         }
     }
 
-    public static void pipe(InputStream is, OutputStream os) {
-        pipe(is, os, null, 100);
+    public static void pipe(InputStream is, OutputStream os) throws IOException {
+        pipe(is, os, null, 100, null);
     }
 
-    public static void pipe(InputStream is, OutputStream os, DownloadProgressListener[] listeners, int size) {
+    public static void pipe(InputStream is, OutputStream os, DownloadProgressListener[] listeners, int size, MetaPackage metaPackage) throws IOException {
+        Log.d("Utils::pipe", "Piping");
         int n;
         byte[] buffer = new byte[1024];
         int sum=0;
         try {
             while ((n = is.read(buffer)) > -1) {
+                if(metaPackage != null && metaPackage.getIsDownloading() == false)
+                    break;
                 sum += n;
                 if(listeners!=null)
                     for( DownloadProgressListener listener : listeners) {
                         listener.update((sum * 100) / size);
                     }
-                os.write(buffer, 0, n);   // Don't allow any extra bytes to creep in, final write
+                os.write(buffer, 0, n);
+            }
+            if(metaPackage != null && metaPackage.getIsDownloading() == false) {
+                if(listeners != null) {
+                    for ( DownloadProgressListener listener : listeners )
+                        listener.failure();
+                }
+                throw new IOException();
             }
             os.close();
             if (listeners != null) {
@@ -148,11 +175,11 @@ public class Utils {
                     listener.success();
             }
         } catch (IOException e) {
-            Log.d("tsst", "wtf");
             if(listeners!=null) {
                 for (DownloadProgressListener listener : listeners)
                     listener.failure();
             }
+            throw e;
         }
     }
 
