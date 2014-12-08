@@ -23,6 +23,7 @@ import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.*;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ import java.util.List;
  * Created by hamed on 8/12/14.
  */
 public class PackageListImplicitAdapter {
+    private int filter;
+
     abstract class PackageInfoListener implements View.OnTouchListener, View.OnClickListener {
         float x;
         float y;
@@ -51,7 +54,7 @@ public class PackageListImplicitAdapter {
     private PackageManager pManager;
     private MetaPackage[] packages;
 
-    public final static int NEW_TAB_ADAPTER = 2, LOCAL_TAB_ADAPTER = 1, HOT_TAB_ADAPTER = 0;
+    public final static int NEW_TAB = 2, LOCAL_TAB = 1, HOT_TAB = 0;
 
     public void flip(int i, View view) {
         if (!itemData[i].enabled)
@@ -78,15 +81,16 @@ public class PackageListImplicitAdapter {
         setFilter(0);
     }
 
-    void setFilter(int category) {
-        switch (category) {
-            case NEW_TAB_ADAPTER:
+    void setFilter(int filter) {
+        this.filter = filter;
+        switch (filter) {
+            case NEW_TAB:
                 packages = pManager.getNewPackages();
                 break;
-            case LOCAL_TAB_ADAPTER:
+            case LOCAL_TAB:
                 packages = pManager.getLocalPackages();
                 break;
-            case HOT_TAB_ADAPTER:
+            case HOT_TAB:
                 packages = pManager.getHotPackages();
                 break;
         }
@@ -97,6 +101,10 @@ public class PackageListImplicitAdapter {
             itemData[i].fromMiddle = AnimationUtils.loadAnimation(activity, R.anim.from_middle);
         }
         notifyDataSetChanged();
+    }
+
+    public int getFilter() {
+        return filter;
     }
 
     public void notifyDataSetChanged() {
@@ -168,27 +176,41 @@ public class PackageListImplicitAdapter {
 
             }
         });
-
-        Bitmap[] bitmaps;
-        if (i < packages.length) {
+        {
+            final InputStream front;
+            final InputStream back;
             try {
-                bitmaps = new Bitmap[]{
-                        ImageManager.loadImageFromInputStream(packages[i].getFront(), mySize, mySize),
-                        ImageManager.loadImageFromInputStream(packages[i].getBack(), mySize, mySize)
-                };
+                front = packages[i].getFront();
+                back = packages[i].getBack();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException();
             }
-        } else {
-            bitmaps = new Bitmap[]{
-                    ImageManager.loadImageFromResource(activity, R.drawable.pack, mySize, mySize),
-                    ImageManager.loadImageFromResource(activity, R.drawable.packback, mySize, mySize)
-            };
-        }
 
-        final DownloadingDrawable frontDrawable = new DownloadingDrawable(bitmaps[itemData[i].shape]);
-        tag.frontCard.setImageDrawable(frontDrawable);
-        tag.backCard.setImageBitmap(bitmaps[1 - itemData[i].shape]);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    {
+                        Bitmap frontBitmap = ImageManager.loadImageFromInputStream(front, mySize, mySize);
+                        final DownloadingDrawable frontDrawable = new DownloadingDrawable(frontBitmap);
+                        tag.frontCard.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                tag.frontCard.setImageDrawable(frontDrawable);
+                            }
+                        });
+                    }
+                    {
+                        final Bitmap backBitmap = ImageManager.loadImageFromInputStream(back, mySize, mySize);
+                        tag.backCard.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                tag.backCard.setImageBitmap(backBitmap);
+                            }
+                        });
+                    }
+                }
+            }).start();
+        }
 
         packageInfo.setLayoutParams(new LinearLayout.LayoutParams(mySize, mySize));
 
@@ -216,7 +238,7 @@ public class PackageListImplicitAdapter {
                     DownloadProgressListener[] dpl = new DownloadProgressListener[] {
                             new NotificationProgressListener(packages[i].getContext(), packages[i]),
                             new DownloadProgressListener() {
-                                DownloadingDrawable drawable = frontDrawable;
+                                DownloadingDrawable drawable = (DownloadingDrawable) tag.frontCard.getDrawable();
                                 ImageView imageView = tag.frontCard;
 
                                 int last=0;

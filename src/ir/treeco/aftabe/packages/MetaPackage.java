@@ -61,7 +61,7 @@ public class MetaPackage {
         return color;
     }
 
-    public float[] getBackgroundHSV() {
+    public float[] getThumbnailHSV() {
         return backgroundHSV;
     }
 

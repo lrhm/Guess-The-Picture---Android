@@ -21,7 +21,12 @@ public class DialogDrawable extends Drawable {
     private Bitmap dialogBottom;
     private int topHeight;
     private int bottomHeight;
+    private int topPadding;
     private boolean isDrawable;
+
+    public void setTopPadding(int topPadding) {
+        this.topPadding = topPadding;
+    }
 
     public DialogDrawable(Context mContext) {
         this.mContext = mContext;
@@ -58,8 +63,8 @@ public class DialogDrawable extends Drawable {
         if (!isDrawable)
             return;
 
-        canvas.drawBitmap(dialogTop, 0, 0, mPaint);
-        canvas.drawBitmap(dialogCenter, new Rect(0, 0, dialogCenter.getWidth(), dialogCenter.getHeight()), new Rect(0, topHeight, getBounds().width(), getBounds().height() - bottomHeight), mPaint);
+        canvas.drawBitmap(dialogTop, 0, topPadding, mPaint);
+        canvas.drawBitmap(dialogCenter, new Rect(0, 0, dialogCenter.getWidth(), dialogCenter.getHeight()), new Rect(0, topHeight + topPadding, getBounds().width(), getBounds().height() - bottomHeight), mPaint);
         canvas.drawBitmap(dialogBottom, 0, getBounds().height() - bottomHeight, mPaint);
     }
 

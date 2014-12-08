@@ -20,6 +20,7 @@ public class ToastMaker {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getToastFontSize());
         textView.setShadowLayer(1, 1, 1, Color.BLACK);
         textView.setTextColor(Color.WHITE);
+        textView.setGravity(Gravity.CENTER);
         textView.setLayoutParams(new ViewGroup.LayoutParams(LengthManager.getToastWidth(), ViewGroup.LayoutParams.WRAP_CONTENT));
         final int padding = LengthManager.getToastPadding();
         textView.setPadding(padding, padding, padding, padding);

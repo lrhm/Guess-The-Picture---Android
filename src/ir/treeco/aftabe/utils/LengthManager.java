@@ -94,6 +94,7 @@ public class LengthManager {
     }
 
     public static int getTabsHeight() {
+        // TODO: Useless resource!
         return LengthManager.getHeightWithFixedWidth(R.drawable.tabbar_background, LengthManager.getScreenWidth());
     }
 
@@ -200,26 +201,15 @@ public class LengthManager {
     }
 
     public static float getStoreItemFontSize() {
-        return getScreenWidth() / 15f;
+        return getScreenWidth() * 60 / 1000;
     }
 
     public static int getStoreItemHeight() {
-        return getScreenWidth() / 6;
+        return getHeightWithFixedWidth(R.drawable.single_button_red, getStoreItemWidth());
     }
 
     public static int getStoreItemWidth() {
-        return getStoreItemsInnerWidth() - 2 * getStoreItemHorizontalMargin();
-    }
-
-    public static int getStoreItemTitleWidth() {
-        return getStoreItemWidth() * 71 / 100;
-    }
-
-    public static int getStoreItemRevenueWidth() {
-        return getStoreItemWidth() * 29 / 100;
-    }
-    public static int getStoreItemHorizontalMargin() {
-        return getStoreItemsInnerWidth() / 45;
+        return getScreenWidth() * 70 / 100;
     }
 
     public static int getCheatButtonHeight() { return getHeightWithFixedWidth(R.drawable.cheat_right, getCheatButtonWidth()); }
@@ -253,7 +243,7 @@ public class LengthManager {
     }
 
     public static int getShopTitleBottomMargin() {
-        return getShopTitleWidth() / 6;
+        return getShopTitleWidth() / 8;
     }
 
     public static int getTickViewSize() {
@@ -321,6 +311,14 @@ public class LengthManager {
     }
 
     public static int getPackagesListColumnCount() {
-        return Math.max((int) (Utils.convertPixelsToDp(getScreenWidth(), context) / 150), 1);
+        return Math.min(Math.max((int) (Utils.convertPixelsToDp(getScreenWidth(), context) / 150), 1), 3);
+    }
+
+    public static int getLevelFinishedDialogTopPadding() {
+        return getScreenWidth() / 30;
+    }
+
+    public static int getPrizeBoxSize() {
+        return getScreenWidth() / 5;
     }
 }

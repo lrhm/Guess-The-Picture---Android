@@ -1,11 +1,14 @@
 package ir.treeco.aftabe;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +51,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
     private static StoreFragment mInstance = null;
     final private String key = "MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwC6dLXqc+NjfwuF3l0DB3Z1xYH96j94DH76M0zI5SA1I/FLj7Ei/wq1tY3yu6pHb+V6GU/BcucICdXtqRBsW8JPxdzcqO9KlpUY0Nk/KBehwt5YSb1bugf3IX4/arXpLrJG1gah4rPAfhsofR5ZHhrkBrkVuZ6DEaA9+jHK4WojpMnD5CNd3A7mrmFanZnNEFvTBYAQ36rru1voJbADNH397NZZYp55rIXRzY6B89sCAwEAAQ==";
     private View layout;
+    private static boolean isUsed;
 
     public static StoreFragment getInstance() {
         if (mInstance == null)
@@ -55,22 +59,30 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
         return mInstance;
     }
 
+    public static boolean getIsUsed() {
+        return isUsed;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LoadingManager.startTask(null);
+
+        isUsed = true;
+
         layout = inflater.inflate(R.layout.fragment_store, container, false);
 
-        Utils.setViewBackground(layout, new DialogDrawable(container.getContext()));
-
         {
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) layout.getLayoutParams();
-            layoutParams.leftMargin = layoutParams.rightMargin = layoutParams.topMargin = layoutParams.bottomMargin = LengthManager.getStoreDialogMargin();
-        }
-
-        {
-            int padding = LengthManager.getStoreDialogPadding();
+            int padding = LengthManager.getStoreDialogMargin();
             layout.setPadding(padding, padding, padding, padding);
         }
 
-        LoadingManager.startTask(null);
+        {
+            View dialog = layout.findViewById(R.id.dialog);
+            Utils.setViewBackground(dialog, new DialogDrawable(container.getContext()));
+
+            int padding = LengthManager.getStoreDialogPadding();
+            dialog.setPadding(padding, padding, padding, padding);
+        }
+
         billingProcessor = new BillingProcessor(getActivity(), key, this);
 
         for (int i = 0; i < SKUs.length; i++) {
@@ -78,75 +90,87 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    billingProcessor.purchase(SKUs[finalI]);
+                    if (billingProcessor.isInitialized())
+                        billingProcessor.purchase(SKUs[finalI]);
+                    else
+                        ToastMaker.show(getActivity(), "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_LONG);
                 }
             });
         }
 
-        ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
-        Bitmap shopTitleBitmap = ImageManager.loadImageFromResource(shopTitle.getContext(), R.drawable.shoptitle, LengthManager.getShopTitleWidth(),  -1);
-        shopTitle.setImageBitmap(shopTitleBitmap);
-        Utils.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
-        ((LinearLayout.LayoutParams) shopTitle.getLayoutParams()).bottomMargin = LengthManager.getShopTitleBottomMargin();
+        {
+            View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
+            reviewBazaar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+
+        {
+            ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
+            Bitmap shopTitleBitmap = ImageManager.loadImageFromResource(shopTitle.getContext(), R.drawable.shoptitle, LengthManager.getShopTitleWidth(), -1);
+
+            shopTitle.setImageBitmap(shopTitleBitmap);
+            Utils.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
+            ((ViewGroup.MarginLayoutParams) shopTitle.getLayoutParams()).bottomMargin = LengthManager.getShopTitleBottomMargin();
+        }
+
+        setupItemsList();
+
+        LoadingManager.endTask();
 
         return layout;
     }
 
-    private void setupItemsList(View view) {
-        ImageView background = (ImageView) view.findViewById(R.id.store_items);
-        Bitmap backgroundBitmap = ImageManager.loadImageFromResource(view.getContext(), R.drawable.store_items, LengthManager.getStoreItemsInnerWidth(), -1);
-        Utils.resizeView(background, backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
-        background.setImageBitmap(backgroundBitmap);
+    private void setupItemsList() {
+        int[] revenues = new int[] {500, 1000, 2000, 15000, 300};
+        int[] prices = new int[] {450, 800, 1500, 5000, -1};
 
-        ImageView extraBackground = (ImageView) view.findViewById(R.id.store_extra_item);
-        Bitmap extraBackgroundBitmap = ImageManager.loadImageFromResource(view.getContext(), R.drawable.extra_item, LengthManager.getStoreItemsInnerWidth(), -1);
-        Utils.resizeView(extraBackground, extraBackgroundBitmap.getWidth(), extraBackgroundBitmap.getHeight());
-        extraBackground.setImageBitmap(extraBackgroundBitmap);
+        LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);
 
+        FrameLayout[] items = new FrameLayout[5];
+        for (int i = 0; i < 5; i++)
+            items[i] = (FrameLayout) itemsList.getChildAt(i);
 
-        float[] titleTops = new float[] {0.03f, 0.355f, 0.68f};
-        int[] revenues = new int[] {500, 2000, 5000};
-        int[] prices = new int[] {500, 1500, 3000};
-        for (int i = 0; i < titleTops.length; i++) {
-            final LinearLayout item = (LinearLayout) view.findViewById(buttonIds[i]);
-            String persianPrice = Utils.numeralStringToPersianDigits("" + prices[i]);
-            setupItem(item, (int) (titleTops[i] * backgroundBitmap.getHeight()), "فقط " + persianPrice + " تومان", i, revenues[i]);
+        for (int i = 0; i < items.length; i++) {
+            String persianPrice = "فقط " + Utils.numeralStringToPersianDigits("" + prices[i]) + " تومان";
+            if (i == 4)
+                persianPrice = "نظر در بازار";
+            setupItem(items[i],  persianPrice, revenues[i], i % 2 == 1);
         }
-
-        setupItem((LinearLayout) view.findViewById(R.id.review_cafebazaar), (int) (extraBackgroundBitmap.getHeight() * 0.15), "نظر دادن در بازار", 3, 300);
-        view.findViewById(R.id.review_cafebazaar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ToastMaker.show(view.getContext(), "سلام به آفتابه ی خالی ما خوش اومدی عزیزم :)ییثیصحثینحثصخنحلصث ث بثص بصث ب صث بثص ب ثصلثق لق ثل ثقل ز ر س رصث ر  ذلذ ق ف", Toast.LENGTH_LONG);
-            }
-        });
     }
 
     private void customizeTextView(TextView textView, String label) {
         textView.setText(label);
+
+        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getStoreItemFontSize());
         textView.setTextColor(Color.WHITE);
+
         textView.setShadowLayer(1, 2, 2, Color.BLACK);
-        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
     }
 
-    private void setupItem(LinearLayout item, int topMargin, String label, int index, int revenueAmount) {
-        final FrameLayout.LayoutParams itemLayoutParams = (FrameLayout.LayoutParams) item.getLayoutParams();
-        itemLayoutParams.topMargin = topMargin;
+    private void setupItem(FrameLayout item, String label, int revenueAmount, boolean reversed) {
+        final ViewGroup.LayoutParams itemLayoutParams = item.getLayoutParams();
         itemLayoutParams.height = LengthManager.getStoreItemHeight();
         itemLayoutParams.width = LengthManager.getStoreItemWidth();
-        itemLayoutParams.leftMargin = itemLayoutParams.rightMargin = LengthManager.getStoreItemHorizontalMargin();
 
-        TextView title = (TextView) item.getChildAt(index % 2);
-        TextView revenue = (TextView) item.getChildAt(1 - index % 2);
+        ImageView itemBackground = (ImageView) item.findViewById(R.id.item_background);
+        itemBackground.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), reversed? R.drawable.single_button_green: R.drawable.single_button_red, LengthManager.getStoreItemWidth(), LengthManager.getStoreItemHeight()));
 
+        TextView title = (TextView) item.findViewById(R.id.label);
         customizeTextView(title, label);
-        title.getLayoutParams().width = LengthManager.getStoreItemTitleWidth();
-        //title.setBackgroundColor(Color.BLUE);
 
+        TextView revenue = (TextView) item.findViewById(R.id.price);
         customizeTextView(revenue, Utils.numeralStringToPersianDigits("" + revenueAmount));
-        revenue.getLayoutParams().width = LengthManager.getStoreItemRevenueWidth();
-        //revenue.setBackgroundColor(Color.RED);
+
+        if (reversed) {
+            LinearLayout textViews = (LinearLayout) item.findViewById(R.id.text_views);
+            Utils.reverseLinearLayout(textViews);
+        }
     }
 
     @Override
@@ -171,16 +195,17 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
 
     @Override
     public void onBillingError(int i, Throwable throwable) {
+        Log.e("IAB", "Got error(" + i + "):", throwable);
     }
 
     @Override
     public void onBillingInitialized() {
-        setupItemsList(layout);
-        LoadingManager.endTask();
+        Log.v("IAB", "Billing initialized.");
     }
 
     @Override
     public void onDestroy() {
+        isUsed = false;
         if (billingProcessor != null)
             billingProcessor.release();
         super.onDestroy();

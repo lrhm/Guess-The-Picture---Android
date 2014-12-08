@@ -68,15 +68,28 @@ public class ImageManager {
         if (him != null && !him.isRecycled())
             return him;
 
-        System.gc();
 
-        Bitmap unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, activity.getResources());
-        Bitmap scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
-        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+        while (true) {
+            System.gc();
 
-        cache.put(key, scaledBitmap);
-        return scaledBitmap;
+            Bitmap scaledBitmap;
+            Bitmap unscaledBitmap;
 
+            try {
+                unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, activity.getResources());
+                scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+                if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+            } catch (OutOfMemoryError e) {
+                throw new RuntimeException(e);
+//                continue;
+            }
+
+//            if (scaledBitmap == null)
+//                continue;
+
+            cache.put(key, scaledBitmap);
+            return scaledBitmap;
+        }
     }
 
     public static Bitmap loadImageFromResource(Context activity, int resourceId, int outWidth, int outHeight) {
@@ -84,15 +97,27 @@ public class ImageManager {
     }
 
     public static Bitmap loadImageFromInputStream(InputStream inputStream, int outWidth, int outHeight) {
-        Bitmap unscaledBitmap = decodeInputStream(inputStream);
-        if(outHeight == -1)
-            outHeight = unscaledBitmap.getHeight()*outWidth/unscaledBitmap.getWidth();
-        if(outWidth == -1)
-            outWidth = unscaledBitmap.getWidth()*outHeight/unscaledBitmap.getHeight();
-        Bitmap scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP);
-        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+        while (true) {
+            System.gc();
 
-        return scaledBitmap;
+            Bitmap scaledBitmap;
+            Bitmap unscaledBitmap;
+
+            try {
+                unscaledBitmap = decodeInputStream(inputStream);
+                if(outHeight == -1)
+                    outHeight = unscaledBitmap.getHeight()*outWidth/unscaledBitmap.getWidth();
+                if(outWidth == -1)
+                    outWidth = unscaledBitmap.getWidth()*outHeight/unscaledBitmap.getHeight();
+                scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP);
+                if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+            } catch (OutOfMemoryError e) {
+                throw new RuntimeException(e);
+//                continue;
+            }
+
+            return scaledBitmap;
+        }
     }
 
     public enum ScalingLogic {FIT, CROP, ALL_TOP}

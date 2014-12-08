@@ -281,11 +281,13 @@ public class Utils {
     }
 
 
-    public static void setViewBackground(View view, Drawable dialogDrawable) {
+    public static void setViewBackground(final View view, Drawable dialogDrawable) {
         if (Build.VERSION.SDK_INT >= 16)
             view.setBackground(dialogDrawable);
-        else
+        else {
             view.setBackgroundDrawable(dialogDrawable);
+
+        }
     }
 
     static String persianDigits = "۰۱۲۳۴۵۶۷۸۹";
@@ -293,7 +295,7 @@ public class Utils {
     public static String numeralStringToPersianDigits(String s) {
         char[] result = new char[s.length()];
         for (int i = 0; i < s.length(); i++)
-            result[i] = persianDigits.charAt(s.charAt(i) - '0');
+            result[i] = Character.isDigit(s.charAt(i))? persianDigits.charAt(s.charAt(i) - '0'): s.charAt(i);
         return new String(result);
     }
 

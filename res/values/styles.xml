@@ -8,4 +8,7 @@
         <item name="android:focusable">false</item>
         <item name="android:clickable">true</item>
     </style>
+    <style name="noAnimTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 </resources>

@@ -16,18 +16,21 @@
         <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="15"/>
+                android:layout_weight="8"/>
+        <!--android:background="#66FF0000"-->
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="55"
+                android:layout_weight="68"
                 android:id="@+id/label"
                 android:gravity="center"/>
+        <!--android:background="#6600FF00"-->
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="40"
+                android:layout_weight="34"
                 android:id="@+id/price"
                 android:gravity="center"/>
+        <!--android:background="#660000FF"-->
     </LinearLayout>
 </FrameLayout>

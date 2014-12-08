@@ -86,11 +86,11 @@ public class PackageManager {
             for (int i = 0;i < tmpColors.size(); i++)
                 color[i] = Color.parseColor(tmpColors.get(i));
 
-            List<Float> bgHSVList = (List<Float>) pkgInfo.get("HSV Background");
-            float[] backgroundHSV = Utils.floatListToArray(bgHSVList);
-            List<Float> cbHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
-            float[] cheatButtonHSV = Utils.floatListToArray(cbHSVList);
-            inPackages[cnt] = new MetaPackage(context, preferences, color, backgroundHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this, 1000);
+            List<Float> thumbnailHSVList = (List<Float>) pkgInfo.get("HSV Thumbnail");
+            float[] thumbnailHSV = Utils.floatListToArray(thumbnailHSVList);
+            List<Float> cheatButtonHSVList = (List<Float>) pkgInfo.get("HSV Cheat Button");
+            float[] cheatButtonHSV = Utils.floatListToArray(cheatButtonHSVList);
+            inPackages[cnt] = new MetaPackage(context, preferences, color, thumbnailHSV, cheatButtonHSV, name, cnt, PackageState.LOCAL, this, 1000);
 
             //Copy data,Thumbnail to memory
             File dataFile = new File(context.getFilesDir(), name+".zip");

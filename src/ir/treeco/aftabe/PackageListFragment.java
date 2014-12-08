@@ -6,15 +6,17 @@ import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.*;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.*;
 
-public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener{
+import static android.view.ViewGroup.*;
+
+public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener {
 
     private LinearLayout tabBar;
     private AutoCropListView packages;
@@ -38,10 +40,35 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         try {
             tabBar.setTranslationY(barTop);
         } catch (java.lang.NoSuchMethodError ignore) {
-            TranslateAnimation anim = new TranslateAnimation(0, 0, barTop, barTop);
-            anim.setFillAfter(true);
-            anim.setDuration(0);
-            tabBar.startAnimation(anim);
+            ObjectAnimator animator = ObjectAnimator.ofFloat(tabBar, "translationY", 0, barTop).setDuration(0);
+            final int finalBarTop = barTop;
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    MarginLayoutParams lp = (MarginLayoutParams) tabBar.getLayoutParams();
+                    lp.topMargin = finalBarTop;
+                    tabBar.setLayoutParams(lp);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+//            TranslateAnimation anim = new TranslateAnimation(0, 0, barTop, barTop);
+//            anim.setFillAfter(true);
+//            anim.setDuration(0);
+//            tabBar.startAnimation(anim);
         }
     }
 
@@ -73,50 +100,43 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         final PackageListAdapter adapter = new PackageListAdapter((IntroActivity) getActivity(), pManager);
         pManager.setAdapter(adapter);
 
-//        final PackageListAdapter newAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.NEW_TAB_ADAPTER);
-//        final PackageListAdapter localAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.LOCAL_TAB_ADAPTER);
-//        final PackageListAdapter hotAdapter = new PackageListAdapter((IntroActivity) getActivity(), pManager, PackageListImplicitAdapter.HOT_TAB_ADAPTER);
-
         packages.setAdapter(adapter);
         adapter.setFilter(1);
         adapter.notifyDataSetChanged();
 
-//        packages.setAdapter(localAdapter);
-//        newAdapter.setFilter(0);
-//        newAdapter.notifyDataSetChanged();
-
-
         packages.setOnScrollListener(this);
 
         final TextView[] textViews = new TextView[] {
-                (TextView) layout.findViewById(R.id.tab_1), // HOT tab
-                (TextView) layout.findViewById(R.id.tab_2), // Local tab
-                (TextView) layout.findViewById(R.id.tab_3)  // New tab
+                (TextView) layout.findViewById(R.id.hot_tab), // HOT tab
+                (TextView) layout.findViewById(R.id.local_tab), // Local tab
+                (TextView) layout.findViewById(R.id.new_tab)  // New tab
         };
 
-//        final PackageListAdapter[] adpaters = new PackageListAdapter[] {
-//                hotAdapter,
-//                localAdapter,
-//                newAdapter
-//        };
+        final int[] filterIDs = new int[] {
+                PackageListImplicitAdapter.HOT_TAB,
+                PackageListImplicitAdapter.LOCAL_TAB,
+                PackageListImplicitAdapter.NEW_TAB
+        };
 
         for (int i = 0; i < 3; ++i) {
             TextView textView = textViews[i];
-//            final PackageListAdapter adapter = adpaters[i];
-            final int finalI = i;
+            final int filterID = filterIDs[i];
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    packages.setAdapter(adapter);
-//                    adapter.setFilter(0);
-                    adapter.setFilter(finalI);
+                    // Do not refresh the same page
+                    if (adapter.getFilter() == filterID)
+                        return;
+
+                    adapter.setFilter(filterID);
+
                     packages.setSelection(0);
                     for (int i = 0; i < 3; i++)
-                        Utils.setViewBackground(textViews[i], i == finalI ? new RoundedCornerDrawable() : null);
+                        Utils.setViewBackground(textViews[i], filterIDs[i] == filterID ? new RoundedCornerDrawable() : null);
                 }
             };
             textView.setOnClickListener(onClickListener);
-            if (i == PackageListImplicitAdapter.LOCAL_TAB_ADAPTER)
+            if (i == PackageListImplicitAdapter.LOCAL_TAB)
                 onClickListener.onClick(textView);
             textView.setTypeface(FontsHolder.getTabBarFont(layout.getContext()));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getScreenWidth() / 17);

@@ -27,7 +27,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="محبوب ترین"
-                    android:id="@+id/tab_1"
+                    android:id="@+id/hot_tab"
                     android:textColor="#4c4224"
                     android:textSize="25dp"/>
             <TextView
@@ -37,7 +37,7 @@
                     android:gravity="center"
                     android:text="دانلود شده"
                     android:textColor="#4c4224"
-                    android:id="@+id/tab_2"
+                    android:id="@+id/local_tab"
                     android:textSize="25dp"/>
             <TextView
                     android:layout_width="0dp"
@@ -46,7 +46,7 @@
                     android:gravity="center"
                     android:text="تازه ها"
                     android:textColor="#4c4224"
-                    android:id="@+id/tab_3"
+                    android:id="@+id/new_tab"
                     android:textSize="25dp"/>
         </LinearLayout>
         <ImageView android:layout_width="match_parent" android:layout_height="wrap_content" />

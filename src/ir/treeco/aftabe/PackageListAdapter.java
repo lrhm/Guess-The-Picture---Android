@@ -68,7 +68,8 @@ public class PackageListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mCount;
+        // TODO: Remove "100"
+        return mCount + 100;
     }
 
     @Override
@@ -86,10 +87,15 @@ public class PackageListAdapter extends BaseAdapter {
         return false;
     }
 
-    void setFilter(int shape) {
-        mAdapter.setFilter(shape);
+    void setFilter(int filter) {
+        mAdapter.setFilter(filter);
         notifyDataSetChanged();
     }
+
+    public int getFilter() {
+        return mAdapter.getFilter();
+    }
+
 
     public View getAdView(View rowView) {
         if (rowView != null)
@@ -108,6 +114,10 @@ public class PackageListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View rowView, ViewGroup viewGroup) {
+        // TODO: Remove this
+        if (i >= mCount)
+            i = 1;
+
         if (i == 0)
             return getAdView(rowView);
         if (i == 1)
@@ -147,6 +157,10 @@ public class PackageListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int i) {
+        // TODO: Remove this
+        if (i >= mCount)
+            i = 1;
+
         return Math.min(i, 2);
     }
 

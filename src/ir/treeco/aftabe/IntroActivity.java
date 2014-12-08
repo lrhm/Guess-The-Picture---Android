@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -11,8 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -41,10 +40,11 @@ public class IntroActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Remove title bar
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Make volume control available the entire time
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+
         // Initialize Height Manager
         LengthManager.initialize(IntroActivity.this);
         // Load Layout
@@ -112,6 +112,7 @@ public class IntroActivity extends FragmentActivity {
                 fadeIn.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
+
                     }
 
                     @Override
@@ -146,6 +147,17 @@ public class IntroActivity extends FragmentActivity {
                     public void onAnimationEnd(Animation animation) {
                         loadingView.setVisibility(View.INVISIBLE);
                         popFromViewStack(loadingView);
+
+                        /* Workaround to redraw the whole view in old devices */
+                        /*if (Build.VERSION.SDK_INT < 16) {
+                            mainView.setVisibility(View.GONE);
+                            mainView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mainView.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }*/
                     }
 
                     @Override
@@ -157,7 +169,6 @@ public class IntroActivity extends FragmentActivity {
                 loadingView.startAnimation(fadeOut);
             }
         });
-
         Log.d("paspas",Utils.getAESkey(this));
         Log.d("paspas",Utils.getAESkey(this).getBytes().length+" ");
 
@@ -201,11 +212,15 @@ public class IntroActivity extends FragmentActivity {
         coinBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (StoreFragment.getIsUsed())
+                    return;
+
                 LoadingManager.startTask(new TaskStartedListener() {
                     @Override
                     public void taskStarted() {
                         StoreFragment fragment = StoreFragment.getInstance();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.fragment_container, fragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
@@ -247,6 +262,7 @@ public class IntroActivity extends FragmentActivity {
                 digits.addView(Utils.makeNewSpace(IntroActivity.this));
             }
         }, preferences);
+
     }
 
     @Override

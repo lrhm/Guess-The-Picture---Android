@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,20 +38,25 @@ import java.util.Random;
 public class LevelFragment extends Fragment {
     Level mLevel;
     private String[] alphabet;
-    private FrameLayout[] alphabetButtons;
+    private ImageView[] alphabetButtons;
     private String[] solution;
-    private FrameLayout[] solutionButtons;
+    private ImageView[] solutionButtons;
     private SharedPreferences preferences;
     private Level.AlphabetState[] alphabetGone;
     private int[] placeHolder;
     private Context mContext;
     Typeface buttonFont;
-    private FrameLayout flyingButton;
+    private ImageView flyingButton;
     private View[] cheatButtons;
     private View blackWidow;
     private Multimedia[] resources;
     private LayoutInflater inflater;
     private LinearLayout greetingsView = null;
+    private ImageView cheatButton;
+    private Bitmap cheatBitmap;
+    private Bitmap backBitmap;
+    private boolean areCheatsVisible = false;
+
 
     public static LevelFragment newInstance(Level mLevel) {
         LevelFragment levelFragment = new LevelFragment();
@@ -70,9 +75,9 @@ public class LevelFragment extends Fragment {
         buttonFont = FontsHolder.getTabBarFont(mContext);
 
         alphabet = mLevel.getAlphabetLabels();
-        alphabetButtons = new FrameLayout[alphabet.length];
+        alphabetButtons = new ImageView[alphabet.length];
         solution = mLevel.getSolutionLabels();
-        solutionButtons = new FrameLayout[solution.length];
+        solutionButtons = new ImageView[solution.length];
 
         try {
             alphabetGone = mLevel.getAlphabetGone(preferences);
@@ -84,7 +89,7 @@ public class LevelFragment extends Fragment {
         loadResources();
 
         //setUpTitleBar();
-        setUpFlyingButton(layout);
+        setUpFlyingButton((FrameLayout) layout);
         setUpSolutionLinearLayout(inflater, layout);
         setUpAlphabetLinearLayout(inflater, layout);
         setUpImagePlace(layout);
@@ -95,50 +100,63 @@ public class LevelFragment extends Fragment {
     }
 
     private void loadResources() {
-        resources = mLevel.getResources();
-        int index = 0;
-        for (Multimedia resource: resources) {
-            try {
-                File file = new File(getActivity().getCacheDir(), "mm_" + index);
-                OutputStream os = new FileOutputStream(file);
-                InputStream is = resource.getMedia();
-                Utils.pipe(is, os);
-                os.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        LoadingManager.startTask(new TaskStartedListener() {
+            @Override
+            public void taskStarted() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        resources = mLevel.getResources();
+                        int index = 0;
+                        for (Multimedia resource: resources) {
+                            try {
+                                File file = new File(getActivity().getCacheDir(), "mm_" + index);
+                                OutputStream os = new FileOutputStream(file);
+                                InputStream is = resource.getMedia();
+                                Utils.pipe(is, os);
+                                os.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            index++;
+                        }
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadingManager.endTask();
+                            }
+                        });
+                    }
+                }).start();
             }
-            index++;
-        }
+        });
     }
 
     private void setupCheatButton(View layout) {
-        final Bitmap cheatBitmap = ImageManager.loadImageFromResource(layout.getContext(), R.drawable.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize());
-        final Bitmap backBitmap = ImageManager.loadImageFromResource(layout.getContext(), R.drawable.back_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize());
+        float[] cheatButtonHSV = mLevel.getWrapperPackage().meta.getCheatButtonHSV();
+        cheatBitmap = Utils.updateHSV(ImageManager.loadImageFromResource(layout.getContext(), R.drawable.cheat_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+        backBitmap = Utils.updateHSV(ImageManager.loadImageFromResource(layout.getContext(), R.drawable.back_button, LengthManager.getCheatButtonSize(), LengthManager.getCheatButtonSize()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
 
-        final ImageView cheatButton = (ImageView) getActivity().findViewById(R.id.cheat_button);
+        cheatButton = (ImageView) getActivity().findViewById(R.id.cheat_button);
         cheatButton.setVisibility(View.VISIBLE);
         cheatButton.setOnClickListener(new View.OnClickListener() {
-            boolean on = false;
-
             @Override
             public void onClick(View _view) {
-                if (!on) {
-                    cheatButton.setImageBitmap(backBitmap);
+                if (!areCheatsVisible) {
                     showCheats();
                 } else {
-                    cheatButton.setImageBitmap(cheatBitmap);
                     hideCheats();
                 }
-                on = !on;
             }
         });
 
         cheatButton.setImageBitmap(cheatBitmap);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
-        layoutParams.leftMargin = (int) (0.7 * LengthManager.getScreenWidth());
-        layoutParams.topMargin = (int) (0.03 * LengthManager.getScreenWidth());
+        layoutParams.leftMargin = (int) (0.724 * LengthManager.getScreenWidth());
+        layoutParams.topMargin = (int) (0.07 * LengthManager.getScreenWidth());
     }
 
     private void setUpCheatLayout(View layout) {
@@ -152,14 +170,15 @@ public class LevelFragment extends Fragment {
             buttons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //doCheat(finalI);
+                    doCheat(finalI);
+                    hideCheats();
                 }
             });
         }
     }
 
     void makeCheatFailedToast(String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+        ToastMaker.show(mContext, message, Toast.LENGTH_LONG);
     }
 
     void doCheat(int id) {
@@ -167,9 +186,7 @@ public class LevelFragment extends Fragment {
             if (id == 0) cheatAndRemoveSomeLetters();
             if (id == 1) cheatAndRevealALetter();
             if (id == 2) cheatAndSkipLevel();
-            //getActivity().onBackPressed();
         } catch (NotEnoughMoneyException e) {
-            Log.e("COINS", "" + CoinManager.getCoinsCount(preferences));
             makeCheatFailedToast("پول ندارید :(");
             return;
         } catch (JSONException e) {
@@ -244,7 +261,9 @@ public class LevelFragment extends Fragment {
                     remainingCount++;
             }
 
-            assert neededCount <= remainingCount;
+            if (neededCount > remainingCount) {
+                throw new RuntimeException();
+            }
 
             if (remainingCount == neededCount)
                 continue;
@@ -304,7 +323,9 @@ public class LevelFragment extends Fragment {
 
         int toBeUpdatedAlphabet = placeHolder[position];
 
-        assert place != -1;
+        if (place == -1) {
+            throw new RuntimeException();
+        }
 
         for (int i = 0; i < placeHolder.length; i++)
             if (placeHolder[i] == place) {
@@ -328,22 +349,24 @@ public class LevelFragment extends Fragment {
     }
 
 
-    private void setUpFlyingButton(View view) {
-        FrameLayout button = (FrameLayout) ((FrameLayout) view).getChildAt(1);
+    private void setUpFlyingButton(FrameLayout view) {
+        ImageView button = new ImageView(getActivity());
+
+        button.setImageDrawable(new LetterButtonDrawable(null, getActivity()));
+
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getAlphabetButtonSize(), LengthManager.getAlphabetButtonSize()));
+        Utils.setViewBackground(button, bitmapDrawable);
+
         button.setVisibility(View.INVISIBLE);
-        ((ImageView) button.getChildAt(0)).setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getAlphabetButtonSize(), LengthManager.getAlphabetButtonSize()));
-        ((TextView) button.getChildAt(1)).setTypeface(FontsHolder.getTabBarFont(view.getContext()));
-        ((TextView) button.getChildAt(1)).setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getAlphabetFontSize());
-        button.setLayoutParams(new FrameLayout.LayoutParams(LengthManager.getAlphabetButtonSize(), LengthManager.getAlphabetButtonSize()));
+
+        view.addView(button, new FrameLayout.LayoutParams(LengthManager.getAlphabetButtonSize(), LengthManager.getAlphabetButtonSize()));
+
         this.flyingButton = button;
     }
 
     private void setUpImagePlace(final View view) {
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.multimedia);
         viewPager.setAdapter(new MultimediaAdapter(this));
-        //ImageView levelImageView = (ImageView) view.findViewById(R.id.image);
-
-        //levelImageView.setImageBitmap(ImageManager.loadImageFromInputStream(mLevel.getThumbnail(), LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
 
         FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
         Utils.resizeView(box, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight());
@@ -413,6 +436,9 @@ public class LevelFragment extends Fragment {
     }
 
     public void showCheats() {
+        areCheatsVisible = true;
+        cheatButton.setImageBitmap(backBitmap);
+
         for (View view: cheatButtons)
             view.setVisibility(View.VISIBLE);
 
@@ -432,6 +458,9 @@ public class LevelFragment extends Fragment {
     }
 
     public void hideCheats() {
+        areCheatsVisible = false;
+        cheatButton.setImageBitmap(cheatBitmap);
+
 
         AnimatorSet set = new AnimatorSet();
 
@@ -482,21 +511,15 @@ public class LevelFragment extends Fragment {
             for (int j = 0; j < 7; j++) {
                 final int id = i * 7 + j;
 
-                FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.view_alphabet_button, null);
-                TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
+                ImageView button = new ImageView(getActivity());
 
-                textView.setFocusable(false);
-                textView.setFocusableInTouchMode(false);
-                textView.setClickable(false);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getAlphabetFontSize());
+                button.setImageDrawable(new LetterButtonDrawable(alphabet[id], getActivity()));
 
-                textView.setTypeface(buttonFont);
+                button.setLayoutParams(new LinearLayout.LayoutParams(alphabetButtonSize, alphabetButtonSize));
 
-                frameLayout.setLayoutParams(new LinearLayout.LayoutParams(alphabetButtonSize, alphabetButtonSize));
+                currentRow.addView(button);
 
-                currentRow.addView(frameLayout);
-
-                frameLayout.setOnClickListener(new View.OnClickListener() {
+                button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mLevel.save(alphabetGone, placeHolder);
@@ -504,54 +527,49 @@ public class LevelFragment extends Fragment {
                     }
                 });
 
-                alphabetButtons[id] = frameLayout;
+                alphabetButtons[id] = button;
 
                 updateAlphabet(id);
             }
             currentRow.addView(Utils.makeNewSpace(mContext));
             linesLayout.addView(currentRow);
         }
-
-        Log.d("aftabe_plus", "linesLayout: " + linesLayout.getChildCount());
-
     }
 
     public void updateAlphabet(int id) {
-        FrameLayout frameLayout = alphabetButtons[id];
-        ImageView imageView = (ImageView) frameLayout.findViewById(R.id.background);
-        TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
+        ImageView button = alphabetButtons[id];
 
         if (alphabetGone[id] != Level.AlphabetState.IN_THERE) {
-            imageView.setImageDrawable(null);
-            textView.setText(null);
+            button.setVisibility(View.INVISIBLE);
         } else {
-            imageView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getAlphabetButtonSize(), LengthManager.getAlphabetButtonSize()));
-            textView.setText(alphabet[id]);
+            button.setVisibility(View.VISIBLE);
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getAlphabetButtonSize(), LengthManager.getAlphabetButtonSize()));
+            Utils.setViewBackground(button, bitmapDrawable);
         }
     }
 
     public void updateSolution(int id) {
-        FrameLayout frameLayout = solutionButtons[id];
-        ImageView imageView = (ImageView) frameLayout.findViewById(R.id.background);
-        TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
+        ImageView button = solutionButtons[id];
+        LetterButtonDrawable drawable = (LetterButtonDrawable) button.getDrawable();
+
         if (placeHolder[id] == -1) {
-            imageView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.place_holder, LengthManager.getSolutionButtonSize(), LengthManager.getSolutionButtonSize()));
-            textView.setText(null);
+            drawable.setLabel(null);
+
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(mContext, R.drawable.place_holder, LengthManager.getSolutionButtonSize(), LengthManager.getSolutionButtonSize()));
+            Utils.setViewBackground(button, bitmapDrawable);
         } else {
-            imageView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getSolutionButtonSize(), LengthManager.getSolutionButtonSize()));
-            textView.setText(alphabet[placeHolder[id]]);
-            textView.setTextColor(alphabetGone[placeHolder[id]] == Level.AlphabetState.FIXED ? Color.rgb(0, 180, 0) : Color.rgb(102, 102, 102));
+            drawable.setLabel(alphabet[placeHolder[id]]);
+
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getSolutionButtonSize(), LengthManager.getSolutionButtonSize()));
+            Utils.setViewBackground(button, bitmapDrawable);
         }
     }
 
     void animateFromAlphabetToSolutionOrNot(int alphabetId, int solutionId, Animator.AnimatorListener listener, boolean direction) {
-        ((TextView) flyingButton.getChildAt(1)).setText(alphabet[alphabetId]);
-
-        /*flyingButton.setTop(0);
-        flyingButton.setLeft(0);
-        flyingButton.setTranslationX(0);
-        flyingButton.setTranslationY(0);*/
-
+        {
+            LetterButtonDrawable drawable = (LetterButtonDrawable) flyingButton.getDrawable();
+            drawable.setLabel(alphabet[alphabetId]);
+        }
 
         int[] flyingButtonLocation = new int[2];
         flyingButton.getLocationOnScreen(flyingButtonLocation);
@@ -562,18 +580,15 @@ public class LevelFragment extends Fragment {
         int[] solutionLocation = new int[2];
         solutionButtons[solutionId].getLocationOnScreen(solutionLocation);
 
-        alphabetLocation[1] -= 180;
-        solutionLocation[1] -= 180;
-
-
-        for (int i = 0; i < 2; i++) {
-            //alphabetLocation[i] -= LengthManager.getAlphabetButtonSize() / 4;
-            solutionLocation[i] -= LengthManager.getSolutionButtonSize() / 4;
+        {
+            int top = getActivity().findViewById(R.id.fragment_container).getTop();
+            alphabetLocation[1] -= top;
+            solutionLocation[1] -= top;
         }
 
-        //Log.d("position of flyer", "" + flyingButtonLocation[0] + "," + flyingButtonLocation[1]);
-        //Log.d("alphabetButton", "" + alphabetLocation[0] + "," + alphabetLocation[1]);
-        //Log.d("solutionButton", "" + solutionLocation[0] + "," + solutionLocation[1]);
+        for (int i = 0; i < 2; i++) {
+            solutionLocation[i] -= LengthManager.getSolutionButtonSize() / 4;
+        }
 
         AnimatorSet set = new AnimatorSet();
         set.setInterpolator(new AccelerateInterpolator());
@@ -586,8 +601,6 @@ public class LevelFragment extends Fragment {
         set.playTogether(
                 ObjectAnimator.ofFloat(flyingButton, "translationX", direction? alphabetLocation[0]: solutionLocation[0], direction? solutionLocation[0]: alphabetLocation[0]),
                 ObjectAnimator.ofFloat(flyingButton, "translationY", direction? alphabetLocation[1]: solutionLocation[1], direction? solutionLocation[1]: alphabetLocation[1]),
-                //ObjectAnimator.ofFloat(flyingButton, "pivotX", 50, 50),
-                //ObjectAnimator.ofFloat(flyingButton, "pivotY", 50, 50),
                 ObjectAnimator.ofFloat(flyingButton, "scaleX", direction? 1: scale, direction? scale: 1),
                 ObjectAnimator.ofFloat(flyingButton, "scaleY", direction? 1: scale, direction? scale: 1)
         );
@@ -704,24 +717,42 @@ public class LevelFragment extends Fragment {
 
         ((IntroActivity) getActivity()).pushToViewStack(greetingsView, true);
 
-        LinearLayout dialog = (LinearLayout) greetingsView.findViewById(R.id.dialog);
-
-        Utils.resizeView(dialog, ViewGroup.LayoutParams.MATCH_PARENT, LengthManager.getScreenWidth());
-
-        Utils.setViewBackground(dialog, new DialogDrawable(mContext));
-
         {
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dialog.getLayoutParams();
-            layoutParams.leftMargin = layoutParams.rightMargin = layoutParams.topMargin = layoutParams.bottomMargin = LengthManager.getStoreDialogMargin();
+            View container = greetingsView.findViewById(R.id.container);
+
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) container.getLayoutParams();
+            layoutParams.leftMargin = layoutParams.rightMargin = LengthManager.getStoreDialogMargin();
         }
 
         {
+            View contents = greetingsView.findViewById(R.id.contents);
+
+            DialogDrawable drawable = new DialogDrawable(mContext);
+            drawable.setTopPadding(LengthManager.getLevelFinishedDialogTopPadding());
+            Utils.setViewBackground(contents, drawable);
+
             int padding = LengthManager.getLevelFinishedDialogPadding();
-            dialog.setPadding(padding, padding, padding, padding);
+            contents.setPadding(padding, 0, padding, padding);
+        }
+
+        {
+            TextView prize = (TextView) greetingsView.findViewById(R.id.prize);
+            if (mLevel.getCurrentPrize() > 0) {
+                String prizeString = "+" + Utils.numeralStringToPersianDigits("" + mLevel.getCurrentPrize());
+                customizeTextView(prize, prizeString, LengthManager.getLevelAuthorTextSize());
+
+                Utils.resizeView(prize, LengthManager.getPrizeBoxSize(), LengthManager.getPrizeBoxSize());
+                Utils.setViewBackground(prize, new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(getActivity(), R.drawable.coin, LengthManager.getPrizeBoxSize(), LengthManager.getPrizeBoxSize())));
+
+                ObjectAnimator.ofFloat(prize, "rotation", 0, 315).setDuration(0).start();
+            } else {
+                prize.setVisibility(View.GONE);
+            }
         }
 
         {
             ImageView tickView = (ImageView) greetingsView.findViewById(R.id.tickView);
+            ((ViewGroup.MarginLayoutParams) tickView.getLayoutParams()).rightMargin = (int) (0.125 * LengthManager.getTickViewSize());
             tickView.setImageBitmap(ImageManager.loadImageFromResource(mContext, R.drawable.correct, LengthManager.getTickViewSize(), LengthManager.getTickViewSize()));
             Utils.resizeView(tickView, LengthManager.getTickViewSize(), LengthManager.getTickViewSize());
         }
@@ -854,27 +885,12 @@ public class LevelFragment extends Fragment {
                 continue;
             }
 
-            FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.view_solution_button, null);
-
-            frameLayout.setFocusable(false);
-            frameLayout.setFocusableInTouchMode(false);
-            frameLayout.setClickable(false);
-
-            // ImageView imageView = (ImageView) frameLayout.findViewById(R.id.solutionImageView);
-            TextView textView = (TextView) frameLayout.findViewById(R.id.letter);
-
-            textView.setFocusable(false);
-            textView.setFocusableInTouchMode(false);
-            textView.setClickable(false);
-
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getSolutionFontSize());
-            textView.setTypeface(buttonFont);
-
-            frameLayout.setLayoutParams(new LinearLayout.LayoutParams((int) solutionButtonSize, (int) solutionButtonSize));
+            ImageView button = new ImageView(getActivity());
+            button.setImageDrawable(new LetterButtonDrawable(solution[i], getActivity()));
+            button.setLayoutParams(new LinearLayout.LayoutParams((int) solutionButtonSize, (int) solutionButtonSize));
 
             final int id = i;
-
-            frameLayout.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mLevel.save(alphabetGone, placeHolder);
@@ -882,8 +898,8 @@ public class LevelFragment extends Fragment {
                 }
             });
 
-            solutionButtons[i] = frameLayout;
-            currentRow.addView(frameLayout);
+            solutionButtons[i] = button;
+            currentRow.addView(button);
 
             updateSolution(i);
         }

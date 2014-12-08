@@ -13,10 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.Package;
-import ir.treeco.aftabe.utils.ImageManager;
-import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.LoadingManager;
-import ir.treeco.aftabe.utils.Utils;
+import ir.treeco.aftabe.utils.*;
 
 import java.io.InputStream;
 
@@ -27,7 +24,7 @@ public class PackageFragment extends Fragment {
     private Package mPackage;
     private Bitmap levelLocked;
     private Bitmap levelUnlocked;
-    private Bitmap[] thubmnails;
+    private Bitmap[] thumbnails;
 
     public static PackageFragment newInstance(Package mPackage) {
         PackageFragment packageFragment = new PackageFragment();
@@ -38,32 +35,37 @@ public class PackageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_package, container, false);
 
-        float[] cheatButtonHSV = mPackage.meta.getCheatButtonHSV();
-        levelLocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
-        levelUnlocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+        float[] thumbnailHSV = mPackage.meta.getThumbnailHSV();
+        levelLocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_locked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+        levelUnlocked = Utils.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_unlocked, LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()), thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
 
-        {
-            int[] backgroundColor = mPackage.meta.getColor();
 
-            {
-                String tmp = "colors: ";
-                for (int color : backgroundColor)
-                    tmp += " " + Integer.toHexString(color);
-                Log.e("COLORS", tmp);
+        final InputStream[] inputStreams = mPackage.getThumbnails();
+        thumbnails = new Bitmap[inputStreams.length];
+
+
+        LoadingManager.startTask(new TaskStartedListener() {
+            @Override
+            public void taskStarted() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < inputStreams.length; i++) {
+                            thumbnails[i] = ImageManager.loadImageFromInputStream(inputStreams[i], LengthManager.getLevelFrameWidth() / 2, LengthManager.getLevelFrameHeight() / 2);
+                            inputStreams[i] = null;
+                        }
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadingManager.endTask();
+                            }
+                        });
+                    }
+                }).start();
+
             }
-
-            View mainView = getActivity().findViewById(R.id.main_view);
-            Utils.setViewBackground(mainView, new BackgroundDrawable(getActivity(), backgroundColor));
-        }
-
-
-        InputStream[] inputStreams = mPackage.getThumbnails();
-        thubmnails = new Bitmap[inputStreams.length];
-
-        for (int i = 0; i < inputStreams.length; i++) {
-            thubmnails[i] = ImageManager.loadImageFromInputStream(inputStreams[i], LengthManager.getLevelFrameWidth() / 2, LengthManager.getLevelFrameHeight() / 2);
-            inputStreams[i] = null;
-        }
+        });
 
         {
             ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
@@ -90,6 +92,19 @@ public class PackageFragment extends Fragment {
             Utils.resizeView(levelsBackBottom, LengthManager.getScreenWidth(), LengthManager.getLevelsBackBottomHeight());
         }
 
+        {
+            int[] backgroundColor = mPackage.meta.getColor();
+
+            {
+                String tmp = "colors: ";
+                for (int color : backgroundColor)
+                    tmp += " " + Integer.toHexString(color);
+                Log.e("COLORS", tmp);
+            }
+
+            View mainView = getActivity().findViewById(R.id.main_view);
+            Utils.setViewBackground(mainView, new BackgroundDrawable(getActivity(), backgroundColor));
+        }
 
         return layout;
     }
@@ -160,7 +175,7 @@ public class PackageFragment extends Fragment {
     }
 
     public Bitmap getThumbnail(int levelID) {
-        return thubmnails[levelID];
+        return thumbnails[levelID];
     }
 
     public Bitmap getLevelLockedBitmap() {

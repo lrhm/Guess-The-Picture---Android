@@ -3,7 +3,7 @@
     - "#FFFFFF"
     - "#000000"
     - "#111111"
-  HSV Background:
+  HSV Thumbnail:
     - 3.4
     - 2.1
     - 1
@@ -16,12 +16,12 @@
     - "#29CDB8"
     - "#1FB8AA"
     - "#0A8A8C"
-  HSV Background:
-    - 3.4
-    - 2.1
-    - 1
+  HSV Thumbnail:
+    - 130
+    - 0
+    - -0.1
   HSV Cheat Button:
+    - 140
     - 0
-    - 0
-    - 0
+    - -0.2
 

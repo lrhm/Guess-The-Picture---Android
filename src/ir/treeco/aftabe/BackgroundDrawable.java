@@ -31,5 +31,6 @@ public class BackgroundDrawable extends GradientDrawable {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         canvas.drawBitmap(background, srcRect, dstRect, paint);
+        invalidateSelf();
     }
 }
