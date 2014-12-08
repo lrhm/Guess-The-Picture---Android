@@ -78,7 +78,7 @@ public class PackageListImplicitAdapter {
         this.mode = mode;
         this.activity = activity;
         this.pManager = pManager;
-        setFilter(0);
+        setFilter(-1);
     }
 
     void setFilter(int filter) {
@@ -93,6 +93,8 @@ public class PackageListImplicitAdapter {
             case HOT_TAB:
                 packages = pManager.getHotPackages();
                 break;
+            default:
+                packages = new MetaPackage[0];
         }
         itemData = new ItemData[packages.length];
         for (int i = 0; i < itemData.length; i++) {

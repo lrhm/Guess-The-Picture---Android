@@ -1,6 +1,7 @@
 package ir.treeco.aftabe;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
@@ -8,18 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.*;
 
-import static android.view.ViewGroup.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener {
 
     private LinearLayout tabBar;
     private AutoCropListView packages;
+    private PackageListAdapter adapter;
+    private TextView[] textViews;
+    private int[] filterIDs;
 
     @Override
     public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -33,48 +36,22 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
             RelativeLayout relativeLayout = (RelativeLayout) packages.getChildAt(0);
             if (relativeLayout != null) {
                 View innerView = relativeLayout.getChildAt(0);
-                innerView.setPadding(0, - relativeLayout.getTop(), 0, 0);
+                innerView.setPadding(0, -relativeLayout.getTop(), 0, 0);
                 barTop = Math.max(relativeLayout.getTop() + innerView.getHeight(), barTop);
             }
         }
-        try {
+
+        if (Build.VERSION.SDK_INT >= 11) {
             tabBar.setTranslationY(barTop);
-        } catch (java.lang.NoSuchMethodError ignore) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(tabBar, "translationY", 0, barTop).setDuration(0);
-            final int finalBarTop = barTop;
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    MarginLayoutParams lp = (MarginLayoutParams) tabBar.getLayoutParams();
-                    lp.topMargin = finalBarTop;
-                    tabBar.setLayoutParams(lp);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-//            TranslateAnimation anim = new TranslateAnimation(0, 0, barTop, barTop);
-//            anim.setFillAfter(true);
-//            anim.setDuration(0);
-//            tabBar.startAnimation(anim);
+        } else {
+            tabBar.setPadding(0, barTop, 0, 0);
+            tabBar.getLayoutParams().height = barTop + LengthManager.getTabBarHeight();
         }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_packages_list, container, false);
-        packages =  (AutoCropListView) layout.findViewById(R.id.package_list);
+        packages = (AutoCropListView) layout.findViewById(R.id.package_list);
         tabBar = (LinearLayout) layout.findViewById(R.id.tab_bar);
 
         FrameLayout.LayoutParams tabBarLayoutParams = (FrameLayout.LayoutParams) tabBar.getLayoutParams();
@@ -97,22 +74,22 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
             e.printStackTrace();
         }
 
-        final PackageListAdapter adapter = new PackageListAdapter((IntroActivity) getActivity(), pManager);
+        adapter = new PackageListAdapter((IntroActivity) getActivity(), pManager);
+
         pManager.setAdapter(adapter);
 
         packages.setAdapter(adapter);
-        adapter.setFilter(1);
-        adapter.notifyDataSetChanged();
-
         packages.setOnScrollListener(this);
 
-        final TextView[] textViews = new TextView[] {
+        adapter.setFilter(PackageListImplicitAdapter.LOCAL_TAB);
+
+        textViews = new TextView[]{
                 (TextView) layout.findViewById(R.id.hot_tab), // HOT tab
                 (TextView) layout.findViewById(R.id.local_tab), // Local tab
                 (TextView) layout.findViewById(R.id.new_tab)  // New tab
         };
 
-        final int[] filterIDs = new int[] {
+        filterIDs = new int[]{
                 PackageListImplicitAdapter.HOT_TAB,
                 PackageListImplicitAdapter.LOCAL_TAB,
                 PackageListImplicitAdapter.NEW_TAB
@@ -124,15 +101,7 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Do not refresh the same page
-                    if (adapter.getFilter() == filterID)
-                        return;
-
-                    adapter.setFilter(filterID);
-
-                    packages.setSelection(0);
-                    for (int i = 0; i < 3; i++)
-                        Utils.setViewBackground(textViews[i], filterIDs[i] == filterID ? new RoundedCornerDrawable() : null);
+                    selectTab(filterID);
                 }
             };
             textView.setOnClickListener(onClickListener);
@@ -142,7 +111,32 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getScreenWidth() / 17);
         }
 
+        try {
+            Method setEnableExcessScroll = packages.getClass().getMethod("setEnableExcessScroll", Boolean.TYPE);
+            setEnableExcessScroll.invoke(packages, false);
+        } catch (SecurityException ignored) {
+        } catch (NoSuchMethodException ignored) {
+        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalAccessException ignored) {
+        } catch (InvocationTargetException ignored) {
+        }
+
         return layout;
+    }
+
+    void selectTab(int filterID) {
+        // Do not refresh the same page
+        if (adapter.getFilter() == filterID)
+            return;
+
+        adapter.setFilter(filterID);
+        adapter.notifyDataSetChanged();
+
+        if (packages.getFirstVisiblePosition() > 0)
+            packages.setSelection(1);
+
+        for (int i = 0; i < 3; i++)
+            Utils.setViewBackground(textViews[i], filterIDs[i] == filterID ? new RoundedCornerDrawable() : null);
     }
 
     @Override

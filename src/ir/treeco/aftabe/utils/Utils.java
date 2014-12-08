@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import ir.treeco.aftabe.packages.DownloadProgressListener;
 import ir.treeco.aftabe.packages.MetaPackage;
-import ir.treeco.aftabe.packages.NotificationProgressListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -286,7 +285,6 @@ public class Utils {
             view.setBackground(dialogDrawable);
         else {
             view.setBackgroundDrawable(dialogDrawable);
-
         }
     }
 
