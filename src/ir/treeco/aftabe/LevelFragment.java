@@ -418,6 +418,7 @@ public class LevelFragment extends Fragment {
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     oneFingerDrag.setVisibility(View.GONE);
+                    oneFingerDrag.clearAnimation();
                 }
 
                 @Override
@@ -480,9 +481,12 @@ public class LevelFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                for (View view: cheatButtons)
-                    view.setVisibility(View.INVISIBLE);
-                blackWidow.setVisibility(View.INVISIBLE);
+                for (View view: cheatButtons) {
+                    view.setVisibility(View.GONE);
+                    view.clearAnimation();
+                }
+
+                blackWidow.setVisibility(View.GONE);
             }
 
             @Override
@@ -559,6 +563,7 @@ public class LevelFragment extends Fragment {
             Utils.setViewBackground(button, bitmapDrawable);
         } else {
             drawable.setLabel(alphabet[placeHolder[id]]);
+            drawable.setGreen(alphabetGone[placeHolder[id]] == Level.AlphabetState.FIXED);
 
             BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), ImageManager.loadImageFromResource(mContext, R.drawable.albutton, LengthManager.getSolutionButtonSize(), LengthManager.getSolutionButtonSize()));
             Utils.setViewBackground(button, bitmapDrawable);

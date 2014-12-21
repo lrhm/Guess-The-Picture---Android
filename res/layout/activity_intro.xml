@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main_view">
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/background"
+            android:contentDescription="@string/nothing"/>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

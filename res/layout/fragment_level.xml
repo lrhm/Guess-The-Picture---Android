@@ -33,24 +33,24 @@
                         android:layout_height="match_parent"
                         android:id="@+id/black_widow"
                         android:background="#000"
-                        android:visibility="invisible"/>
+                        android:visibility="gone"/>
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cheat_remove_some_letters"
-                        android:visibility="invisible"
+                        android:visibility="gone"
                         android:layout_gravity="top"/>
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cheat_reveal_a_letter"
-                        android:visibility="invisible"
+                        android:visibility="gone"
                         android:layout_gravity="center_vertical"/>
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cheat_skip_level"
-                        android:visibility="invisible"
+                        android:visibility="gone"
                         android:layout_gravity="bottom"/>
             </FrameLayout>
             <ImageView

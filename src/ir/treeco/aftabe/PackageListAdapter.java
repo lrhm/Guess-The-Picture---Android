@@ -68,8 +68,8 @@ public class PackageListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO: Remove "100"
-        return mCount + 100;
+        // TODO: Remove "5"
+        return mCount + 5;
     }
 
     @Override

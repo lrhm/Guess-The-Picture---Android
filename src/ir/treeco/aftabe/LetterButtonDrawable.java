@@ -52,6 +52,7 @@ public class LetterButtonDrawable extends Drawable {
             paint.setColor(Color.parseColor("#00AA00"));
         else
             paint.setColor(Color.parseColor("#666666"));
+        invalidateSelf();
     }
 
     @Override
@@ -73,6 +74,7 @@ public class LetterButtonDrawable extends Drawable {
     public void setLabel(String label) {
         this.label = label;
         onBoundsChange(getBounds());
+        invalidateSelf();
     }
 
 }

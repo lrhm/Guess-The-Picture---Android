@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -95,15 +94,8 @@ public class PackageFragment extends Fragment {
         {
             int[] backgroundColor = mPackage.meta.getColor();
 
-            {
-                String tmp = "colors: ";
-                for (int color : backgroundColor)
-                    tmp += " " + Integer.toHexString(color);
-                Log.e("COLORS", tmp);
-            }
-
-            View mainView = getActivity().findViewById(R.id.main_view);
-            Utils.setViewBackground(mainView, new BackgroundDrawable(getActivity(), backgroundColor));
+            ImageView background = (ImageView) getActivity().findViewById(R.id.background);
+            background.setImageDrawable(new BackgroundDrawable(getActivity(), backgroundColor));
         }
 
         return layout;

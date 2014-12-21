@@ -76,11 +76,21 @@ public class IntroActivity extends FragmentActivity {
         fragmentTransaction.commit();
 
         mainView = (FrameLayout) findViewById(R.id.main_view);
-        Utils.setViewBackground(mainView, new BackgroundDrawable(this, new int[]{
-                Color.parseColor("#F3C81D"),
-                Color.parseColor("#F3C01E"),
-                Color.parseColor("#F49C14")
-        }));
+
+//        Utils.setViewBackground(mainView, new BackgroundDrawable(this, new int[]{
+//                Color.parseColor("#F3C81D"),
+//                Color.parseColor("#F3C01E"),
+//                Color.parseColor("#F49C14")
+//        }));
+
+        {
+            ImageView background = (ImageView) findViewById(R.id.background);
+            background.setImageDrawable(new BackgroundDrawable(this, new int[]{
+                    Color.parseColor("#F3C81D"),
+                    Color.parseColor("#F3C01E"),
+                    Color.parseColor("#F49C14")
+            }));
+        }
 
 
         /*ImageView background = (ImageView) findViewById(R.id.background);
