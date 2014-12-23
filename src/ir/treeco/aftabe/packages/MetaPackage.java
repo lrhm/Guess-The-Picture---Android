@@ -1,14 +1,7 @@
 package ir.treeco.aftabe.packages;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.widget.ImageView;
-import ir.treeco.aftabe.DownloadingDrawable;
 import ir.treeco.aftabe.utils.Utils;
 
 import java.io.FileNotFoundException;
@@ -20,25 +13,38 @@ import java.io.InputStream;
  */
 public class MetaPackage {
     private final SharedPreferences preferences;
-    private String name, dataUrl;
+    private Context context;
+    private PackageManager packageManager;
+
+    private PackageState state;
+
     private int id;
-    private boolean isDownloading;
+    private String name;
+    private String dataUrl;
     private int cost;
     private int dataVersion;
     private int rate;
-    private Context context;
-    private PackageState state;
-    private PackageManager packageManager;
+
     private int[] color;
-    private float[] backgroundHSV, cheat‌ButtonHSV;
+    private float[] backgroundHSV;
+    private float[] cheat‌ButtonHSV;
+
+    private boolean isDownloading;
+
+    public Context getContext() {
+        return context;
+    }
+
+    public SharedPreferences getPreferences() {
+        return preferences;
+    }
+
+    public PackageManager getPackageManager() {
+        return packageManager;
+    }
 
     public int getRate() {
         return rate;
-    }
-
-    @Override
-    public String toString() {
-        return name + " " + id + " " + cost + " " + state;
     }
 
     public void setIsDownloading(boolean isDownloading) {
@@ -47,14 +53,6 @@ public class MetaPackage {
 
     public boolean getIsDownloading() {
         return isDownloading;
-    }
-
-    public void setState (PackageState state) {
-        this.state = state;
-    }
-
-    public Context getContext() {
-        return context;
     }
 
     public int[] getColor() {
@@ -78,30 +76,25 @@ public class MetaPackage {
         this.color = color;
         this.backgroundHSV = backgroundHSV;
         this.preferences = preferences;
-        this.cheat‌ButtonHSV = cheat‌ButtonHSV;
+        this.cheat‌ButtonHSV = cheatButtonHSV;
         this.isDownloading = false;
         this.rate = rate;
     }
 
     public void setCost(int cost) {
-
         this.cost = cost;
-    }
-
-    public int getDataVersion() {
-        return dataVersion;
     }
 
     public void setDataVersion(int dataVersion) {
         this.dataVersion = dataVersion;
     }
 
-    public void setDataUrl(String dataUrl) {
-        this.dataUrl = dataUrl;
+    public int getDataVersion() {
+        return dataVersion;
     }
 
-    public PackageManager getPackageManager() {
-        return packageManager;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -112,50 +105,53 @@ public class MetaPackage {
         return dataUrl;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public int getCost() {
         return cost;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
     }
 
     public PackageState getState() {
         return state;
     }
 
-    public void becomeLocal(final DownloadProgressListener[] dpl) {
-        if( state == PackageState.LOCAL || isDownloading)
+    public InputStream getFront() throws FileNotFoundException {
+        return context.openFileInput(this.name + "_front.png");
+    }
+
+    public InputStream getBack() throws FileNotFoundException {
+        return context.openFileInput(this.name + "_back.png");
+    }
+
+    public void becomeLocal(final DownloadProgressListener[] listeners) {
+        if (state == PackageState.LOCAL || isDownloading)
             return;
-        final MetaPackage metaPackage = this;
+
         isDownloading = true;
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Utils.download(context, dataUrl, getName()+".zip", dpl, metaPackage);
+                    Utils.download(context, dataUrl, getName() + ".zip", listeners, MetaPackage.this);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    metaPackage.isDownloading = false;
                     return;
+                } finally {
+                    isDownloading = false;
                 }
-                metaPackage.isDownloading = false;
+
                 state = PackageState.LOCAL;
-                preferences.edit().putInt(name+"_DATA_VERSION", dataVersion).commit();
+                preferences.edit().putInt(name + "_DATA_VERSION", dataVersion).commit();
                 packageManager.generateAdapterResourceArrays();
             }
         }).start();
     }
 
-    public InputStream getFront() throws FileNotFoundException {
-            return context.openFileInput(this.name+"_front.png");
-    }
-
-    public InputStream getBack() throws FileNotFoundException {
-            return context.openFileInput(this.name + "_back.png");
-    }
-
-    public SharedPreferences getPreferences() {
-        return preferences;
+    @Override
+    public String toString() {
+        return name + " " + id + " " + cost + " " + state;
     }
 }

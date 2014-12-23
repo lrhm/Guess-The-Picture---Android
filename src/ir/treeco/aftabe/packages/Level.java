@@ -1,6 +1,8 @@
 package ir.treeco.aftabe.packages;
 
 import android.content.SharedPreferences;
+import android.util.Log;
+import ir.treeco.aftabe.BuildConfig;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.utils.Encryption;
 import org.json.JSONArray;
@@ -148,6 +150,15 @@ public class Level {
     }
 
     public void save(AlphabetState[] alphabetGone, int[] placeHolder) {
+        if (BuildConfig.DEBUG) {
+            String logMessage = "";
+            logMessage += "alphabetGone:";
+            for (AlphabetState state: alphabetGone) logMessage += " " + state.toString();
+            logMessage += "\nplaceHolder:";
+            for (int place: placeHolder) logMessage += " " + place;
+            Log.d("LEVEL", logMessage);
+        }
+
         JSONArray alphabetArray = new JSONArray();
         for (AlphabetState b: alphabetGone)
             alphabetArray.put(b.toString());

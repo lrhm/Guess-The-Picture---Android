@@ -13,7 +13,6 @@ import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
@@ -30,7 +29,7 @@ public class AdItemAdapter extends PagerAdapter {
     }
 
     public void update_ads() {
-        SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         num_of_ads = preferences.getInt(ADS_KEY,0);
     }
 

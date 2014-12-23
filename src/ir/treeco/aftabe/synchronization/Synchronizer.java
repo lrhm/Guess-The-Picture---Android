@@ -71,7 +71,7 @@ public class Synchronizer extends BroadcastReceiver{
 
         Log.d("synch","passed network state ifs");
 
-        final SharedPreferences preferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), Context.MODE_PRIVATE);
+        final SharedPreferences preferences = context.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {

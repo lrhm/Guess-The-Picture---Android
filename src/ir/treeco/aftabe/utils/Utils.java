@@ -200,10 +200,6 @@ public class Utils {
     }
 
 
-    public static String sharedPrefrencesTag() {
-        return "GOLVAZHE_XEJDIWE";
-    }
-
     public static void resizeView(View view, int width, int height) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (width != layoutParams.width || height != layoutParams.height) {

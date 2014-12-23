@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.utils;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,7 +22,7 @@ public class UserStimulator extends BroadcastReceiver {
                         .setSmallIcon(R.drawable.ad)
                         .setContentTitle("اهمم ! آفتابه کارت داره");
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Utils.sharedPrefrencesTag(), 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         int coinCount = CoinManager.getCoinsCount(sharedPreferences);
 
         if(coinCount < 130) {

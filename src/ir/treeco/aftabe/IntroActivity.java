@@ -32,11 +32,6 @@ import java.util.ArrayList;
 public class IntroActivity extends FragmentActivity {
     private SharedPreferences preferences;
 
-    /**
-     * Called when the activity is first created.
-     */
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +67,7 @@ public class IntroActivity extends FragmentActivity {
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PackageListFragment listFragment = PackageListFragment.newInstance();
-        fragmentTransaction.replace(R.id.fragment_container, listFragment);
+        fragmentTransaction.replace(R.id.fragment_container, listFragment, "package_list");
         fragmentTransaction.commit();
 
         mainView = (FrameLayout) findViewById(R.id.main_view);

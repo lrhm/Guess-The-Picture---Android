@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,8 +71,8 @@ public class LevelFragment extends Fragment {
 
         final ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.fragment_level, container, false);
 
-        mContext = container.getContext();
-        preferences = container.getContext().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+        mContext = getActivity();
+        preferences = mContext.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         buttonFont = FontsHolder.getTabBarFont(mContext);
 
         alphabet = mLevel.getAlphabetLabels();
@@ -88,13 +89,23 @@ public class LevelFragment extends Fragment {
 
         loadResources();
 
-        //setUpTitleBar();
         setUpFlyingButton((FrameLayout) layout);
         setUpSolutionLinearLayout(inflater, layout);
         setUpAlphabetLinearLayout(inflater, layout);
         setUpImagePlace(layout);
         setUpCheatLayout(layout);
         setupCheatButton(layout);
+
+        {
+            FragmentManager fragmentManager = getFragmentManager();
+            int length = fragmentManager.getBackStackEntryCount();
+            String result = "Path: ";
+            for (int i = 0; i < length; i++) {
+                FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(i);
+                result += entry.getBreadCrumbShortTitle() + "|" + entry.getBreadCrumbTitle() + ", ";
+            }
+            Log.e("BREAD", result);
+        }
 
         return layout;
     }
@@ -397,8 +408,14 @@ public class LevelFragment extends Fragment {
                 "رد کردن مرحله"
         };
 
+        int[] cheatCosts = new int[] {
+                CoinManager.ALPHABET_HIDING_COST,
+                CoinManager.LETTER_REVEAL_COST,
+                CoinManager.SKIP_LEVEL_COST
+        };
+
         for (int i = 0; i < 3; i++)
-            Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], "۱۲۰"));
+            Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], Utils.numeralStringToPersianDigits("" + cheatCosts[i])));
 
         blackWidow = view.findViewById(R.id.black_widow);
 
@@ -526,8 +543,8 @@ public class LevelFragment extends Fragment {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mLevel.save(alphabetGone, placeHolder);
                         alphabetClicked(id);
+                        mLevel.save(alphabetGone, placeHolder);
                     }
                 });
 
@@ -782,12 +799,14 @@ public class LevelFragment extends Fragment {
                                 Level level = mLevel.getWrapperPackage().getLevel(mLevel.getId() + 1);
                                 LevelFragment newFragment = LevelFragment.newInstance(level);
                                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                fragmentManager.popBackStack();
 
                                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                                 transaction.remove(LevelFragment.this);
                                 transaction.replace(R.id.fragment_container, newFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();
+
                             }
                         });
                     }
@@ -898,8 +917,8 @@ public class LevelFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mLevel.save(alphabetGone, placeHolder);
                     solutionClicked(id);
+                    mLevel.save(alphabetGone, placeHolder);
                 }
             });
 

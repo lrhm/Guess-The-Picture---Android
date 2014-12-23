@@ -15,16 +15,15 @@ import java.util.zip.ZipFile;
  * Created by hossein on 7/31/14.
  */
 public class Package {
+    private final static String LEVEL_SOLUTION_KEY = "Solution";
+    private final static String LEVEL_AUTHOR_KEY = "Author";
+    private final static String LEVEL_THUMBNAIL_KEY = "Thumbnail";
+    private final static String RESOURCE_INFO_KEY = "Resources";
+    private final static String LEVEL_PRIZE_KEY = "Prize";
+
     private ZipFile zipFile;
     private List<HashMap<String, Object>> levelsInfo;
     private Level[] levels;
-    private InputStream[] thumbnails;
-    private String levelSolutionKey = "Solution",
-            levelAuthorKey = "Author",
-            levelThumbnailKey = "Thumbnail",
-            resourceInfoKey = "Resources",
-            levelPrizeKey = "Prize";
-    private HashMap<String, InputStream> nameToInputStream = new HashMap<String, InputStream>();
 
     public MetaPackage meta;
 
@@ -58,51 +57,60 @@ public class Package {
         this.meta = meta;
         try {
             load();
-        } catch (Exception e) {
-            // shit happened!
+        } catch (IOException e) {
+            // Shit happened!
             e.printStackTrace();
         }
     }
 
-    public void load() throws Exception {
-
-        if(meta.getState() != PackageState.LOCAL)
+    public void load() throws IOException {
+        if (meta.getState() != PackageState.LOCAL)
             return;
 
-        InputStream yamlStream = null;
-
-        zipFile = new ZipFile(new File(meta.getContext().getFilesDir(), meta.getName() + ".zip"));
-        ZipEntry confFile = zipFile.getEntry("level_list.yml");
-        yamlStream = zipFile.getInputStream(confFile);
-
         Yaml yaml = new Yaml();
+        zipFile = new ZipFile(new File(meta.getContext().getFilesDir(), meta.getName() + ".zip"));
+
+        InputStream yamlStream;
+        {
+            ZipEntry confFile = zipFile.getEntry("level_list.yml");
+            yamlStream = zipFile.getInputStream(confFile);
+        }
+
         levelsInfo = (List<HashMap<String, Object>>) yaml.load(yamlStream);
         levels = new Level[levelsInfo.size()];
 
-        int cnt = 0;
-        for (HashMap<String, Object> aLevelInfo : levelsInfo) {
+        {
+            int levelIndex = 0;
+            for (HashMap<String, Object> aLevelInfo : levelsInfo) {
+                String author = (String) aLevelInfo.get(LEVEL_AUTHOR_KEY);
+                String solution = (String) aLevelInfo.get(LEVEL_SOLUTION_KEY);
+                String thumbnailName = (String) aLevelInfo.get(LEVEL_THUMBNAIL_KEY);
 
-            String author = (String) aLevelInfo.get(levelAuthorKey);
-            String solution = (String) aLevelInfo.get(levelSolutionKey);
-            String thumbnailName = (String) aLevelInfo.get(levelThumbnailKey);
-            int prize = aLevelInfo.get(levelPrizeKey)==null?30:Integer.parseInt((String) aLevelInfo.get(levelPrizeKey));
-            List<HashMap<String, String>> resourcesInfo = (List<HashMap<String, String>>) aLevelInfo.get(resourceInfoKey);
-            Multimedia[] resources = new Multimedia[resourcesInfo.size()];
+                int prize = aLevelInfo.get(LEVEL_PRIZE_KEY) == null ? 30 : Integer.parseInt((String) aLevelInfo.get(LEVEL_PRIZE_KEY));
 
-            levels[cnt] = new Level(meta.getPreferences(), author, solution, thumbnailName, this, cnt, prize);
+                List<HashMap<String, String>> resourcesInfo = (List<HashMap<String, String>>) aLevelInfo.get(RESOURCE_INFO_KEY);
 
-            int resCnt = 0;
-            for( HashMap<String, String> aResource : resourcesInfo) {
-                int cost = aResource.get("Cost")==null?5:Integer.parseInt(aResource.get("Cost"));
-                resources[resCnt] = new Multimedia(meta.getContext(), getData(), aResource.get("Name"), aResource.get("Type"), cost);
-                resCnt++;
+                Multimedia[] resources = new Multimedia[resourcesInfo.size()];
+
+                levels[levelIndex] = new Level(meta.getPreferences(), author, solution, thumbnailName, this, levelIndex, prize);
+
+                {
+                    int resourceIndex = 0;
+                    for (HashMap<String, String> aResource : resourcesInfo) {
+                        int cost = aResource.get("Cost") == null ? 5 : Integer.parseInt(aResource.get("Cost"));
+                        resources[resourceIndex] = new Multimedia(meta.getContext(), getData(), aResource.get("Name"), aResource.get("Type"), cost);
+                        resourceIndex++;
+                    }
+                }
+
+                levels[levelIndex].setResources(resources);
+
+                levelIndex++;
             }
-            levels[cnt].setResources(resources);
-            cnt++;
         }
     }
 
-    public Level getLevel(int lev) {
-        return levels[lev];
+    public Level getLevel(int index) {
+        return levels[index];
     }
 }

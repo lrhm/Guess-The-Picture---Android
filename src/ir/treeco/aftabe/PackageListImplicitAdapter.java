@@ -277,7 +277,7 @@ public class PackageListImplicitAdapter {
                         public void taskStarted() {
                             PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]));
                             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.fragment_container, fragment);
+                            transaction.replace(R.id.fragment_container, fragment, "package_" + packages[i].getName());
                             transaction.addToBackStack(null);
                             transaction.commit();
                         }

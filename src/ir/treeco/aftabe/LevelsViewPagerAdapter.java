@@ -83,7 +83,7 @@ public class LevelsViewPagerAdapter extends PagerAdapter {
                     public void taskStarted() {
                         LevelFragment newFragment = LevelFragment.newInstance(theLevel);
                         FragmentTransaction transaction = fragment.getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, newFragment);
+                        transaction.replace(R.id.fragment_container, newFragment, "level_" + levelIDs[i]);
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }

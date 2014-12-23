@@ -70,7 +70,7 @@ public class AdActivity extends Activity {
     static final String PROMOTIONS_TAG = "promotions";
 
     void addPromotion(String promote, int prize) {
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences(Utils.sharedPrefrencesTag(), MODE_PRIVATE);
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, MODE_PRIVATE);
         String jsonData = preferences.getString(PROMOTIONS_TAG, "[]");
 
         JSONArray promotions;
