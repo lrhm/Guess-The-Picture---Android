@@ -87,7 +87,7 @@ public class LevelFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-        loadResources();
+        loadResources(layout);
 
         setUpFlyingButton((FrameLayout) layout);
         setUpSolutionLinearLayout(inflater, layout);
@@ -110,7 +110,7 @@ public class LevelFragment extends Fragment {
         return layout;
     }
 
-    private void loadResources() {
+    private void loadResources(final View view) {
         LoadingManager.startTask(new TaskStartedListener() {
             @Override
             public void taskStarted() {
@@ -137,6 +137,9 @@ public class LevelFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                ViewPager viewPager = (ViewPager) view.findViewById(R.id.multimedia);
+                                viewPager.setAdapter(new MultimediaAdapter(LevelFragment.this));
+
                                 LoadingManager.endTask();
                             }
                         });
@@ -376,8 +379,8 @@ public class LevelFragment extends Fragment {
     }
 
     private void setUpImagePlace(final View view) {
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.multimedia);
-        viewPager.setAdapter(new MultimediaAdapter(this));
+        //ViewPager viewPager = (ViewPager) view.findViewById(R.id.multimedia);
+        //viewPager.setAdapter(new MultimediaAdapter(this));
 
         FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
         Utils.resizeView(box, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight());
@@ -471,6 +474,28 @@ public class LevelFragment extends Fragment {
                 ObjectAnimator.ofFloat(cheatButtons[2], "translationX", -cheatButtons[2].getWidth(), 0)
         );
 
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                cheatButton.setClickable(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                cheatButton.setClickable(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
         set.setInterpolator(new DecelerateInterpolator());
         set.setDuration(600).start();
     }
@@ -493,7 +518,7 @@ public class LevelFragment extends Fragment {
         set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-
+                cheatButton.setClickable(false);
             }
 
             @Override
@@ -504,6 +529,7 @@ public class LevelFragment extends Fragment {
                 }
 
                 blackWidow.setVisibility(View.GONE);
+                cheatButton.setClickable(true);
             }
 
             @Override
@@ -713,6 +739,7 @@ public class LevelFragment extends Fragment {
 
         addLevelFinishedLayout();
 
+        // TODO: look up this
         /*if (giveHimPrize && !levelData.isSolved(preferences)) {
             CoinManager.earnCoins(CoinManager.LEVEL_COMPELETED_PRIZE, preferences);
         } else {

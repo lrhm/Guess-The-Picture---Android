@@ -43,6 +43,22 @@ public class PackageFragment extends Fragment {
         thumbnails = new Bitmap[inputStreams.length];
 
 
+        final LevelsViewPagerAdapter viewPagerAdapter;
+        {
+            ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
+            Utils.resizeView(viewPager, LengthManager.getScreenWidth(), LengthManager.getLevelsViewpagerHeight());
+            viewPagerAdapter = new LevelsViewPagerAdapter(this);
+            viewPager.setAdapter(viewPagerAdapter);
+
+
+            int currentPage = 0;
+            while (16 * (currentPage + 1) < mPackage.getNumberOfLevels() && !mPackage.getLevel(16 * (currentPage + 1)).isLocked())
+                currentPage++;
+
+            viewPager.setCurrentItem(currentPage);
+            setUpIndicatorLayout(layout, viewPager);
+        }
+
         LoadingManager.startTask(new TaskStartedListener() {
             @Override
             public void taskStarted() {
@@ -58,6 +74,7 @@ public class PackageFragment extends Fragment {
                             @Override
                             public void run() {
                                 LoadingManager.endTask();
+                                viewPagerAdapter.notifyDataSetChanged();
                             }
                         });
                     }
@@ -66,18 +83,6 @@ public class PackageFragment extends Fragment {
             }
         });
 
-        {
-            ViewPager viewPager = (ViewPager) layout.findViewById(R.id.levels_view_pager);
-            Utils.resizeView(viewPager, LengthManager.getScreenWidth(), LengthManager.getLevelsViewpagerHeight());
-            viewPager.setAdapter(new LevelsViewPagerAdapter(this));
-
-            int currentPage = 0;
-            while (16 * (currentPage + 1) < mPackage.getNumberOfLevels() && !mPackage.getLevel(16 * (currentPage + 1)).isLocked())
-                currentPage++;
-
-            viewPager.setCurrentItem(currentPage);
-            setUpIndicatorLayout(layout, viewPager);
-        }
 
         {
             ImageView levelsBackTop = (ImageView) layout.findViewById(R.id.levels_back_top);

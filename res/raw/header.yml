@@ -1,16 +1,45 @@
-- Name: aftabe
+- Name: aftabe_messi
   Color:
-    - "#FFFFFF"
-    - "#000000"
-    - "#111111"
+    - "#29CDB8"
+    - "#1FB8AA"
+    - "#0A8A8C"
   HSV Thumbnail:
-    - 3.4
-    - 2.1
-    - 1
+    - 130
+    - 0
+    - -0.1
   HSV Cheat Button:
+    - 140
     - 0
+    - -0.2
+
+- Name: aftabe_silver
+  Color:
+    - "#29CDB8"
+    - "#1FB8AA"
+    - "#0A8A8C"
+  HSV Thumbnail:
+    - 130
     - 0
+    - -0.1
+  HSV Cheat Button:
+    - 140
     - 0
+    - -0.2
+
+- Name: aftabe_talayi
+  Color:
+    - "#29CDB8"
+    - "#1FB8AA"
+    - "#0A8A8C"
+  HSV Thumbnail:
+    - 130
+    - 0
+    - -0.1
+  HSV Cheat Button:
+    - 140
+    - 0
+    - -0.2
+
 - Name: sher
   Color:
     - "#29CDB8"

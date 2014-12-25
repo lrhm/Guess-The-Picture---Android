@@ -1,21 +1,24 @@
 package ir.treeco.aftabe;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import ir.treeco.aftabe.utils.LengthManager;
 
-/**
- * Created by hamed on 9/2/14.
- */
 class LevelsGridViewAdapter extends BaseAdapter {
+    class Tag {
+        ImageView frame;
+        ImageView thumbnail;
+    }
+
     private final int[] levelIDs;
     private final PackageFragment fragment;
+    LayoutInflater inflater;
 
     public LevelsGridViewAdapter(int[] levelIDs, PackageFragment fragment) {
         this.levelIDs = levelIDs;
@@ -28,38 +31,49 @@ class LevelsGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View oldFrameLayout, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        FrameLayout frameLayout;
-        ImageView thumbnail, frame;
+    public View getView(int i, View frameLayout, ViewGroup viewGroup) {
+        if (frameLayout == null) {
+            if (inflater == null)
+                inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (oldFrameLayout == null) {
-            frameLayout = (FrameLayout) inflater.inflate(R.layout.view_level_thumbnail, null);
+            frameLayout = inflater.inflate(R.layout.view_level_thumbnail, viewGroup, false);
+
             frameLayout.setLayoutParams(new GridView.LayoutParams(LengthManager.getLevelFrameWidth(), LengthManager.getLevelFrameHeight()));
-            thumbnail = (ImageView) frameLayout.findViewById(R.id.thumbnail);
+
+            Tag tag = new Tag();
+
+            tag.thumbnail = (ImageView) frameLayout.findViewById(R.id.thumbnail);
+            tag.frame = (ImageView) frameLayout.findViewById(R.id.frame);
+
             int myPadding = LengthManager.getLevelThumbnailPadding();
-            thumbnail.setPadding(myPadding, myPadding, myPadding, myPadding);
-        } else {
-            frameLayout = (FrameLayout) oldFrameLayout;
+            tag.thumbnail.setPadding(myPadding, myPadding, myPadding, myPadding);
+
+            frameLayout.setTag(tag);
         }
 
-        thumbnail = (ImageView) frameLayout.findViewById(R.id.thumbnail);
-        frame = (ImageView) frameLayout.findViewById(R.id.frame);
+        Tag tag = (Tag) frameLayout.getTag();
+
+        tag.thumbnail = (ImageView) frameLayout.findViewById(R.id.thumbnail);
+        tag.frame = (ImageView) frameLayout.findViewById(R.id.frame);
 
         final int levelID = levelIDs[i];
 
-        if (levelID != -1) {
-            frameLayout.setVisibility(View.VISIBLE);
-
-            if (fragment.getPackage().getLevel(levelID).isLocked()) {
-                thumbnail.setImageBitmap(null);
-                frame.setImageBitmap(fragment.getLevelLockedBitmap());
-            } else {
-                thumbnail.setImageBitmap(fragment.getThumbnail(levelID));
-                frame.setImageBitmap(fragment.getLevelUnockedBitmap());
-            }
-        } else {
+        if (levelID == -1) {
             frameLayout.setVisibility(View.INVISIBLE);
+            return frameLayout;
+        }
+
+        frameLayout.setVisibility(View.VISIBLE);
+
+        tag.thumbnail.setImageBitmap(null);
+
+        if (fragment.getPackage().getLevel(levelID).isLocked()) {
+            tag.thumbnail.setImageBitmap(null);
+            tag.frame.setImageBitmap(fragment.getLevelLockedBitmap());
+        } else {
+            Log.e("GVAdapter", "" + levelID + ": " + fragment.getThumbnail(levelID));
+            tag.thumbnail.setImageBitmap(fragment.getThumbnail(levelID));
+            tag.frame.setImageBitmap(fragment.getLevelUnockedBitmap());
         }
 
         return frameLayout;

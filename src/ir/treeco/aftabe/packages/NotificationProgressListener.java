@@ -23,6 +23,7 @@ public class NotificationProgressListener implements DownloadProgressListener {
         mBuilder = new NotificationCompat.Builder(context);
         mBuilder.setContentTitle(mPackage.getName())
                 .setContentText("در حال آبگیری")
+                .setContentIntent(null)
                 .setSmallIcon(R.drawable.tiny);
         mBuilder.setProgress(100, 0, false);
         mNotifyManager.notify(id, mBuilder.build());

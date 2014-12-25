@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class IntroActivity extends FragmentActivity {
+    private static final String TAG = "IntroActivity";
     private SharedPreferences preferences;
 
     @Override
@@ -42,56 +43,71 @@ public class IntroActivity extends FragmentActivity {
 
         // Initialize Height Manager
         LengthManager.initialize(IntroActivity.this);
+
         // Load Layout
         setContentView(R.layout.activity_intro);
 
         preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
+        mainView = (FrameLayout) findViewById(R.id.main_view);
+
         Utils.updateLastTime(this);
 
+        loadPackagesFragment();
+        setUpHeader();
+        setUpCoinBox();
+        setOriginalBackgroundColor();
+        registerLoadingView();
+        backupSharedPreferences();
+    }
+
+    private void setUpHeader() {
         RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
         header.setLayoutParams(new LinearLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         logo.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
 
-        setUpCoinBox();
+    }
 
-
-
-        // List fragment transaction
+    private void loadPackagesFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        if (fragmentManager.getBackStackEntryCount() != 0) throw new AssertionError();
+        if (fragmentManager.getBackStackEntryCount() != 0) throw new IllegalStateException();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PackageListFragment listFragment = PackageListFragment.newInstance();
-        fragmentTransaction.replace(R.id.fragment_container, listFragment, "package_list");
+        fragmentTransaction.replace(R.id.fragment_container, listFragment);
         fragmentTransaction.commit();
+    }
 
-        mainView = (FrameLayout) findViewById(R.id.main_view);
+    private void backupSharedPreferences() {
+//        Log.d("paspas",Utils.getAESkey(this));
+//        Log.d("paspas",Utils.getAESkey(this).getBytes().length+" ");
 
-//        Utils.setViewBackground(mainView, new BackgroundDrawable(this, new int[]{
-//                Color.parseColor("#F3C81D"),
-//                Color.parseColor("#F3C01E"),
-//                Color.parseColor("#F49C14")
-//        }));
-
-        {
-            ImageView background = (ImageView) findViewById(R.id.background);
-            background.setImageDrawable(new BackgroundDrawable(this, new int[]{
-                    Color.parseColor("#F3C81D"),
-                    Color.parseColor("#F3C01E"),
-                    Color.parseColor("#F49C14")
-            }));
+        // Backup
+        if (Utils.isExternalStorageWritable()) {
+            File rootFolder = new File(Environment.getExternalStorageDirectory(), ".aftabe");
+            rootFolder.mkdir();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("Coin Count", CoinManager.getCoinsCount(preferences));
+                Log.i("Backup", jsonObject.toString());
+                Log.i("Backup", Encryption.encryptAES(jsonObject.toString(), this));
+                FileOutputStream fileOutputStream = new FileOutputStream(new File(rootFolder, "Backup"));
+                fileOutputStream.write(Encryption.encryptAES(jsonObject.toString(), this).getBytes());
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
 
-
-        /*ImageView background = (ImageView) findViewById(R.id.background);
-        background.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.circles, LengthManager.getScreenWidth(), LengthManager.getScreenHeight()));
-        */
-
+    private void registerLoadingView() {
         final RelativeLayout loadingView = (RelativeLayout) getLayoutInflater().inflate(R.layout.view_ehem, null);
 
         LoadingManager.setSomeTaskStartedListener(new SomeTaskStartedListener() {
@@ -108,7 +124,6 @@ public class IntroActivity extends FragmentActivity {
                 toilet.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.toilet, LengthManager.getLoadingToiletWidth(), -1));
                 toilet.getLayoutParams().width = LengthManager.getLoadingToiletWidth();
 
-
                 loadingView.setVisibility(View.VISIBLE);
 
                 final Animation fadeIn = new AlphaAnimation(0, 1);
@@ -122,6 +137,8 @@ public class IntroActivity extends FragmentActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
+                        loadingView.clearAnimation();
+
                         callback.done();
                     }
 
@@ -129,6 +146,7 @@ public class IntroActivity extends FragmentActivity {
                     public void onAnimationRepeat(Animation animation) {
                     }
                 });
+
                 loadingView.clearAnimation();
                 loadingView.startAnimation(fadeIn);
             }
@@ -151,18 +169,9 @@ public class IntroActivity extends FragmentActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         loadingView.setVisibility(View.INVISIBLE);
-                        popFromViewStack(loadingView);
+                        loadingView.clearAnimation();
 
-                        /* Workaround to redraw the whole view in old devices */
-                        /*if (Build.VERSION.SDK_INT < 16) {
-                            mainView.setVisibility(View.GONE);
-                            mainView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mainView.setVisibility(View.VISIBLE);
-                                }
-                            });
-                        }*/
+                        popFromViewStack(loadingView);
                     }
 
                     @Override
@@ -170,32 +179,19 @@ public class IntroActivity extends FragmentActivity {
 
                     }
                 });
+
                 loadingView.clearAnimation();
                 loadingView.startAnimation(fadeOut);
+
+                int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+
+                Log.d(TAG, "backStackEntryCount: " + backStackEntryCount);
+
+                if (backStackEntryCount == 0) {
+                    setOriginalBackgroundColor();
+                }
             }
         });
-        Log.d("paspas",Utils.getAESkey(this));
-        Log.d("paspas",Utils.getAESkey(this).getBytes().length+" ");
-
-        // Backup
-        if( Utils.isExternalStorageWritable() ) {
-            File rootFolder = new File(Environment.getExternalStorageDirectory(),".aftabe");
-            rootFolder.mkdir();
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("Coin Count", CoinManager.getCoinsCount(preferences));
-                Log.i("Backup", jsonObject.toString());
-                Log.i("Backup", Encryption.encryptAES(jsonObject.toString(), this));
-                FileOutputStream fileOutputStream = new FileOutputStream(new File(rootFolder, "Backup"));
-                fileOutputStream.write(Encryption.encryptAES(jsonObject.toString(),this).getBytes());
-                fileOutputStream.flush();
-                fileOutputStream.close();
-            }catch ( JSONException e ) {
-                e.printStackTrace();
-            }catch ( IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void setUpCoinBox() {
@@ -296,10 +292,19 @@ public class IntroActivity extends FragmentActivity {
         LoadingManager.startTask(new TaskStartedListener() {
             @Override
             public void taskStarted() {
-                Log.d("back", "pressed");
                 IntroActivity.super.onBackPressed();
             }
         });
+    }
+
+    private void setOriginalBackgroundColor() {
+        ImageView background = (ImageView) findViewById(R.id.background);
+        background.setImageDrawable(new BackgroundDrawable(this, new int[]{
+                Color.parseColor("#F3C81D"),
+                Color.parseColor("#F3C01E"),
+                Color.parseColor("#F49C14")
+        }));
+        Log.d(TAG, "Replacing the background!");
     }
 
     ArrayList<View> currentlyPushedViews = new ArrayList<View>();
