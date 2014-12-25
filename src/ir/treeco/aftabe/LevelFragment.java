@@ -411,6 +411,8 @@ public class LevelFragment extends Fragment {
                 "رد کردن مرحله"
         };
 
+        boolean isSolved = mLevel.isSolved();
+
         int[] cheatCosts = new int[] {
                 CoinManager.ALPHABET_HIDING_COST,
                 CoinManager.LETTER_REVEAL_COST,
@@ -418,7 +420,7 @@ public class LevelFragment extends Fragment {
         };
 
         for (int i = 0; i < 3; i++)
-            Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], Utils.numeralStringToPersianDigits("" + cheatCosts[i])));
+            Utils.setViewBackground(cheatButtons[i], new CheatDrawable(view.getContext(), i, cheatBack, cheatTitles[i], isSolved? "مفت": Utils.numeralStringToPersianDigits("" + cheatCosts[i])));
 
         blackWidow = view.findViewById(R.id.black_widow);
 

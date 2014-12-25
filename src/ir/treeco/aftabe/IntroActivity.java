@@ -48,6 +48,7 @@ public class IntroActivity extends FragmentActivity {
         setContentView(R.layout.activity_intro);
 
         preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+        updateGameData();
 
         mainView = (FrameLayout) findViewById(R.id.main_view);
 
@@ -185,8 +186,6 @@ public class IntroActivity extends FragmentActivity {
 
                 int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 
-                Log.d(TAG, "backStackEntryCount: " + backStackEntryCount);
-
                 if (backStackEntryCount == 0) {
                     setOriginalBackgroundColor();
                 }
@@ -304,7 +303,6 @@ public class IntroActivity extends FragmentActivity {
                 Color.parseColor("#F3C01E"),
                 Color.parseColor("#F49C14")
         }));
-        Log.d(TAG, "Replacing the background!");
     }
 
     ArrayList<View> currentlyPushedViews = new ArrayList<View>();
@@ -318,5 +316,92 @@ public class IntroActivity extends FragmentActivity {
     void popFromViewStack(View view) {
         currentlyPushedViews.remove(view);
         mainView.removeView(view);
+    }
+
+    final String DATA_VERSION_TAG = "data_version";
+
+    private void updateGameData() {
+        updateToVersion1();
+        updateToVersion2();
+        updateToVersion3();
+        updateToVersion4();
+    }
+
+    String getGameData() {
+        return preferences.getString(DATA_VERSION_TAG, "0");
+    }
+
+    private void updateToVersion1() {
+        if (!getGameData().equals("0"))
+            return;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("data_version", "1");
+        editor.commit();
+    }
+
+    private void updateToVersion2() {
+        if (!getGameData().equals("1"))
+            return;
+        SharedPreferences.Editor editor = preferences.edit();
+
+
+        for (int i = 0; preferences.getBoolean("level_" + i + "_is_solved", false); i++) {
+            editor.remove("level_" + i + "_alphabet_gone");
+            editor.remove("level_" + i + "_place_holder");
+        }
+
+        editor.putString("data_version", "2");
+        editor.commit();
+    }
+
+    private void updateToVersion3() {
+        if (!getGameData().equals("2"))
+            return;
+        SharedPreferences.Editor editor = preferences.edit();
+
+        CoinManager.earnCoins(199, preferences);
+
+        editor.putString("data_version", "3");
+        editor.commit();
+    }
+
+    private void updateToVersion4() {
+        if (!getGameData().equals("3"))
+            return;
+        SharedPreferences.Editor editor = preferences.edit();
+
+        int levelCounts[] = new int[] {96, 96, 112};
+        int totalLevelCount = 304;
+        for (int i = 0; i < totalLevelCount; i++) {
+            int currentPackage = 0;
+            int currentLevel = i;
+            for (int amount: levelCounts)
+                if (amount <= currentLevel) {
+                    currentLevel -= amount;
+                    currentPackage++;
+                }
+
+            {
+                String fromKey = "level_" + i + "_is_solved";
+                if (preferences.getBoolean(fromKey, false)) {
+                    editor.remove(fromKey);
+                    editor.putBoolean("package_" + currentPackage + "_level_" + currentLevel + "_is_solved", true);
+                }
+            }
+
+            renameString(preferences, editor, "level_" + i + "_alphabet_gone", "package_" + currentPackage + "_level_" + currentLevel + "_alphabet_gone");
+            renameString(preferences, editor, "level_" + i + "_place_holder", "package_" + currentPackage + "_level_" + currentLevel + "_place_holder");
+        }
+
+        editor.putString("data_version", "4");
+        editor.commit();
+    }
+
+    private void renameString(SharedPreferences preferences, SharedPreferences.Editor editor, String fromKey, String toKey) {
+        String value = preferences.getString(fromKey, null);
+        if (value == null)
+            return;
+        editor.remove(fromKey);
+        editor.putString(toKey, value);
     }
 }

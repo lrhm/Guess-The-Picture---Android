@@ -1,6 +1,7 @@
 package ir.treeco.aftabe;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +15,7 @@ public class CoinManager {
     public static final int ALPHABET_HIDING_COST = 40;
     public static final int LETTER_REVEAL_COST = 50;
     public static final int SKIP_LEVEL_COST = 130;
-
+    private static final String TAG = "CoinManager";
 
 
     public static interface CoinsChangedListener {
@@ -35,14 +36,15 @@ public class CoinManager {
     }
 
     public static int getCoinsCount(SharedPreferences preferences) {
-        return preferences.getInt(tag, 200);
+        return preferences.getInt(COINS_COUNT_TAG, 200);
     }
 
-    private static String tag = "COINS_COUNT";
+    private static String COINS_COUNT_TAG = "COINS_COUNT";
     private static void setCoinsCount(int nextAmount, SharedPreferences preferences) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(tag, nextAmount);
-        editor.commit();
+        if (!preferences.edit().putInt(COINS_COUNT_TAG, nextAmount).commit()) {
+            Log.e(TAG, "Could not store coins count!");
+        }
+
         if (listener != null)
             listener.changed(nextAmount);
     }

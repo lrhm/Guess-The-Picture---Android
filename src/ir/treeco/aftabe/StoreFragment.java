@@ -42,8 +42,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
             SKU_MEDIUM_COIN,
             SKU_BIG_COIN
     };
-
-
+    private static final String CAFEBAZAAR_REVIEWED = "cafebazaar_reviewed";
 
 
     public static BillingProcessor billingProcessor;
@@ -99,14 +98,25 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
         }
 
         {
-            View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
-            reviewBazaar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
-                    startActivity(browserIntent);
-                }
-            });
+            final SharedPreferences preferences = getActivity().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+            final View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
+            if (preferences.getBoolean(CAFEBAZAAR_REVIEWED, false))
+                reviewBazaar.setVisibility(View.GONE);
+            else {
+                reviewBazaar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        preferences.edit().putBoolean(CAFEBAZAAR_REVIEWED, true).commit();
+
+                        CoinManager.earnCoins(300, preferences);
+
+                        Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
+                        startActivity(browserIntent);
+
+                        reviewBazaar.setVisibility(View.GONE);
+                    }
+                });
+            }
         }
 
         {
