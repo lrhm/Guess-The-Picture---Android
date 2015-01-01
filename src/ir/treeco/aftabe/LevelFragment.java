@@ -979,15 +979,6 @@ public class LevelFragment extends Fragment {
             getActivity().deleteFile("mm_" + i);
     }
 
-    @Override
-    public void onStop() {
-        super.onDestroy();
-
-        getActivity().findViewById(R.id.logo).setVisibility(View.VISIBLE);
-        getActivity().findViewById(R.id.cheat_button).setVisibility(View.INVISIBLE);
-        getActivity().findViewById(R.id.cheat_button).setOnClickListener(null);
-    }
-
     public Multimedia[] getMultimedia() {
         return resources;
     }

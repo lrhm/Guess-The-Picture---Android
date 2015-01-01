@@ -1,25 +1,17 @@
 package ir.treeco.aftabe.synchronization;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import ir.treeco.aftabe.AdActivity;
 import ir.treeco.aftabe.AdItemAdapter;
-import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.NotificationBuilder;
-import ir.treeco.aftabe.utils.UserStimulator;
 import ir.treeco.aftabe.utils.Utils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -27,13 +19,14 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by hossein on 8/18/14.
@@ -100,8 +93,8 @@ public class Synchronizer extends BroadcastReceiver{
                 do_Task_Files_Download_And_Update((List<HashMap<String,Object>>) tasks.get(TASK_FILE_KEY));
                 Log.d("synch","after files");
 
-                packageManager.refresh();
-
+                if (packageManager != null)
+                    packageManager.refresh();
             }
 
             private String loadAdData() {

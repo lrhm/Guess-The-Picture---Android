@@ -54,7 +54,7 @@ public class Utils {
 
     public static void updateLastTime(Context context) {
         Intent intent = new Intent(context, UserStimulator.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 5);
@@ -62,12 +62,12 @@ public class Utils {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent); // cancel the former alarm
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     public static int[] intListToArray(List<Integer> list) {
         int[] arr = new int[list.size()];
-        for(int i=0; i<list.size(); ++i)
+        for (int i = 0; i < list.size(); ++i)
             arr[i] = list.get(i);
         return arr;
     }
@@ -81,22 +81,24 @@ public class Utils {
         for (int i = 0; i < items.length; i++) {
             try {
                 results[i] = Float.parseFloat(items[i]);
-            } catch (NumberFormatException nfe) {};
+            } catch (NumberFormatException nfe) {
+            }
+            ;
         }
         return results;
     }
 
     public static String getAESkey(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String str = telephonyManager.getDeviceId();
-        if(str==null)
+        if (str == null)
             return "1234567812345678"; // for users without deviceID
         byte[] key = new byte[16];
         byte[] strBytes = str.getBytes();
-        int i=0;
-        while (i<16 && i<strBytes.length)
+        int i = 0;
+        while (i < 16 && i < strBytes.length)
             key[i] = strBytes[i++];
-        while (i<16)
+        while (i < 16)
             key[i++] = 100;
         return new String(key);
     }
@@ -125,7 +127,7 @@ public class Utils {
             conection.setReadTimeout(10000);
             conection.connect();
             int lenghtOfFile = conection.getContentLength();
-            Log.d("tsst",url+" "+path+" "+lenghtOfFile);
+            Log.d("tsst", url + " " + path + " " + lenghtOfFile);
             InputStream is = new URL(url).openStream();
 //            InputStream is = conection.getInputStream();
             OutputStream os = context.openFileOutput(path, 0);
@@ -133,8 +135,8 @@ public class Utils {
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
-            if(listeners!=null)
-                for(DownloadProgressListener listener : listeners)
+            if (listeners != null)
+                for (DownloadProgressListener listener : listeners)
                     listener.failure();
             new File(context.getFilesDir(), path).delete();
             throw e;
@@ -149,21 +151,21 @@ public class Utils {
         Log.d("Utils::pipe", "Piping");
         int n;
         byte[] buffer = new byte[1024];
-        int sum=0;
+        int sum = 0;
         try {
             while ((n = is.read(buffer)) > -1) {
-                if(metaPackage != null && metaPackage.getIsDownloading() == false)
+                if (metaPackage != null && metaPackage.getIsDownloading() == false)
                     break;
                 sum += n;
-                if(listeners!=null)
-                    for( DownloadProgressListener listener : listeners) {
+                if (listeners != null)
+                    for (DownloadProgressListener listener : listeners) {
                         listener.update((sum * 100) / size);
                     }
                 os.write(buffer, 0, n);
             }
-            if(metaPackage != null && metaPackage.getIsDownloading() == false) {
-                if(listeners != null) {
-                    for ( DownloadProgressListener listener : listeners )
+            if (metaPackage != null && metaPackage.getIsDownloading() == false) {
+                if (listeners != null) {
+                    for (DownloadProgressListener listener : listeners)
                         listener.failure();
                 }
                 throw new IOException();
@@ -174,7 +176,7 @@ public class Utils {
                     listener.success();
             }
         } catch (IOException e) {
-            if(listeners!=null) {
+            if (listeners != null) {
                 for (DownloadProgressListener listener : listeners)
                     listener.failure();
             }
@@ -289,28 +291,45 @@ public class Utils {
     public static String numeralStringToPersianDigits(String s) {
         char[] result = new char[s.length()];
         for (int i = 0; i < s.length(); i++)
-            result[i] = Character.isDigit(s.charAt(i))? persianDigits.charAt(s.charAt(i) - '0'): s.charAt(i);
+            result[i] = Character.isDigit(s.charAt(i)) ? persianDigits.charAt(s.charAt(i) - '0') : s.charAt(i);
         return new String(result);
     }
 
     public static String[] stringListToArray(List<String> list) {
         String[] arr = new String[list.size()];
-        for(int i=0; i<list.size(); ++i)
+        for (int i = 0; i < list.size(); ++i)
             arr[i] = list.get(i);
         return arr;
     }
 
-    public static float convertDpToPixel(float dp, Context context){
+    public static float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return px;
     }
 
-    public static float convertPixelsToDp(float px, Context context){
+    public static float convertPixelsToDp(float px, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float dp = px / (metrics.densityDpi / 160f);
         return dp;
+    }
+
+    private static String[] tips = new String[]{"با ورزش روزانه و تغذیه‌ی سالم در هر صورت خواهید مرد.",
+            "رنگین کمان یک کمان رنگی نیست.",
+            "آب انار مزه‌ی انار می‌دهد.",
+            "شما قطعا کور نیستید.",
+            "پدر شما قطعا مرد است.",
+            "کهکشان راه شیری از شیر درست نشده است.",
+            "علت اصلی تاریکی نبود روشناییست.",
+            "صد و بیست سال پیش مردمی دیگر بر روی زمین زندگی می‌کردند.",
+            "اسکل نام یک پرنده است.",
+            "کسانی که هشت ساعت در روز می‌خوابند، نسبت به کسانی که پنج ساعت در روز می‌خوابند، سه ساعت بیش‌تر می‌خوابند.",
+            "هر انسانی خلافکار است، مگر آنکه خلافش ثابت نشود."};
+
+    public static String getRandomTip() {
+        Random random = new Random();
+        return tips[random.nextInt(tips.length)];
     }
 }

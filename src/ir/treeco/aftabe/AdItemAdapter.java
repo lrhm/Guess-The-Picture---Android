@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,11 @@ import ir.treeco.aftabe.utils.Utils;
 
 import java.io.FileNotFoundException;
 
-/**
- * Created by hamed on 8/17/14.
- */
 public class AdItemAdapter extends PagerAdapter {
+    private static final String TAG = "PagerAdapter";
     Context context;
     public final static String ADS_KEY = "number_of_ads";
-    private int num_of_ads;
+    private int numberOfAds;
 
     public AdItemAdapter(Context context) {
         this.context = context;
@@ -30,12 +29,12 @@ public class AdItemAdapter extends PagerAdapter {
 
     public void update_ads() {
         SharedPreferences preferences = context.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
-        num_of_ads = preferences.getInt(ADS_KEY,0);
+        numberOfAds = preferences.getInt(ADS_KEY, 0);
     }
 
     @Override
     public int getCount() {
-        return num_of_ads;
+        return numberOfAds;
     }
 
     @Override
@@ -48,13 +47,12 @@ public class AdItemAdapter extends PagerAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.view_ad_image, null);
         ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
+
         try {
-            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad"+position+".jpg"),LengthManager.getScreenWidth(),-1));
+            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), LengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
-            imageView.setImageResource(R.drawable.ad);
-            e.printStackTrace();
+            Log.e(TAG, "Could not load ad!", e);
         }
-//        imageView.setImageResource(R.drawable.ad);
 
         ImageView topShadow = (ImageView) relativeLayout.getChildAt(1);
         ImageView bottomShadow = (ImageView) relativeLayout.getChildAt(2);

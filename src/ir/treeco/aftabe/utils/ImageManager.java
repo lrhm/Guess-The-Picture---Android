@@ -51,6 +51,7 @@ class ImageKey {
 }
 
 public class ImageManager {
+    private static final String TAG = "ImageManager";
     static LruCache<ImageKey, Bitmap> cache = new LruCache<ImageKey, Bitmap>(1) {
         @Override
         protected int sizeOf(ImageKey key, Bitmap value) {
@@ -68,28 +69,17 @@ public class ImageManager {
         if (him != null && !him.isRecycled())
             return him;
 
+        System.gc();
 
-        while (true) {
-            System.gc();
+        Bitmap scaledBitmap;
+        Bitmap unscaledBitmap;
 
-            Bitmap scaledBitmap;
-            Bitmap unscaledBitmap;
+        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, activity.getResources());
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
-            try {
-                unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, activity.getResources());
-                scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
-                if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
-            } catch (OutOfMemoryError e) {
-                throw new RuntimeException(e);
-//                continue;
-            }
-
-//            if (scaledBitmap == null)
-//                continue;
-
-            cache.put(key, scaledBitmap);
-            return scaledBitmap;
-        }
+        cache.put(key, scaledBitmap);
+        return scaledBitmap;
     }
 
     public static Bitmap loadImageFromResource(Context activity, int resourceId, int outWidth, int outHeight) {
@@ -97,27 +87,27 @@ public class ImageManager {
     }
 
     public static Bitmap loadImageFromInputStream(InputStream inputStream, int outWidth, int outHeight) {
-        while (true) {
-            System.gc();
+        System.gc();
 
-            Bitmap scaledBitmap;
-            Bitmap unscaledBitmap;
+        Bitmap scaledBitmap;
+        Bitmap unscaledBitmap;
 
-            try {
-                unscaledBitmap = decodeInputStream(inputStream);
-                if(outHeight == -1)
-                    outHeight = unscaledBitmap.getHeight()*outWidth/unscaledBitmap.getWidth();
-                if(outWidth == -1)
-                    outWidth = unscaledBitmap.getWidth()*outHeight/unscaledBitmap.getHeight();
-                scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP);
-                if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
-            } catch (OutOfMemoryError e) {
-                throw new RuntimeException(e);
-//                continue;
-            }
+        if (inputStream == null)
+            throw new IllegalStateException("null InputStream!");
 
-            return scaledBitmap;
-        }
+        unscaledBitmap = decodeInputStream(inputStream);
+
+        if (outHeight == -1)
+            outHeight = unscaledBitmap.getHeight() * outWidth / unscaledBitmap.getWidth();
+
+        if (outWidth == -1)
+            outWidth = unscaledBitmap.getWidth() * outHeight / unscaledBitmap.getHeight();
+
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP);
+
+        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+
+        return scaledBitmap;
     }
 
     public enum ScalingLogic {FIT, CROP, ALL_TOP}
@@ -125,15 +115,15 @@ public class ImageManager {
     public static Rect calculateSrcRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
         switch (scalingLogic) {
             case CROP:
-                final float srcAspect = (float)srcWidth / (float)srcHeight;
-                final float dstAspect = (float)dstWidth / (float)dstHeight;
+                final float srcAspect = (float) srcWidth / (float) srcHeight;
+                final float dstAspect = (float) dstWidth / (float) dstHeight;
                 if (srcAspect > dstAspect) {
-                    final int srcRectWidth = (int)(srcHeight * dstAspect);
+                    final int srcRectWidth = (int) (srcHeight * dstAspect);
                     final int srcRectLeft = (srcWidth - srcRectWidth) / 2;
                     return new Rect(srcRectLeft, 0, srcRectLeft + srcRectWidth, srcHeight);
                 } else {
-                    final int srcRectHeight = (int)(srcWidth / dstAspect);
-                    final int scrRectTop = (int)(srcHeight - srcRectHeight) / 2;
+                    final int srcRectHeight = (int) (srcWidth / dstAspect);
+                    final int scrRectTop = (int) (srcHeight - srcRectHeight) / 2;
                     return new Rect(0, scrRectTop, srcWidth, scrRectTop + srcRectHeight);
                 }
             case FIT:
@@ -148,12 +138,12 @@ public class ImageManager {
     public static Rect calculateDstRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
         switch (scalingLogic) {
             case FIT:
-                final float srcAspect = (float)srcWidth / (float)srcHeight;
-                final float dstAspect = (float)dstWidth / (float)dstHeight;
+                final float srcAspect = (float) srcWidth / (float) srcHeight;
+                final float dstAspect = (float) dstWidth / (float) dstHeight;
                 if (srcAspect > dstAspect)
-                    return new Rect(0, 0, dstWidth, (int)(dstWidth / srcAspect));
+                    return new Rect(0, 0, dstWidth, (int) (dstWidth / srcAspect));
                 else
-                    return new Rect(0, 0, (int)(dstHeight * srcAspect), dstHeight);
+                    return new Rect(0, 0, (int) (dstHeight * srcAspect), dstHeight);
             case CROP:
                 return new Rect(0, 0, dstWidth, dstHeight);
             case ALL_TOP:

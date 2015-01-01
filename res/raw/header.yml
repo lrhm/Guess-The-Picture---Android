@@ -54,3 +54,17 @@
     - 0
     - -0.2
 
+- Name: ahang
+  Color:
+    - "#29CDB8"
+    - "#1FB8AA"
+    - "#0A8A8C"
+  HSV Thumbnail:
+    - 130
+    - 0
+    - -0.1
+  HSV Cheat Button:
+    - 140
+    - 0
+    - -0.2
+

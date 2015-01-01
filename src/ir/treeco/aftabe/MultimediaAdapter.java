@@ -5,29 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.support.v4.view.PagerAdapter;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.widget.VideoView;
+import android.util.TypedValue;
+import android.view.*;
+import android.widget.*;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.ToastMaker;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Created by hamed on 10/8/14.
  */
 public class MultimediaAdapter extends PagerAdapter {
+    private static final String PLAY_TEXT = "►";
+    private static final String STOP_TEXT = "■";
     private final LevelFragment fragment;
     private final LayoutInflater inflater;
     private final Multimedia[] multimedia;
@@ -72,6 +66,67 @@ public class MultimediaAdapter extends PagerAdapter {
                     ImageView imageView = new ImageView(container.getContext());
                     imageView.setImageBitmap(bitmap);
                     multimediaView = imageView;
+                    break;
+                }
+                case AUDIO: {
+                    RelativeLayout relativeLayout = new RelativeLayout(container.getContext());
+
+                    ImageView imageView = new ImageView(container.getContext());
+                    imageView.setImageBitmap(ImageManager.loadImageFromResource(container.getContext(), R.drawable.music_background, LengthManager.getLevelImageWidth(), LengthManager.getLevelImageHeight()));
+                    
+                    relativeLayout.addView(imageView);
+                    
+                    final TextView textView = new TextView(container.getContext());
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getPlayStopButtonFontSize());
+                    textView.setTextColor(Color.argb(200, 200, 200, 200));
+                    textView.setText(PLAY_TEXT);
+
+                    {
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LengthManager.getVideoPlayButtonSize(), LengthManager.getVideoPlayButtonSize());
+                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+                        relativeLayout.addView(textView, layoutParams);
+                    }
+
+                    final MediaPlayer mediaPlayer;
+
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(file);
+                        FileDescriptor fileDescriptor = fileInputStream.getFD();
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setDataSource(fileDescriptor);
+                        mediaPlayer.prepare();
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            textView.setText(PLAY_TEXT);
+                        }
+                    });
+
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (mediaPlayer.isPlaying()) {
+                                mediaPlayer.pause();
+                                textView.setText(PLAY_TEXT);
+                            } else {
+                                mediaPlayer.seekTo(0);
+                                mediaPlayer.start();
+                                textView.setText(STOP_TEXT);
+                            }
+                        }
+                    });
+
+                    multimediaView = relativeLayout;
                     break;
                 }
                 case VIDEO: {

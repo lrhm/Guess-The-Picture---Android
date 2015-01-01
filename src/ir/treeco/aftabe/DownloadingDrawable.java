@@ -3,29 +3,33 @@ package ir.treeco.aftabe;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by hamed on 9/22/14.
- */
 public class DownloadingDrawable extends Drawable {
     private final Paint desaturatedPaint;
     private final Paint saturatedPaint;
     Rect desaturatedRect;
     Rect saturatedRect;
-    private final Bitmap bitmap;
+    private Bitmap bitmap;
     int percentage;
 
     public DownloadingDrawable(Bitmap bitmap) {
-        this.bitmap = bitmap;
-
         saturatedPaint = new Paint();
 
         desaturatedPaint = new Paint();
-        ColorMatrix colorMatrix = new ColorMatrix();
-        colorMatrix.setSaturation(0);
-        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
-        desaturatedPaint.setColorFilter(colorFilter);
+        {
+            ColorMatrix colorMatrix = new ColorMatrix();
+            colorMatrix.setSaturation(0);
+            ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
+            desaturatedPaint.setColorFilter(colorFilter);
+        }
 
+        setBitmap(bitmap);
         setPercentage(100);
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+        updateBounds();
+        invalidateSelf();
     }
 
     @Override
@@ -62,7 +66,11 @@ public class DownloadingDrawable extends Drawable {
 
     public void setPercentage(int percentage) {
         this.percentage = percentage;
-        onBoundsChange(getBounds());
+        updateBounds();
         invalidateSelf();
+    }
+
+    private void updateBounds() {
+        onBoundsChange(getBounds());
     }
 }

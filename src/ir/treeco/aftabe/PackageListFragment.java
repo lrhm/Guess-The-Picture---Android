@@ -1,6 +1,5 @@
 package ir.treeco.aftabe;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -143,12 +142,14 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
     public void onResume() {
         super.onResume();
 
-        View mainView = getActivity().findViewById(R.id.main_view);
-        Utils.setViewBackground(mainView, new BackgroundDrawable(this.getActivity(), new int[]{
-                Color.parseColor("#F3C81D"),
-                Color.parseColor("#F3C01E"),
-                Color.parseColor("#F49C14")
-        }));
+        packages.setSelection(0);
+
+//        View mainView = getActivity().findViewById(R.id.main_view);
+//        Utils.setViewBackground(mainView, new BackgroundDrawable(this.getActivity(), new int[]{
+//                Color.parseColor("#F3C81D"),
+//                Color.parseColor("#F3C01E"),
+//                Color.parseColor("#F49C14")
+//        }));
 
         LoadingManager.endTask();
     }

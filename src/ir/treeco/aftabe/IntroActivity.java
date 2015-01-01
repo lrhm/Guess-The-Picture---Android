@@ -11,15 +11,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.*;
 import ir.treeco.aftabe.utils.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,6 +123,13 @@ public class IntroActivity extends FragmentActivity {
                 toilet.setImageBitmap(ImageManager.loadImageFromResource(IntroActivity.this, R.drawable.toilet, LengthManager.getLoadingToiletWidth(), -1));
                 toilet.getLayoutParams().width = LengthManager.getLoadingToiletWidth();
 
+                TextView tip = (TextView) loadingView.findViewById(R.id.tip);
+                tip.setText(Utils.getRandomTip());
+                tip.setTypeface(FontsHolder.getYekan(IntroActivity.this));
+                tip.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getTipTextSize());
+                tip.setTextColor(Color.WHITE);
+                tip.getLayoutParams().width = LengthManager.getTipWidth();
+
                 loadingView.setVisibility(View.VISIBLE);
 
                 final Animation fadeIn = new AlphaAnimation(0, 1);
@@ -188,6 +193,12 @@ public class IntroActivity extends FragmentActivity {
 
                 if (backStackEntryCount == 0) {
                     setOriginalBackgroundColor();
+                }
+
+                if (backStackEntryCount == 1) {
+                    findViewById(R.id.logo).setVisibility(View.VISIBLE);
+                    findViewById(R.id.cheat_button).setVisibility(View.GONE);
+                    findViewById(R.id.cheat_button).setOnClickListener(null);
                 }
             }
         });
@@ -404,4 +415,6 @@ public class IntroActivity extends FragmentActivity {
         editor.remove(fromKey);
         editor.putString(toKey, value);
     }
+
+
 }

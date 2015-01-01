@@ -9,6 +9,8 @@ import android.widget.*;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 
+import java.util.Random;
+
 /**
  * Created by hamed on 8/14/14.
  */
@@ -103,11 +105,13 @@ public class PackageListAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.view_ad_item, null);
         AutoScrollViewPager viewPager = (AutoScrollViewPager) adHolder.findViewById(R.id.ad_view_pager);
-        viewPager.setAdapter(new AdItemAdapter(context));
+        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
+        viewPager.setAdapter(adItemAdapter);
         viewPager.setInterval(5000);
         viewPager.startAutoScroll(5000);
         viewPager.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 579 / 1248));
         viewPager.setOffscreenPageLimit(1);
+        viewPager.setCurrentItem(new Random().nextInt(adItemAdapter.getCount()));
         adHolder.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 579 / 1248));
         return adHolder;
     }

@@ -321,4 +321,13 @@ public class LengthManager {
     public static int getPrizeBoxSize() {
         return getScreenWidth() / 5;
     }
+
+    public static float getTipTextSize() {
+        return getScreenWidth() / 12.F;
+    }
+    public static int getTipWidth() { return getScreenWidth() * 8 / 10; }
+
+    public static float getPlayStopButtonFontSize() {
+        return getScreenWidth() / 3;
+    }
 }

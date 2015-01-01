@@ -21,6 +21,7 @@ public class MetaPackage {
     private int id;
     private String name;
     private String dataUrl;
+    private String sku;
     private int cost;
     private int dataVersion;
     private int rate;
@@ -99,6 +100,10 @@ public class MetaPackage {
 
     public String getName() {
         return name;
+    }
+
+    public String getSKU() {
+        return sku;
     }
 
     public String getDataUrl() {

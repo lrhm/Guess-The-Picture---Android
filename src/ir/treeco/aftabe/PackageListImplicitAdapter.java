@@ -12,10 +12,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import ir.treeco.aftabe.packages.*;
 import android.widget.TextView;
 import ir.treeco.aftabe.packages.MetaPackage;
@@ -44,7 +47,7 @@ public class PackageListImplicitAdapter {
             return false;
         }
     }
-    
+
     class PackageInfoTag {
         ImageView frontCard;
         ImageView backCard;
@@ -68,12 +71,12 @@ public class PackageListImplicitAdapter {
         boolean enabled = true;
         Animation toMiddle;
         Animation fromMiddle;
-        public int shape;
     }
 
     ItemData[] itemData;
 
     int mode;
+
     public PackageListImplicitAdapter(IntroActivity activity, PackageManager pManager) {
         this.mode = mode;
         this.activity = activity;
@@ -124,7 +127,7 @@ public class PackageListImplicitAdapter {
         return itemData.length;
     }
 
-    public View getView(final int i, View packageInfo, ViewGroup viewGroup) {
+    public View getView(final int i, View packageInfo, final ViewGroup viewGroup) {
         if (packageInfo == null) {
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             packageInfo = inflater.inflate(R.layout.view_package_info, null);
@@ -178,6 +181,7 @@ public class PackageListImplicitAdapter {
 
             }
         });
+
         {
             final InputStream front;
             final InputStream back;
@@ -188,25 +192,44 @@ public class PackageListImplicitAdapter {
                 throw new RuntimeException();
             }
 
+            tag.frontCard.setImageBitmap(null);
+            tag.frontCard.clearAnimation();
+            tag.backCard.setImageBitmap(null);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     {
-                        Bitmap frontBitmap = ImageManager.loadImageFromInputStream(front, mySize, mySize);
-                        final DownloadingDrawable frontDrawable = new DownloadingDrawable(frontBitmap);
-                        tag.frontCard.post(new Runnable() {
+                        final Bitmap frontBitmap = ImageManager.loadImageFromInputStream(front, mySize, mySize);
+                        activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tag.frontCard.setImageDrawable(frontDrawable);
+                                final DownloadingDrawable frontDrawable = new DownloadingDrawable(frontBitmap);
+                                tag.frontCard.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tag.frontCard.setImageDrawable(frontDrawable);
+                                        Animation fadeIn = new AlphaAnimation(0, 1);
+                                        fadeIn.setInterpolator(new DecelerateInterpolator());
+                                        fadeIn.setDuration(200);
+                                        tag.frontCard.clearAnimation();
+                                        tag.frontCard.startAnimation(fadeIn);
+                                    }
+                                });
                             }
                         });
                     }
                     {
                         final Bitmap backBitmap = ImageManager.loadImageFromInputStream(back, mySize, mySize);
-                        tag.backCard.post(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tag.backCard.setImageBitmap(backBitmap);
+                                tag.backCard.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tag.backCard.setImageBitmap(backBitmap);
+                                    }
+                                });
                             }
                         });
                     }
@@ -228,7 +251,7 @@ public class PackageListImplicitAdapter {
                     return;
                 }
 
-                if( packages[i].getIsDownloading() == true ) {
+                if (packages[i].getIsDownloading()) {
                     DownloadCancelAlert dialog = new DownloadCancelAlert(packages[i]);
                     dialog.show(activity.getSupportFragmentManager(), "CancelDownload");
                     return;
@@ -237,41 +260,51 @@ public class PackageListImplicitAdapter {
                 if (/* true || */ packages[i].getState() == PackageState.REMOTE) {
                     Log.d("ImplicitAdapter::OnClick", " clicked for dl");
 //                    createPackagePurchaseDialog(packages[i]);
-                    DownloadProgressListener[] dpl = new DownloadProgressListener[] {
-                            new NotificationProgressListener(packages[i].getContext(), packages[i]),
-                            new DownloadProgressListener() {
-                                DownloadingDrawable drawable = (DownloadingDrawable) tag.frontCard.getDrawable();
-                                ImageView imageView = tag.frontCard;
+                    NotificationProgressListener notificationProgressListener = new NotificationProgressListener(packages[i].getContext(), packages[i]);
+                    DownloadProgressListener downloadProgressListener = new DownloadProgressListener() {
+                        DownloadingDrawable drawable = (DownloadingDrawable) tag.frontCard.getDrawable();
+                        int last = 0;
 
-                                int last=0;
-                                @Override
-                                public void update(int progressInPercentage) {
-                                    if(last != progressInPercentage) {
+                        @Override
+                        public void update(final int progressInPercentage) {
+                            if (last != progressInPercentage) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
                                         drawable.setPercentage(progressInPercentage);
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                imageView.setImageDrawable(drawable);
-                                                notifyDataSetChanged();
-                                            }
-                                        });
                                     }
-                                    last = progressInPercentage;
-                                }
-
-                                @Override
-                                public void success() {
-                                    drawable.setPercentage(100);
-                                }
-
-                                @Override
-                                public void failure() {
-                                    drawable.setPercentage(100);
-                                }
+                                });
                             }
+                            last = progressInPercentage;
+                        }
+
+                        @Override
+                        public void success() {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    drawable.setPercentage(100);
+                                    setFilter(filter);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void failure() {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    drawable.setPercentage(100);
+                                    ToastMaker.show(activity, "دانلود بسته با مشکل روبرو شد :(", Toast.LENGTH_LONG);
+                                }
+                            });
+                        }
                     };
-                    packages[i].becomeLocal(dpl);
-                } else if(packages[i].getState() == PackageState.LOCAL) {
+                    packages[i].becomeLocal(new DownloadProgressListener[]{
+                            notificationProgressListener,
+                            downloadProgressListener
+                    });
+                } else if (packages[i].getState() == PackageState.LOCAL) {
                     LoadingManager.startTask(new TaskStartedListener() {
                         @Override
                         public void taskStarted() {
@@ -382,7 +415,7 @@ public class PackageListImplicitAdapter {
         }
 
         {
-            TextView itemPrice = (TextView)  storeItem.findViewById(R.id.price);
+            TextView itemPrice = (TextView) storeItem.findViewById(R.id.price);
             customizeTextView(itemPrice, price, TextType.ITEM_TEXT);
         }
 
@@ -395,6 +428,7 @@ public class PackageListImplicitAdapter {
 
 class DownloadCancelAlert extends android.support.v4.app.DialogFragment {
     private MetaPackage metaPackage;
+
     public DownloadCancelAlert(MetaPackage metaPackage) {
         this.metaPackage = metaPackage;
     }
