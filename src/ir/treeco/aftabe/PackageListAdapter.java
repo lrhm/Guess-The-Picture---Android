@@ -52,7 +52,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     void refreshData() {
-        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount() + 2 /* Tab bar and Ad view pager */;
+        mCount = (mAdapter.getCount() + getColumnCount() - 1) / getColumnCount() + 3 /* Tab bar and Ad view pager */;
     }
 
 
@@ -70,8 +70,7 @@ public class PackageListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO: Remove "5"
-        return mCount + 5;
+        return mCount;
     }
 
     @Override
@@ -109,10 +108,11 @@ public class PackageListAdapter extends BaseAdapter {
         viewPager.setAdapter(adItemAdapter);
         viewPager.setInterval(5000);
         viewPager.startAutoScroll(5000);
-        viewPager.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 579 / 1248));
+        viewPager.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getAdViewPagerHeight()));
         viewPager.setOffscreenPageLimit(1);
-        viewPager.setCurrentItem(new Random().nextInt(adItemAdapter.getCount()));
-        adHolder.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getScreenWidth() * 579 / 1248));
+        if (adItemAdapter.getCount() > 0)
+            viewPager.setCurrentItem(new Random().nextInt(adItemAdapter.getCount()));
+        adHolder.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getAdViewPagerHeight()));
         return adHolder;
     }
 
@@ -124,8 +124,13 @@ public class PackageListAdapter extends BaseAdapter {
 
         if (i == 0)
             return getAdView(rowView);
+
         if (i == 1)
             return getSpaceView(rowView);
+
+        if (i == mCount - 1)
+            return getPlaceHolderView(rowView);
+
         i -= 2;
 
         if (rowView == null) {
@@ -159,22 +164,40 @@ public class PackageListAdapter extends BaseAdapter {
         return rowView;
     }
 
+    private View getPlaceHolderView(View rowView) {
+        if (rowView != null)
+            return rowView;
+        rowView = new View(context);
+        rowView.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), getPlaceHolderHeight()));
+        return rowView;
+    }
+
     @Override
     public int getItemViewType(int i) {
         // TODO: Remove this
         if (i >= mCount)
             i = 1;
 
+        if (i == mCount - 1)
+            return 3;
         return Math.min(i, 2);
     }
 
     @Override
     public int getViewTypeCount() {
-        return 3;
+        return 4;
     }
 
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    public int getTotalHeight() {
+        return LengthManager.getAdViewPagerHeight() + LengthManager.getTabBarHeight() + (mCount - 3) * LengthManager.getPackageIconSize();
+    }
+
+    public int getPlaceHolderHeight() {
+        return Math.max(0, LengthManager.getScreenHeight() - LengthManager.getHeaderHeight() - getTotalHeight());
     }
 }

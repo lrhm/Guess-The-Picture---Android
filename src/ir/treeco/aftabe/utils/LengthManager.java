@@ -330,4 +330,12 @@ public class LengthManager {
     public static float getPlayStopButtonFontSize() {
         return getScreenWidth() / 3;
     }
+
+    public static int getAdViewPagerHeight() {
+        return getScreenWidth() * 579 / 1248;
+    }
+
+    public static int getPackageIconSize() {
+        return LengthManager.getScreenWidth() / LengthManager.getPackagesListColumnCount();
+    }
 }

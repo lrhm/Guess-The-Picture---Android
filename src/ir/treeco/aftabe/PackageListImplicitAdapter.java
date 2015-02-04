@@ -139,7 +139,7 @@ public class PackageListImplicitAdapter {
             packageInfo.setTag(tag);
         }
 
-        final int mySize = LengthManager.getScreenWidth() / LengthManager.getPackagesListColumnCount();
+        final int mySize = LengthManager.getPackageIconSize();
 
         final PackageInfoTag tag = (PackageInfoTag) packageInfo.getTag();
         final View finalPackageInfo = packageInfo;
@@ -424,31 +424,32 @@ public class PackageListImplicitAdapter {
             background.setImageBitmap(ImageManager.loadImageFromResource(activity, resourceId, LengthManager.getPackagePurchaseItemWidth(), -1));
         }
     }
-}
+    static class DownloadCancelAlert extends android.support.v4.app.DialogFragment {
+        private MetaPackage metaPackage;
 
-class DownloadCancelAlert extends android.support.v4.app.DialogFragment {
-    private MetaPackage metaPackage;
+        public DownloadCancelAlert(MetaPackage metaPackage) {
+            this.metaPackage = metaPackage;
+        }
 
-    public DownloadCancelAlert(MetaPackage metaPackage) {
-        this.metaPackage = metaPackage;
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("از کرده خود پشیمانی؟")
+                    .setPositiveButton("بلی", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            metaPackage.setIsDownloading(false);
+                        }
+                    })
+                    .setNegativeButton("خیر", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    });
+            return builder.create();
+        }
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("از کرده خود پشیمانی؟")
-                .setPositiveButton("بلی", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        metaPackage.setIsDownloading(false);
-                    }
-                })
-                .setNegativeButton("خیر", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                });
-        return builder.create();
-    }
 }
+

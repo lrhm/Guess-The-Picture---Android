@@ -25,6 +25,7 @@
     <orderEntry type="library" name="anjlab-iabv3-1.0.15" level="project" />
     <orderEntry type="library" name="anjlab-iabv3-1.0.15" level="project" />
     <orderEntry type="library" name="android-inapp-billing-v3 (2)" level="project" />
+    <orderEntry type="library" name="adbaan" level="project" />
   </component>
 </module>
 

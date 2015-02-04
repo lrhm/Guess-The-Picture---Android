@@ -45,5 +45,9 @@
                 android:id="@+id/fragment_container">
         </FrameLayout>
     </LinearLayout>
+    <com.adbaan.AdView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            token="NX8H8YNCMO"/>
 </FrameLayout>
 
