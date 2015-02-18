@@ -17,15 +17,17 @@ import java.util.*;
 public class PackageManager {
     private final static String TAG = "PackagerManager";
 
-    private final static String PKG_NAME_KEY = "Name";
-    private final static String DATA_URL_KEY = "Data URL";
-    private final static String COST_KEY = "Cost";
-    private final static String DATA_VERSION_KEY = "Data Version";
-    private final static String RATE_KEY = "Rate";
-    private final static String COLOR_KEY = "Color";
-    private final static String HSV_THUMBNAIL_KEY = "HSV Thumbnail";
-    private final static String HSV_CHEAT_BUTTON_KEY = "HSV Cheat Button";
-    private final static String HSV_BACKGROUND_KEY = "HSV Background";
+    private final static String KEY_PKG_NAME = "Name";
+    private final static String KEY_DATA_URL = "Data URL";
+    private final static String KEY_DATA_VERSION = "Data Version";
+    private final static String KEY_RATE = "Rate";
+    private final static String KEY_COLOR = "Color";
+    private final static String KEY_HSV_THUMBNAIL = "HSV Thumbnail";
+    private final static String KEY_HSV_CHEAT_BUTTON = "HSV Cheat Button";
+    private final static String KEY_HSV_BACKGROUND = "HSV Background";
+    private static final String KEY_TOMAN_COST = "TomanCost";
+    private static final String KEY_COIN_COST = "CoinCost";
+    private static final String KEY_SKU = "SKU";
 
     private final SharedPreferences preferences;
     IntroActivity activity;
@@ -73,11 +75,11 @@ public class PackageManager {
 
             int index = 0;
             for (HashMap<String, Object> packageInfo : headerInfo) {
-                String name = (String) packageInfo.get(PKG_NAME_KEY);
+                String name = (String) packageInfo.get(KEY_PKG_NAME);
 
                 int[] colors;
                 {
-                    List<String> colorList = (List<String>) packageInfo.get(COLOR_KEY);
+                    List<String> colorList = (List<String>) packageInfo.get(KEY_COLOR);
                     colors = new int[colorList.size()];
 
                     ArrayList<String> tmpColors = new ArrayList<String>();
@@ -91,13 +93,13 @@ public class PackageManager {
 
                 float[] thumbnailHSV;
                 {
-                    List<Float> thumbnailHSVList = (List<Float>) packageInfo.get(HSV_THUMBNAIL_KEY);
+                    List<Float> thumbnailHSVList = (List<Float>) packageInfo.get(KEY_HSV_THUMBNAIL);
                     thumbnailHSV = Utils.floatListToArray(thumbnailHSVList);
                 }
 
                 float[] cheatButtonHSV;
                 {
-                    List<Float> cheatButtonHSVList = (List<Float>) packageInfo.get(HSV_CHEAT_BUTTON_KEY);
+                    List<Float> cheatButtonHSVList = (List<Float>) packageInfo.get(KEY_HSV_CHEAT_BUTTON);
                     cheatButtonHSV = Utils.floatListToArray(cheatButtonHSVList);
                 }
 
@@ -149,11 +151,11 @@ public class PackageManager {
 
                 int index = 0;
                 for (HashMap<String, Object> packageInfo : headerInfo) {
-                    String name = (String) packageInfo.get(PKG_NAME_KEY);
+                    String name = (String) packageInfo.get(KEY_PKG_NAME);
 
                     int[] colors;
                     {
-                        List<String> colorList = (List<String>) packageInfo.get(COLOR_KEY);
+                        List<String> colorList = (List<String>) packageInfo.get(KEY_COLOR);
                         colors = new int[colorList.size()];
 
                         ArrayList<String> tmpColors = new ArrayList<String>();
@@ -165,12 +167,14 @@ public class PackageManager {
                             colors[i] = Color.parseColor(tmpColors.get(i));
                     }
 
-                    int cost = (Integer) packageInfo.get(COST_KEY);
-                    int version = (Integer) packageInfo.get(DATA_VERSION_KEY);
-                    int rate = (Integer) packageInfo.get(RATE_KEY);
-                    String dataUrl = (String) packageInfo.get(DATA_URL_KEY);
+                    int tomanCost = (Integer) packageInfo.get(KEY_TOMAN_COST);
+                    int coinCost = (Integer) packageInfo.get(KEY_COIN_COST);
+                    int version = (Integer) packageInfo.get(KEY_DATA_VERSION);
+                    int rate = (Integer) packageInfo.get(KEY_RATE);
+                    String dataUrl = (String) packageInfo.get(KEY_DATA_URL);
+                    String sku = (String) packageInfo.get(KEY_SKU);
 
-                    Log.d(TAG, "Loading package: " + name + " " + cost + " " + version + " " + dataUrl);
+                    Log.d(TAG, "Loading package: " + name + " " + version + " " + dataUrl + " " + sku);
 
                     File dataFile = new File(context.getFilesDir(), name + ".zip");
                     PackageState state = dataFile.exists() ? PackageState.LOCAL : PackageState.REMOTE;
@@ -183,20 +187,22 @@ public class PackageManager {
 
                     float[] backgroundHSV;
                     {
-                        List<Float> bgHSVList = (List<Float>) packageInfo.get(HSV_BACKGROUND_KEY);
+                        List<Float> bgHSVList = (List<Float>) packageInfo.get(KEY_HSV_BACKGROUND);
                         backgroundHSV = Utils.floatListToArray(bgHSVList);
                     }
 
                     float[] cheatButtonHSV;
                     {
-                        List<Float> cbHSVList = (List<Float>) packageInfo.get(HSV_CHEAT_BUTTON_KEY);
+                        List<Float> cbHSVList = (List<Float>) packageInfo.get(KEY_HSV_CHEAT_BUTTON);
                         cheatButtonHSV = Utils.floatListToArray(cbHSVList);
                     }
 
                     outPackages[index] = new MetaPackage(context, preferences, colors, backgroundHSV, cheatButtonHSV, name, index + inPackages.length, state, this, rate);
-                    outPackages[index].setCost(cost);
+                    outPackages[index].setTomanCost(tomanCost);
+                    outPackages[index].setCoinCost(coinCost);
                     outPackages[index].setDataUrl(dataUrl);
                     outPackages[index].setDataVersion(version);
+                    outPackages[index].setSku(sku);
 
                     index++;
                 }

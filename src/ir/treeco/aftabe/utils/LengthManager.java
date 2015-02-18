@@ -338,4 +338,8 @@ public class LengthManager {
     public static int getPackageIconSize() {
         return LengthManager.getScreenWidth() / LengthManager.getPackagesListColumnCount();
     }
+
+    public static float getPlaceHolderTextSize() {
+        return getScreenWidth() / 14.F;
+    }
 }

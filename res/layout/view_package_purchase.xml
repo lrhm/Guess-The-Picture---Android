@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/description"
+                android:gravity="center"
                 android:text="یه توپ دارم قلقلیه سرخ و سفید و آبیه می زنم زمین هوا می ره نمی دونی تا کجا می ره من این توپو نداشتم مشقامو خوب نوشتم بابام بهم عیدی داد یه توپ قلقلی داد.."/>
         <include
                 layout="@layout/view_store_item"

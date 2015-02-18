@@ -2,11 +2,15 @@ package ir.treeco.aftabe;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import ir.treeco.aftabe.packages.PackageManager;
+import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.LengthManager;
 
 import java.util.Random;
@@ -101,18 +105,19 @@ public class PackageListAdapter extends BaseAdapter {
     public View getAdView(View rowView) {
         if (rowView != null)
             return rowView;
+        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout adHolder = (RelativeLayout) inflater.inflate(R.layout.view_ad_item, null);
         AutoScrollViewPager viewPager = (AutoScrollViewPager) adHolder.findViewById(R.id.ad_view_pager);
-        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
         viewPager.setAdapter(adItemAdapter);
         viewPager.setInterval(5000);
         viewPager.startAutoScroll(5000);
-        viewPager.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getAdViewPagerHeight()));
+        int height = adItemAdapter.getCount() == 0? 0: LengthManager.getAdViewPagerHeight();
+        viewPager.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), height));
         viewPager.setOffscreenPageLimit(1);
         if (adItemAdapter.getCount() > 0)
             viewPager.setCurrentItem(new Random().nextInt(adItemAdapter.getCount()));
-        adHolder.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getAdViewPagerHeight()));
+        adHolder.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), height));
         return adHolder;
     }
 
@@ -165,11 +170,22 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     private View getPlaceHolderView(View rowView) {
-        if (rowView != null)
-            return rowView;
-        rowView = new View(context);
-        rowView.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), getPlaceHolderHeight()));
-        return rowView;
+        TextView textView;
+        if (rowView == null) {
+            textView = new TextView(context);
+            textView.setGravity(Gravity.CENTER);
+            textView.setTypeface(FontsHolder.getYekan(context));
+            textView.setTextColor(Color.GRAY);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getPlaceHolderTextSize());
+        } else {
+            textView = (TextView) rowView;
+        }
+        String text = "";
+        if (mAdapter.getCount() == 0)
+            text = context.getString(R.string.empty_list);
+        textView.setText(text);
+        textView.setLayoutParams(new AbsListView.LayoutParams(LengthManager.getScreenWidth(), getPlaceHolderHeight()));
+        return textView;
     }
 
     @Override
@@ -194,7 +210,7 @@ public class PackageListAdapter extends BaseAdapter {
     }
 
     public int getTotalHeight() {
-        return LengthManager.getAdViewPagerHeight() + LengthManager.getTabBarHeight() + (mCount - 3) * LengthManager.getPackageIconSize();
+        return LengthManager.getTabBarHeight() + (mCount - 3) * LengthManager.getPackageIconSize();
     }
 
     public int getPlaceHolderHeight() {

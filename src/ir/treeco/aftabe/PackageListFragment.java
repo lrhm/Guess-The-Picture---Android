@@ -2,6 +2,7 @@ package ir.treeco.aftabe;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import java.lang.reflect.Method;
 
 public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener {
 
+    private static final String TAG = "PackageListFragment";
     private LinearLayout tabBar;
     private AutoCropListView packages;
     private PackageListAdapter adapter;
@@ -80,8 +82,6 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         packages.setAdapter(adapter);
         packages.setOnScrollListener(this);
 
-        adapter.setFilter(PackageListImplicitAdapter.LOCAL_TAB);
-
         textViews = new TextView[]{
                 (TextView) layout.findViewById(R.id.hot_tab), // HOT tab
                 (TextView) layout.findViewById(R.id.local_tab), // Local tab
@@ -121,6 +121,13 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         }
 
         return layout;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        selectTab(PackageListImplicitAdapter.LOCAL_TAB);
     }
 
     void selectTab(int filterID) {

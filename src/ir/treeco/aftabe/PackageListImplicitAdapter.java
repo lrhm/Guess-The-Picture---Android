@@ -1,13 +1,10 @@
 package ir.treeco.aftabe;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.TypedValue;
@@ -18,10 +15,9 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import ir.treeco.aftabe.packages.*;
-import android.widget.TextView;
-import ir.treeco.aftabe.packages.MetaPackage;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.*;
 
@@ -35,6 +31,7 @@ import java.util.List;
  */
 public class PackageListImplicitAdapter {
     private int filter;
+    private LinearLayout mPackagePurchaseDialog;
 
     abstract class PackageInfoListener implements View.OnTouchListener, View.OnClickListener {
         float x;
@@ -60,10 +57,10 @@ public class PackageListImplicitAdapter {
     public final static int NEW_TAB = 2, LOCAL_TAB = 1, HOT_TAB = 0;
 
     public void flip(int i, View view) {
-        if (!itemData[i].enabled)
+        if (!itemsData[i].enabled)
             return;
         view.clearAnimation();
-        view.startAnimation(itemData[i].toMiddle);
+        view.startAnimation(itemsData[i].toMiddle);
     }
 
     static class ItemData {
@@ -73,12 +70,9 @@ public class PackageListImplicitAdapter {
         Animation fromMiddle;
     }
 
-    ItemData[] itemData;
-
-    int mode;
+    ItemData[] itemsData;
 
     public PackageListImplicitAdapter(IntroActivity activity, PackageManager pManager) {
-        this.mode = mode;
         this.activity = activity;
         this.pManager = pManager;
         setFilter(-1);
@@ -99,11 +93,11 @@ public class PackageListImplicitAdapter {
             default:
                 packages = new MetaPackage[0];
         }
-        itemData = new ItemData[packages.length];
-        for (int i = 0; i < itemData.length; i++) {
-            itemData[i] = new ItemData();
-            itemData[i].toMiddle = AnimationUtils.loadAnimation(activity, R.anim.to_middle);
-            itemData[i].fromMiddle = AnimationUtils.loadAnimation(activity, R.anim.from_middle);
+        itemsData = new ItemData[packages.length];
+        for (int i = 0; i < itemsData.length; i++) {
+            itemsData[i] = new ItemData();
+            itemsData[i].toMiddle = AnimationUtils.loadAnimation(activity, R.anim.to_middle);
+            itemsData[i].fromMiddle = AnimationUtils.loadAnimation(activity, R.anim.from_middle);
         }
         notifyDataSetChanged();
     }
@@ -124,7 +118,7 @@ public class PackageListImplicitAdapter {
     }
 
     public int getCount() {
-        return itemData.length;
+        return itemsData.length;
     }
 
     public View getView(final int i, View packageInfo, final ViewGroup viewGroup) {
@@ -143,17 +137,19 @@ public class PackageListImplicitAdapter {
 
         final PackageInfoTag tag = (PackageInfoTag) packageInfo.getTag();
         final View finalPackageInfo = packageInfo;
+        final MetaPackage aPackage = packages[i];
+        final ItemData aItemData = itemsData[i];
 
-        itemData[i].toMiddle.setAnimationListener(new Animation.AnimationListener() {
+        aItemData.toMiddle.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                itemData[i].enabled = false;
+                aItemData.enabled = false;
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 finalPackageInfo.clearAnimation();
-                finalPackageInfo.startAnimation(itemData[i].fromMiddle);
+                finalPackageInfo.startAnimation(aItemData.fromMiddle);
                 Utils.toggleVisibility(tag.frontCard);
                 Utils.toggleVisibility(tag.backCard);
             }
@@ -164,7 +160,7 @@ public class PackageListImplicitAdapter {
             }
         });
 
-        itemData[i].fromMiddle.setAnimationListener(new Animation.AnimationListener() {
+        aItemData.fromMiddle.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -172,8 +168,8 @@ public class PackageListImplicitAdapter {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                itemData[i].enabled = true;
-                itemData[i].flipped = !itemData[i].flipped;
+                aItemData.enabled = true;
+                aItemData.flipped = !aItemData.flipped;
             }
 
             @Override
@@ -186,8 +182,8 @@ public class PackageListImplicitAdapter {
             final InputStream front;
             final InputStream back;
             try {
-                front = packages[i].getFront();
-                back = packages[i].getBack();
+                front = aPackage.getFront();
+                back = aPackage.getBack();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException();
             }
@@ -239,82 +235,133 @@ public class PackageListImplicitAdapter {
 
         packageInfo.setLayoutParams(new LinearLayout.LayoutParams(mySize, mySize));
 
-        tag.frontCard.setVisibility(itemData[i].flipped ? View.GONE : View.VISIBLE);
-        tag.backCard.setVisibility(itemData[i].flipped ? View.VISIBLE : View.GONE);
+        tag.frontCard.setVisibility(aItemData.flipped ? View.GONE : View.VISIBLE);
+        tag.backCard.setVisibility(aItemData.flipped ? View.VISIBLE : View.GONE);
 
         PackageInfoListener packageInfoListener = new PackageInfoListener() {
             @Override
             public void onClick(View view) {
-                Log.d("ImplicitAdapter::OnClick", " clicked general");
-                if (itemData[i].flipped || x < mySize / 3 && y < mySize / 3) {
+                if (aItemData.flipped || x < mySize / 3 && y < mySize / 3) {
                     PackageListImplicitAdapter.this.flip(i, view);
                     return;
                 }
 
-                if (packages[i].getIsDownloading()) {
-                    DownloadCancelAlert dialog = new DownloadCancelAlert(packages[i]);
+                if (aPackage.getIsDownloading()) {
+                    DownloadCancelAlert dialog = new DownloadCancelAlert(aPackage);
                     dialog.show(activity.getSupportFragmentManager(), "CancelDownload");
                     return;
                 }
 
-                if (/* true || */ packages[i].getState() == PackageState.REMOTE) {
-                    Log.d("ImplicitAdapter::OnClick", " clicked for dl");
-//                    createPackagePurchaseDialog(packages[i]);
-                    NotificationProgressListener notificationProgressListener = new NotificationProgressListener(packages[i].getContext(), packages[i]);
-                    DownloadProgressListener downloadProgressListener = new DownloadProgressListener() {
-                        DownloadingDrawable drawable = (DownloadingDrawable) tag.frontCard.getDrawable();
-                        int last = 0;
+                final NotificationProgressListener notificationProgressListener = new NotificationProgressListener(aPackage.getContext(), aPackage);
 
-                        @Override
-                        public void update(final int progressInPercentage) {
-                            if (last != progressInPercentage) {
-                                activity.runOnUiThread(new Runnable() {
+                final DownloadProgressListener downloadProgressListener = new DownloadProgressListener() {
+                    DownloadingDrawable drawable = (DownloadingDrawable) tag.frontCard.getDrawable();
+                    int last = 0;
+
+                    @Override
+                    public void update(final int progressInPercentage) {
+                        if (last != progressInPercentage) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    drawable.setPercentage(progressInPercentage);
+                                }
+                            });
+                        }
+                        last = progressInPercentage;
+                    }
+
+                    @Override
+                    public void success() {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                drawable.setPercentage(100);
+                                setFilter(filter);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure() {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                drawable.setPercentage(100);
+                                ToastMaker.show(activity, "دانلود بسته با مشکل روبرو شد :(", Toast.LENGTH_LONG);
+                            }
+                        });
+                    }
+                };
+
+                final SharedPreferences preferences = activity.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+
+                switch (aPackage.getState()) {
+                    case REMOTE: {
+                        if (aPackage.isPurchased()) {
+                            aPackage.becomeLocal(new DownloadProgressListener[]{
+                                    notificationProgressListener,
+                                    downloadProgressListener
+                            });
+                            break;
+                        }
+                        createPackagePurchaseDialog(packages[i],
+                                // Purchase From Bazaar
+                                new View.OnClickListener() {
                                     @Override
-                                    public void run() {
-                                        drawable.setPercentage(progressInPercentage);
+                                    public void onClick(View view) {
+                                        Log.i("Purchase", "from bazaaar " + aPackage.getSku());
+                                        activity.setOnPackagePurchasedListener(new IntroActivity.OnPackagePurchasedListener() {
+                                            @Override
+                                            public void packagePurchased(String sku) {
+                                                aPackage.becomeLocal(new DownloadProgressListener[]{
+                                                        notificationProgressListener,
+                                                        downloadProgressListener
+                                                });
+                                                hidePackagePurchaseDialog();
+                                            }
+                                        });
+                                        activity.purchase(aPackage.getSku());
+                                    }
+                                },
+                                // Purchase with coins
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (CoinManager.getCoinsCount(preferences) < aPackage.getCoinCost()) {
+                                            ToastMaker.show(activity, activity.getString(R.string.not_enought_coins), Toast.LENGTH_SHORT);
+                                        } else {
+                                            CoinManager.spendCoins(aPackage.getCoinCost(), preferences);
+                                            aPackage.becomeLocal(new DownloadProgressListener[]{
+                                                    notificationProgressListener,
+                                                    downloadProgressListener
+                                            });
+                                            hidePackagePurchaseDialog();
+                                        }
+                                    }
+                                },
+                                // Cancel Purchase
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        hidePackagePurchaseDialog();
                                     }
                                 });
+                        break;
+                    }
+                    case LOCAL: {
+                        LoadingManager.startTask(new TaskStartedListener() {
+                            @Override
+                            public void taskStarted() {
+                                PackageFragment fragment = PackageFragment.newInstance(new Package(aPackage));
+                                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.fragment_container, fragment, "package_" + aPackage.getName());
+                                transaction.addToBackStack(null);
+                                transaction.commit();
                             }
-                            last = progressInPercentage;
-                        }
-
-                        @Override
-                        public void success() {
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    drawable.setPercentage(100);
-                                    setFilter(filter);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void failure() {
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    drawable.setPercentage(100);
-                                    ToastMaker.show(activity, "دانلود بسته با مشکل روبرو شد :(", Toast.LENGTH_LONG);
-                                }
-                            });
-                        }
-                    };
-                    packages[i].becomeLocal(new DownloadProgressListener[]{
-                            notificationProgressListener,
-                            downloadProgressListener
-                    });
-                } else if (packages[i].getState() == PackageState.LOCAL) {
-                    LoadingManager.startTask(new TaskStartedListener() {
-                        @Override
-                        public void taskStarted() {
-                            PackageFragment fragment = PackageFragment.newInstance(new Package(packages[i]));
-                            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.fragment_container, fragment, "package_" + packages[i].getName());
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-                        }
-                    });
+                        });
+                        break;
+                    }
                 }
             }
         };
@@ -356,12 +403,12 @@ public class PackageListImplicitAdapter {
         }
     }
 
-    private void createPackagePurchaseDialog(MetaPackage metaPackage) {
+    private void createPackagePurchaseDialog(MetaPackage metaPackage, View.OnClickListener fromBazaar, View.OnClickListener byCoin, View.OnClickListener cancelPurchase) {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout packagePurchase = (LinearLayout) inflater.inflate(R.layout.view_package_purchase, null);
-        activity.pushToViewStack(packagePurchase, true);
+        mPackagePurchaseDialog = (LinearLayout) inflater.inflate(R.layout.view_package_purchase, null);
+        activity.pushToViewStack(mPackagePurchaseDialog, true);
 
-        LinearLayout dialog = (LinearLayout) packagePurchase.findViewById(R.id.dialog);
+        LinearLayout dialog = (LinearLayout) mPackagePurchaseDialog.findViewById(R.id.dialog);
 
         {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dialog.getLayoutParams();
@@ -385,15 +432,24 @@ public class PackageListImplicitAdapter {
 
         {
             View purchaseFromBazaar = dialog.findViewById(R.id.purchase_from_bazaar);
-            setupStoreItem(purchaseFromBazaar, "خرید از بازار", "۱۲۳۴", R.drawable.single_button_green, true);
+            purchaseFromBazaar.setOnClickListener(fromBazaar);
+            setupStoreItem(purchaseFromBazaar, "خرید از بازار", Utils.numeralStringToPersianDigits("" + metaPackage.getTomanCost()), R.drawable.single_button_green, true);
         }
 
         {
             View purchaseByCoin = dialog.findViewById(R.id.purchase_by_coin);
-            setupStoreItem(purchaseByCoin, "خرید با سکه", "۱۲۳۴", R.drawable.single_button_red, false);
+            purchaseByCoin.setOnClickListener(byCoin);
+            setupStoreItem(purchaseByCoin, "خرید با سکه", Utils.numeralStringToPersianDigits("" + metaPackage.getCoinCost()), R.drawable.single_button_red, false);
         }
 
         Utils.setViewBackground(dialog, new DialogDrawable(activity));
+    }
+
+    void hidePackagePurchaseDialog() {
+        if (mPackagePurchaseDialog == null)
+            return;
+        activity.popFromViewStack(mPackagePurchaseDialog);
+        mPackagePurchaseDialog = null;
     }
 
     private void setupStoreItem(View storeItem, String label, String price, int resourceId, boolean reversed) {
@@ -424,32 +480,5 @@ public class PackageListImplicitAdapter {
             background.setImageBitmap(ImageManager.loadImageFromResource(activity, resourceId, LengthManager.getPackagePurchaseItemWidth(), -1));
         }
     }
-    static class DownloadCancelAlert extends android.support.v4.app.DialogFragment {
-        private MetaPackage metaPackage;
-
-        public DownloadCancelAlert(MetaPackage metaPackage) {
-            this.metaPackage = metaPackage;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("از کرده خود پشیمانی؟")
-                    .setPositiveButton("بلی", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            metaPackage.setIsDownloading(false);
-                        }
-                    })
-                    .setNegativeButton("خیر", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            return;
-                        }
-                    });
-            return builder.create();
-        }
-    }
-
 }
 

@@ -34,9 +34,7 @@ import java.util.List;
 public class Synchronizer extends BroadcastReceiver{
 
     private static final String tasksFileUrl = "http://static.treeco.ir/packages/tasks.yml";
-//    private final String PREFS_TAG = "ad_data";
     private final static String AD_UPDATE_TAG = "last_ad_update";
-    private static boolean firstConnect = true;
     private HashMap<String, Object> tasks;
     private static final String TASK_FILE_KEY="Files",
                                 TASK_NOTIFICATION_KEY="Notifications",
@@ -53,30 +51,21 @@ public class Synchronizer extends BroadcastReceiver{
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
-        if (activeNetwork == null || activeNetwork.getType() != ConnectivityManager.TYPE_WIFI || !activeNetwork.isConnected()) {
-            firstConnect = true;
+        if (activeNetwork == null /*|| activeNetwork.getType() != ConnectivityManager.TYPE_WIFI*/ || !activeNetwork.isConnected()) {
             return;
         }
-
-        if (!firstConnect)
-            return;
-        firstConnect = false;
 
         Log.d("synch","passed network state ifs");
 
         final SharedPreferences preferences = context.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         Thread thread = new Thread(new Runnable() {
+            boolean success = true;
             @Override
             public void run() {
                 String lastTime = preferences.getString(AD_UPDATE_TAG, "2000-01-01");
                 String nowTime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-                {
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(AD_UPDATE_TAG, nowTime);
-                    editor.commit();
-                }
-//                TODO uncomment below
-//                if (lastTime.equals(nowTime)) return;
+                if (lastTime.equals(nowTime)) return;
+
                 String data = loadAdData();
 
                 if (data == null)
@@ -95,6 +84,12 @@ public class Synchronizer extends BroadcastReceiver{
 
                 if (packageManager != null)
                     packageManager.refresh();
+
+                if (success) {
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(AD_UPDATE_TAG, nowTime);
+                    editor.commit();
+                }
             }
 
             private String loadAdData() {
@@ -151,6 +146,7 @@ public class Synchronizer extends BroadcastReceiver{
                         } catch (Exception e) {
 //                        Log.d("synch","Error in DOWNLOADING File",e);
                             e.printStackTrace();
+                            success = false;
                         }
                     }
                 }
@@ -207,6 +203,7 @@ public class Synchronizer extends BroadcastReceiver{
                     try {
                         Utils.download(context, (String) notif.get("Image URL"), randomName);
                     } catch (Exception e) {
+                        success = false;
                         e.printStackTrace();
                     }
                     intent.putExtra("imageName", randomName);
@@ -242,6 +239,7 @@ public class Synchronizer extends BroadcastReceiver{
                     try {
                         Utils.download(context, url, "ad" + cnt + ".jpg");
                     } catch (Exception e) {
+                        success = false;
                         e.printStackTrace();
                     }
                     cnt++;

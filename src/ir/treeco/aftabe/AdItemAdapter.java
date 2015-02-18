@@ -24,10 +24,10 @@ public class AdItemAdapter extends PagerAdapter {
 
     public AdItemAdapter(Context context) {
         this.context = context;
-        update_ads();
+        updateAds();
     }
 
-    public void update_ads() {
+    public void updateAds() {
         SharedPreferences preferences = context.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         numberOfAds = preferences.getInt(ADS_KEY, 0);
     }

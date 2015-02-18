@@ -8,20 +8,18 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.TransactionDetails;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import ir.treeco.aftabe.utils.*;
 
-/**
- * Created by hamed on 9/2/14.
- */
-public class StoreFragment extends Fragment implements BillingProcessor.IBillingHandler {
+
+public class StoreFragment extends Fragment {
     public static final String SKU_VERY_SMALL_COIN = "very_small_coin";
     public static final String SKU_SMALL_COIN = "small_coin";
     public static final String SKU_MEDIUM_COIN = "medium_coin";
@@ -44,11 +42,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
     };
     private static final String CAFEBAZAAR_REVIEWED = "cafebazaar_reviewed";
 
-
-    public static BillingProcessor billingProcessor;
-
     private static StoreFragment mInstance = null;
-    final private String key = "MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwC6dLXqc+NjfwuF3l0DB3Z1xYH96j94DH76M0zI5SA1I/FLj7Ei/wq1tY3yu6pHb+V6GU/BcucICdXtqRBsW8JPxdzcqO9KlpUY0Nk/KBehwt5YSb1bugf3IX4/arXpLrJG1gah4rPAfhsofR5ZHhrkBrkVuZ6DEaA9+jHK4WojpMnD5CNd3A7mrmFanZnNEFvTBYAQ36rru1voJbADNH397NZZYp55rIXRzY6B89sCAwEAAQ==";
     private View layout;
     private static boolean isUsed;
 
@@ -82,17 +76,14 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
             dialog.setPadding(padding, padding, padding, padding);
         }
 
-        billingProcessor = new BillingProcessor(getActivity(), key, this);
+        final IntroActivity activity = (IntroActivity) getActivity();
 
         for (int i = 0; i < SKUs.length; i++) {
             final int finalI = i;
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (billingProcessor.isInitialized())
-                        billingProcessor.purchase(SKUs[finalI]);
-                    else
-                        ToastMaker.show(getActivity(), "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_LONG);
+                    activity.purchase(SKUs[finalI]);
                 }
             });
         }
@@ -108,7 +99,7 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
                     public void onClick(View view) {
                         preferences.edit().putBoolean(CAFEBAZAAR_REVIEWED, true).commit();
 
-                        CoinManager.earnCoins(300, preferences);
+                        CoinManager.earnCoins(30000, preferences);
 
                         Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
                         startActivity(browserIntent);
@@ -189,35 +180,10 @@ public class StoreFragment extends Fragment implements BillingProcessor.IBilling
         LoadingManager.endTask();
     }
 
-    @Override
-    public void onProductPurchased(String productId, TransactionDetails transactionDetails) {
-        SharedPreferences preferences = getActivity().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
-        if (productId.equals(SKU_VERY_SMALL_COIN)) CoinManager.earnCoins(AMOUNT_VERY_SMALL_COIN, preferences);
-        if (productId.equals(SKU_SMALL_COIN)) CoinManager.earnCoins(AMOUNT_SMALL_COIN, preferences);
-        if (productId.equals(SKU_MEDIUM_COIN)) CoinManager.earnCoins(AMOUNT_MEDIUM_COIN, preferences);
-        if (productId.equals(SKU_BIG_COIN)) CoinManager.earnCoins(AMOUNT_BIG_COIN, preferences);
-        billingProcessor.consumePurchase(productId);
-    }
-
-    @Override
-    public void onPurchaseHistoryRestored() {
-    }
-
-    @Override
-    public void onBillingError(int i, Throwable throwable) {
-        Log.e("IAB", "Got error(" + i + "):", throwable);
-    }
-
-    @Override
-    public void onBillingInitialized() {
-        Log.v("IAB", "Billing initialized.");
-    }
 
     @Override
     public void onDestroy() {
-        isUsed = false;
-        if (billingProcessor != null)
-            billingProcessor.release();
         super.onDestroy();
+        isUsed = false;
     }
 }

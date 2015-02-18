@@ -18,6 +18,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.BillingWrapper;
+import com.anjlab.android.iab.v3.TransactionDetails;
+import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +31,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class IntroActivity extends FragmentActivity {
+public class IntroActivity extends FragmentActivity implements BillingProcessor.IBillingHandler {
     private static final String TAG = "IntroActivity";
     private SharedPreferences preferences;
+    private BillingProcessor billingProcessor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,14 @@ public class IntroActivity extends FragmentActivity {
         setOriginalBackgroundColor();
         registerLoadingView();
         backupSharedPreferences();
+
+        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
+//
+        callSynchronizer();
+    }
+
+    private void callSynchronizer() {
+        new Synchronizer().onReceive(getApplicationContext(), null);
     }
 
     private void setUpHeader() {
@@ -278,7 +291,7 @@ public class IntroActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (StoreFragment.billingProcessor == null || !StoreFragment.billingProcessor.handleActivityResult(requestCode, resultCode, data))
+        if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -417,4 +430,58 @@ public class IntroActivity extends FragmentActivity {
     }
 
 
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails transactionDetails) {
+        SharedPreferences preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN)) CoinManager.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN, preferences);
+        else if (productId.equals(StoreFragment.SKU_SMALL_COIN)) CoinManager.earnCoins(StoreFragment.AMOUNT_SMALL_COIN, preferences);
+        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN)) CoinManager.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN, preferences);
+        else if (productId.equals(StoreFragment.SKU_BIG_COIN)) CoinManager.earnCoins(StoreFragment.AMOUNT_BIG_COIN, preferences);
+        else if (mOnPackagePurchasedListener != null) {
+            mOnPackagePurchasedListener.packagePurchased(productId);
+            mOnPackagePurchasedListener = null;
+        }
+        billingProcessor.consumePurchase(productId);
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+
+    }
+
+    @Override
+    public void onBillingError(int i, Throwable throwable) {
+        Log.e("IAB", "Got error(" + i + "):", throwable);
+    }
+
+    @Override
+    public void onBillingInitialized() {
+        Log.v("IAB", "Billing initialized.");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (billingProcessor != null)
+            billingProcessor.release();
+
+        super.onDestroy();
+    }
+
+    public void purchase(String sku) {
+        if (billingProcessor.isInitialized())
+            billingProcessor.purchase(sku);
+        else
+            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
+    }
+
+    OnPackagePurchasedListener mOnPackagePurchasedListener;
+
+    void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
+        mOnPackagePurchasedListener = onPackagePurchasedListener;
+    }
+
+    static interface OnPackagePurchasedListener {
+        void packagePurchased(String sku);
+    }
 }

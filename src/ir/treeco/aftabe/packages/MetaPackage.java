@@ -21,8 +21,8 @@ public class MetaPackage {
     private int id;
     private String name;
     private String dataUrl;
-    private String sku;
-    private int cost;
+    private int tomanCost;
+    private int coinCost;
     private int dataVersion;
     private int rate;
 
@@ -31,6 +31,7 @@ public class MetaPackage {
     private float[] cheat‌ButtonHSV;
 
     private boolean isDownloading;
+    private String sku;
 
     public Context getContext() {
         return context;
@@ -82,10 +83,6 @@ public class MetaPackage {
         this.rate = rate;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
     public void setDataVersion(int dataVersion) {
         this.dataVersion = dataVersion;
     }
@@ -102,16 +99,12 @@ public class MetaPackage {
         return name;
     }
 
-    public String getSKU() {
+    public String getSku() {
         return sku;
     }
 
     public String getDataUrl() {
         return dataUrl;
-    }
-
-    public int getCost() {
-        return cost;
     }
 
     public void setDataUrl(String dataUrl) {
@@ -130,9 +123,12 @@ public class MetaPackage {
         return context.openFileInput(this.name + "_back.png");
     }
 
+
     public void becomeLocal(final DownloadProgressListener[] listeners) {
         if (state == PackageState.LOCAL || isDownloading)
             return;
+
+        purchase();
 
         isDownloading = true;
 
@@ -155,8 +151,40 @@ public class MetaPackage {
         }).start();
     }
 
+    public boolean isPurchased() {
+        return preferences.getBoolean(getPurchaseTag(), false);
+    }
+
+    public void purchase() {
+        preferences.edit().putBoolean(getPurchaseTag(), true).commit();
+    }
+
+    private String getPurchaseTag() {
+        return "purchased_" + getSku();
+    }
+
     @Override
     public String toString() {
-        return name + " " + id + " " + cost + " " + state;
+        return name + " " + id + " " + state;
+    }
+
+    public void setTomanCost(int tomanCost) {
+        this.tomanCost = tomanCost;
+    }
+
+    public void setCoinCost(int coinCost) {
+        this.coinCost = coinCost;
+    }
+
+    public int getTomanCost() {
+        return tomanCost;
+    }
+
+    public int getCoinCost() {
+        return coinCost;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 }
