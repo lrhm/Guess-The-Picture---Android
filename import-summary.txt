@@ -1,0 +1,94 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .gitignore
+* .idea/
+* .idea/.name
+* .idea/aftabe.iml
+* .idea/compiler.xml
+* .idea/copyright/
+* .idea/copyright/profiles_settings.xml
+* .idea/misc.xml
+* .idea/modules.xml
+* .idea/vcs.xml
+* .idea/workspace.xml
+* README.md
+* aftabe_plus.iml
+* ant.properties
+* build.xml
+* out/
+* out/production/
+* out/production/aftabe_plus/
+* out/production/aftabe_plus/com/
+* out/production/aftabe_plus/com/android/
+* out/production/aftabe_plus/com/android/vending/
+* out/production/aftabe_plus/com/android/vending/billing/
+* out/production/aftabe_plus/com/android/vending/billing/IInAppBillingService.aidl
+* out/production/aftabe_plus/ir/
+* out/production/aftabe_plus/ir/tgbs/
+* out/production/aftabe_plus/ir/tgbs/iranapps/
+* out/production/aftabe_plus/ir/tgbs/iranapps/billing/
+* out/production/aftabe_plus/ir/tgbs/iranapps/billing/IranAppsIabService.aidl
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:19.1.0
+guava-17.0.jar => com.google.guava:guava:17.0
+
+Potentially Missing Dependency:
+-------------------------------
+When we replaced the following .jar files with a Gradle dependency, we
+inferred the dependency version number from the filename. This
+specific version may not actually be available from the repository.
+If you get a build error stating that the dependency is missing, edit
+the version number to for example "+" to pick up the latest version
+instead. (This may require you to update your code if the library APIs
+have changed.)
+
+guava-17.0.jar => version 17.0 in com.google.guava:guava:17.0
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app/src/main/AndroidManifest.xml
+* assets/ => app/src/main/assets/
+* libs/acra-4.5.0.jar => app/libs/acra-4.5.0.jar
+* libs/adbaan.jar => app/libs/adbaan.jar
+* libs/nineoldandroids.jar => app/libs/nineoldandroids.jar
+* libs/snakeyaml-1.10-android.jar => app/libs/snakeyaml-1.10-android.jar
+* res/ => app/src/main/res/
+* src/ => app/src/main/java/
+* src/com/android/vending/billing/IInAppBillingService.aidl => app/src/main/aidl/com/android/vending/billing/IInAppBillingService.aidl
+* src/ir/tgbs/iranapps/billing/IranAppsIabService.aidl => app/src/main/aidl/ir/tgbs/iranapps/billing/IranAppsIabService.aidl
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

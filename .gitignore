@@ -95,13 +95,6 @@ crashlytics.properties
 crashlytics-build.properties
 
 
-# Android Studio
-.idea
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
-.gradle
-build/
-
-
 ### Gradle ###
 .gradle
 build/
@@ -140,10 +133,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# Eclipse project files
-.classpath
-.project
-
 # Windows shortcuts
 *.lnk
 
@@ -173,15 +162,3 @@ Temporary Items
 
 # secret information
 /app/src/main/res/values/secret_info.xml
-
-
-
-/*/out
-/*/*/build
-/*/*/production
-*.iws
-*.ipr
-*~
-*.swp
-
-.todo2
