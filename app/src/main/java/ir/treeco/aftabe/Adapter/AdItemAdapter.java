@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import java.io.FileNotFoundException;
+
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
 import ir.treeco.aftabe.utils.Utils;
-
-import java.io.FileNotFoundException;
 
 public class AdItemAdapter extends PagerAdapter {
     private static final String TAG = "PagerAdapter";

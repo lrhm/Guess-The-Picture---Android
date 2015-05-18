@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.ListView;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,7 +9,7 @@ import ir.treeco.aftabe.utils.LengthManager;
 /**
  * Created by hamed on 9/5/14.
  */
-class AutoCropListView extends ListView {
+public class AutoCropListView extends ListView {
     public AutoCropListView(Context context) {
         super(context);
     }

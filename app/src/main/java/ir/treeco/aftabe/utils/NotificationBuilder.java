@@ -10,7 +10,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import ir.treeco.aftabe.AdActivity;
+import ir.treeco.aftabe.View.Activity.AdActivity;
 import ir.treeco.aftabe.R;
 
 import java.io.FileNotFoundException;

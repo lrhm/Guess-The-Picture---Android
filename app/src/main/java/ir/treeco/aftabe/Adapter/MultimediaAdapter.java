@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,11 +8,14 @@ import android.support.v4.view.PagerAdapter;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Fragment.LevelFragment;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.ToastMaker;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
 
 import java.io.*;
 

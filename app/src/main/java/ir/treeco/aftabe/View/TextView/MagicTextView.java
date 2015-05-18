@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.TextView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.WeakHashMap;
+
+import ir.treeco.aftabe.R;
 
 public class MagicTextView extends TextView {
     private ArrayList<Shadow> outerShadows;

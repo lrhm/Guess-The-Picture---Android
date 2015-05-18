@@ -3,7 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
-    <ir.treeco.aftabe.AutoCropListView
+    <ir.treeco.aftabe.View.ListView.AutoCropListView
         android:id="@+id/package_list"
         android:orientation="vertical"
         android:layout_width="match_parent"

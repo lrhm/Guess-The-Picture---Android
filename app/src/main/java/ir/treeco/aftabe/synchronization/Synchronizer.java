@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import ir.treeco.aftabe.AdItemAdapter;
+import ir.treeco.aftabe.Adapter.AdItemAdapter;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.NotificationBuilder;
 import ir.treeco.aftabe.utils.Utils;

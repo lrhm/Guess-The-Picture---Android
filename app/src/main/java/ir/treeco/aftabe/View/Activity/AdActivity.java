@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,9 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import ir.treeco.aftabe.utils.ImageManager;
-import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.Utils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -18,6 +16,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.Utils;
 
 
 public class AdActivity extends Activity {

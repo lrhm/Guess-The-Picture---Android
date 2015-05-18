@@ -1,4 +1,4 @@
-package ir.treeco.aftabe.utils;
+package ir.treeco.aftabe.View.Toast;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +7,11 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import ir.treeco.aftabe.View.Toast.ToastBackgroundDrawable;
+import ir.treeco.aftabe.utils.FontsHolder;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.Utils;
 
 /**
  * Created by hamed on 9/29/14.

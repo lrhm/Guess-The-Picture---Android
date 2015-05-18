@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +17,17 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.*;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import ir.treeco.aftabe.synchronization.Synchronizer;
-import ir.treeco.aftabe.utils.*;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +35,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.View.Fragment.PackageListFragment;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Fragment.StoreFragment;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
+import ir.treeco.aftabe.synchronization.Synchronizer;
+import ir.treeco.aftabe.utils.Encryption;
+import ir.treeco.aftabe.utils.FontsHolder;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.LoadingManager;
+import ir.treeco.aftabe.utils.SomeTaskStartedListener;
+import ir.treeco.aftabe.utils.TaskCallback;
+import ir.treeco.aftabe.utils.TaskStartedListener;
+import ir.treeco.aftabe.utils.TasksFinishedListener;
+import ir.treeco.aftabe.utils.Utils;
 
 public class IntroActivity extends FragmentActivity implements BillingProcessor.IBillingHandler {
     private static final String TAG = "IntroActivity";
@@ -331,13 +354,13 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
 
     ArrayList<View> currentlyPushedViews = new ArrayList<View>();
 
-    void pushToViewStack(View view, boolean popOnBackPressed) {
+    public void pushToViewStack(View view, boolean popOnBackPressed) {
         mainView.addView(view);
         if (popOnBackPressed)
             currentlyPushedViews.add(view);
     }
 
-    void popFromViewStack(View view) {
+    public void popFromViewStack(View view) {
         currentlyPushedViews.remove(view);
         mainView.removeView(view);
     }
@@ -477,11 +500,11 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
 
     OnPackagePurchasedListener mOnPackagePurchasedListener;
 
-    void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
+    public void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
         mOnPackagePurchasedListener = onPackagePurchasedListener;
     }
 
-    static interface OnPackagePurchasedListener {
+    public static interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
     }
 }

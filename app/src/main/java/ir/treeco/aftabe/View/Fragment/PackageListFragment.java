@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.Fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -8,13 +8,29 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import ir.treeco.aftabe.packages.PackageManager;
-import ir.treeco.aftabe.synchronization.Synchronizer;
-import ir.treeco.aftabe.utils.*;
+import android.widget.AbsListView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import ir.treeco.aftabe.Adapter.PackageListAdapter;
+import ir.treeco.aftabe.Adapter.PackageListImplicitAdapter;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.RoundedCornerDrawable;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
+import ir.treeco.aftabe.View.ListView.AutoCropListView;
+import ir.treeco.aftabe.packages.PackageManager;
+import ir.treeco.aftabe.synchronization.Synchronizer;
+import ir.treeco.aftabe.utils.FontsHolder;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.LoadingManager;
+import ir.treeco.aftabe.utils.Utils;
 
 public class PackageListFragment extends Fragment implements AbsListView.OnScrollListener {
 

@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,11 @@ import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,14 +21,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import ir.treeco.aftabe.packages.*;
-import ir.treeco.aftabe.packages.Package;
-import ir.treeco.aftabe.utils.*;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.DialogDrawable;
+import ir.treeco.aftabe.DownloadCancelAlert;
+import ir.treeco.aftabe.DownloadingDrawable;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
+import ir.treeco.aftabe.View.Fragment.PackageFragment;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
+import ir.treeco.aftabe.packages.DownloadProgressListener;
+import ir.treeco.aftabe.packages.MetaPackage;
+import ir.treeco.aftabe.packages.NotificationProgressListener;
+import ir.treeco.aftabe.packages.Package;
+import ir.treeco.aftabe.packages.PackageManager;
+import ir.treeco.aftabe.utils.FontsHolder;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.LoadingManager;
+import ir.treeco.aftabe.utils.TaskStartedListener;
+import ir.treeco.aftabe.utils.Utils;
 
 /**
  * Created by hamed on 8/12/14.

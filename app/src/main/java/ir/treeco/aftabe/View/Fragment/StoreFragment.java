@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.DialogDrawable;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.*;
 
 
