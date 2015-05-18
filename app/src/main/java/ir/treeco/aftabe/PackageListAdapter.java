@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import ir.treeco.aftabe.Adapter.AdItemAdapter;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.LengthManager;

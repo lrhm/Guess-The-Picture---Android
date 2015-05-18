@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.Fragment;
 
 
 import android.graphics.Bitmap;
@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.LevelsViewPagerAdapter;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.packages.Package;
 import ir.treeco.aftabe.utils.*;
 

@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AdActivity"
+        <activity android:name=".View.Activity.AdActivity"
                   android:label="Aftabe"
                   android:theme="@style/noAnimTheme"
                   android:screenOrientation="portrait">

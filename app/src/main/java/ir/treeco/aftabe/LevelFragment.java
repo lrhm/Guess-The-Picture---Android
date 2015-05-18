@@ -19,19 +19,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.*;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-import ir.treeco.aftabe.mutlimedia.Multimedia;
-import ir.treeco.aftabe.packages.Level;
-import ir.treeco.aftabe.utils.*;
+
 import org.json.JSONException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import ir.treeco.aftabe.View.Toast.ToastMaker;
+import ir.treeco.aftabe.mutlimedia.Multimedia;
+import ir.treeco.aftabe.packages.Level;
+import ir.treeco.aftabe.utils.FontsHolder;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.LoadingManager;
+import ir.treeco.aftabe.utils.TaskStartedListener;
+import ir.treeco.aftabe.utils.Utils;
 
 /**
  * Created by hamed on 9/2/14.

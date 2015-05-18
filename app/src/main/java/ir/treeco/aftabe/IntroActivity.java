@@ -21,6 +21,8 @@ import android.widget.*;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
+
+import ir.treeco.aftabe.View.Toast.ToastMaker;
 import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.*;
 import org.json.JSONException;

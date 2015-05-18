@@ -12,7 +12,7 @@ import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.ToastMaker;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
 
 import java.io.*;
 
