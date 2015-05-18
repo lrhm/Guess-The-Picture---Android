@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-import ir.treeco.aftabe.Adapter.AdItemAdapter;
+import ir.treeco.aftabe.AutoScrollViewPager;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.packages.PackageManager;
 import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.LengthManager;
@@ -94,7 +96,7 @@ public class PackageListAdapter extends BaseAdapter {
         return false;
     }
 
-    void setFilter(int filter) {
+    public void setFilter(int filter) {
         mAdapter.setFilter(filter);
         notifyDataSetChanged();
     }

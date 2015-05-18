@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+
 import ir.treeco.aftabe.packages.MetaPackage;
 
-public class DownloadCancelAlert extends android.support.v4.app.DialogFragment {
+public class DownloadCancelAlert extends DialogFragment {
     private MetaPackage metaPackage;
 
     public DownloadCancelAlert(MetaPackage metaPackage) {

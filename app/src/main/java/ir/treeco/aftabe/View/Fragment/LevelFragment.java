@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.View.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -42,6 +42,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import ir.treeco.aftabe.CheatDrawable;
+import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.DialogDrawable;
+import ir.treeco.aftabe.LetterButtonDrawable;
+import ir.treeco.aftabe.Adapter.MultimediaAdapter;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.View.Toast.ToastMaker;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.packages.Level;

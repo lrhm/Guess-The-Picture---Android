@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import ir.treeco.aftabe.Adapter.LevelsGridViewAdapter;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Fragment.LevelFragment;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.packages.Package;

@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +27,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.DialogDrawable;
+import ir.treeco.aftabe.DownloadCancelAlert;
+import ir.treeco.aftabe.DownloadingDrawable;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 import ir.treeco.aftabe.View.Toast.ToastMaker;
 import ir.treeco.aftabe.packages.DownloadProgressListener;

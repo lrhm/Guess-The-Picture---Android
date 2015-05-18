@@ -1,4 +1,4 @@
-package ir.treeco.aftabe;
+package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 import ir.treeco.aftabe.utils.LengthManager;
 
