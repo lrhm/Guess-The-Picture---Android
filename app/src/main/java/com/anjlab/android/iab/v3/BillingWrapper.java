@@ -115,7 +115,13 @@ public class BillingWrapper {
     private void bindToServices() {
         if (isPreferred(Service.IRAN_APPS)) {
             Intent serviceIntent = new Intent(IranAppsIabService.class.getName());
-            context.bindService(serviceIntent, iranAppsServiceConn, Context.BIND_AUTO_CREATE);
+            // TODO Armin: sometimes want to bind service that is already binded!!!(double back on ehem loading)
+
+            try {
+                context.bindService(serviceIntent, iranAppsServiceConn, Context.BIND_AUTO_CREATE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (isPreferred(Service.CAFE_BAZAAR)) {

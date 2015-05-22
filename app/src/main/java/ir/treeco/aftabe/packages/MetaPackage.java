@@ -135,7 +135,7 @@ public class MetaPackage {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
+                try { // TODO Armin: Download
                     Utils.download(context, dataUrl, getName() + ".zip", listeners, MetaPackage.this);
                 } catch (IOException e) {
                     e.printStackTrace();
