@@ -38,11 +38,10 @@ import java.util.ArrayList;
 
 import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.CoinManager;
-import ir.treeco.aftabe.View.Fragment.PackageListFragment;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Fragment.PackageListFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.View.Toast.ToastMaker;
-import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.Encryption;
 import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.ImageManager;
@@ -93,7 +92,7 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
     }
 
     private void callSynchronizer() {
-        new Synchronizer().onReceive(getApplicationContext(), null);
+//        new Synchronizer().onReceive(getApplicationContext(), null);
     }
 
     private void setUpHeader() {

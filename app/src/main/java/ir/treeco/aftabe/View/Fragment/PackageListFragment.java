@@ -25,7 +25,6 @@ import ir.treeco.aftabe.RoundedCornerDrawable;
 import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.View.ListView.AutoCropListView;
 import ir.treeco.aftabe.packages.PackageManager;
-import ir.treeco.aftabe.synchronization.Synchronizer;
 import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
@@ -83,7 +82,7 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         Utils.resizeView(shade, LengthManager.getScreenWidth(), LengthManager.getTabBarShadeHeight());
 
         PackageManager pManager = new PackageManager(getActivity(), layout);
-        Synchronizer.setPackageManager(pManager);
+//        Synchronizer.setPackageManager(pManager);
         pManager.setActivity((IntroActivity) getActivity());
         try {
             pManager.refresh();
