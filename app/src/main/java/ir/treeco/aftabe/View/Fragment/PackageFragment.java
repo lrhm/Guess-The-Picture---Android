@@ -74,13 +74,17 @@ public class PackageFragment extends Fragment {
                             inputStreams[i] = null;
                         }
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                LoadingManager.endTask();
-                                viewPagerAdapter.notifyDataSetChanged();
-                            }
-                        });
+                        try {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    LoadingManager.endTask();
+                                    viewPagerAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).start();
 

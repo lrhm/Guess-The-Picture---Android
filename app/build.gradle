@@ -21,10 +21,9 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:22.1.1'
     compile 'com.google.guava:guava:18.0'
-    compile files('libs/acra-4.5.0.jar')
+    compile 'ch.acra:acra:4.5.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'org.yaml:snakeyaml:1.10'
     compile files('libs/adbaan.jar')
-    compile files('libs/nineoldandroids.jar')
-    compile files('libs/snakeyaml-1.10-android.jar')
-
     compile 'com.mani:thindownloadmanager:1.0.0'
 }

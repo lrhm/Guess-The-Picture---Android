@@ -5,7 +5,7 @@ import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
-
+/*
 @ReportsCrashes(
         formKey = "", // This is required for backward compatibility but not used
         formUri = "http://qoqnous-acra.herokuapp.com/reports",
@@ -20,12 +20,12 @@ import org.acra.annotation.ReportsCrashes;
         },
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.toast_crash
-)
+)*/
 public class MainApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        ACRA.init(this);
+        //ACRA.init(this);
     }
 }
