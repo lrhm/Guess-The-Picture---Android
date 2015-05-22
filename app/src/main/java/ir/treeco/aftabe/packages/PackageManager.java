@@ -12,6 +12,7 @@ import ir.treeco.aftabe.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class PackageManager {
@@ -29,7 +30,7 @@ public class PackageManager {
     private static final String KEY_COIN_COST = "CoinCost";
     private static final String KEY_SKU = "SKU";
 
-    private final SharedPreferences preferences;
+    private SharedPreferences preferences;
     IntroActivity activity;
     Context context;
 
@@ -53,6 +54,10 @@ public class PackageManager {
         this.frameLayout = frameLayout;
         //TODO uncomment below
 //        refresh();
+    }
+
+    public PackageManager(){
+
     }
 
     public void refresh() {
@@ -219,6 +224,13 @@ public class PackageManager {
             System.arraycopy(outPackages, 0, packages, inPackages.length, outPackages.length);
 
         generateAdapterResourceArrays();
+    }
+
+    public void parsingYml(InputStream ymlFile) {
+        List<HashMap<String, Object>> hashMaps = (List<HashMap<String, Object>>) new Yaml().load(ymlFile);
+        for (HashMap<String, Object> map : hashMaps) {
+            Log.d("armin", map.get("Name").toString());
+        }
     }
 
     public void generateAdapterResourceArrays() {

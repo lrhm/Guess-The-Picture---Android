@@ -30,9 +30,7 @@ public class Sync extends BroadcastReceiver {
         downloadManager = new ThinDownloadManager(DOWNLOAD_THREAD_POOL_SIZE);
 
         Uri downloadUri = Uri.parse("http://rsdn.ir/files/aftabe.yml");
-        downloader = new Downloader();
-
-
+        downloader = new Downloader(context);
 
         File appDir = context.getDir ("data", Context.MODE_PRIVATE);
         //Getting a file within the dir.
