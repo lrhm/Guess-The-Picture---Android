@@ -14,12 +14,15 @@
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:name=".MainApplication">
         <receiver android:process=":remote" android:name=".utils.UserStimulator"></receiver>
         <receiver android:process=":remote" android:name=".utils.NotificationBuilder"></receiver>
-        <receiver android:name="ir.treeco.aftabe.synchronization.Synchronizer" android:label="NetChangeReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name="ir.treeco.aftabe.synchronization.Synchronizer" android:label="NetChangeReceiver" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+                <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
+
+
         <activity android:name=".View.Activity.IntroActivity"
                   android:theme="@style/noAnimTheme"
                   android:label="@string/app_name"
