@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "ir.treeco.aftabe"
         minSdkVersion 7
-        targetSdkVersion 16
+        targetSdkVersion 22
     }
 
     buildTypes {
@@ -25,4 +25,6 @@ dependencies {
     compile files('libs/adbaan.jar')
     compile files('libs/nineoldandroids.jar')
     compile files('libs/snakeyaml-1.10-android.jar')
+
+    compile 'com.mani:thindownloadmanager:1.0.0'
 }
