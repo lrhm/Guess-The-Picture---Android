@@ -36,6 +36,14 @@ public class Sync extends BroadcastReceiver {
         //Getting a file within the dir.
         File downloadPath = new File (appDir, "data.yml");
 
+        // if file exists delete the file
+        if (downloadPath.exists()) {
+           boolean deleted =  downloadPath.delete();
+            if (deleted) {
+                Log.d("armin", "file is deleted");
+            }
+        }
+
         Log.e("bahdad" , "download path " + String.valueOf(downloadPath));
 
         final DownloadRequest downloadRequest = new DownloadRequest(downloadUri)

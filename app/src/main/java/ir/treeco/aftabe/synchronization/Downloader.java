@@ -32,6 +32,7 @@ public class Downloader implements DownloadStatusListener {
 
         packageManager = new PackageManager();
         try {
+            // this is the method that should take care of yml parsing
             packageManager.parsingYml(new FileInputStream(new File(context.getDir("data",Context.MODE_PRIVATE),"data.yml")));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
