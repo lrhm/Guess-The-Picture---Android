@@ -42,6 +42,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Fragment.PackageListFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.View.Toast.ToastMaker;
+import ir.treeco.aftabe.synchronization.Sync;
 import ir.treeco.aftabe.utils.Encryption;
 import ir.treeco.aftabe.utils.FontsHolder;
 import ir.treeco.aftabe.utils.ImageManager;
@@ -67,7 +68,7 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
 
 
         // Initialize Height Manager
-        LengthManager.initialize(IntroActivity.this);
+        LengthManager.initialize(this);
 
         // Load Layout
         setContentView(R.layout.activity_intro);
@@ -87,12 +88,12 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
         backupSharedPreferences();
 
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
-//
+
         callSynchronizer();
     }
 
     private void callSynchronizer() {
-//        new Synchronizer().onReceive(getApplicationContext(), null);
+        new Sync().onReceive(getApplicationContext(), null);
     }
 
     private void setUpHeader() {
@@ -133,9 +134,7 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
                 fileOutputStream.write(Encryption.encryptAES(jsonObject.toString(), this).getBytes());
                 fileOutputStream.flush();
                 fileOutputStream.close();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
         }
@@ -351,7 +350,7 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
         }));
     }
 
-    ArrayList<View> currentlyPushedViews = new ArrayList<View>();
+    ArrayList<View> currentlyPushedViews = new ArrayList<>();
 
     public void pushToViewStack(View view, boolean popOnBackPressed) {
         mainView.addView(view);

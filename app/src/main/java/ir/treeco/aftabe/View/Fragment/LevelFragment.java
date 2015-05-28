@@ -33,7 +33,6 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,11 +41,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import ir.treeco.aftabe.Adapter.MultimediaAdapter;
 import ir.treeco.aftabe.CheatDrawable;
 import ir.treeco.aftabe.CoinManager;
 import ir.treeco.aftabe.DialogDrawable;
 import ir.treeco.aftabe.LetterButtonDrawable;
-import ir.treeco.aftabe.Adapter.MultimediaAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.View.Toast.ToastMaker;
@@ -152,8 +151,6 @@ public class LevelFragment extends Fragment {
                                 InputStream is = resource.getMedia();
                                 Utils.pipe(is, os);
                                 os.close();
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -339,7 +336,7 @@ public class LevelFragment extends Fragment {
             throw new NotEnoughMoneyException();
 
         Random random = new Random();
-        ArrayList<Integer> positions = new ArrayList<Integer>();
+        ArrayList<Integer> positions = new ArrayList<>();
 
         for (int i = 0; i < solution.length; i++) {
             if (solution[i].equals(" ") || solution[i].equals("."))

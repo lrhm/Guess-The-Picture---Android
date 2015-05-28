@@ -128,11 +128,7 @@ public class PackageListFragment extends Fragment implements AbsListView.OnScrol
         try {
             Method setEnableExcessScroll = packages.getClass().getMethod("setEnableExcessScroll", Boolean.TYPE);
             setEnableExcessScroll.invoke(packages, false);
-        } catch (SecurityException ignored) {
-        } catch (NoSuchMethodException ignored) {
-        } catch (IllegalArgumentException ignored) {
-        } catch (IllegalAccessException ignored) {
-        } catch (InvocationTargetException ignored) {
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException | InvocationTargetException ignored) {
         }
 
         return layout;
