@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         app:stl_indicatorAlwaysInCenter="false"
-        app:stl_indicatorInFront="true"
+        app:stl_indicatorInFront="false"
         app:stl_indicatorInterpolation="smart"
         app:stl_indicatorColor="#44000000"
         app:stl_indicatorThickness="40dp"
