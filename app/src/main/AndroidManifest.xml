@@ -33,15 +33,22 @@
                   android:theme="@style/noAnimTheme"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".View.Activity.AdActivity"
+            android:label="Aftabe"
+            android:theme="@style/noAnimTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+
+        <activity android:name=".New.Activity.MainActivity"
+            android:label="Aftabe"
+            android:theme="@style/noAnimTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".View.Activity.AdActivity"
-                  android:label="Aftabe"
-                  android:theme="@style/noAnimTheme"
-                  android:screenOrientation="portrait">
         </activity>
     </application>
 </manifest>
