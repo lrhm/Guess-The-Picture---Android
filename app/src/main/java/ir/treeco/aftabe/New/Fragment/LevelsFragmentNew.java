@@ -9,24 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ir.treeco.aftabe.New.Adapter.PackageAdapter;
+import ir.treeco.aftabe.New.Adapter.LevelsAdapter;
 import ir.treeco.aftabe.R;
 
-public class PackageFragmentNew extends Fragment {
+public class LevelsFragmentNew extends Fragment {
     private RecyclerView recyclerView;
-    private PackageAdapter adapter;
+    private LevelsAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.new_fragment_package, container, false);
+        View view = inflater.inflate(R.layout.new_fragment_levels, container, false);
 
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.package_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.levels_recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        adapter = new PackageAdapter(getActivity());
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+
+        adapter = new LevelsAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
 

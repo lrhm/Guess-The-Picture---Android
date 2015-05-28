@@ -40,6 +40,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".New.Activity.LevelsActivityNew"
+            android:label="Aftabe"
+            android:theme="@style/noAnimTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
 
         <activity android:name=".New.Activity.MainActivity"
             android:label="Aftabe"
