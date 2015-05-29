@@ -1,4 +1,4 @@
-package ir.treeco.aftabe.New.Fragment;
+package ir.treeco.aftabe.New.View.Fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

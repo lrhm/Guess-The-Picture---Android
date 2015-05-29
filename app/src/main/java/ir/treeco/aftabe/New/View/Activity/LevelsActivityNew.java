@@ -1,5 +1,4 @@
-package ir.treeco.aftabe.New.Activity;
-
+package ir.treeco.aftabe.New.View.Activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,21 +8,25 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
-import ir.treeco.aftabe.New.Fragment.PackageFragmentNew;
+import ir.treeco.aftabe.New.View.Fragment.LevelsFragmentNew;
 import ir.treeco.aftabe.R;
 
-public class MainActivity extends FragmentActivity {
+public class LevelsActivityNew extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_main_activity);
+        setContentView(R.layout.new_activity_levels);
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add("تازه‌ها", PackageFragmentNew.class)
-                .add("دانلود شده‌ها", PackageFragmentNew.class)
-                .add("محبوب‌ترین‌ها", PackageFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
+                .add("", LevelsFragmentNew.class)
                 .create());
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

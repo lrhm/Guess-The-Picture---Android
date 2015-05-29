@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-import ir.treeco.aftabe.New.Activity.LevelsActivityNew;
+import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.R;
 
