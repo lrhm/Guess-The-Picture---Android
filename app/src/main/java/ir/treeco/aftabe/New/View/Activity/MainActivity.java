@@ -9,6 +9,10 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import java.io.File;
+
+import cn.aigestudio.downloader.bizs.DLManager;
+import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
 
@@ -31,5 +35,14 @@ public class MainActivity extends FragmentActivity {
 
         SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
+
+        DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(),
+                new DLTaskListener() {
+
+                    @Override
+                    public void onFinish(File file) {
+                        super.onFinish(file);
+                    }
+                });
     }
 }

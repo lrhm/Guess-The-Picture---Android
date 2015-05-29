@@ -25,11 +25,15 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'org.yaml:snakeyaml:1.10'
     compile files('libs/adbaan.jar')
+
+
     compile 'com.mani:thindownloadmanager:1.0.0'
     compile 'com.ogaclejapan.smarttablayout:library:1.1.3@aar'
     //Optional: see how to use the utility.
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.1.3@aar'
 
     compile 'com.android.support:recyclerview-v7:22.1.1'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'cn.aigestudio.downloader:Downloader:1.2.1'
 
 }

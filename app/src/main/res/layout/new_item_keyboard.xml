@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:padding="15dp"
+        android:layout_margin="15dp"
         android:id="@+id/itemkeboard"
         android:src="@drawable/digit_4"/>
 
