@@ -8,26 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
-
-import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
 import ir.treeco.aftabe.New.Object.PackageObject;
+import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
 import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder>{
-    private ArrayList<PackageObject> packageObjects;
+    private PackageObject[] packageObjects;
     Context context;
 
-    public PackageAdapter(Context context) {
+    public PackageAdapter(Context context, PackageObject[] packageObjects) {
         this.context = context;
-
-        packageObjects = new ArrayList<>();
-        for (int i = 0; i < 5 ; i ++) {
-            PackageObject packageObject = new PackageObject();
-            packageObject.setName("a" + i);
-            packageObjects.add(packageObject);
-        }
-
+        this.packageObjects = packageObjects;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -35,7 +26,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
-
             v.setOnClickListener(this);
         }
 
@@ -43,7 +33,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         public void onClick(View v) {
             Intent myIntent = new Intent(context, LevelsActivityNew.class);
             context.startActivity(myIntent);
-
         }
     }
 
@@ -51,18 +40,16 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public PackageAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.new_item_package, viewGroup, false);
         return new ViewHolder(v);
-
     }
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
-
-
     }
 
     @Override
     public int getItemCount() {
-        return packageObjects.size();
+        if (packageObjects==null)
+            return 0;
+        return packageObjects.length;
     }
-
 }
