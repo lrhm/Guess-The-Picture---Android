@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.New.Object.PackageObject;
+import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder>{
@@ -39,8 +41,8 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-//            Intent myIntent = new Intent(context, LevelsActivityNew.class);
-//            context.startActivity(myIntent);
+            Intent myIntent = new Intent(context, GameActivity.class);
+            context.startActivity(myIntent);
 
         }
     }

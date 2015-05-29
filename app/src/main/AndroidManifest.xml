@@ -46,6 +46,12 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".New.View.Activity.GameActivity"
+            android:label="Aftabe"
+            android:theme="@style/noAnimTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
 
         <activity android:name=".New.View.Activity.MainActivity"
             android:label="Aftabe"
