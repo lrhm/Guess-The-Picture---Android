@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
+import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
@@ -31,6 +32,7 @@ public class MainActivity extends FragmentActivity {
     private FragmentPagerItemAdapter fragmentPagerItemAdapter;
     private ViewPager viewPager;
     private HeadObject headObject;
+    NotificationAdapter notificationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,24 +109,36 @@ public class MainActivity extends FragmentActivity {
         this.headObject = headObject;
     }
 
-    public void downloadPackage(String url, String path){
+    public void downloadPackage(String url, String path, final int id, final String name){
+
+        notificationAdapter = new NotificationAdapter(id, this, name);
         DLManager.getInstance(this).dlStart(url, path, new DLTaskListener() {
+                    int n = 0;
                     @Override
                     public void onProgress(int progress) {
                         super.onProgress(progress);
-                        Log.e("don", "progress" + progress);
+
+                        n++;
+                        if (n == 10) {
+                            notificationAdapter.notifyDownload(progress, id, name);
+                            n = 0;
+
+                            Log.e("don", "progress" + progress);
+                        }
                     }
 
                     @Override
                     public void onError(String error) {
                         super.onError(error);
+                        notificationAdapter.faildDownload(id, name);
 
                         Log.e("don", "error");
                     }
 
                     @Override
                     public void onFinish(File file) {
-                        super.onFinish(file);
+                        super.onFinish(file); //todo chack md5 & save in json file
+                        notificationAdapter.finalDownload(id, name);
                         Log.e("don", "finish "+file.getPath());
                     }
                 }

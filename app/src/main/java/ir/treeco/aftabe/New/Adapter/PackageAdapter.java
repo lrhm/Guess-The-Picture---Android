@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 import ir.treeco.aftabe.New.Object.PackageObject;
+import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
@@ -38,38 +42,21 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
-            mainActivity.downloadPackage(packageObjects[getAdapterPosition()].getUrl(), context.getFilesDir().getPath());
-            /*
+
             File file = new File(context.getFilesDir().getPath() + "/" + packageObjects[getAdapterPosition()].getId() + ".zip");
+            //todo chack md5
 
             if (!file.exists()) {
-                DLManager.getInstance(context).dlStart(packageObjects[getAdapterPosition()].getUrl(), context.getFilesDir().getPath(),
-                        new DLTaskListener() {
-
-                            @Override
-                            public void onProgress(int progress) {
-                                super.onProgress(progress);
-                            }
-
-                            @Override
-                            public void onError(String error) {
-                                super.onError(error);
-                            }
-
-                            @Override
-                            public void onFinish(File file) {
-                                super.onFinish(file);
-                                Log.e("don", file.getPath());
-                            }
-                        }
-                );
-
+                mainActivity.downloadPackage(
+                        packageObjects[getAdapterPosition()].getUrl(),
+                        context.getFilesDir().getPath(),
+                        packageObjects[getAdapterPosition()].getId(),
+                        packageObjects[getAdapterPosition()].getName());
             } else {
                 Intent myIntent = new Intent(context, LevelsActivityNew.class);
                 context.startActivity(myIntent);
 
             }
-            */
         }
     }
 
