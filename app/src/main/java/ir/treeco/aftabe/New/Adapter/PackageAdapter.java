@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +12,18 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.New.Object.PackageObject;
-import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
+import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder>{
     private PackageObject[] packageObjects;
     Context context;
+    private MainActivity mainActivity;
 
-    public PackageAdapter(Context context, PackageObject[] packageObjects) {
+    public PackageAdapter(Context context, PackageObject[] packageObjects, MainActivity mainActivity) {
         this.context = context;
         this.packageObjects = packageObjects;
+        this.mainActivity = mainActivity;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -37,8 +38,38 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         @Override
         public void onClick(View v) {
-            Intent myIntent = new Intent(context, LevelsActivityNew.class);
-            context.startActivity(myIntent);
+            mainActivity.downloadPackage(packageObjects[getAdapterPosition()].getUrl(), context.getFilesDir().getPath());
+            /*
+            File file = new File(context.getFilesDir().getPath() + "/" + packageObjects[getAdapterPosition()].getId() + ".zip");
+
+            if (!file.exists()) {
+                DLManager.getInstance(context).dlStart(packageObjects[getAdapterPosition()].getUrl(), context.getFilesDir().getPath(),
+                        new DLTaskListener() {
+
+                            @Override
+                            public void onProgress(int progress) {
+                                super.onProgress(progress);
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                super.onError(error);
+                            }
+
+                            @Override
+                            public void onFinish(File file) {
+                                super.onFinish(file);
+                                Log.e("don", file.getPath());
+                            }
+                        }
+                );
+
+            } else {
+                Intent myIntent = new Intent(context, LevelsActivityNew.class);
+                context.startActivity(myIntent);
+
+            }
+            */
         }
     }
 
@@ -51,7 +82,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
         viewHolder.textView.setText(packageObjects[i].getName());
-        String a = "file://" +context.getFilesDir().getPath() + "/" + packageObjects[i].getId() + ".png";
+        String a = "file://" + context.getFilesDir().getPath() + "/" + packageObjects[i].getId() + ".png";
         Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
     }

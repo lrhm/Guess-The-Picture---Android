@@ -106,4 +106,28 @@ public class MainActivity extends FragmentActivity {
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
+
+    public void downloadPackage(String url, String path){
+        DLManager.getInstance(this).dlStart(url, path, new DLTaskListener() {
+                    @Override
+                    public void onProgress(int progress) {
+                        super.onProgress(progress);
+                        Log.e("don", "progress" + progress);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        super.onError(error);
+
+                        Log.e("don", "error");
+                    }
+
+                    @Override
+                    public void onFinish(File file) {
+                        super.onFinish(file);
+                        Log.e("don", "finish "+file.getPath());
+                    }
+                }
+        );
+    }
 }
