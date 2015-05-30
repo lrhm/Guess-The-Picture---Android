@@ -3,6 +3,7 @@ package ir.treeco.aftabe.New.Object;
 public class HeadObject {
     private PackageObject[] saller;
     private PackageObject[] news;
+    private PackageObject[] downloadtask;
 
     public PackageObject[] getSaller ()
     {
@@ -24,6 +25,13 @@ public class HeadObject {
         this.news = news;
     }
 
+    public PackageObject[] getDownloadtask() {
+        return downloadtask;
+    }
+
+    public void setDownloadtask(PackageObject[] downloadtask) {
+        this.downloadtask = downloadtask;
+    }
 }
 
 

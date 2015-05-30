@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.New.View.Activity;
 
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -31,7 +30,7 @@ public class MainActivity extends FragmentActivity {
     public final static String FRAGMENT_TYPE = "fragment_type";
     private FragmentPagerItemAdapter fragmentPagerItemAdapter;
     private ViewPager viewPager;
-    public HeadObject headObject;
+    private HeadObject headObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +38,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.new_activity_main);
 
         headObject = new HeadObject();
+        parseJson();
 
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
@@ -62,10 +62,10 @@ public class MainActivity extends FragmentActivity {
                     public void onFinish(File file) {
                         super.onFinish(file);
                         parseJson();
+                        downloadTask();
                     }
                 });
     }
-
 
     public void parseJson() {
         try {
@@ -78,6 +78,25 @@ public class MainActivity extends FragmentActivity {
 
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void downloadTask() {
+        for (int i = 0; i < headObject.getDownloadtask().length; i++) {
+            File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask()[i].getName());
+            if (!file.exists()) {
+
+                DLManager.getInstance(this).dlStart(headObject.getDownloadtask()[i].getUrl(), this.getFilesDir().getPath(),
+                        new DLTaskListener() {
+
+                            @Override
+                            public void onFinish(File file) {
+                                super.onFinish(file);
+                                Log.e("don", file.getPath());
+                            }
+                        }
+                );
+            }
         }
     }
 
