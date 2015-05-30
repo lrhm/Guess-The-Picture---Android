@@ -85,7 +85,6 @@ public class MainActivity extends FragmentActivity {
         for (int i = 0; i < headObject.getDownloadtask().length; i++) {
             File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask()[i].getName());
             if (!file.exists()) {
-
                 DLManager.getInstance(this).dlStart(headObject.getDownloadtask()[i].getUrl(), this.getFilesDir().getPath(),
                         new DLTaskListener() {
 
