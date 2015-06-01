@@ -119,7 +119,7 @@ public class MainActivity extends FragmentActivity {
                         super.onProgress(progress);
 
                         n++;
-                        if (n == 10) {
+                        if (n == 30) {
                             notificationAdapter.notifyDownload(progress, id, name);
                             n = 0;
 
