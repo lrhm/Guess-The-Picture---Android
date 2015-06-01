@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.New.View.Activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
+import ir.treeco.aftabe.New.Util.Zip;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
 
@@ -33,11 +35,14 @@ public class MainActivity extends FragmentActivity {
     private ViewPager viewPager;
     private HeadObject headObject;
     NotificationAdapter notificationAdapter;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
+
+        context = this;
 
         headObject = new HeadObject();
         parseJson();
@@ -50,7 +55,6 @@ public class MainActivity extends FragmentActivity {
                 .create()
         );
 
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 
@@ -59,14 +63,14 @@ public class MainActivity extends FragmentActivity {
 
         DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(),
                 new DLTaskListener() {
-
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file);
                         parseJson();
                         downloadTask();
                     }
-                });
+                }
+        );
     }
 
     public void parseJson() {
@@ -139,7 +143,9 @@ public class MainActivity extends FragmentActivity {
                     public void onFinish(File file) {
                         super.onFinish(file); //todo chack md5 & save in json file
                         notificationAdapter.finalDownload(id, name);
-                        Log.e("don", "finish "+file.getPath());
+                        Log.e("don", "finish " + file.getPath());
+                        Zip zip = new Zip();
+                        zip.unpackZip(file.getPath(), id, context);
                     }
                 }
         );

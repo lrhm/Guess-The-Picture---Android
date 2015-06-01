@@ -6,18 +6,31 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.support.v4.view.PagerAdapter;
 import android.util.TypedValue;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Fragment.LevelFragment;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
 import ir.treeco.aftabe.mutlimedia.Multimedia;
 import ir.treeco.aftabe.packages.Level;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.View.Toast.ToastMaker;
-
-import java.io.*;
 
 /**
  * Created by hamed on 10/8/14.
@@ -102,8 +115,6 @@ public class MultimediaAdapter extends PagerAdapter {
                         mediaPlayer = new MediaPlayer();
                         mediaPlayer.setDataSource(fileDescriptor);
                         mediaPlayer.prepare();
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
