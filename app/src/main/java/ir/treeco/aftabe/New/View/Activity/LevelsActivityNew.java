@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
@@ -26,6 +27,7 @@ import ir.treeco.aftabe.R;
 public class LevelsActivityNew extends FragmentActivity {
     int packageId;
     PackageObject packageObject;
+    public final static String LEVEL_PAGE = "level_page";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +37,15 @@ public class LevelsActivityNew extends FragmentActivity {
         setContentView(R.layout.new_activity_levels);
 
         parseJson();
-        int levelsSize = packageObject.getLevels().length;
 
-        int pagesize = levelsSize / 16;
+        int pagesize = packageObject.getLevels().length / 16;
         if ((pagesize % 16) != 0) {
             pagesize ++;
         }
 
         FragmentPagerItems.Creator fragmentPagerItemsCreator = FragmentPagerItems.with(this);
         for (int i = 0; i < pagesize; i++) {
-            fragmentPagerItemsCreator.add("", LevelsFragmentNew.class);
+            fragmentPagerItemsCreator.add("", LevelsFragmentNew.class, new Bundler().putInt(LEVEL_PAGE, i).get());
         }
 
         FragmentPagerItems fragmentPagerItems = fragmentPagerItemsCreator.create();
@@ -70,5 +71,11 @@ public class LevelsActivityNew extends FragmentActivity {
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    public PackageObject getPackageObject() {
+        return packageObject;
     }
 }

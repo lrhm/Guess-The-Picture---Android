@@ -11,4 +11,16 @@
         android:id="@+id/itemLevel"
         android:src="@drawable/digit_4"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemLevelText"
+        android:textSize="20px"
+        android:layout_alignTop="@id/itemLevel"
+        android:layout_alignRight="@id/itemLevel"
+        android:layout_alignEnd="@id/itemLevel"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp" />
+
 </RelativeLayout>

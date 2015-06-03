@@ -3,38 +3,39 @@ package ir.treeco.aftabe.New.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
-public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder>{
-    private ArrayList<PackageObject> packageObjects;
+public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
     Context context;
+    PackageObject packageObjects;
+    int page;
 
-    public LevelsAdapter(Context context) {
+    public LevelsAdapter(Context context, PackageObject packageObjects, int page) {
         this.context = context;
-
-        packageObjects = new ArrayList<>();
-        for (int i = 0; i < 16 ; i ++) {
-            PackageObject packageObject = new PackageObject();
-            packageObject.setName("a" + i);
-            packageObjects.add(packageObject);
-        }
-
+        this.packageObjects = packageObjects;
+        this.page = page;
+        Log.e("page " + page, " : " + packageObjects.getLevels().length );
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
+        TextView textView;
+
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemLevel);
+            textView = (TextView) itemView.findViewById(R.id.itemLevelText);
 
             v.setOnClickListener(this);
         }
@@ -56,13 +57,20 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
+        viewHolder.textView.setText("" + packageObjects.getLevels()[i].getJavab());
+        String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                + packageObjects.getId()
+                + "_" + packageObjects.getLevels()[i].getResources();
 
-
+        Log.e("tes", a);
+        Picasso.with(context).load(a).into(viewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return packageObjects.size();
+        if ( ( (packageObjects.getLevels().length - (page * 16) ) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
+            return 16;
+        } else
+            return (packageObjects.getLevels().length - (page * 16) ) % 16;
     }
-
 }
