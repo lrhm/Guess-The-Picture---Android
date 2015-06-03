@@ -38,7 +38,7 @@ public class LevelsActivityNew extends FragmentActivity {
 
         parseJson();
 
-        int pagesize = packageObject.getLevels().length / 16;
+        int pagesize = packageObject.getLevels().size() / 16;
         if ((pagesize % 16) != 0) {
             pagesize ++;
         }

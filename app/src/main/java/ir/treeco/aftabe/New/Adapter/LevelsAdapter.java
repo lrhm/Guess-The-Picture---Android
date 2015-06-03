@@ -25,7 +25,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         this.context = context;
         this.packageObjects = packageObjects;
         this.page = page;
-        Log.e("page " + page, " : " + packageObjects.getLevels().length );
+        Log.e("page " + page, " : " + packageObjects.getLevels().size() );
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -57,11 +57,11 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
-        if (packageObjects.getLevels()[i].isResolved()) {
-            viewHolder.textView.setText("" + packageObjects.getLevels()[i].getJavab());
+        if (packageObjects.getLevels().get(i).isResolved()) {
+            viewHolder.textView.setText("" + packageObjects.getLevels().get(i).getJavab());
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + packageObjects.getId()
-                    + "_" + packageObjects.getLevels()[i].getResources();
+                    + "_" + packageObjects.getLevels().get(i).getResources();
             Log.e("tes", a);
             Picasso.with(context).load(a).into(viewHolder.imageView);
         } else Picasso.with(context).load(R.drawable.level_locked).into(viewHolder.imageView);
@@ -69,9 +69,9 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        if ( ( (packageObjects.getLevels().length - (page * 16) ) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
+        if ( ( (packageObjects.getLevels().size() - (page * 16) ) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
             return 16;
         } else
-            return (packageObjects.getLevels().length - (page * 16) ) % 16;
+            return (packageObjects.getLevels().size() - (page * 16) ) % 16;
     }
 }

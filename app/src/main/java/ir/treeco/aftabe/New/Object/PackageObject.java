@@ -1,9 +1,11 @@
 package ir.treeco.aftabe.New.Object;
 
+import java.util.ArrayList;
+
 public class PackageObject {
     private String name;
     private int id;
-    private Level[] levels;
+    private ArrayList<Level> levels;
     private String url;
 
     public String getName ()
@@ -34,11 +36,11 @@ public class PackageObject {
         this.url = url;
     }
 
-    public Level[] getLevels() {
+    public ArrayList<Level> getLevels() {
         return levels;
     }
 
-    public void setLevels(Level[] levels) {
+    public void setLevels(ArrayList<Level> levels) {
         this.levels = levels;
     }
 }

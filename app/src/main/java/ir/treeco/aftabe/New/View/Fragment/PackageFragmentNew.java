@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import ir.treeco.aftabe.New.Adapter.PackageAdapter;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
@@ -18,7 +20,7 @@ public class PackageFragmentNew extends Fragment {
     private RecyclerView recyclerView;
     private PackageAdapter adapter;
     int type;
-    PackageObject[] packageObjects;
+    ArrayList<PackageObject> packageObjects;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

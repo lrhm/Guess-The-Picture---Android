@@ -16,15 +16,19 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
+import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.Zip;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
@@ -88,10 +92,10 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void downloadTask() {
-        for (int i = 0; i < headObject.getDownloadtask().length; i++) {
-            File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask()[i].getName());
+        for (int i = 0; i < headObject.getDownloadtask().size(); i++) {
+            File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask().get(i).getName());
             if (!file.exists()) {
-                DLManager.getInstance(this).dlStart(headObject.getDownloadtask()[i].getUrl(), this.getFilesDir().getPath(),
+                DLManager.getInstance(this).dlStart(headObject.getDownloadtask().get(i).getUrl(), this.getFilesDir().getPath(),
                         new DLTaskListener() {
 
                             @Override
@@ -146,8 +150,88 @@ public class MainActivity extends FragmentActivity {
                         Log.e("don", "finish " + file.getPath());
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, context);
+                        saveToDownloads(id);
                     }
                 }
         );
+    }
+
+    public void saveToDownloads(int id) {
+        PackageObject packageObject = null;
+        try {
+            String a = this.getFilesDir().getPath() + "/Downloaded/" + id + "_level_list.json";
+            Log.e("path", a);
+            InputStream inputStream = new FileInputStream(a);
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            Gson gson = new GsonBuilder().create();
+             packageObject = gson.fromJson(reader, PackageObject.class);
+
+
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        HeadObject downlodedObject = null;
+
+
+        try {
+
+
+            String downloadedPAth = this.getFilesDir().getPath() + "/downloaded.json";
+            Log.e("downloadedPAth", downloadedPAth);
+
+            File file = new File(downloadedPAth);
+            if(file.exists()) {
+                InputStream downloadedPAthinputStream = new FileInputStream(downloadedPAth);
+                Reader readerd = new InputStreamReader(downloadedPAthinputStream, "UTF-8");
+                Gson gsond = new GsonBuilder().create();
+                downlodedObject = gsond.fromJson(readerd, HeadObject.class);
+
+                boolean deleted = file.delete();
+            }
+
+        } catch ( Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (downlodedObject.getDownloaded()==null){
+            ArrayList<PackageObject> a = new ArrayList<>();
+            downlodedObject.setDownloaded(a);
+        }
+
+        downlodedObject.getDownloaded().add(packageObject);
+
+
+
+
+            String aa = this.getFilesDir().getPath() + "/downloaded.json";
+            Log.e("path", aa);
+
+
+        Gson gson = new Gson();
+
+        // convert java object to JSON format,
+        // and returned as JSON formatted string
+        String json = gson.toJson(downlodedObject);
+
+        try {
+            //write converted json data to a file named "file.json"
+            FileWriter writer = new FileWriter(aa);
+            writer.write(json);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+//            InputStream inputStream = new FileInputStream(a);
+//            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+//            Gson gson = new GsonBuilder().create();
+//            headObject = gson.fromJson(reader, HeadObject.class);
+
+
+
     }
 }
