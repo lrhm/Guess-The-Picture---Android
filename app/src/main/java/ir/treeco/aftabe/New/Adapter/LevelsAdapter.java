@@ -57,13 +57,14 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.textView.setText("" + packageObjects.getLevels()[i].getJavab());
-        String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                + packageObjects.getId()
-                + "_" + packageObjects.getLevels()[i].getResources();
-
-        Log.e("tes", a);
-        Picasso.with(context).load(a).into(viewHolder.imageView);
+        if (packageObjects.getLevels()[i].isResolved()) {
+            viewHolder.textView.setText("" + packageObjects.getLevels()[i].getJavab());
+            String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                    + packageObjects.getId()
+                    + "_" + packageObjects.getLevels()[i].getResources();
+            Log.e("tes", a);
+            Picasso.with(context).load(a).into(viewHolder.imageView);
+        } else Picasso.with(context).load(R.drawable.level_locked).into(viewHolder.imageView);
     }
 
     @Override

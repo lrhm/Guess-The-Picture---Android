@@ -7,7 +7,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:src="@drawable/digit_5"
         android:id="@+id/image_game"
         android:scaleType="fitXY"/>
 

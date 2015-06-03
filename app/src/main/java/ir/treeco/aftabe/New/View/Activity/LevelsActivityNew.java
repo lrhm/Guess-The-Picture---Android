@@ -73,8 +73,6 @@ public class LevelsActivityNew extends FragmentActivity {
         }
     }
 
-
-
     public PackageObject getPackageObject() {
         return packageObject;
     }

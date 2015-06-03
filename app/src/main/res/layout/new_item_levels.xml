@@ -8,8 +8,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:padding="10dp"
-        android:id="@+id/itemLevel"
-        android:src="@drawable/digit_4"/>
+        android:id="@+id/itemLevel"/>
 
     <TextView
         android:layout_width="wrap_content"

@@ -9,7 +9,6 @@
         android:layout_height="200dp"
         android:padding="10dp"
         android:id="@+id/itemPackage"
-        android:src="@drawable/digit_5"
         android:scaleType="fitXY"/>
 
     <TextView
