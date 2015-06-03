@@ -53,9 +53,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                         packageObjects[getAdapterPosition()].getId(),
                         packageObjects[getAdapterPosition()].getName());
             } else {
-                Intent myIntent = new Intent(context, LevelsActivityNew.class);
-                context.startActivity(myIntent);
-
+                Intent intent = new Intent(context, LevelsActivityNew.class);
+                intent.putExtra("id", packageObjects[getAdapterPosition()].getId());
+                context.startActivity(intent);
             }
         }
     }

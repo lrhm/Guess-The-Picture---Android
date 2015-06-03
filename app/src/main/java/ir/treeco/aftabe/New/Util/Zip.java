@@ -12,9 +12,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- * Created by behdad on 6/1/15.
- */
 public class Zip {
     public Zip() {
     }
