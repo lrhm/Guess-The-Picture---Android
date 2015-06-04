@@ -61,7 +61,7 @@ public class LevelsActivityNew extends FragmentActivity {
 
     public void parseJson() {
         try {
-            String a = this.getFilesDir().getPath() + "/Downloaded/" + packageId + "_level_list.json";
+            String a = this.getFilesDir().getPath() + "_level_list.json";
             Log.e("path", a);
             InputStream inputStream = new FileInputStream(a);
             Reader reader = new InputStreamReader(inputStream, "UTF-8");

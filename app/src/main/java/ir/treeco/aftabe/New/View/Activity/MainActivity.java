@@ -193,6 +193,9 @@ public class MainActivity extends FragmentActivity {
             e.printStackTrace();
         }
 
+        if (downlodedObject==null){
+            downlodedObject = new HeadObject();
+        }
 
         if (downlodedObject.getDownloaded()==null){
             ArrayList<PackageObject> a = new ArrayList<>();
