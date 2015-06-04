@@ -12,20 +12,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Activity.GameActivity;
+import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
     Context context;
-    PackageObject packageObjects;
     int page;
+    int packageNumber;
 
-    public LevelsAdapter(Context context, PackageObject packageObjects, int page) {
+    public LevelsAdapter(Context context, int packageNumber, int page) {
         this.context = context;
-        this.packageObjects = packageObjects;
         this.page = page;
-        Log.e("page " + page, " : " + packageObjects.getLevels().size() );
+        this.packageNumber = packageNumber;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -57,11 +56,11 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
-        if (packageObjects.getLevels().get(i).isResolved()) {
-            viewHolder.textView.setText("" + packageObjects.getLevels().get(i).getJavab());
+        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).isResolved()) {
+            viewHolder.textView.setText("" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getJavab());
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + packageObjects.getId()
-                    + "_" + packageObjects.getLevels().get(i).getResources();
+                    + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
+                    + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getResources();
             Log.e("tes", a);
             Picasso.with(context).load(a).into(viewHolder.imageView);
         } else Picasso.with(context).load(R.drawable.level_locked).into(viewHolder.imageView);
@@ -69,9 +68,9 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        if ( ( (packageObjects.getLevels().size() - (page * 16) ) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
+        if ( ( (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() - (page * 16) ) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
             return 16;
         } else
-            return (packageObjects.getLevels().size() - (page * 16) ) % 16;
+            return (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() - (page * 16) ) % 16;
     }
 }

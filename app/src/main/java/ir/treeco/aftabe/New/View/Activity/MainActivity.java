@@ -40,6 +40,7 @@ public class MainActivity extends FragmentActivity {
     private HeadObject headObject;
     NotificationAdapter notificationAdapter;
     Context context;
+    public static HeadObject downlodedObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.new_activity_main);
 
         context = this;
-
+        loadDownloadedObject();
         headObject = new HeadObject();
         parseJson();
 
@@ -172,8 +173,34 @@ public class MainActivity extends FragmentActivity {
             e.printStackTrace();
         }
 
-        HeadObject downlodedObject = null;
+        if (downlodedObject==null){
+            downlodedObject = new HeadObject();
+        }
 
+        if (downlodedObject.getDownloaded()==null){
+            ArrayList<PackageObject> a = new ArrayList<>();
+            downlodedObject.setDownloaded(a);
+        }
+
+        downlodedObject.getDownloaded().add(packageObject);
+        String aa = this.getFilesDir().getPath() + "/downloaded.json";
+
+        Gson gson = new Gson();
+        // convert java object to JSON format,
+        // and returned as JSON formatted string
+        String json = gson.toJson(downlodedObject);
+        try {
+            //write converted json data to a file named "file.json"
+            FileWriter writer = new FileWriter(aa);
+            writer.write(json);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadDownloadedObject() {
         try {
             String downloadedPAth = this.getFilesDir().getPath() + "/downloaded.json";
             Log.e("downloadedPAth", downloadedPAth);
@@ -185,23 +212,15 @@ public class MainActivity extends FragmentActivity {
                 Gson gsond = new GsonBuilder().create();
                 downlodedObject = gsond.fromJson(readerd, HeadObject.class);
 
-                file.delete();
+//                file.delete();
             }
 
         } catch ( Exception e) {
             e.printStackTrace();
         }
+    }
 
-        if (downlodedObject==null){
-            downlodedObject = new HeadObject();
-        }
-
-        if (downlodedObject.getDownloaded()==null){
-            ArrayList<PackageObject> a = new ArrayList<>();
-            downlodedObject.setDownloaded(a);
-        }
-
-        downlodedObject.getDownloaded().add(packageObject);
+    public void saveData(){
         String aa = this.getFilesDir().getPath() + "/downloaded.json";
 
         Gson gson = new Gson();
