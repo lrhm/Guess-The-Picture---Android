@@ -14,12 +14,11 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
+import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Fragment.LevelsFragmentNew;
 import ir.treeco.aftabe.R;
@@ -61,17 +60,27 @@ public class LevelsActivityNew extends FragmentActivity {
 
     public void parseJson() {
         try {
-            String a = this.getFilesDir().getPath() + "_level_list.json";
-            Log.e("path", a);
-            InputStream inputStream = new FileInputStream(a);
-            Reader reader = new InputStreamReader(inputStream, "UTF-8");
-            Gson gson = new GsonBuilder().create();
-            packageObject = gson.fromJson(reader, PackageObject.class);
+            String downloadedPAth = this.getFilesDir().getPath() + "/downloaded.json";
+            Log.e("downloadedPAth", downloadedPAth);
 
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            InputStream downloadedPAthinputStream = new FileInputStream(downloadedPAth);
+            Reader readerd = new InputStreamReader(downloadedPAthinputStream, "UTF-8");
+            Gson gsond = new GsonBuilder().create();
+            HeadObject downlodedObject = gsond.fromJson(readerd, HeadObject.class);
+
+            for (int i = 0; downlodedObject.getDownloaded().size() > i; i++) {
+                if (downlodedObject.getDownloaded().get(i).getId() == packageId) {
+                    packageObject = downlodedObject.getDownloaded().get(i);
+                    break;
+                }
+            }
+
+        } catch ( Exception e) {
             e.printStackTrace();
         }
     }
+
+
 
     public PackageObject getPackageObject() {
         return packageObject;
