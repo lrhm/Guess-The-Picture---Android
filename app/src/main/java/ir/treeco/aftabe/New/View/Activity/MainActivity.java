@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity {
     private FragmentPagerItemAdapter fragmentPagerItemAdapter;
     private ViewPager viewPager;
     private HeadObject headObject;
-    NotificationAdapter notificationAdapter;
+    //NotificationAdapter notificationAdapter;
     Context context;
     SharedPreferences preferences;
     public static HeadObject downlodedObject;
@@ -71,10 +71,6 @@ public class MainActivity extends FragmentActivity {
         // Initialize Height Manager
         LengthManager.initialize(this);
 
-        // setup header
-        setUpHeader();
-        // setup coins
-        setUpCoinBox();
         // set main activity background
         setOriginalBackgroundColor();
 
@@ -155,7 +151,7 @@ public class MainActivity extends FragmentActivity {
 
     public void downloadPackage(String url, String path, final int id, final String name){
 
-        notificationAdapter = new NotificationAdapter(id, this, name);
+        //notificationAdapter = new NotificationAdapter(id, this, name);
         DLManager.getInstance(this).dlStart(url, path, new DLTaskListener() {
                     int n = 0;
                     @Override
@@ -164,7 +160,7 @@ public class MainActivity extends FragmentActivity {
 
                         n++;
                         if (n == 30) {
-                            notificationAdapter.notifyDownload(progress, id, name);
+                            //notificationAdapter.notifyDownload(progress, id, name);
                             n = 0;
 
                             Log.e("don", "progress" + progress);
@@ -174,7 +170,7 @@ public class MainActivity extends FragmentActivity {
                     @Override
                     public void onError(String error) {
                         super.onError(error);
-                        notificationAdapter.faildDownload(id, name);
+                        //notificationAdapter.faildDownload(id, name);
 
                         Log.e("don", "error");
                     }
@@ -182,7 +178,7 @@ public class MainActivity extends FragmentActivity {
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file); //todo chack md5 & save in json file
-                        notificationAdapter.finalDownload(id, name);
+                        //notificationAdapter.finalDownload(id, name);
                         Log.e("don", "finish " + file.getPath());
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, context);
@@ -281,91 +277,6 @@ public class MainActivity extends FragmentActivity {
                 Color.parseColor("#F3C01E"),
                 Color.parseColor("#F49C14")
         }));
-    }
-    //endregion
-
-    //region SetUpCoinBox
-    private void setUpCoinBox() {
-        ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
-        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
-        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
-        coinBox.setImageBitmap(ImageManager.loadImageFromResource(MainActivity.this, R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
-
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
-        layoutParams.topMargin = LengthManager.getScreenWidth() / 15;
-        layoutParams.leftMargin = LengthManager.getScreenWidth() / 50;
-
-        LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
-        RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-        digitsLayoutParams.topMargin = LengthManager.getScreenWidth() * 40 / 360;
-        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
-        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
-
-        coinBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (StoreFragment.getIsUsed())
-                    return;
-
-                LoadingManager.startTask(new TaskStartedListener() {
-                    @Override
-                    public void taskStarted() {
-                        StoreFragment fragment = StoreFragment.getInstance();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
-                });
-            }
-        });
-
-
-        CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
-            @Override
-            public void changed(int newAmount) {
-                LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
-                digits.removeAllViews();
-
-                String number = "" + CoinManager.getCoinsCount(preferences);
-
-                int[] digitResource = new int[]{
-                        R.drawable.digit_0,
-                        R.drawable.digit_1,
-                        R.drawable.digit_2,
-                        R.drawable.digit_3,
-                        R.drawable.digit_4,
-                        R.drawable.digit_5,
-                        R.drawable.digit_6,
-                        R.drawable.digit_7,
-                        R.drawable.digit_8,
-                        R.drawable.digit_9,
-                };
-
-                digits.addView(Utils.makeNewSpace(MainActivity.this));
-                for (int i = 0; i < number.length(); i++) {
-                    int d = number.charAt(i) - '0';
-                    ImageView digit = new ImageView(MainActivity.this);
-                    int digitHeight = LengthManager.getScreenWidth() / 21;
-                    digit.setImageBitmap(ImageManager.loadImageFromResource(MainActivity.this, digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
-                    digits.addView(digit);
-                }
-                digits.addView(Utils.makeNewSpace(MainActivity.this));
-            }
-        }, preferences);
-
-    }
-    //endregion
-
-    //region SetUpHeader
-    private void setUpHeader() {
-        RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
-        header.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
-
-        ImageView logo = (ImageView) findViewById(R.id.logo);
-        logo.setImageBitmap(ImageManager.loadImageFromResource(MainActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
-
     }
     //endregion
 }
