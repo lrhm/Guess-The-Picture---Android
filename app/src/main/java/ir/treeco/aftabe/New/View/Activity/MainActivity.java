@@ -1,10 +1,18 @@
 package ir.treeco.aftabe.New.View.Activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,12 +34,20 @@ import java.util.ArrayList;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
+import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.CoinManager;
 import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.Zip;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Fragment.StoreFragment;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.LoadingManager;
+import ir.treeco.aftabe.utils.TaskStartedListener;
+import ir.treeco.aftabe.utils.Utils;
 
 public class MainActivity extends FragmentActivity {
     public final static String FRAGMENT_TYPE = "fragment_type";
@@ -40,17 +56,32 @@ public class MainActivity extends FragmentActivity {
     private HeadObject headObject;
     NotificationAdapter notificationAdapter;
     Context context;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
 
+
+        preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+
+        // Initialize Height Manager
+        LengthManager.initialize(this);
+
+        // setup header
+        setUpHeader();
+        // setup coins
+        setUpCoinBox();
+        // set main activity background
+        setOriginalBackgroundColor();
+
         context = this;
 
         headObject = new HeadObject();
         parseJson();
 
+        //region Setup fragments in ViewPager
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
                 .add("تازه‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
@@ -64,7 +95,9 @@ public class MainActivity extends FragmentActivity {
 
         SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
+        //endregion
 
+        //region Downloads
         DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(),
                 new DLTaskListener() {
                     @Override
@@ -75,6 +108,7 @@ public class MainActivity extends FragmentActivity {
                     }
                 }
         );
+        //endregion
     }
 
     public void parseJson() {
@@ -234,4 +268,100 @@ public class MainActivity extends FragmentActivity {
 
 
     }
+
+    //region SetBackGroundDrawable
+    private void setOriginalBackgroundColor() {
+        ImageView background = (ImageView) findViewById(R.id.background);
+        background.setImageDrawable(new BackgroundDrawable(this, new int[]{
+                Color.parseColor("#F3C81D"),
+                Color.parseColor("#F3C01E"),
+                Color.parseColor("#F49C14")
+        }));
+    }
+    //endregion
+
+    //region SetUpCoinBox
+    private void setUpCoinBox() {
+        ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
+        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
+        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
+        coinBox.setImageBitmap(ImageManager.loadImageFromResource(MainActivity.this, R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
+        layoutParams.topMargin = LengthManager.getScreenWidth() / 15;
+        layoutParams.leftMargin = LengthManager.getScreenWidth() / 50;
+
+        LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
+        RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
+        digitsLayoutParams.topMargin = LengthManager.getScreenWidth() * 40 / 360;
+        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
+        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
+
+        coinBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (StoreFragment.getIsUsed())
+                    return;
+
+                LoadingManager.startTask(new TaskStartedListener() {
+                    @Override
+                    public void taskStarted() {
+                        StoreFragment fragment = StoreFragment.getInstance();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragment_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                });
+            }
+        });
+
+
+        CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
+            @Override
+            public void changed(int newAmount) {
+                LinearLayout digits = (LinearLayout) findViewById(R.id.digits);
+                digits.removeAllViews();
+
+                String number = "" + CoinManager.getCoinsCount(preferences);
+
+                int[] digitResource = new int[]{
+                        R.drawable.digit_0,
+                        R.drawable.digit_1,
+                        R.drawable.digit_2,
+                        R.drawable.digit_3,
+                        R.drawable.digit_4,
+                        R.drawable.digit_5,
+                        R.drawable.digit_6,
+                        R.drawable.digit_7,
+                        R.drawable.digit_8,
+                        R.drawable.digit_9,
+                };
+
+                digits.addView(Utils.makeNewSpace(MainActivity.this));
+                for (int i = 0; i < number.length(); i++) {
+                    int d = number.charAt(i) - '0';
+                    ImageView digit = new ImageView(MainActivity.this);
+                    int digitHeight = LengthManager.getScreenWidth() / 21;
+                    digit.setImageBitmap(ImageManager.loadImageFromResource(MainActivity.this, digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
+                    digits.addView(digit);
+                }
+                digits.addView(Utils.makeNewSpace(MainActivity.this));
+            }
+        }, preferences);
+
+    }
+    //endregion
+
+    //region SetUpHeader
+    private void setUpHeader() {
+        RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
+        header.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
+
+        ImageView logo = (ImageView) findViewById(R.id.logo);
+        logo.setImageBitmap(ImageManager.loadImageFromResource(MainActivity.this, R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
+
+    }
+    //endregion
 }
