@@ -35,14 +35,17 @@ public class PackageFragmentNew extends Fragment {
 
         switch (type) {
             case 0:
-                packageObjects =  ((MainActivity) this.getActivity()).getHeadObject().getNews();
+                packageObjects = ((MainActivity) this.getActivity()).getHeadObject().getNews();
                 break;
 
             case 1:
+                if (MainActivity.downlodedObject != null) {
+                    packageObjects = MainActivity.downlodedObject.getDownloaded();
+                }
                 break;
 
             case 2:
-                packageObjects =  ((MainActivity) this.getActivity()).getHeadObject().getSaller();
+                packageObjects = ((MainActivity) this.getActivity()).getHeadObject().getSaller();
                 break;
         }
 
@@ -51,6 +54,4 @@ public class PackageFragmentNew extends Fragment {
 
         return view;
     }
-
-
 }

@@ -4,30 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-
-import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Fragment.LevelsFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class LevelsActivityNew extends FragmentActivity {
     int packageId;
-    PackageObject packageObject;
+//    PackageObject packageObject;
     public final static String LEVEL_PAGE = "level_page";
+    public final static String PACKAGE_NUMBER = "package_number";
+    int packageNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +29,14 @@ public class LevelsActivityNew extends FragmentActivity {
 
         parseJson();
 
-        int pagesize = packageObject.getLevels().size() / 16;
+        int pagesize = MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
         if ((pagesize % 16) != 0) {
             pagesize ++;
         }
 
         FragmentPagerItems.Creator fragmentPagerItemsCreator = FragmentPagerItems.with(this);
         for (int i = 0; i < pagesize; i++) {
-            fragmentPagerItemsCreator.add("", LevelsFragmentNew.class, new Bundler().putInt(LEVEL_PAGE, i).get());
+            fragmentPagerItemsCreator.add("", LevelsFragmentNew.class, new Bundler().putInt(LEVEL_PAGE, i).putInt(PACKAGE_NUMBER, packageNumber).get());
         }
 
         FragmentPagerItems fragmentPagerItems = fragmentPagerItemsCreator.create();
@@ -61,19 +52,21 @@ public class LevelsActivityNew extends FragmentActivity {
 
     public void parseJson() {
         try {
-            String a = this.getFilesDir().getPath() + "/Downloaded/" + packageId + "_level_list.json";
-            Log.e("path", a);
-            InputStream inputStream = new FileInputStream(a);
-            Reader reader = new InputStreamReader(inputStream, "UTF-8");
-            Gson gson = new GsonBuilder().create();
-            packageObject = gson.fromJson(reader, PackageObject.class);
 
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            for (int i = 0; MainActivity.downlodedObject.getDownloaded().size() > i; i++) {
+                if (MainActivity.downlodedObject.getDownloaded().get(i).getId() == packageId) {
+                    packageNumber = i;
+//                    packageObject = MainActivity.downlodedObject.getDownloaded().get(i);
+                    break;
+                }
+            }
+
+        } catch ( Exception e) {
             e.printStackTrace();
         }
     }
 
-    public PackageObject getPackageObject() {
-        return packageObject;
-    }
+//    public PackageObject getPackageObject() {
+//        return packageObject;
+//    }
 }

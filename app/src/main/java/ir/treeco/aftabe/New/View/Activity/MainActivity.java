@@ -57,6 +57,8 @@ public class MainActivity extends FragmentActivity {
     NotificationAdapter notificationAdapter;
     Context context;
     SharedPreferences preferences;
+    public static HeadObject downlodedObject;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class MainActivity extends FragmentActivity {
         setOriginalBackgroundColor();
 
         context = this;
-
+        loadDownloadedObject();
         headObject = new HeadObject();
         parseJson();
 
@@ -192,6 +194,7 @@ public class MainActivity extends FragmentActivity {
 
     public void saveToDownloads(int id) {
         PackageObject packageObject = null;
+
         try {
             String a = this.getFilesDir().getPath() + "/Downloaded/" + id + "_level_list.json";
             Log.e("path", a);
@@ -204,12 +207,36 @@ public class MainActivity extends FragmentActivity {
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        HeadObject downlodedObject = null;
 
+        if (downlodedObject==null){
+            downlodedObject = new HeadObject();
+        }
 
+        if (downlodedObject.getDownloaded()==null){
+            ArrayList<PackageObject> a = new ArrayList<>();
+            downlodedObject.setDownloaded(a);
+        }
+
+        downlodedObject.getDownloaded().add(packageObject);
+        String aa = this.getFilesDir().getPath() + "/downloaded.json";
+
+        Gson gson = new Gson();
+        // convert java object to JSON format,
+        // and returned as JSON formatted string
+        String json = gson.toJson(downlodedObject);
         try {
+            //write converted json data to a file named "file.json"
+            FileWriter writer = new FileWriter(aa);
+            writer.write(json);
+            writer.close();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void loadDownloadedObject() {
+        try {
             String downloadedPAth = this.getFilesDir().getPath() + "/downloaded.json";
             Log.e("downloadedPAth", downloadedPAth);
 
@@ -220,34 +247,21 @@ public class MainActivity extends FragmentActivity {
                 Gson gsond = new GsonBuilder().create();
                 downlodedObject = gsond.fromJson(readerd, HeadObject.class);
 
-                boolean deleted = file.delete();
+//                file.delete();
             }
 
         } catch ( Exception e) {
             e.printStackTrace();
         }
+    }
 
-
-        if (downlodedObject.getDownloaded()==null){
-            ArrayList<PackageObject> a = new ArrayList<>();
-            downlodedObject.setDownloaded(a);
-        }
-
-        downlodedObject.getDownloaded().add(packageObject);
-
-
-
-
-            String aa = this.getFilesDir().getPath() + "/downloaded.json";
-            Log.e("path", aa);
-
+    public void saveData(){
+        String aa = this.getFilesDir().getPath() + "/downloaded.json";
 
         Gson gson = new Gson();
-
         // convert java object to JSON format,
         // and returned as JSON formatted string
         String json = gson.toJson(downlodedObject);
-
         try {
             //write converted json data to a file named "file.json"
             FileWriter writer = new FileWriter(aa);
@@ -257,16 +271,6 @@ public class MainActivity extends FragmentActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-//            InputStream inputStream = new FileInputStream(a);
-//            Reader reader = new InputStreamReader(inputStream, "UTF-8");
-//            Gson gson = new GsonBuilder().create();
-//            headObject = gson.fromJson(reader, HeadObject.class);
-
-
-
     }
 
     //region SetBackGroundDrawable
