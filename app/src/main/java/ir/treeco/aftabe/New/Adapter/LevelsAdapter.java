@@ -2,6 +2,7 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,26 +16,36 @@ import com.squareup.picasso.Picasso;
 import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.utils.ImageManager;
+import ir.treeco.aftabe.utils.LengthManager;
+import ir.treeco.aftabe.utils.Utils;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
     Context context;
     int page;
     int packageNumber;
+    Bitmap levelLocked;
+    Bitmap levelUnlocked;
 
-    public LevelsAdapter(Context context, int packageNumber, int page) {
+
+    public LevelsAdapter(Context context, int packageNumber, int page, Bitmap levelLocked, Bitmap levelUnlocked) {
         this.context = context;
         this.page = page;
         this.packageNumber = packageNumber;
+        this.levelLocked = levelLocked;
+        this.levelUnlocked = levelUnlocked;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
+        ImageView frame;
         TextView textView;
 
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemLevel);
             textView = (TextView) itemView.findViewById(R.id.itemLevelText);
+            frame = (ImageView) itemView.findViewById(R.id.itemLevel_frame);
 
             v.setOnClickListener(this);
         }
@@ -63,14 +74,18 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
                     + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getResources();
             Log.e("tes", a);
             Picasso.with(context).load(a).into(viewHolder.imageView);
-        } else Picasso.with(context).load(R.drawable.level_locked).into(viewHolder.imageView);
+            viewHolder.frame.setImageBitmap(levelUnlocked);
+        } else {
+            viewHolder.imageView.setImageBitmap(null);
+            viewHolder.frame.setImageBitmap(levelLocked);
+        }
     }
 
     @Override
     public int getItemCount() {
-        if ( ( (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() - (page * 16) ) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
+        if (((MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() - (page * 16)) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
             return 16;
         } else
-            return (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() - (page * 16) ) % 16;
+            return (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() - (page * 16)) % 16;
     }
 }
