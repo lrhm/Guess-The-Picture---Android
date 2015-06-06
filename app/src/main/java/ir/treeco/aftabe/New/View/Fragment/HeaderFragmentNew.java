@@ -1,35 +1,21 @@
 package ir.treeco.aftabe.New.View.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import ir.treeco.aftabe.CoinManager;
+import com.squareup.picasso.Picasso;
+
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Fragment.StoreFragment;
-import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.LoadingManager;
-import ir.treeco.aftabe.utils.TaskStartedListener;
-import ir.treeco.aftabe.utils.Utils;
 
-/**
- * Created by armin on 6/5/15.
- */
 public class HeaderFragmentNew extends Fragment {
-
-    SharedPreferences preferences;
+//    SharedPreferences preferences;
     View v;
     Activity activity;
 
@@ -42,7 +28,7 @@ public class HeaderFragmentNew extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = activity.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+//        preferences = activity.getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
     }
 
     @Nullable
@@ -62,41 +48,43 @@ public class HeaderFragmentNew extends Fragment {
     //region SetUpCoinBox
     private void setUpCoinBox() {
         ImageView coinBox = (ImageView) v.findViewById(R.id.coin_box);
-        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
-        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
-        coinBox.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
-        layoutParams.topMargin = LengthManager.getScreenWidth() / 15;
-        layoutParams.leftMargin = LengthManager.getScreenWidth() / 50;
+        Picasso.with(getActivity()).load(R.drawable.coin_box).into(coinBox);
+//        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
+//        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
+//        coinBox.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
 
-        LinearLayout digits = (LinearLayout) v.findViewById(R.id.digits);
-        RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-        digitsLayoutParams.topMargin = LengthManager.getScreenWidth() * 40 / 360;
-        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
-        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
+//        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
+//        layoutParams.topMargin = LengthManager.getScreenWidth() / 15;
+//        layoutParams.leftMargin = LengthManager.getScreenWidth() / 50;
 
-        coinBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (StoreFragment.getIsUsed())
-                    return;
+//        LinearLayout digits = (LinearLayout) v.findViewById(R.id.digits);
+//        RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
+//        digitsLayoutParams.topMargin = LengthManager.getScreenWidth() * 40 / 360;
+//        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
+//        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
 
-                LoadingManager.startTask(new TaskStartedListener() {
-                    @Override
-                    public void taskStarted() {
-                        StoreFragment fragment = StoreFragment.getInstance();
-                        FragmentManager fragmentManager = getChildFragmentManager();
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
-                });
-            }
-        });
+//        coinBox.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (StoreFragment.getIsUsed())
+//                    return;
+//
+//                LoadingManager.startTask(new TaskStartedListener() {
+//                    @Override
+//                    public void taskStarted() {
+//                        StoreFragment fragment = StoreFragment.getInstance();
+//                        FragmentManager fragmentManager = getChildFragmentManager();
+//                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                        transaction.replace(R.id.fragment_container, fragment);
+//                        transaction.addToBackStack(null);
+//                        transaction.commit();
+//                    }
+//                });
+//            }
+//        });
 
-
+/*
         CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
             @Override
             public void changed(int newAmount) {
@@ -129,17 +117,18 @@ public class HeaderFragmentNew extends Fragment {
                 digits.addView(Utils.makeNewSpace(getActivity()));
             }
         }, preferences);
-
+*/
     }
     //endregion
 
     //region SetUpHeader
     private void setUpHeader() {
-        RelativeLayout header = (RelativeLayout) v.findViewById(R.id.header);
-        header.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
+//        RelativeLayout header = (RelativeLayout) v.findViewById(R.id.header);
+//        header.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
 
         ImageView logo = (ImageView) v.findViewById(R.id.logo);
-        logo.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
+        Picasso.with(getActivity()).load(R.drawable.header).into(logo);
+//        logo.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
 
     }
     //endregion

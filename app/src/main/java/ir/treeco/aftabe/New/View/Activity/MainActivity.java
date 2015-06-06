@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.New.View.Activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -35,8 +34,6 @@ import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.Zip;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.Utils;
 
 public class MainActivity extends FragmentActivity {
     public final static String FRAGMENT_TYPE = "fragment_type";
@@ -45,7 +42,7 @@ public class MainActivity extends FragmentActivity {
     private HeadObject headObject;
     //NotificationAdapter notificationAdapter;
     Context context;
-    SharedPreferences preferences;
+//    SharedPreferences preferences;
     public static HeadObject downlodedObject; //todo in bayad static class she ehtemalan
 
 
@@ -55,10 +52,10 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.new_activity_main);
 
 
-        preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+//        preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
         // Initialize Height Manager
-        LengthManager.initialize(this); //todo delete
+//        LengthManager.initialize(this); //todo delete
 
         // set main activity background
         setOriginalBackgroundColor();
