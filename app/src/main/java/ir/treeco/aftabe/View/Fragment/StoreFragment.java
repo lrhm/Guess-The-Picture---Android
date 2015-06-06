@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +20,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ir.treeco.aftabe.CoinManager;
 import ir.treeco.aftabe.DialogDrawable;
+import ir.treeco.aftabe.New.View.Activity.StoreActivity;
 import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
 import ir.treeco.aftabe.utils.*;
 
 
@@ -47,41 +54,38 @@ public class StoreFragment extends Fragment {
     };
     private static final String CAFEBAZAAR_REVIEWED = "cafebazaar_reviewed";
 
-    private static StoreFragment mInstance = null;
     private View layout;
-    private static boolean isUsed;
 
-    public static StoreFragment getInstance() {
-        if (mInstance == null)
-            mInstance = new StoreFragment();
-        return mInstance;
+    public StoreFragment(){
     }
 
-    public static boolean getIsUsed() {
-        return isUsed;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LoadingManager.startTask(null);
 
-        isUsed = true;
+        /**
+         * @param container is null here
+         */
+
+        Point point = new Point();
 
         layout = inflater.inflate(R.layout.fragment_store, container, false);
 
         {
-            int padding = LengthManager.getStoreDialogMargin();
-            layout.setPadding(padding, padding, padding, padding);
-        }
-
-        {
             View dialog = layout.findViewById(R.id.dialog);
-            Utils.setViewBackground(dialog, new DialogDrawable(container.getContext()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                this.getActivity().getWindowManager().getDefaultDisplay().getRealSize(point);
+                dialog.setBackground(new DialogDrawable(getActivity().getBaseContext()));
+            }else {
+                point.x = this.getActivity().getWindowManager().getDefaultDisplay().getWidth();
+                point.y = this.getActivity().getWindowManager().getDefaultDisplay().getHeight();
+                dialog.setBackgroundDrawable(new DialogDrawable(getActivity().getBaseContext()));
+            }
 
-            int padding = LengthManager.getStoreDialogPadding();
-            dialog.setPadding(padding, padding, padding, padding);
+            layout.setPadding(point.x/20,point.y/20,point.x/20,point.y/20);
+            dialog.setPadding(point.x/15,point.y/15,point.x/15,point.y/15);
         }
 
-        final IntroActivity activity = (IntroActivity) getActivity();
+        final StoreActivity activity = (StoreActivity) getActivity();
 
         for (int i = 0; i < SKUs.length; i++) {
             final int finalI = i;
@@ -126,8 +130,6 @@ public class StoreFragment extends Fragment {
 
         setupItemsList();
 
-        LoadingManager.endTask();
-
         return layout;
     }
 
@@ -165,7 +167,7 @@ public class StoreFragment extends Fragment {
         itemLayoutParams.width = LengthManager.getStoreItemWidth();
 
         ImageView itemBackground = (ImageView) item.findViewById(R.id.item_background);
-        itemBackground.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), reversed? R.drawable.single_button_green: R.drawable.single_button_red, LengthManager.getStoreItemWidth(), LengthManager.getStoreItemHeight()));
+        itemBackground.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), reversed ? R.drawable.single_button_green : R.drawable.single_button_red, LengthManager.getStoreItemWidth(), LengthManager.getStoreItemHeight()));
 
         TextView title = (TextView) item.findViewById(R.id.label);
         customizeTextView(title, label);
@@ -182,13 +184,11 @@ public class StoreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        LoadingManager.endTask();
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isUsed = false;
     }
 }

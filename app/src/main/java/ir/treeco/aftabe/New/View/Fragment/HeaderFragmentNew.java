@@ -2,6 +2,7 @@ package ir.treeco.aftabe.New.View.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.New.View.Activity.StoreActivity;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.utils.ImageManager;
@@ -79,20 +81,7 @@ public class HeaderFragmentNew extends Fragment {
         coinBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (StoreFragment.getIsUsed())
-                    return;
-
-                LoadingManager.startTask(new TaskStartedListener() {
-                    @Override
-                    public void taskStarted() {
-                        StoreFragment fragment = StoreFragment.getInstance();
-                        FragmentManager fragmentManager = getChildFragmentManager();
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
-                });
+                getActivity().startActivity(new Intent(getActivity(), StoreActivity.class));
             }
         });
 
