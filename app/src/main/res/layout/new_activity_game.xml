@@ -7,8 +7,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:id="@+id/image_game"
-        android:scaleType="fitXY"/>
+        android:id="@+id/image_game"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_game"

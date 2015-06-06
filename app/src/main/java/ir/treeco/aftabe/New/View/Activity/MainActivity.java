@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity {
     //NotificationAdapter notificationAdapter;
     Context context;
     SharedPreferences preferences;
-    public static HeadObject downlodedObject;
+    public static HeadObject downlodedObject; //todo in bayad static class she ehtemalan
 
 
     @Override
