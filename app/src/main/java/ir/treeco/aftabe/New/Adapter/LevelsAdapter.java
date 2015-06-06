@@ -16,9 +16,6 @@ import com.squareup.picasso.Picasso;
 import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.ImageManager;
-import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.Utils;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
     Context context;
@@ -52,8 +49,11 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            Intent myIntent = new Intent(context, GameActivity.class);
-            context.startActivity(myIntent);
+            Intent intent = new Intent(context, GameActivity.class);
+            int a = MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(getAdapterPosition()).getId();
+            intent.putExtra("id", a);
+            intent.putExtra("packageNumber", packageNumber);
+            context.startActivity(intent);
 
         }
     }
@@ -67,7 +67,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
-        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).isResolved()) {
+        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
             viewHolder.textView.setText("" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getJavab());
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
