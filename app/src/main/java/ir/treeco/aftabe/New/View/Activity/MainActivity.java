@@ -5,14 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,18 +30,12 @@ import java.util.ArrayList;
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.BackgroundDrawable;
-import ir.treeco.aftabe.CoinManager;
-import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.Zip;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Fragment.StoreFragment;
-import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;
-import ir.treeco.aftabe.utils.LoadingManager;
-import ir.treeco.aftabe.utils.TaskStartedListener;
 import ir.treeco.aftabe.utils.Utils;
 
 public class MainActivity extends FragmentActivity {
@@ -69,7 +58,7 @@ public class MainActivity extends FragmentActivity {
         preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
         // Initialize Height Manager
-        LengthManager.initialize(this);
+        LengthManager.initialize(this); //todo delete
 
         // set main activity background
         setOriginalBackgroundColor();
@@ -96,7 +85,7 @@ public class MainActivity extends FragmentActivity {
         //endregion
 
         //region Downloads
-        DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(),
+        DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
                 new DLTaskListener() {
                     @Override
                     public void onFinish(File file) {
@@ -197,8 +186,7 @@ public class MainActivity extends FragmentActivity {
             InputStream inputStream = new FileInputStream(a);
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             Gson gson = new GsonBuilder().create();
-             packageObject = gson.fromJson(reader, PackageObject.class);
-
+            packageObject = gson.fromJson(reader, PackageObject.class);
 
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -214,21 +202,7 @@ public class MainActivity extends FragmentActivity {
         }
 
         downlodedObject.getDownloaded().add(packageObject);
-        String aa = this.getFilesDir().getPath() + "/downloaded.json";
-
-        Gson gson = new Gson();
-        // convert java object to JSON format,
-        // and returned as JSON formatted string
-        String json = gson.toJson(downlodedObject);
-        try {
-            //write converted json data to a file named "file.json"
-            FileWriter writer = new FileWriter(aa);
-            writer.write(json);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveData();
     }
 
     public void loadDownloadedObject() {
@@ -243,7 +217,6 @@ public class MainActivity extends FragmentActivity {
                 Gson gsond = new GsonBuilder().create();
                 downlodedObject = gsond.fromJson(readerd, HeadObject.class);
 
-//                file.delete();
             }
 
         } catch ( Exception e) {
@@ -258,6 +231,10 @@ public class MainActivity extends FragmentActivity {
         // convert java object to JSON format,
         // and returned as JSON formatted string
         String json = gson.toJson(downlodedObject);
+
+        File file = new File(aa);
+        file.delete();
+
         try {
             //write converted json data to a file named "file.json"
             FileWriter writer = new FileWriter(aa);
