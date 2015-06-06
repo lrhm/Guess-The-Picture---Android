@@ -257,7 +257,7 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
         coinBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (StoreFragment.getIsUsed())
+                /*if (StoreFragment.getIsUsed())
                     return;
 
                 LoadingManager.startTask(new TaskStartedListener() {
@@ -270,7 +270,7 @@ public class IntroActivity extends FragmentActivity implements BillingProcessor.
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
-                });
+                });*/
             }
         });
 
