@@ -1,66 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="ir.treeco.aftabe"
-          android:versionCode="1"
-          android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="22"/>
+    package="ir.treeco.aftabe"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="22" />
+
     <uses-permission android:name="ir.tgbs.iranapps.permission.BILLING" />
     <uses-permission android:name="com.farsitel.bazaar.permission.PAY_THROUGH_BAZAAR" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:name=".MainApplication">
-        <receiver android:process=":remote" android:name=".utils.UserStimulator"></receiver>
-        <receiver android:process=":remote" android:name=".utils.NotificationBuilder"></receiver>
-        <!--<receiver android:name="ir.treeco.aftabe.synchronization.Synchronizer" android:label="NetChangeReceiver" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-                <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
 
-        <receiver android:name="ir.treeco.aftabe.synchronization.Sync" android:label="NetChangeReceiver" >
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
+    <application
+        android:name=".MainApplication"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <receiver
+            android:name=".utils.UserStimulator"
+            android:process=":remote" />
+        <receiver
+            android:name=".utils.NotificationBuilder"
+            android:process=":remote" />
+        <!-- <receiver android:name="ir.treeco.aftabe.synchronization.Synchronizer" android:label="NetChangeReceiver" > -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+        <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+        <receiver
+            android:name=".synchronization.Sync"
+            android:label="NetChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 
-
-        <activity android:name=".View.Activity.IntroActivity"
-                  android:theme="@style/noAnimTheme"
-                  android:label="@string/app_name"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".View.Activity.IntroActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" >
         </activity>
-        <activity android:name=".View.Activity.AdActivity"
+        <activity
+            android:name=".View.Activity.AdActivity"
             android:label="Aftabe"
-            android:theme="@style/noAnimTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" >
         </activity>
-
-        <activity android:name=".New.View.Activity.LevelsActivityNew"
+        <activity
+            android:name=".New.View.Activity.LevelsActivityNew"
             android:label="Aftabe"
-            android:theme="@style/noAnimTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" >
         </activity>
-
-        <activity android:name=".New.View.Activity.GameActivity"
+        <activity
+            android:name=".New.View.Activity.GameActivity"
             android:label="Aftabe"
-            android:theme="@style/noAnimTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" >
         </activity>
-
-
-        <activity android:name=".New.View.Activity.MainActivity"
+        <activity
+            android:name=".New.View.Activity.MainActivity"
             android:label="Aftabe"
-            android:theme="@style/noAnimTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".New.View.Activity.StoreActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme">
+        </activity>
     </application>
+
 </manifest>

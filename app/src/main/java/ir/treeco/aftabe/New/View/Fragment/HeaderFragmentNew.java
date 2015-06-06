@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.View.Fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import ir.treeco.aftabe.New.View.Activity.StoreActivity;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.LengthManager;
 
@@ -49,6 +51,9 @@ public class HeaderFragmentNew extends Fragment {
     private void setUpCoinBox() {
         ImageView coinBox = (ImageView) v.findViewById(R.id.coin_box);
 
+
+
+
         Picasso.with(getActivity()).load(R.drawable.coin_box).into(coinBox);
 //        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
 //        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
@@ -64,25 +69,12 @@ public class HeaderFragmentNew extends Fragment {
 //        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
 //        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
 
-//        coinBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (StoreFragment.getIsUsed())
-//                    return;
-//
-//                LoadingManager.startTask(new TaskStartedListener() {
-//                    @Override
-//                    public void taskStarted() {
-//                        StoreFragment fragment = StoreFragment.getInstance();
-//                        FragmentManager fragmentManager = getChildFragmentManager();
-//                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                        transaction.replace(R.id.fragment_container, fragment);
-//                        transaction.addToBackStack(null);
-//                        transaction.commit();
-//                    }
-//                });
-//            }
-//        });
+        coinBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivity(new Intent(getActivity(), StoreActivity.class));
+            }
+        });
 
 /*
         CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
