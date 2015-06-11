@@ -11,4 +11,40 @@
     <string name="not_enought_coins">سکه‌ی کافی برای خریدش نداریم</string>
     <string name="toast_crash">آفتابه با مشکل عجیبی رو به رو شده... در صورتی که به اینترنت متصل شوید این مشکل به ماگزارش می‌شه و به زودی برطرف می‌شه. صمیمانه ازتون عذر می‌خوایم. :(</string>
     <string name="empty_list">بسته‌ای وجود ندارد</string>
+
+    <string-array name="alphabet">
+        <item>آ</item>
+        <item>ا</item>
+        <item>ب</item>
+        <item>پ</item>
+        <item>ت</item>
+        <item>ث</item>
+        <item>ج</item>
+        <item>چ</item>
+        <item>ح</item>
+        <item>خ</item>
+        <item>د</item>
+        <item>ذ</item>
+        <item>ر</item>
+        <item>ز</item>
+        <item>ژ</item>
+        <item>س</item>
+        <item>ش</item>
+        <item>ص</item>
+        <item>ض</item>
+        <item>ط</item>
+        <item>ظ</item>
+        <item>ع</item>
+        <item>غ</item>
+        <item>آ</item>
+        <item>ق</item>
+        <item>ک</item>
+        <item>گ</item>
+        <item>ل</item>
+        <item>م</item>
+        <item>ن</item>
+        <item>و</item>
+        <item>ه</item>
+        <item>ی</item>
+    </string-array>
 </resources>
