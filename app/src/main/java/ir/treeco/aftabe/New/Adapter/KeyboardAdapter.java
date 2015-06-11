@@ -7,12 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import ir.treeco.aftabe.LetterButtonDrawable;
 import ir.treeco.aftabe.R;
 
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder>{
     Context context;
 
-    public KeyboardAdapter() {
+    public KeyboardAdapter(Context context) {
         this.context = context;
 
 
@@ -45,8 +46,7 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int i) {
-
-
+        viewHolder.imageView.setImageDrawable(new LetterButtonDrawable("آ",context));
     }
 
     @Override
