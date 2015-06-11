@@ -24,7 +24,6 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     Bitmap levelLocked;
     Bitmap levelUnlocked;
 
-
     public LevelsAdapter(Context context, int packageNumber, int page, Bitmap levelLocked, Bitmap levelUnlocked) {
         this.context = context;
         this.page = page;
@@ -50,7 +49,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, GameActivity.class);
-            int a = MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(getAdapterPosition()).getId();
+            int a = MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(page * 16  + getAdapterPosition()).getId();
             intent.putExtra("id", a);
             intent.putExtra("packageNumber", packageNumber);
             context.startActivity(intent);
@@ -67,11 +66,13 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
-        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
+        int b = page * 16 + i;
+        Log.e("teeee", " "+ page + " - " + b);
+        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
             viewHolder.textView.setText("" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getJavab());
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
-                    + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getResources();
+                    + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
             Log.e("tes", a);
             Picasso.with(context).load(a).into(viewHolder.imageView);
             viewHolder.frame.setImageBitmap(levelUnlocked);
