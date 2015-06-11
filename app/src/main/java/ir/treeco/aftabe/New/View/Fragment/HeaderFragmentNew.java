@@ -51,9 +51,6 @@ public class HeaderFragmentNew extends Fragment {
     private void setUpCoinBox() {
         ImageView coinBox = (ImageView) v.findViewById(R.id.coin_box);
 
-
-
-
         Picasso.with(getActivity()).load(R.drawable.coin_box).into(coinBox);
 //        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
 //        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
