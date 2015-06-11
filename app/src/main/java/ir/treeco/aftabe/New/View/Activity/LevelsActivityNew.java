@@ -46,6 +46,7 @@ public class LevelsActivityNew extends FragmentActivity {
                                 LengthManager.getLevelFrameWidth(),
                                 LengthManager.getLevelFrameHeight()),
                 thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+
         levelUnlocked = Utils.updateHSV(ImageManager
                         .loadImageFromResource(this, R.drawable.level_unlocked,
                                 LengthManager.getLevelFrameWidth(),
@@ -62,7 +63,7 @@ public class LevelsActivityNew extends FragmentActivity {
         parseJson();
 
         int pagesize = MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
-        if ((pagesize % 16) != 0) {
+        if ((MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() % 16) != 0) {
             pagesize++;
         }
 
