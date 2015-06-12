@@ -2,6 +2,7 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,11 @@ import ir.treeco.aftabe.R;
 
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder>{
     Context context;
+    char[] strings;
 
-    public KeyboardAdapter(Context context) {
+    public KeyboardAdapter(Context context,char[] strings) {
         this.context = context;
-
-
-
+        this.strings = strings;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -31,9 +31,8 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-//            Intent myIntent = new Intent(context, LevelsActivityNew.class);
-//            context.startActivity(myIntent);
 
+            Log.d("armin adapter position", String.valueOf(getAdapterPosition()));
         }
     }
 
@@ -46,12 +45,15 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.imageView.setImageDrawable(new LetterButtonDrawable("آ",context));
+        viewHolder.imageView.setBackgroundResource(R.drawable.albutton);
+        Log.d("armin strings in keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
+        viewHolder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(strings[i]),context));
     }
 
     @Override
     public int getItemCount() {
-        return 21;
+        Log.d("armin strings length", String.valueOf(strings.length));
+        return strings.length;
     }
 
 }
