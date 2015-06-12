@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +20,9 @@ import java.util.Random;
 import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
+import ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.utils.LengthManager;
 
 public class GameActivity extends FragmentActivity {
     private RecyclerView recyclerView;
@@ -41,6 +44,11 @@ public class GameActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_game);
+
+        LengthManager.initialize(this);
+
+        HeaderFragmentNew header = (HeaderFragmentNew) getSupportFragmentManager().findFragmentById(R.id.header);
+        header.setUpHeader(R.drawable.cheat_button);
 
         // set background drawable
         setOriginalBackgroundColor();
