@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.View.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.CoinManager;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Activity.IntroActivity;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.View.Toast.ToastMaker;
 import ir.treeco.aftabe.utils.Utils;
@@ -35,8 +35,7 @@ public class StoreActivity extends FragmentActivity implements BillingProcessor.
 
         setOriginalBackgroundColor();
 
-
-        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
+        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.CAFE_BAZAAR);
     }
 
     @Override
@@ -122,6 +121,12 @@ public class StoreActivity extends FragmentActivity implements BillingProcessor.
             billingProcessor.purchase(sku);
         else
             ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
