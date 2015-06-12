@@ -51,7 +51,7 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return 21;
+        return 18;
     }
 
 }

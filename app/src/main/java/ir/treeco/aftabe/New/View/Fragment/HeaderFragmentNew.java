@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -73,6 +74,35 @@ public class HeaderFragmentNew extends Fragment {
             }
         });
 
+
+        LinearLayout digits = (LinearLayout) v.findViewById(R.id.digits);
+        digits.removeAllViews();
+        String number = "1234";
+
+        int[] digitResource = new int[]{
+                R.drawable.digit_0,
+                R.drawable.digit_1,
+                R.drawable.digit_2,
+                R.drawable.digit_3,
+                R.drawable.digit_4,
+                R.drawable.digit_5,
+                R.drawable.digit_6,
+                R.drawable.digit_7,
+                R.drawable.digit_8,
+                R.drawable.digit_9,
+        };
+
+
+        for (int i = 0; i < number.length(); i++) {   //is bad cod
+            int d = number.charAt(i) - '0';
+            ImageView digit = new ImageView(getActivity());
+
+            Picasso.with(getActivity()).load(digitResource[d]).into(digit);
+//            int digitHeight = LengthManager.getScreenWidth() / 21;
+//            digit.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
+            digits.addView(digit);
+        }
+
 /*
         CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
             @Override
@@ -106,7 +136,9 @@ public class HeaderFragmentNew extends Fragment {
                 digits.addView(Utils.makeNewSpace(getActivity()));
             }
         }, preferences);
-*/
+
+        */
+
     }
     //endregion
 
