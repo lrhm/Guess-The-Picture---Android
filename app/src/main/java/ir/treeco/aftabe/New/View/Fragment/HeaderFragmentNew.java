@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -146,11 +148,18 @@ public class HeaderFragmentNew extends Fragment {
     private void setUpHeader() {
 //        RelativeLayout header = (RelativeLayout) v.findViewById(R.id.header);
 //        header.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
-
         ImageView logo = (ImageView) v.findViewById(R.id.logo);
         Picasso.with(getActivity()).load(R.drawable.header).into(logo);
 //        logo.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
 
+    }
+    public void setUpHeader(int resourceID) {
+        ImageView logo = (ImageView) v.findViewById(R.id.logo);
+        ImageView cheatButton = (ImageView) v.findViewById(R.id.cheat_button);
+        logo.setVisibility(View.GONE);
+        /*FrameLayout.LayoutParams layoutParams = ((FrameLayout.LayoutParams) logo.getLayoutParams());
+        cheatButton.setLayoutParams(layoutParams);*/
+        Picasso.with(getActivity()).load(resourceID).into(cheatButton);
     }
     //endregion
 }
