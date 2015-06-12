@@ -2,7 +2,6 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,15 +20,15 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     Context context;
     int page;
     int packageNumber;
-    Bitmap levelLocked;
-    Bitmap levelUnlocked;
+//    Bitmap levelLocked;
+//    Bitmap levelUnlocked;
 
-    public LevelsAdapter(Context context, int packageNumber, int page, Bitmap levelLocked, Bitmap levelUnlocked) {
+    public LevelsAdapter(Context context, int packageNumber, int page) {
         this.context = context;
         this.page = page;
         this.packageNumber = packageNumber;
-        this.levelLocked = levelLocked;
-        this.levelUnlocked = levelUnlocked;
+//        this.levelLocked = levelLocked;
+//        this.levelUnlocked = levelUnlocked;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -68,18 +67,19 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
         int b = page * 16 + i;
         Log.e("teeee", " "+ page + " - " + b);
-        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
+//        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
             viewHolder.textView.setText("" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getJavab());
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
                     + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
             Log.e("tes", a);
-            Picasso.with(context).load(a).into(viewHolder.imageView);
-            viewHolder.frame.setImageBitmap(levelUnlocked);
-        } else {
-            viewHolder.imageView.setImageBitmap(null);
-            viewHolder.frame.setImageBitmap(levelLocked);
-        }
+        Picasso.with(context).load(a).into(viewHolder.imageView);
+        Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
+//            viewHolder.frame.setImageBitmap(levelUnlocked);
+//        } else {
+//            viewHolder.imageView.setImageBitmap(null);
+//            viewHolder.frame.setImageBitmap(levelLocked);
+//        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.New.View.Activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -27,10 +26,10 @@ public class LevelsActivityNew extends FragmentActivity {
     public final static String PACKAGE_NUMBER = "package_number";
     int packageNumber;
 
-    public Bitmap levelLocked;
-    public Bitmap levelUnlocked;
-
-    float[] thumbnailHSV;
+//    public Bitmap levelLocked;
+//    public Bitmap levelUnlocked;
+//
+//    float[] thumbnailHSV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +38,19 @@ public class LevelsActivityNew extends FragmentActivity {
         packageId = intent.getIntExtra("id", 0);
         setContentView(R.layout.new_activity_levels);
 
-        thumbnailHSV = new float[] {Float.parseFloat("130"),Float.parseFloat("0"),Float.parseFloat("-0.1")};
-
-        levelLocked = Utils.updateHSV(ImageManager
-                        .loadImageFromResource(this, R.drawable.level_locked,
-                                LengthManager.getLevelFrameWidth(),
-                                LengthManager.getLevelFrameHeight()),
-                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-
-        levelUnlocked = Utils.updateHSV(ImageManager
-                        .loadImageFromResource(this, R.drawable.level_unlocked,
-                                LengthManager.getLevelFrameWidth(),
-                                LengthManager.getLevelFrameHeight()),
-                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+//        thumbnailHSV = new float[] {Float.parseFloat("130"),Float.parseFloat("0"),Float.parseFloat("-0.1")};
+//
+//        levelLocked = Utils.updateHSV(ImageManager
+//                        .loadImageFromResource(this, R.drawable.level_locked,
+//                                LengthManager.getLevelFrameWidth(),
+//                                LengthManager.getLevelFrameHeight()),
+//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+//
+//        levelUnlocked = Utils.updateHSV(ImageManager
+//                        .loadImageFromResource(this, R.drawable.level_unlocked,
+//                                LengthManager.getLevelFrameWidth(),
+//                                LengthManager.getLevelFrameHeight()),
+//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
 
 
         // set background drawable
