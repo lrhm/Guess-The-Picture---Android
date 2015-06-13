@@ -40,14 +40,14 @@ public class GameActivity extends FragmentActivity {
         // set background drawable
         setOriginalBackgroundColor();
 
-        String solution = "سیبسیبسیبلسب";
+        String solution = "بلسjhkjhkjب";
         char[] characters = new char[solution.length()];
         char[] keyboardChars = new char[21];
         solution.getChars(0, solution.length(), characters, 0);
 
         SolutionAdapter solutionAdapter = new SolutionAdapter(characters);
         RecyclerView recyclerView_solution = (RecyclerView) findViewById(R.id.recycler_view_solution);
-        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 9);
+        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 7);
         recyclerView_solution.setHasFixedSize(true);
         recyclerView_solution.setLayoutManager(gridLayoutManager_solution);
         recyclerView_solution.setAdapter(solutionAdapter);
@@ -63,6 +63,9 @@ public class GameActivity extends FragmentActivity {
         for (int i = 0; i < 21; i++) {
             keyboardChars[i] = strings[random.nextInt(33)].charAt(0);
         }
+
+//        ArrayList aa= new ArrayList(int);
+
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != ' ') {
                 keyboardChars[random.nextInt(21)] = characters[i];
@@ -81,12 +84,22 @@ public class GameActivity extends FragmentActivity {
 //        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
 //        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
+
+
+
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_keyboard);
         recyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 7);
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter = new KeyboardAdapter(this, keyboardChars);
         recyclerView.setAdapter(adapter);
+
+
+
+
+
+
 
         Log.d("armin gridLayout ortion", String.valueOf(gridLayoutManager.getOrientation()));
         String a = "file://" + getFilesDir().getPath() + "/Downloaded/"
