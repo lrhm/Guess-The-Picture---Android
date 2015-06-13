@@ -6,15 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-
-import java.util.ArrayList;
 
 import ir.treeco.aftabe.R;
 
-/**
- * Created by armin on 6/12/15.
- */
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> implements View.OnClickListener {
 
     public SolutionAdapter(char[] characters) {
@@ -26,7 +20,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
     @Override
     public SolutionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_item_keyboard, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_item_solution, parent, false);
         return new ViewHolder(v);
     }
 
