@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import ir.treeco.aftabe.BackgroundDrawable;
@@ -49,19 +50,20 @@ public class GameActivity extends FragmentActivity {
 
         String[] strings = getResources().getStringArray(R.array.alphabet);
 
+        ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 21; i++) {
             keyboardChars[i] = strings[random.nextInt(33)].charAt(0);
+            list.add(i);
         }
-
-//        ArrayList aa= new ArrayList(int);
 
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != ' ') {
-                keyboardChars[random.nextInt(21)] = characters[i];
+                int j = random.nextInt(list.size());
+                keyboardChars[list.get(j)] = characters[i];
+                list.remove(j);
             }
         }
-
         SolutionAdapter solutionAdapter = new SolutionAdapter(characters);
         RecyclerView recyclerView_solution = (RecyclerView) findViewById(R.id.recycler_view_solution);
         GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 7);
