@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Random;
 
 import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew;
@@ -45,19 +46,8 @@ public class GameActivity extends FragmentActivity {
         char[] keyboardChars = new char[21];
         solution.getChars(0, solution.length(), characters, 0);
 
-        SolutionAdapter solutionAdapter = new SolutionAdapter(characters);
-        RecyclerView recyclerView_solution = (RecyclerView) findViewById(R.id.recycler_view_solution);
-        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 7);
-        recyclerView_solution.setHasFixedSize(true);
-        recyclerView_solution.setLayoutManager(gridLayoutManager_solution);
-        recyclerView_solution.setAdapter(solutionAdapter);
 
         String[] strings = getResources().getStringArray(R.array.alphabet);
-
-        for (int i = 0; i < characters.length; i++) {
-            Log.d("aaaaaaa", String.valueOf(characters[i]));
-        }
-
 
         Random random = new Random();
         for (int i = 0; i < 21; i++) {
@@ -72,9 +62,12 @@ public class GameActivity extends FragmentActivity {
             }
         }
 
-        for (int i = 0; i < 21; i++) {
-            Log.d("salam3", String.valueOf(keyboardChars[i]));
-        }
+        SolutionAdapter solutionAdapter = new SolutionAdapter(characters);
+        RecyclerView recyclerView_solution = (RecyclerView) findViewById(R.id.recycler_view_solution);
+        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 7);
+        recyclerView_solution.setHasFixedSize(true);
+        recyclerView_solution.setLayoutManager(gridLayoutManager_solution);
+        recyclerView_solution.setAdapter(solutionAdapter);
 
         Intent intent = getIntent();
         levelId = intent.getIntExtra("id", 0);
@@ -95,34 +88,20 @@ public class GameActivity extends FragmentActivity {
         adapter = new KeyboardAdapter(this, keyboardChars);
         recyclerView.setAdapter(adapter);
 
-
-
-
-
-
-
-        Log.d("armin gridLayout ortion", String.valueOf(gridLayoutManager.getOrientation()));
         String a = "file://" + getFilesDir().getPath() + "/Downloaded/"
-                + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
-                + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getResources();
+                + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
+                + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getResources();
 
         Picasso.with(this).load(a).into(imageView);
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
+        MainApplication.saveDataAndBackUpData(this);
+    }
 
     //region SetBackGroundDrawable
     private void setOriginalBackgroundColor() {

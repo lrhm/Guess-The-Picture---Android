@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -13,6 +14,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.View.Fragment.LevelsFragmentNew;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.ImageManager;
@@ -61,8 +63,8 @@ public class LevelsActivityNew extends FragmentActivity {
 
         parseJson();
 
-        int pagesize = MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
-        if ((MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().size() % 16) != 0) {
+        int pagesize = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
+        if ((MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() % 16) != 0) {
             pagesize++;
         }
 
@@ -82,11 +84,19 @@ public class LevelsActivityNew extends FragmentActivity {
         viewPagerTab.setViewPager(viewPager);
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
+        MainApplication.saveDataAndBackUpData(this);
+    }
+
     public void parseJson() {
         try {
 
-            for (int i = 0; MainActivity.downlodedObject.getDownloaded().size() > i; i++) {
-                if (MainActivity.downlodedObject.getDownloaded().get(i).getId() == packageId) {
+            for (int i = 0; MainApplication.downloadedObject.getDownloaded().size() > i; i++) {
+                if (MainApplication.downloadedObject.getDownloaded().get(i).getId() == packageId) {
                     packageNumber = i;
 //                    packageObject = MainActivity.downlodedObject.getDownloaded().get(i);
                     break;

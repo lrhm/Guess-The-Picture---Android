@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.PackageAdapter;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
@@ -39,8 +40,8 @@ public class PackageFragmentNew extends Fragment {
                 break;
 
             case 1:
-                if (MainActivity.downlodedObject != null) {
-                    packageObjects = MainActivity.downlodedObject.getDownloaded();
+                if (MainApplication.downloadedObject != null) {
+                    packageObjects = MainApplication.downloadedObject.getDownloaded();
                 }
                 break;
 
