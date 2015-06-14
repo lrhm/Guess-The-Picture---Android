@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import ir.treeco.aftabe.BackgroundDrawable;
@@ -54,26 +54,19 @@ public class GameActivity extends FragmentActivity {
 
         String[] strings = getResources().getStringArray(R.array.alphabet);
 
-        for (int i = 0; i < characters.length; i++) {
-            Log.d("aaaaaaa", String.valueOf(characters[i]));
-        }
-
-
+        ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 21; i++) {
             keyboardChars[i] = strings[random.nextInt(33)].charAt(0);
+            list.add(i);
         }
-
-//        ArrayList aa= new ArrayList(int);
 
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != ' ') {
-                keyboardChars[random.nextInt(21)] = characters[i];
+                int j = random.nextInt(list.size());
+                keyboardChars[list.get(j)] = characters[i];
+                list.remove(j);
             }
-        }
-
-        for (int i = 0; i < 21; i++) {
-            Log.d("salam3", String.valueOf(keyboardChars[i]));
         }
 
         Intent intent = getIntent();
@@ -100,8 +93,6 @@ public class GameActivity extends FragmentActivity {
 
 
 
-
-        Log.d("armin gridLayout ortion", String.valueOf(gridLayoutManager.getOrientation()));
         String a = "file://" + getFilesDir().getPath() + "/Downloaded/"
                 + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
                 + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getResources();
