@@ -38,7 +38,7 @@
         <!-- </receiver> -->
 
         <receiver
-            android:name=".synchronization.Sync"
+            android:name=".New.Synchronization.Synchronize"
             android:label="NetChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
