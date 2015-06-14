@@ -1,10 +1,17 @@
 package ir.treeco.aftabe;
 
 import android.app.Application;
+import android.util.Log;
+
+import com.pixplicity.easyprefs.library.Prefs;
+
 import org.acra.ACRA;
 import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
+
+import ir.treeco.aftabe.New.Object.HeadObject;
+
 /*
 @ReportsCrashes(
         formKey = "", // This is required for backward compatibility but not used
@@ -23,9 +30,18 @@ import org.acra.annotation.ReportsCrashes;
 )*/
 public class MainApplication extends Application {
 
+    static HeadObject headObject;
+
     @Override
     public void onCreate() {
         super.onCreate();
         //ACRA.init(this);
+        Log.d("armin : initialize Shared Preference", "true");
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
     }
 }
