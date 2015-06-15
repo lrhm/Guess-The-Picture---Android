@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew;
@@ -88,32 +90,20 @@ public class GameActivity extends FragmentActivity {
         adapter = new KeyboardAdapter(this, keyboardChars);
         recyclerView.setAdapter(adapter);
 
-
-
-
-
-
         String a = "file://" + getFilesDir().getPath() + "/Downloaded/"
-                + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
-                + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getResources();
+                + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
+                + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getResources();
 
         Picasso.with(this).load(a).into(imageView);
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
+        MainApplication.saveDataAndBackUpData(this);
+    }
 
     //region SetBackGroundDrawable
     private void setOriginalBackgroundColor() {

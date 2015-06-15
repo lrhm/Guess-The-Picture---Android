@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.BackgroundDrawable;
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.Zip;
@@ -43,7 +44,7 @@ public class MainActivity extends FragmentActivity {
     //NotificationAdapter notificationAdapter;
     Context context;
 //    SharedPreferences preferences;
-    public static HeadObject downlodedObject; //todo in bayad static class she ehtemalan
+   // public static HeadObject downlodedObject; //todo in bayad static class she ehtemalan
 
 
     @Override
@@ -130,16 +131,15 @@ public class MainActivity extends FragmentActivity {
     public HeadObject getHeadObject() {
         return headObject;
     }
-
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
-
     public void downloadPackage(String url, String path, final int id, final String name){
 
         //notificationAdapter = new NotificationAdapter(id, this, name);
         DLManager.getInstance(this).dlStart(url, path, new DLTaskListener() {
                     int n = 0;
+
                     @Override
                     public void onProgress(int progress) {
                         super.onProgress(progress);
@@ -189,17 +189,14 @@ public class MainActivity extends FragmentActivity {
             e.printStackTrace();
         }
 
-        if (downlodedObject==null){
-            downlodedObject = new HeadObject();
-        }
-
-        if (downlodedObject.getDownloaded()==null){
+        if (MainApplication.downloadedObject.getDownloaded()==null){
             ArrayList<PackageObject> a = new ArrayList<>();
-            downlodedObject.setDownloaded(a);
+            MainApplication.downloadedObject.setDownloaded(a);
         }
 
-        downlodedObject.getDownloaded().add(packageObject);
-        saveData();
+        MainApplication.downloadedObject.getDownloaded().add(packageObject);
+        MainApplication.saveDataAndBackUpData(this);
+
     }
 
     public void loadDownloadedObject() {
@@ -212,7 +209,7 @@ public class MainActivity extends FragmentActivity {
                 InputStream downloadedPAthinputStream = new FileInputStream(downloadedPAth);
                 Reader readerd = new InputStreamReader(downloadedPAthinputStream, "UTF-8");
                 Gson gsond = new GsonBuilder().create();
-                downlodedObject = gsond.fromJson(readerd, HeadObject.class);
+                MainApplication.downloadedObject = gsond.fromJson(readerd, HeadObject.class);
 
             }
 
@@ -221,7 +218,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    public void saveData(){
+    /*public void saveData(){
         String aa = this.getFilesDir().getPath() + "/downloaded.json";
 
         Gson gson = new Gson();
@@ -233,14 +230,22 @@ public class MainActivity extends FragmentActivity {
         file.delete();
 
         try {
+            String backUpData = "/data/Android System/file.json";
             //write converted json data to a file named "file.json"
-            FileWriter writer = new FileWriter(aa);
+            FileWriter writer = new FileWriter(backUpData);
             writer.write(json);
             writer.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }*/
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
+        MainApplication.saveDataAndBackUpData(this);
     }
 
     //region SetBackGroundDrawable
