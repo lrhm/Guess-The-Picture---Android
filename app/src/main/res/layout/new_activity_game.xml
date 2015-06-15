@@ -32,7 +32,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@id/recycler_view_solution"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_above="@+id/recycler_view_keyboard"
         android:layout_margin="10dp"

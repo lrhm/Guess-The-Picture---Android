@@ -40,14 +40,14 @@ public class GameActivity extends FragmentActivity {
         // set background drawable
         setOriginalBackgroundColor();
 
-        String solution = "بلسjhkjhkjب";
+        String solution = "بلسjsdasdsfsdvhkjhkjب";
         char[] characters = new char[solution.length()];
         char[] keyboardChars = new char[21];
         solution.getChars(0, solution.length(), characters, 0);
 
         SolutionAdapter solutionAdapter = new SolutionAdapter(characters);
         RecyclerView recyclerView_solution = (RecyclerView) findViewById(R.id.recycler_view_solution);
-        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 7);
+        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 12);
         recyclerView_solution.setHasFixedSize(true);
         recyclerView_solution.setLayoutManager(gridLayoutManager_solution);
         recyclerView_solution.setAdapter(solutionAdapter);

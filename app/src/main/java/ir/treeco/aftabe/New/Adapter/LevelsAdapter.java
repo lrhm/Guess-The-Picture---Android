@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -34,12 +33,10 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
         ImageView frame;
-        TextView textView;
 
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemLevel);
-            textView = (TextView) itemView.findViewById(R.id.itemLevelText);
             frame = (ImageView) itemView.findViewById(R.id.itemLevel_frame);
 
             v.setOnClickListener(this);
@@ -68,8 +65,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         int b = page * 16 + i;
         Log.e("teeee", " "+ page + " - " + b);
 //        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
-            viewHolder.textView.setText("" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(i).getJavab());
-            String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getId()
                     + "_" + MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
             Log.e("tes", a);
