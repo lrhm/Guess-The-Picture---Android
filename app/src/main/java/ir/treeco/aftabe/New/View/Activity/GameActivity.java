@@ -97,7 +97,6 @@ public class GameActivity extends FragmentActivity {
         Picasso.with(this).load(a).into(imageView);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
