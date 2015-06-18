@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -42,10 +43,13 @@ public class GameActivity extends FragmentActivity {
         // set background drawable
         setOriginalBackgroundColor();
 
-        String solution = "ab cde saddsa ads sad";
+        String solution = "aa a aa bbb bbbb cccc cccc";
 
         int breake1;
         int breake2;
+        char[] characters1;
+        char[] characters2 = new char[0];
+        char[] characters3 = new char[0];
 
         if (solution.length() >= 9){
             breake1 = 10;
@@ -55,21 +59,21 @@ public class GameActivity extends FragmentActivity {
                 }
             }
 
-            char[] characters1 = new char[breake1];
+            characters1 = new char[breake1];
             solution.getChars(0, breake1, characters1, 0);
             for (int i = 0 ; i < characters1.length; i++) {
                 Log.e("Asd", String.valueOf(characters1[i]));
             }
             //-------------------------------
             if (solution.length() - breake1 -1  > 9) {
-                breake2 = 19;
-                for (int i = breake1 + 1; i < breake1 + 10 && i < solution.length(); i ++){
+                breake2 = 18;
+                for (int i = breake1 + 1; i <= breake1 + 10 && i <= solution.length(); i ++){
                     if (solution.charAt(i) == ' '){
                         breake2 = i;
                     }
                 }
 
-                char[] characters2 = new char[breake2 - breake1 - 1];
+                characters2 = new char[breake2 - breake1 - 1];
                 solution.getChars(breake1 + 1, breake2, characters2, 0);
                 for (int i = 0 ; i < characters2.length; i++) {
                     Log.e("Asd2", String.valueOf(characters2[i]));
@@ -77,7 +81,7 @@ public class GameActivity extends FragmentActivity {
 
 
 
-                char[] characters3 = new char[solution.length()-1 - breake2];
+                characters3 = new char[solution.length()-1 - breake2];
                 solution.getChars(breake2 + 1, solution.length(), characters3, 0);
                 for (int i = 0 ; i < characters3.length; i++) {
                     Log.e("Asd3", String.valueOf(characters3[i]));
@@ -85,7 +89,7 @@ public class GameActivity extends FragmentActivity {
 
             } else {
                 breake2 = solution.length() -1 ;
-                char[] characters2 = new char[breake2 - breake1];
+                characters2 = new char[breake2 - breake1];
                 solution.getChars(breake1 + 1, breake2 + 1, characters2, 0);
                 for (int i = 0 ; i < characters2.length; i++) {
                     Log.e("Asd2", String.valueOf(characters2[i]));
@@ -93,7 +97,7 @@ public class GameActivity extends FragmentActivity {
             }
 
         } else {
-            char[] characters1 = new char[solution.length()];
+            characters1 = new char[solution.length()];
             solution.getChars(0, solution.length(), characters1, 0);
             for (int i = 0 ; i < characters1.length; i++) {
                 Log.e("Asd", String.valueOf(characters1[i]));
@@ -106,26 +110,32 @@ public class GameActivity extends FragmentActivity {
 
 
 
-        SolutionAdapter solutionAdapter1 = new SolutionAdapter(characters);
+        SolutionAdapter solutionAdapter1 = new SolutionAdapter(characters1);
         RecyclerView recyclerView_solution1 = (RecyclerView) findViewById(R.id.recycler_view_solution1);
-        GridLayoutManager gridLayoutManager_solution1 = new GridLayoutManager(this,11);
+        GridLayoutManager gridLayoutManager_solution1 = new GridLayoutManager(this, characters1.length);
         recyclerView_solution1.setHasFixedSize(true);
         recyclerView_solution1.setLayoutManager(gridLayoutManager_solution1);
         recyclerView_solution1.setAdapter(solutionAdapter1);
 
-        SolutionAdapter solutionAdapter2 = new SolutionAdapter(characters);
-        RecyclerView recyclerView_solution2 = (RecyclerView) findViewById(R.id.recycler_view_solution2);
-        GridLayoutManager gridLayoutManager_solution2 = new GridLayoutManager(this,10);
-        recyclerView_solution2.setHasFixedSize(true);
-        recyclerView_solution2.setLayoutManager(gridLayoutManager_solution2);
-        recyclerView_solution2.setAdapter(solutionAdapter2);
+        if (characters2.length > 0) {
+            SolutionAdapter solutionAdapter2 = new SolutionAdapter(characters2);
+            RecyclerView recyclerView_solution2 = (RecyclerView) findViewById(R.id.recycler_view_solution2);
+            GridLayoutManager gridLayoutManager_solution2 = new GridLayoutManager(this, characters2.length);
+            recyclerView_solution2.setHasFixedSize(true);
+            recyclerView_solution2.setLayoutManager(gridLayoutManager_solution2);
+            recyclerView_solution2.setAdapter(solutionAdapter2);
+            recyclerView_solution2.setVisibility(View.VISIBLE);
+        }
 
-        SolutionAdapter solutionAdapter3 = new SolutionAdapter(characters);
-        RecyclerView recyclerView_solution3 = (RecyclerView) findViewById(R.id.recycler_view_solution3);
-        GridLayoutManager gridLayoutManager_solution3 = new GridLayoutManager(this, 9);
-        recyclerView_solution3.setHasFixedSize(true);
-        recyclerView_solution3.setLayoutManager(gridLayoutManager_solution3);
-        recyclerView_solution3.setAdapter(solutionAdapter3);
+        if (characters3.length > 0) {
+            SolutionAdapter solutionAdapter3 = new SolutionAdapter(characters3);
+            RecyclerView recyclerView_solution3 = (RecyclerView) findViewById(R.id.recycler_view_solution3);
+            GridLayoutManager gridLayoutManager_solution3 = new GridLayoutManager(this, characters3.length);
+            recyclerView_solution3.setHasFixedSize(true);
+            recyclerView_solution3.setLayoutManager(gridLayoutManager_solution3);
+            recyclerView_solution3.setAdapter(solutionAdapter3);
+            recyclerView_solution3.setVisibility(View.VISIBLE);
+        }
 
         String[] strings = getResources().getStringArray(R.array.alphabet);
         char[] keyboardChars = new char[21];
@@ -137,7 +147,7 @@ public class GameActivity extends FragmentActivity {
             list.add(i);
         }
 
-        for (int i = 0; i < characters.length; i++) {
+        for (int i = 0; i < characters.length && i <21; i++) {
             if (characters[i] != ' ') {
                 int j = random.nextInt(list.size());
                 keyboardChars[list.get(j)] = characters[i];
