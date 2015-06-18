@@ -10,13 +10,10 @@ import android.widget.ImageView;
 import ir.treeco.aftabe.R;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> implements View.OnClickListener {
-
     public SolutionAdapter(char[] characters) {
         this.characters = characters;
     }
-
     char[] characters;
-
 
     @Override
     public SolutionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

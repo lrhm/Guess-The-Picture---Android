@@ -42,19 +42,93 @@ public class GameActivity extends FragmentActivity {
         // set background drawable
         setOriginalBackgroundColor();
 
-        String solution = "بلسjsdasdsfsdvhkjhkjب";
+        String solution = "ab cde saddsa ads sad";
+
+        int breake1;
+        int breake2;
+
+        if (solution.length() >= 9){
+            breake1 = 10;
+            for (int i = 0; i < 10  && i < solution.length(); i ++){
+                if (solution.charAt(i) == ' '){
+                    breake1 = i;
+                }
+            }
+
+            char[] characters1 = new char[breake1];
+            solution.getChars(0, breake1, characters1, 0);
+            for (int i = 0 ; i < characters1.length; i++) {
+                Log.e("Asd", String.valueOf(characters1[i]));
+            }
+            //-------------------------------
+            if (solution.length() - breake1 -1  > 9) {
+                breake2 = 19;
+                for (int i = breake1 + 1; i < breake1 + 10 && i < solution.length(); i ++){
+                    if (solution.charAt(i) == ' '){
+                        breake2 = i;
+                    }
+                }
+
+                char[] characters2 = new char[breake2 - breake1 - 1];
+                solution.getChars(breake1 + 1, breake2, characters2, 0);
+                for (int i = 0 ; i < characters2.length; i++) {
+                    Log.e("Asd2", String.valueOf(characters2[i]));
+                }
+
+
+
+                char[] characters3 = new char[solution.length()-1 - breake2];
+                solution.getChars(breake2 + 1, solution.length(), characters3, 0);
+                for (int i = 0 ; i < characters3.length; i++) {
+                    Log.e("Asd3", String.valueOf(characters3[i]));
+                }
+
+            } else {
+                breake2 = solution.length() -1 ;
+                char[] characters2 = new char[breake2 - breake1];
+                solution.getChars(breake1 + 1, breake2 + 1, characters2, 0);
+                for (int i = 0 ; i < characters2.length; i++) {
+                    Log.e("Asd2", String.valueOf(characters2[i]));
+                }
+            }
+
+        } else {
+            char[] characters1 = new char[solution.length()];
+            solution.getChars(0, solution.length(), characters1, 0);
+            for (int i = 0 ; i < characters1.length; i++) {
+                Log.e("Asd", String.valueOf(characters1[i]));
+            }
+        }
+
         char[] characters = new char[solution.length()];
-        char[] keyboardChars = new char[21];
         solution.getChars(0, solution.length(), characters, 0);
 
-        SolutionAdapter solutionAdapter = new SolutionAdapter(characters);
-        RecyclerView recyclerView_solution = (RecyclerView) findViewById(R.id.recycler_view_solution);
-        GridLayoutManager gridLayoutManager_solution = new GridLayoutManager(this, 12);
-        recyclerView_solution.setHasFixedSize(true);
-        recyclerView_solution.setLayoutManager(gridLayoutManager_solution);
-        recyclerView_solution.setAdapter(solutionAdapter);
+
+
+
+        SolutionAdapter solutionAdapter1 = new SolutionAdapter(characters);
+        RecyclerView recyclerView_solution1 = (RecyclerView) findViewById(R.id.recycler_view_solution1);
+        GridLayoutManager gridLayoutManager_solution1 = new GridLayoutManager(this,11);
+        recyclerView_solution1.setHasFixedSize(true);
+        recyclerView_solution1.setLayoutManager(gridLayoutManager_solution1);
+        recyclerView_solution1.setAdapter(solutionAdapter1);
+
+        SolutionAdapter solutionAdapter2 = new SolutionAdapter(characters);
+        RecyclerView recyclerView_solution2 = (RecyclerView) findViewById(R.id.recycler_view_solution2);
+        GridLayoutManager gridLayoutManager_solution2 = new GridLayoutManager(this,10);
+        recyclerView_solution2.setHasFixedSize(true);
+        recyclerView_solution2.setLayoutManager(gridLayoutManager_solution2);
+        recyclerView_solution2.setAdapter(solutionAdapter2);
+
+        SolutionAdapter solutionAdapter3 = new SolutionAdapter(characters);
+        RecyclerView recyclerView_solution3 = (RecyclerView) findViewById(R.id.recycler_view_solution3);
+        GridLayoutManager gridLayoutManager_solution3 = new GridLayoutManager(this, 9);
+        recyclerView_solution3.setHasFixedSize(true);
+        recyclerView_solution3.setLayoutManager(gridLayoutManager_solution3);
+        recyclerView_solution3.setAdapter(solutionAdapter3);
 
         String[] strings = getResources().getStringArray(R.array.alphabet);
+        char[] keyboardChars = new char[21];
 
         ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
@@ -112,6 +186,17 @@ public class GameActivity extends FragmentActivity {
                 Color.parseColor("#1FB8AA"),
                 Color.parseColor("#0A8A8C")
         }));
+    }
+
+
+    private int getKalame(String javab){
+        int kalame = 1;
+        for (int i = 0; i < javab.length(); i++){
+            if (javab.charAt(i) == ' '){
+                kalame++;
+            }
+        }
+        return kalame;
     }
     //endregion
 }

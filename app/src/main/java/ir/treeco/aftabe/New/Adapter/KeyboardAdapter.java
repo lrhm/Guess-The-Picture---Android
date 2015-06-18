@@ -31,7 +31,6 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-
             Log.d("armin adapter position", String.valueOf(getAdapterPosition()));
         }
     }
@@ -40,7 +39,6 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     public KeyboardAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.new_item_keyboard, viewGroup, false);
         return new ViewHolder(v);
-
     }
 
     @Override
@@ -55,5 +53,4 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
         Log.d("armin strings length", String.valueOf(strings.length));
         return strings.length;
     }
-
 }
