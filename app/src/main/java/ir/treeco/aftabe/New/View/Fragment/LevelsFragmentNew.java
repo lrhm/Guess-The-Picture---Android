@@ -22,7 +22,6 @@ public class LevelsFragmentNew extends Fragment {
 //    Bitmap levelLocked;
 //    Bitmap levelUnlocked;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
