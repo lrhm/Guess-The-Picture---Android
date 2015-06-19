@@ -44,4 +44,10 @@ public class LevelsFragmentNew extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+    }
 }
