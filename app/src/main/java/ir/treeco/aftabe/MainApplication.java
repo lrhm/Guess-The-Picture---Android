@@ -8,6 +8,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.squareup.picasso.LruCache;
+import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -56,13 +58,20 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //ACRA.init(this);
+        Picasso picasso = new Picasso.Builder(this)
+                .memoryCache(new LruCache(10000000))
+                .build();
+        Picasso.setSingletonInstance(picasso);
+
         new Prefs.Builder()
                 .setContext(this)
                 .setMode(MODE_PRIVATE)
                 .setPrefsName(getPackageName())
                 .setUseDefaultSharedPreference(true)
                 .build();
+
         downloadedObject = new HeadObject();
+
         copyRawFiles();
     }
 
