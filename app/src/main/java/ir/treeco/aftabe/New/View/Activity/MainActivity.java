@@ -70,7 +70,7 @@ public class MainActivity extends FragmentActivity {
         context = this;
         loadDownloadedObject();
         headObject = new HeadObject();
-        //parseJson();
+        parseJson();
 
         //region Setup fragments in ViewPager
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
@@ -89,7 +89,7 @@ public class MainActivity extends FragmentActivity {
         //endregion
 
         //region Downloads
-        /*DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
+        DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
                 new DLTaskListener() {
                     @Override
                     public void onFinish(File file) {
@@ -98,7 +98,7 @@ public class MainActivity extends FragmentActivity {
                         downloadTask();
                     }
                 }
-        );*/
+        );
         //endregion
     }
 
