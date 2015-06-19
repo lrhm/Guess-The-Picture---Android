@@ -2,9 +2,6 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +42,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         @Override
         public void onClick(View v) {
 
-            File file = new File(context.getFilesDir().getPath() + "/" + packageObjects.get(getAdapterPosition()).getId() + ".zip");
+            File file = new File(context.getFilesDir().getPath() + "/p_" + packageObjects.get(getAdapterPosition()).getId() + ".zip");
             //todo chack md5
 
             if (!file.exists()) {
@@ -70,7 +67,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
-        String a = "file://" + context.getFilesDir().getPath() + "/" + "p" + packageObjects.get(i).getId() + "_front" + ".png";
+        String a = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects.get(i).getId() + "_front" + ".png";
         Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
     }

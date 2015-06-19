@@ -16,7 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Util.Zip;
@@ -87,15 +86,13 @@ public class MainApplication extends Application {
 
     public void writeRawFiles(String name, String type) throws IOException {
         InputStream inputStream = getResources().openRawResource(getResources().getIdentifier("raw/" + name, type, getPackageName()));
+
+        String path;
+
         switch (type) {
             case "png":
+                path = getFilesDir().getPath() + File.separator + name + "." + type;
                 try {
-                    StringTokenizer stringTokenizer = new StringTokenizer(name, "_");
-                    stringTokenizer.nextToken();
-                    stringTokenizer.nextToken();
-                    String path = getFilesDir()
-                            .getPath() + File.separator +
-                            MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_" + stringTokenizer.nextToken() + "." + type;
                     Log.d("armin etsting path", path);
                     fileOutputStream = new FileOutputStream(path);
                     byte[] bytes = new byte[1024];
@@ -112,13 +109,11 @@ public class MainApplication extends Application {
                 /**
                  * First we write the zip file in /files/ directory then unpack it
                  * to /Downloaded/ directory, the zip file name is packageID.zip
-                 * The iamges file name is packageID_level_levelNumber.png
+                 * The images file name is packageID_level_levelNumber.png
                  * The package back and front images file name is packageID_back.png
                  * and packageID_front.png
                  */
-                String path = getFilesDir()
-                        .getPath() + File.separator +
-                        MainApplication.downloadedObject.getDownloaded().get(0).getId() + "." + type;
+                path = getFilesDir().getPath() + File.separator + name + "." + type;
                 try {
                     fileOutputStream = new FileOutputStream(path);
                     byte[] bytes = new byte[1024];
