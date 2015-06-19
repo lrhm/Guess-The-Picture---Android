@@ -6,30 +6,17 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 
-import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Util.Zip;
@@ -164,7 +151,7 @@ public class MainApplication extends Application {
         Log.d("armin path", aa);
         File parentDir = new File(Environment.getExternalStorageDirectory() + "/Android");
         parentDir.mkdir();
-        String backUpDataPath = "/file.json";
+        String backUpDataPath = parentDir.getPath() + "/file.json";
         Gson backupGson = new Gson();
         String backUpJson = backupGson.toJson(downloadedObject);
 

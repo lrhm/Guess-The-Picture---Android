@@ -197,16 +197,5 @@ public class GameActivity extends FragmentActivity {
                 Color.parseColor("#0A8A8C")
         }));
     }
-
-
-    private int getKalame(String javab){
-        int kalame = 1;
-        for (int i = 0; i < javab.length(); i++){
-            if (javab.charAt(i) == ' '){
-                kalame++;
-            }
-        }
-        return kalame;
-    }
     //endregion
 }
