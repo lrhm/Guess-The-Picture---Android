@@ -68,14 +68,9 @@ public class MainApplication extends Application {
             MainApplication.downloadedObject = new Gson().
                     fromJson(new InputStreamReader(
                             getResources().openRawResource(R.raw.downloaded)), HeadObject.class);
-            String backImage = MainApplication.downloadedObject.getDownloaded().get(0).getName() + "_back";
-            String frontImage = MainApplication.downloadedObject.getDownloaded().get(0).getName() + "_front";
-            String zipFile = MainApplication.downloadedObject.getDownloaded().get(0).getName();
-
-
-            Log.d("armin testing zip: ", String.valueOf(R.raw.aftabe_messi));
-            Log.d("armin testing back: ", String.valueOf(R.raw.aftabe_messi_back));
-            Log.d("armin testing front: ", String.valueOf(R.raw.aftabe_messi_front));
+            String backImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_back";
+            String frontImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_front";
+            String zipFile = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId();
 
             try {
                 writeRawFiles(backImage, "png");
@@ -100,8 +95,7 @@ public class MainApplication extends Application {
                     stringTokenizer.nextToken();
                     String path = getFilesDir()
                             .getPath() + File.separator +
-                            MainApplication.downloadedObject.getDownloaded()
-                                    .get(0).getId() + "_" + stringTokenizer.nextToken() + "." + type;
+                            MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_" + stringTokenizer.nextToken() + "." + type;
                     Log.d("armin etsting path", path);
                     fileOutputStream = new FileOutputStream(path);
                     byte[] bytes = new byte[1024];
@@ -124,8 +118,7 @@ public class MainApplication extends Application {
                  */
                 String path = getFilesDir()
                         .getPath() + File.separator +
-                        MainApplication.downloadedObject.getDownloaded()
-                                .get(0).getId() + "." + type;
+                        MainApplication.downloadedObject.getDownloaded().get(0).getId() + "." + type;
                 try {
                     fileOutputStream = new FileOutputStream(path);
                     byte[] bytes = new byte[1024];
