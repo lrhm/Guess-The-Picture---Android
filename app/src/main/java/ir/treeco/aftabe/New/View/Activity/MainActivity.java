@@ -14,17 +14,24 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.pixplicity.easyprefs.library.Prefs;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
@@ -44,14 +51,13 @@ public class MainActivity extends FragmentActivity {
     //NotificationAdapter notificationAdapter;
     Context context;
 //    SharedPreferences preferences;
-   // public static HeadObject downlodedObject; //todo in bayad static class she ehtemalan
+    // public static HeadObject downlodedObject; //todo in bayad static class she ehtemalan
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
-
 
 //        preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
@@ -64,7 +70,7 @@ public class MainActivity extends FragmentActivity {
         context = this;
         loadDownloadedObject();
         headObject = new HeadObject();
-        parseJson();
+        //parseJson();
 
         //region Setup fragments in ViewPager
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
@@ -83,7 +89,7 @@ public class MainActivity extends FragmentActivity {
         //endregion
 
         //region Downloads
-        DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
+        /*DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
                 new DLTaskListener() {
                     @Override
                     public void onFinish(File file) {
@@ -92,7 +98,7 @@ public class MainActivity extends FragmentActivity {
                         downloadTask();
                     }
                 }
-        );
+        );*/
         //endregion
     }
 
@@ -131,10 +137,12 @@ public class MainActivity extends FragmentActivity {
     public HeadObject getHeadObject() {
         return headObject;
     }
+
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
-    public void downloadPackage(String url, String path, final int id, final String name){
+
+    public void downloadPackage(String url, String path, final int id, final String name) {
 
         //notificationAdapter = new NotificationAdapter(id, this, name);
         DLManager.getInstance(this).dlStart(url, path, new DLTaskListener() {
@@ -189,7 +197,7 @@ public class MainActivity extends FragmentActivity {
             e.printStackTrace();
         }
 
-        if (MainApplication.downloadedObject.getDownloaded()==null){
+        if (MainApplication.downloadedObject.getDownloaded() == null) {
             ArrayList<PackageObject> a = new ArrayList<>();
             MainApplication.downloadedObject.setDownloaded(a);
         }
@@ -205,7 +213,7 @@ public class MainActivity extends FragmentActivity {
             Log.e("downloadedPAth", downloadedPAth);
 
             File file = new File(downloadedPAth);
-            if(file.exists()) {
+            if (file.exists()) {
                 InputStream downloadedPAthinputStream = new FileInputStream(downloadedPAth);
                 Reader readerd = new InputStreamReader(downloadedPAthinputStream, "UTF-8");
                 Gson gsond = new GsonBuilder().create();
@@ -213,7 +221,7 @@ public class MainActivity extends FragmentActivity {
 
             }
 
-        } catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

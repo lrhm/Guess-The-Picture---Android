@@ -30,8 +30,8 @@ public class Zip {
         String newPath = context.getFilesDir().getPath() + "/Downloaded/";
         Log.e("path", "newPath: " + newPath);
 
-                    File fmd1 = new File(newPath);
-                    fmd1.mkdirs();
+        File fmd1 = new File(newPath);
+        fmd1.mkdirs();
         InputStream is;
         ZipInputStream zis;
         try {
@@ -54,7 +54,7 @@ public class Zip {
 //                    continue;
 //                }
 
-                FileOutputStream fout = new FileOutputStream(newPath + id + "_" +filename);
+                FileOutputStream fout = new FileOutputStream(newPath + id + "_" + filename);
 
                 // cteni zipu a zapis
                 while ((count = zis.read(buffer)) != -1) {
@@ -66,8 +66,7 @@ public class Zip {
             }
 
             zis.close();
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

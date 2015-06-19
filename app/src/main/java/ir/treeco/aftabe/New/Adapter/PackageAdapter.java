@@ -70,7 +70,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
         viewHolder.textView.setText(packageObjects.get(i).getName());
-        String a = "file://" + context.getFilesDir().getPath() + "/" + packageObjects.get(i).getId() + ".png";
+        String a = "file://" + context.getFilesDir().getPath() + "/" + packageObjects.get(i).getId()+ "_front" + ".png";
         Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
     }
