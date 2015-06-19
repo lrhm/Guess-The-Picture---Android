@@ -2,6 +2,9 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +22,8 @@ import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
-public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder>{
-    private ArrayList<PackageObject>  packageObjects;
+public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
+    private ArrayList<PackageObject> packageObjects;
     Context context;
     private MainActivity mainActivity;
 
@@ -32,6 +35,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
+
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
@@ -66,14 +70,14 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
-        String a = "file://" + context.getFilesDir().getPath() + "/" + packageObjects.get(i).getId()+ "_front" + ".png";
+        String a = "file://" + context.getFilesDir().getPath() + "/" + "p" + packageObjects.get(i).getId() + "_front" + ".png";
         Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        if (packageObjects==null)
+        if (packageObjects == null)
             return 0;
         return packageObjects.size();
     }
