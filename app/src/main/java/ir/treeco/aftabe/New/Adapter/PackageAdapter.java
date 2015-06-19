@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,11 +32,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
-        TextView textView;
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
-            textView = (TextView) itemView.findViewById(R.id.itemPackageText);
             v.setOnClickListener(this);
         }
 
@@ -69,7 +66,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.textView.setText(packageObjects.get(i).getName());
         String a = "file://" + context.getFilesDir().getPath() + "/" + packageObjects.get(i).getId()+ "_front" + ".png";
         Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
