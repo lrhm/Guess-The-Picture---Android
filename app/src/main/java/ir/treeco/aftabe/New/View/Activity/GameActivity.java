@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -43,7 +45,22 @@ public class GameActivity extends FragmentActivity {
         // set background drawable
         setOriginalBackgroundColor();
 
-        String solution = "aa a aa bbb bbbb cccc cccc";
+
+        Intent intent = getIntent();
+        levelId = intent.getIntExtra("id", 0);
+        packageNumber = intent.getIntExtra("packageNumber", 0);
+
+        String solution1 = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getJavab();
+
+
+
+        byte[] data = Base64.decode(solution1, Base64.DEFAULT);
+        String solution = null;
+        try {
+            solution = new String(data, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         int breake1;
         int breake2;
@@ -110,7 +127,7 @@ public class GameActivity extends FragmentActivity {
 
 
 
-        SolutionAdapter solutionAdapter1 = new SolutionAdapter(characters1);
+        SolutionAdapter solutionAdapter1 = new SolutionAdapter(characters1, this);
         RecyclerView recyclerView_solution1 = (RecyclerView) findViewById(R.id.recycler_view_solution1);
         GridLayoutManager gridLayoutManager_solution1 = new GridLayoutManager(this, characters1.length);
         recyclerView_solution1.setHasFixedSize(true);
@@ -118,7 +135,7 @@ public class GameActivity extends FragmentActivity {
         recyclerView_solution1.setAdapter(solutionAdapter1);
 
         if (characters2.length > 0) {
-            SolutionAdapter solutionAdapter2 = new SolutionAdapter(characters2);
+            SolutionAdapter solutionAdapter2 = new SolutionAdapter(characters2, this);
             RecyclerView recyclerView_solution2 = (RecyclerView) findViewById(R.id.recycler_view_solution2);
             GridLayoutManager gridLayoutManager_solution2 = new GridLayoutManager(this, characters2.length);
             recyclerView_solution2.setHasFixedSize(true);
@@ -128,7 +145,7 @@ public class GameActivity extends FragmentActivity {
         }
 
         if (characters3.length > 0) {
-            SolutionAdapter solutionAdapter3 = new SolutionAdapter(characters3);
+            SolutionAdapter solutionAdapter3 = new SolutionAdapter(characters3, this);
             RecyclerView recyclerView_solution3 = (RecyclerView) findViewById(R.id.recycler_view_solution3);
             GridLayoutManager gridLayoutManager_solution3 = new GridLayoutManager(this, characters3.length);
             recyclerView_solution3.setHasFixedSize(true);
@@ -155,9 +172,6 @@ public class GameActivity extends FragmentActivity {
             }
         }
 
-        Intent intent = getIntent();
-        levelId = intent.getIntExtra("id", 0);
-        packageNumber = intent.getIntExtra("packageNumber", 0);
 
         imageView = (ImageView) findViewById(R.id.image_game);
 //        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
