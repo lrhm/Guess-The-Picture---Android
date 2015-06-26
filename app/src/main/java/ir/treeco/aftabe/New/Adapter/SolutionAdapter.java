@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.New.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,13 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import ir.treeco.aftabe.LetterButtonDrawable;
 import ir.treeco.aftabe.R;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> implements View.OnClickListener {
-    public SolutionAdapter(char[] characters) {
-        this.characters = characters;
-    }
     char[] characters;
+    Context context;
+
+    public SolutionAdapter(char[] characters, Context context) {
+        this.characters = characters;
+        this.context = context;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.itemkeboard);
+        }
+    }
 
     @Override
     public SolutionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -25,9 +39,11 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
         Log.d("armin characters ", String.valueOf(characters[position]));
 
-        if (characters[position] != ' ') {
+        if (characters[getItemCount() - position - 1] != ' ') {
             holder.imageView.setBackgroundResource(R.drawable.place_holder);
-            holder.imageView.setTag(characters[position]);
+            holder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(characters[getItemCount() - position - 1]), context));
+
+            holder.imageView.setTag(characters[getItemCount() - position - 1]);
             holder.imageView.setOnClickListener(this);
         }
     }
@@ -46,12 +62,4 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.itemkeboard);
-        }
-    }
 }

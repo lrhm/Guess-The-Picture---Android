@@ -47,6 +47,6 @@ public class LevelsFragmentNew extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 }
