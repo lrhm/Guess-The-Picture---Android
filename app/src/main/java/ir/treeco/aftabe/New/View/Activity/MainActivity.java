@@ -56,7 +56,7 @@ public class MainActivity extends FragmentActivity {
 //        LengthManager.initialize(this); //todo delete
 
         // set main activity background
-        setOriginalBackgroundColor();
+//        setOriginalBackgroundColor();
 
         context = this;
         loadDownloadedObject();

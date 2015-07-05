@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -17,7 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.New.View.Activity.StoreActivity;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.LengthManager;
 
 public class HeaderFragmentNew extends Fragment {
 //    SharedPreferences preferences;
@@ -40,7 +37,7 @@ public class HeaderFragmentNew extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.new_fragment_header, container, false);
-        LengthManager.initialize(activity.getBaseContext());
+//        LengthManager.initialize(activity.getBaseContext());
         // setup header
         setUpHeader();
         // setup coinBox

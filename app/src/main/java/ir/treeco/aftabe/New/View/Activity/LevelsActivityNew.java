@@ -56,10 +56,10 @@ public class LevelsActivityNew extends FragmentActivity {
 
 
         // set background drawable
-        setOriginalBackgroundColor();
+//        setOriginalBackgroundColor();
 
         // set top and bottom curved bar
-        setTopAndBottomBar();
+//        setTopAndBottomBar();
 
         parseJson();
 
