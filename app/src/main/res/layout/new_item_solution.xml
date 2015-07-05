@@ -8,6 +8,7 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:id="@+id/itemkeboard"/>
+        android:id="@+id/itemkeboard"
+        android:background="@drawable/place_holder"/>
 
 </RelativeLayout>

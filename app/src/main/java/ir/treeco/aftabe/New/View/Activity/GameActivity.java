@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
@@ -59,6 +60,18 @@ public class GameActivity extends FragmentActivity {
             e.printStackTrace();
         }
 
+        String status;
+        StringBuilder myName = new StringBuilder(solution);
+
+        for (int i = 0; i < solution.length(); i++) {
+
+            System.out.println(myName);
+            if (solution.charAt(i) != '.' && solution.charAt(i) != ' ') {
+                myName.setCharAt(i, '-');
+            }
+        }
+        status = String.valueOf(myName);
+
 //        int breake1;
 //        int breake2;
 //        char[] characters1;
@@ -66,14 +79,20 @@ public class GameActivity extends FragmentActivity {
 //        char[] characters3 = new char[0];
 
         Log.e("solotion" , solution);
-        String[] characters0;// = new String[3];
+        String[] characters0;
+        String[] status0;// = new String[3];
 
 //        if (solution != null) {
             if (solution.length() <= 12) {
+
                 characters0 = new String[1];
                 characters0[0] = solution;
+
+                status0 = new String[1];
+                status0[0] = status;
             } else {
                 characters0 = solution.split("\\.");
+                status0 = status.split("\\.");
             }
 //        }
 
@@ -82,22 +101,22 @@ public class GameActivity extends FragmentActivity {
 
         RecyclerView recyclerView_solution1 = (RecyclerView) findViewById(R.id.recycler_view_solution1);
         recyclerView_solution1.setHasFixedSize(true);
-        recyclerView_solution1.setLayoutManager(new GridLayoutManager(this, characters0[0].length()));
-        recyclerView_solution1.setAdapter(new SolutionAdapter(characters0[0], this));
+        recyclerView_solution1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        recyclerView_solution1.setAdapter(new SolutionAdapter(characters0[0], this, status0[0]));
 
         if (characters0.length > 1 && characters0[1] != null && characters0[1].length() > 0) {
             RecyclerView recyclerView_solution2 = (RecyclerView) findViewById(R.id.recycler_view_solution2);
             recyclerView_solution2.setHasFixedSize(true);
-            recyclerView_solution2.setLayoutManager(new GridLayoutManager(this, characters0[1].length()));
-            recyclerView_solution2.setAdapter(new SolutionAdapter(characters0[1], this));
+            recyclerView_solution2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+            recyclerView_solution2.setAdapter(new SolutionAdapter(characters0[1], this, status0[1]));
             recyclerView_solution2.setVisibility(View.VISIBLE);
         }
 
         if (characters0.length > 2 && characters0[2] != null && characters0[2].length() > 0) {
             RecyclerView recyclerView_solution3 = (RecyclerView) findViewById(R.id.recycler_view_solution3);
             recyclerView_solution3.setHasFixedSize(true);
-            recyclerView_solution3.setLayoutManager(new GridLayoutManager(this, characters0[2].length()));
-            recyclerView_solution3.setAdapter(new SolutionAdapter(characters0[2], this));
+            recyclerView_solution3.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+            recyclerView_solution3.setAdapter(new SolutionAdapter(characters0[2], this, status0[2]));
             recyclerView_solution3.setVisibility(View.VISIBLE);
         }
 

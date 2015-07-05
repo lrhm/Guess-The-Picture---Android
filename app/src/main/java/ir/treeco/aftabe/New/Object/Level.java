@@ -7,6 +7,7 @@ public class Level {
     private boolean resolved;
     private String type;
     private String thumbnail;
+    private String status;
 
     public int getId() {
         return id;
@@ -54,5 +55,13 @@ public class Level {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
