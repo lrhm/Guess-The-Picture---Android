@@ -3,7 +3,6 @@ package ir.treeco.aftabe.New.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
         String a = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects.get(i).getId() + "_front" + ".png";
-        Log.e("tes", a);
+//        Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
     }
 

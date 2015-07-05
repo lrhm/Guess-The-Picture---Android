@@ -69,7 +69,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
                     + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
-            Log.e("tes", a);
+//            Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
         Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
 //            viewHolder.frame.setImageBitmap(levelUnlocked);

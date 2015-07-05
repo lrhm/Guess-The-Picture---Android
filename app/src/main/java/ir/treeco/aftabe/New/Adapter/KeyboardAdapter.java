@@ -44,13 +44,13 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     @Override
     public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int i) {
         viewHolder.imageView.setBackgroundResource(R.drawable.albutton);
-        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
+//        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
         viewHolder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(strings[i]),context));
     }
 
     @Override
     public int getItemCount() {
-        Log.d("armin strings length", String.valueOf(strings.length));
+//        Log.d("armin strings length", String.valueOf(strings.length));
         return strings.length;
     }
 }
