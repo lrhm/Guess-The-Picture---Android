@@ -89,7 +89,7 @@ public class LevelsActivityNew extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
-        MainApplication.saveDataAndBackUpData(this);
+//        MainApplication.saveDataAndBackUpData(this);
     }
 
     public void parseJson() {

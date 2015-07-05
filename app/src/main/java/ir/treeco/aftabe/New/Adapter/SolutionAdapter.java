@@ -12,10 +12,10 @@ import ir.treeco.aftabe.LetterButtonDrawable;
 import ir.treeco.aftabe.R;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> implements View.OnClickListener {
-    char[] characters;
+    String characters;
     Context context;
 
-    public SolutionAdapter(char[] characters, Context context) {
+    public SolutionAdapter(String characters, Context context) {
         this.characters = characters;
         this.context = context;
     }
@@ -37,22 +37,22 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
-        Log.d("armin characters ", String.valueOf(characters[position]));
+        Log.d("armin characters ", String.valueOf(characters.charAt(position)));
 
-        if (characters[getItemCount() - position - 1] != ' ') {
+        if (characters.charAt(getItemCount() - position - 1) != ' ') {
             holder.imageView.setBackgroundResource(R.drawable.place_holder);
-            holder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(characters[getItemCount() - position - 1]), context));
+            holder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(characters.charAt(getItemCount() - position - 1)), context));
 
-            holder.imageView.setTag(characters[getItemCount() - position - 1]);
+            holder.imageView.setTag(characters.charAt(getItemCount() - position - 1));
             holder.imageView.setOnClickListener(this);
         }
     }
 
     @Override
     public int getItemCount() {
-        Log.d("armin strings size", String.valueOf(characters.length));
+        Log.d("armin strings size", String.valueOf(characters.length()));
 
-        return characters.length;
+        return characters.length();
     }
 
     @Override
