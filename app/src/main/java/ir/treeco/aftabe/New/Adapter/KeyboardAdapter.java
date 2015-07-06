@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.New.Adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,14 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder>{
-    Context context;
+    GameActivity gameActivity;
     char[] strings;
 
-    public KeyboardAdapter(Context context,char[] strings) {
-        this.context = context;
+    public KeyboardAdapter(GameActivity gameActivity, char[] strings) {
+        this.gameActivity = gameActivity;
         this.strings = strings;
     }
 
@@ -31,6 +31,7 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
+            gameActivity.selectKeyboard(getAdapterPosition());
             Log.d("armin adapter position", String.valueOf(getAdapterPosition()));
         }
     }

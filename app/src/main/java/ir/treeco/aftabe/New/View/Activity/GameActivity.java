@@ -24,12 +24,11 @@ import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
 public class GameActivity extends FragmentActivity {
-    private RecyclerView recyclerView;
-    private KeyboardAdapter adapter;
     int levelId;
     ImageView imageView;
     int packageNumber;
     private Tools tools;
+    private String status;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,30 +50,34 @@ public class GameActivity extends FragmentActivity {
                 .downloadedObject.getDownloaded()
                 .get(packageNumber).getLevels().get(levelId).getJavab());
 
-        String status;
         StringBuilder stringBuilder = new StringBuilder(solution);
 
         for (int i = 0; i < solution.length(); i++) {
-            System.out.println(stringBuilder);
             if (solution.charAt(i) != '.' && solution.charAt(i) != ' ') {
                 stringBuilder.setCharAt(i, '-');
             }
         }
         status = String.valueOf(stringBuilder);
 
-        String[] solutionAdapter;
-        String[] statusAdapter;
+        Log.e("solotion", solution);
 
-        if (solution.length() <= 12) {
-            solutionAdapter = new String[1];
-            solutionAdapter[0] = solution;
+        char[] solutionAdapter = solution.toCharArray();
+        char[] statusAdapter = status.toCharArray();
 
-            statusAdapter = new String[1];
-            statusAdapter[0] = status;
+        int break0;
+        int break1;
 
+        if (solution.length() > 12) {
+            break0 = getBreak(solutionAdapter, 0);
+
+            if (solution.length() > 24) {
+                break1 = getBreak(solutionAdapter, 1);
+            } else {
+                break1 = solution.length();
+            }
         } else {
-            solutionAdapter = solution.split("\\.");
-            statusAdapter = status.split("\\.");
+            break0 = solution.length();
+            break1 = 0;
         }
 
         RecyclerView recyclerView_solution1 =
@@ -86,11 +89,9 @@ public class GameActivity extends FragmentActivity {
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
         recyclerView_solution1.setAdapter(
-                new SolutionAdapter(solutionAdapter[0], this, statusAdapter[0]));
+                new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1));
 
-        if (solutionAdapter.length > 1 && solutionAdapter[1] != null
-                && solutionAdapter[1].length() > 0) {
-
+        if (solutionAdapter.length > 12) {
             RecyclerView recyclerView_solution2 = (
                     RecyclerView) findViewById(R.id.recycler_view_solution2);
 
@@ -100,14 +101,12 @@ public class GameActivity extends FragmentActivity {
                     new LinearLayoutManager (this, LinearLayoutManager.HORIZONTAL, true));
 
             recyclerView_solution2.setAdapter (
-                    new SolutionAdapter(solutionAdapter[1], this, statusAdapter[1]));
+                    new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1));
 
             recyclerView_solution2.setVisibility(View.VISIBLE);
         }
 
-        if (solutionAdapter.length > 2 && solutionAdapter[2] != null
-                && solutionAdapter[2].length() > 0) {
-
+        if (solutionAdapter.length > 24) {
             RecyclerView recyclerView_solution3 = (
                     RecyclerView) findViewById(R.id.recycler_view_solution3);
 
@@ -117,7 +116,7 @@ public class GameActivity extends FragmentActivity {
                     new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
             recyclerView_solution3.setAdapter (
-                    new SolutionAdapter(solutionAdapter[2], this, statusAdapter[2]));
+                    new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1));
 
             recyclerView_solution3.setVisibility(View.VISIBLE);
         }
@@ -179,6 +178,28 @@ public class GameActivity extends FragmentActivity {
         }));
     }
     //endregion
+
+    public void selectKeyboard(int adapterPosition) {
+        for (int i = 0; i < status.length(); i++) {
+            if (status.charAt(i) != '-') {
+
+            }
+        }
+    }
+
+    private int getBreak (char[] string, int n) {
+        int number = n;
+        for (int i = 0; i < string.length; i++) {
+            if (string[i] == '.'){
+                if (number == 0) {
+                    return i;
+                } else {
+                    number--;
+                }
+            }
+        }
+        return n;
+    }
 
 
 }
