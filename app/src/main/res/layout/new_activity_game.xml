@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#77aaff">
 
     <ImageView
         android:id="@+id/background"
@@ -16,12 +17,28 @@
         android:layout_height="100dp"
         tools:layout="@layout/new_fragment_header" />
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hazf"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/header"
+        android:text="حذف چند حرف"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/azafe"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/header"
+        android:text="نمایش یک حرف"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:id="@+id/quation"
-            android:layout_below="@id/header"
+            android:layout_below="@id/hazf"
             android:layout_above="@+id/recycler_view_solution1">
 
             <ImageView
@@ -32,42 +49,34 @@
         </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@id/recycler_view_solution1"
+        android:id="@+id/recycler_view_solution1"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:layout_above="@+id/recycler_view_solution2"
-        android:overScrollMode="never"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:scrollbars="vertical" />
+        android:gravity="center_horizontal" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@id/recycler_view_solution2"
+        android:id="@+id/recycler_view_solution2"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:layout_above="@+id/recycler_view_solution3"
-        android:overScrollMode="never"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:gravity="center"
-        android:scrollbars="vertical"
         android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@id/recycler_view_solution3"
+        android:id="@+id/recycler_view_solution3"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:layout_above="@+id/recycler_view_keyboard"
         android:overScrollMode="never"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:gravity="center"
-        android:scrollbars="vertical"
         android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
-            android:id="@id/recycler_view_keyboard"
+            android:id="@+id/recycler_view_keyboard"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_alignParentBottom="true"

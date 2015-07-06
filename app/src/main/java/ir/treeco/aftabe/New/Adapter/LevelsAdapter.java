@@ -2,8 +2,6 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +11,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.View.Activity.GameActivity;
-import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
@@ -74,7 +69,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
                     + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
-            Log.e("tes", a);
+//            Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
         Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
 //            viewHolder.frame.setImageBitmap(levelUnlocked);

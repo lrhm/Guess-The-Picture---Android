@@ -5,15 +5,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -21,176 +21,163 @@ import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
-import ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew;
+import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.LengthManager;
 
-public class GameActivity extends FragmentActivity {
-    private RecyclerView recyclerView;
-    private KeyboardAdapter adapter;
+public class GameActivity extends FragmentActivity implements View.OnClickListener {
     int levelId;
     ImageView imageView;
     int packageNumber;
+    private Tools tools;
+    private String status;
+    private char[] statusAdapter;
+    private char[] keyboardChars;
+    private char[] solutionAdapter;
+    private SolutionAdapter solutionAdapter0;
+    private SolutionAdapter solutionAdapter1;
+    private SolutionAdapter solutionAdapter2;
+    int break0;
+    int break1;
+    private int[] sAndkIndex;  //!! should use hashMap
+    private KeyboardAdapter keyboardAdapter;
+    private boolean[] keyboardStatus;
+    Button hazf;
+    Button azafe;
+    private Random random;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_game);
 
-        LengthManager.initialize(this);
+//        LengthManager.initialize(this);
+//        HeaderFragmentNew header = (HeaderFragmentNew) getSupportFragmentManager().findFragmentById(R.id.header);
+//        header.setUpHeader(R.drawable.cheat_button);
+//        setOriginalBackgroundColor();
 
-        HeaderFragmentNew header = (HeaderFragmentNew) getSupportFragmentManager().findFragmentById(R.id.header);
-        header.setUpHeader(R.drawable.cheat_button);
+        hazf = (Button) findViewById(R.id.hazf);
+        azafe = (Button) findViewById(R.id.azafe);
+        hazf.setOnClickListener(this);
+        azafe.setOnClickListener(this);
 
-        // set background drawable
-        setOriginalBackgroundColor();
-
+        tools = new Tools();
 
         Intent intent = getIntent();
         levelId = intent.getIntExtra("id", 0);
         packageNumber = intent.getIntExtra("packageNumber", 0);
 
-        String solution1 = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getJavab();
+        String solution = tools.decodeBase64(MainApplication
+                .downloadedObject.getDownloaded()
+                .get(packageNumber).getLevels().get(levelId).getJavab());
 
+        StringBuilder stringBuilder = new StringBuilder(solution);
 
-
-        byte[] data = Base64.decode(solution1, Base64.DEFAULT);
-        String solution = null;
-        try {
-            solution = new String(data, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        for (int i = 0; i < solution.length(); i++) {
+            if (solution.charAt(i) != '.' && solution.charAt(i) != ' ') {
+                stringBuilder.setCharAt(i, '-');
+            }
         }
+        status = String.valueOf(stringBuilder);
 
-        int breake1;
-        int breake2;
-        char[] characters1;
-        char[] characters2 = new char[0];
-        char[] characters3 = new char[0];
+        Log.e("solotion", solution);
 
-        if (solution.length() >= 9){
-            breake1 = 10;
-            for (int i = 0; i < 10  && i < solution.length(); i ++){
-                if (solution.charAt(i) == ' '){
-                    breake1 = i;
-                }
-            }
+        solutionAdapter = solution.toCharArray();
+        statusAdapter = status.toCharArray();
+        sAndkIndex = new int[statusAdapter.length];
 
-            characters1 = new char[breake1];
-            solution.getChars(0, breake1, characters1, 0);
-            for (int i = 0 ; i < characters1.length; i++) {
-                Log.e("Asd", String.valueOf(characters1[i]));
-            }
-            //-------------------------------
-            if (solution.length() - breake1 -1  > 9) {
-                breake2 = 18;
-                for (int i = breake1 + 1; i <= breake1 + 10 && i <= solution.length(); i ++){
-                    if (solution.charAt(i) == ' '){
-                        breake2 = i;
-                    }
-                }
+        if (solution.length() > 12) {
+            break0 = getBreak(solutionAdapter, 0);
 
-                characters2 = new char[breake2 - breake1 - 1];
-                solution.getChars(breake1 + 1, breake2, characters2, 0);
-                for (int i = 0 ; i < characters2.length; i++) {
-                    Log.e("Asd2", String.valueOf(characters2[i]));
-                }
-
-
-
-                characters3 = new char[solution.length()-1 - breake2];
-                solution.getChars(breake2 + 1, solution.length(), characters3, 0);
-                for (int i = 0 ; i < characters3.length; i++) {
-                    Log.e("Asd3", String.valueOf(characters3[i]));
-                }
-
+            if (solution.length() > 24) {
+                break1 = getBreak(solutionAdapter, 1);
             } else {
-                breake2 = solution.length() -1 ;
-                characters2 = new char[breake2 - breake1];
-                solution.getChars(breake1 + 1, breake2 + 1, characters2, 0);
-                for (int i = 0 ; i < characters2.length; i++) {
-                    Log.e("Asd2", String.valueOf(characters2[i]));
-                }
+                break1 = solution.length();
             }
-
         } else {
-            characters1 = new char[solution.length()];
-            solution.getChars(0, solution.length(), characters1, 0);
-            for (int i = 0 ; i < characters1.length; i++) {
-                Log.e("Asd", String.valueOf(characters1[i]));
-            }
+            break0 = solution.length();
+            break1 = 0;
         }
 
-        char[] characters = new char[solution.length()];
-        solution.getChars(0, solution.length(), characters, 0);
+        RecyclerView recyclerView_solution1 =
+                (RecyclerView) findViewById(R.id.recycler_view_solution1);
 
-
-
-
-        SolutionAdapter solutionAdapter1 = new SolutionAdapter(characters1, this);
-        RecyclerView recyclerView_solution1 = (RecyclerView) findViewById(R.id.recycler_view_solution1);
-        GridLayoutManager gridLayoutManager_solution1 = new GridLayoutManager(this, characters1.length);
         recyclerView_solution1.setHasFixedSize(true);
-        recyclerView_solution1.setLayoutManager(gridLayoutManager_solution1);
-        recyclerView_solution1.setAdapter(solutionAdapter1);
 
-        if (characters2.length > 0) {
-            SolutionAdapter solutionAdapter2 = new SolutionAdapter(characters2, this);
-            RecyclerView recyclerView_solution2 = (RecyclerView) findViewById(R.id.recycler_view_solution2);
-            GridLayoutManager gridLayoutManager_solution2 = new GridLayoutManager(this, characters2.length);
+        recyclerView_solution1.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+        solutionAdapter0 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1);
+        recyclerView_solution1.setAdapter(solutionAdapter0);
+
+        if (solutionAdapter.length > 12) {
+            RecyclerView recyclerView_solution2 = (
+                    RecyclerView) findViewById(R.id.recycler_view_solution2);
+
             recyclerView_solution2.setHasFixedSize(true);
-            recyclerView_solution2.setLayoutManager(gridLayoutManager_solution2);
-            recyclerView_solution2.setAdapter(solutionAdapter2);
+
+            recyclerView_solution2.setLayoutManager(
+                    new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+            solutionAdapter1 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1);
+            recyclerView_solution2.setAdapter (solutionAdapter1);
+
             recyclerView_solution2.setVisibility(View.VISIBLE);
         }
 
-        if (characters3.length > 0) {
-            SolutionAdapter solutionAdapter3 = new SolutionAdapter(characters3, this);
-            RecyclerView recyclerView_solution3 = (RecyclerView) findViewById(R.id.recycler_view_solution3);
-            GridLayoutManager gridLayoutManager_solution3 = new GridLayoutManager(this, characters3.length);
+        if (solutionAdapter.length > 24) {
+            RecyclerView recyclerView_solution3 = (
+                    RecyclerView) findViewById(R.id.recycler_view_solution3);
+
             recyclerView_solution3.setHasFixedSize(true);
-            recyclerView_solution3.setLayoutManager(gridLayoutManager_solution3);
-            recyclerView_solution3.setAdapter(solutionAdapter3);
+
+            recyclerView_solution3.setLayoutManager(
+                    new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+            solutionAdapter2 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1);
+            recyclerView_solution3.setAdapter (solutionAdapter2);
+
             recyclerView_solution3.setVisibility(View.VISIBLE);
         }
 
-        String[] strings = getResources().getStringArray(R.array.alphabet);
-        char[] keyboardChars = new char[21];
+        char[] alphabet = {
+                'ی', 'ه','و' , 'ن', 'م', 'ل', 'گ', 'ک', 'ق', 'ف', 'غ', 'ع', 'ظ', 'ط', 'ض', 'ص', 'ش',
+                'س','ژ' , 'ز', 'ر', 'ذ','د' , 'خ', 'ح', 'چ', 'ج', 'ث', 'ت', 'پ', 'ب', 'ا', 'آ' };
+
+        keyboardChars = new char[21];
+        keyboardStatus = new boolean[21];
 
         ArrayList<Integer> list = new ArrayList<>();
-        Random random = new Random();
+        random = new Random();
         for (int i = 0; i < 21; i++) {
-            keyboardChars[i] = strings[random.nextInt(33)].charAt(0);
+            keyboardChars[i] = alphabet[random.nextInt(33)];
             list.add(i);
         }
 
-        for (int i = 0; i < characters.length && i <21; i++) {
-            if (characters[i] != ' ') {
+        for (int i = 0; i < solutionAdapter.length; i++) { //fuck
+            if (solutionAdapter[i] != ' ' && solutionAdapter[i] != '.') {
                 int j = random.nextInt(list.size());
-                keyboardChars[list.get(j)] = characters[i];
+                keyboardChars[list.get(j)] = solutionAdapter[i];
                 list.remove(j);
             }
         }
 
+        RecyclerView recyclerView_keyboard = (
+                RecyclerView) findViewById(R.id.recycler_view_keyboard);
+
+        recyclerView_keyboard.setHasFixedSize(true);
+        recyclerView_keyboard.setLayoutManager(new GridLayoutManager(this, 7));
+        keyboardAdapter = new KeyboardAdapter(this, keyboardChars, keyboardStatus);
+        recyclerView_keyboard.setAdapter(keyboardAdapter);
 
         imageView = (ImageView) findViewById(R.id.image_game);
 //        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
 //        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
-
-
-
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_keyboard);
-        recyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 7);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new KeyboardAdapter(this, keyboardChars);
-        recyclerView.setAdapter(adapter);
-
         String a = "file://" + getFilesDir().getPath() + "/Downloaded/"
                 + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
-                + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(levelId).getResources();
+                + "_" + MainApplication.downloadedObject.getDownloaded()
+                .get(packageNumber).getLevels().get(levelId).getResources();
 
         Picasso.with(this).load(a).into(imageView);
     }
@@ -199,7 +186,7 @@ public class GameActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
-        MainApplication.saveDataAndBackUpData(this);
+//        MainApplication.saveDataAndBackUpData(this);
     }
 
     //region SetBackGroundDrawable
@@ -212,4 +199,128 @@ public class GameActivity extends FragmentActivity {
         }));
     }
     //endregion
+
+    public void selectKeyboard(int adapterPosition) {
+        for (int i = 0; i < statusAdapter.length; i++) {
+            if (statusAdapter[i] == '-') {
+                statusAdapter[i] = keyboardChars[adapterPosition];
+                sAndkIndex[i] = adapterPosition;
+                keyboardStatus[adapterPosition] = true;
+
+                keyboardAdapter.notifyDataSetChanged();
+
+                if (i <= break0) {
+                    solutionAdapter0.notifyDataSetChanged();
+                } else if(i <= break1) {
+                    solutionAdapter1.notifyDataSetChanged();
+                } else {
+                    solutionAdapter2.notifyDataSetChanged();
+                }
+                return;
+            }
+        }
+    }
+
+    public void removeFromSolution (int adapterPosition) {
+        statusAdapter[adapterPosition] = '-';
+        keyboardStatus[sAndkIndex[adapterPosition]] = false;
+        keyboardAdapter.notifyDataSetChanged();
+
+        if (adapterPosition <= break0) {
+            solutionAdapter0.notifyDataSetChanged();
+        } else if(adapterPosition <= break1) {
+            solutionAdapter1.notifyDataSetChanged();
+        } else {
+            solutionAdapter2.notifyDataSetChanged();
+        }
+    }
+
+    private int getBreak (char[] string, int n) {
+        int number = n;
+        for (int i = 0; i < string.length; i++) {
+            if (string[i] == '.'){
+                if (number == 0) {
+                    return i;
+                } else {
+                    number--;
+                }
+            }
+        }
+        return n;
+    }
+
+    private void cheatHazf() {
+
+    }
+
+    private void cheatAzafe() { //is bad algoritm
+        int rand;
+        while (true) {
+            rand = random.nextInt(statusAdapter.length);
+
+            if (statusAdapter[rand] != '*' && statusAdapter[rand] != ' ' && statusAdapter[rand] != '.') {
+
+                if (statusAdapter[rand] != '-') {
+                    if (solutionAdapter[rand] != statusAdapter[rand]) {
+                        removeFromSolution(rand);
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+
+        statusAdapter[rand] = '*';
+
+        boolean key = false;
+
+        for (int i = 0; i < keyboardChars.length; i++) {
+            if (keyboardChars[i] == solutionAdapter[rand] && !keyboardStatus[i]) {
+                keyboardStatus[i] = true;
+                keyboardAdapter.notifyDataSetChanged();
+                key = true;
+                break;
+            }
+        }
+
+        if (!key) {
+            for (int i = 0; i < keyboardChars.length; i++) {
+                if (keyboardChars[i] == solutionAdapter[rand]) {
+                    for (int j = 0; j < sAndkIndex.length; j++) {
+                        if (sAndkIndex[j] == i) {
+                            removeFromSolution(j);
+                            break;
+                        }
+                    }
+
+                    keyboardStatus[i] = true;
+                    keyboardAdapter.notifyDataSetChanged();
+                    break;
+                }
+
+            }
+        }
+
+        if (rand <= break0) {
+            solutionAdapter0.notifyDataSetChanged();
+        } else if(rand <= break1) {
+            solutionAdapter1.notifyDataSetChanged();
+        } else {
+            solutionAdapter2.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.hazf:
+                cheatHazf();
+                break;
+
+            case R.id.azafe:
+                cheatAzafe();
+                break;
+        }
+    }
 }

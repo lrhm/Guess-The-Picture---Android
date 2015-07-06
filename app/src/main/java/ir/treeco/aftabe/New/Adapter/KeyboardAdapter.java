@@ -1,36 +1,39 @@
 package ir.treeco.aftabe.New.Adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
-import ir.treeco.aftabe.LetterButtonDrawable;
+import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
-public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder>{
-    Context context;
+public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder> {
+    GameActivity gameActivity;
     char[] strings;
+    boolean[] status;
 
-    public KeyboardAdapter(Context context,char[] strings) {
-        this.context = context;
+    public KeyboardAdapter(GameActivity gameActivity, char[] strings, boolean[] status) {
+        this.gameActivity = gameActivity;
         this.strings = strings;
+        this.status = status;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imageView;
+        TextView textView;
+
         public ViewHolder(View v) {
             super(v);
-            imageView = (ImageView) itemView.findViewById(R.id.itemkeboard);
+            textView = (TextView) itemView.findViewById(R.id.itemKeyboard);
 
             v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            gameActivity.selectKeyboard(getAdapterPosition());
             Log.d("armin adapter position", String.valueOf(getAdapterPosition()));
         }
     }
@@ -42,15 +45,21 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.imageView.setBackgroundResource(R.drawable.albutton);
-        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
-        viewHolder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(strings[i]),context));
+    public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int position) {
+//        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
+
+
+
+        if (status[position]) {
+            viewHolder.textView.setText("");
+        } else {
+            viewHolder.textView.setText(String.valueOf(strings[position]));
+        }
     }
 
     @Override
     public int getItemCount() {
-        Log.d("armin strings length", String.valueOf(strings.length));
+//        Log.d("armin strings length", String.valueOf(strings.length));
         return strings.length;
     }
 }

@@ -5,9 +5,12 @@
     android:gravity="center"
     android:layout_margin="2dp">
 
-    <ImageView
+    <TextView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:id="@+id/itemkeboard"/>
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:id="@+id/character"
+        android:background="@drawable/place_holder"/>
 
 </RelativeLayout>

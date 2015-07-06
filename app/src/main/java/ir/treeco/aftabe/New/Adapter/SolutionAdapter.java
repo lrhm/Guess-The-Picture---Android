@@ -1,31 +1,47 @@
 package ir.treeco.aftabe.New.Adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
-import ir.treeco.aftabe.LetterButtonDrawable;
+import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
-public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> implements View.OnClickListener {
+public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> {
     char[] characters;
-    Context context;
+    char[] status;
+    GameActivity gameActivity;
+    int n;
+    int break0;
+    int break1;
 
-    public SolutionAdapter(char[] characters, Context context) {
+    public SolutionAdapter(char[] characters, GameActivity gameActivity, char[] status, int n, int break0, int break1) {
         this.characters = characters;
-        this.context = context;
+        this.status = status;
+        this.gameActivity = gameActivity;
+        this.break0 = break0;
+        this.break1 = break1;
+        this.n = n;
+
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView textView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.itemkeboard);
+            textView = (TextView) itemView.findViewById(R.id.character);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (status[getLocalPosition(getAdapterPosition())] != '*') {
+                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()));
+            }
+
         }
     }
 
@@ -37,29 +53,54 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
-        Log.d("armin characters ", String.valueOf(characters[position]));
-
-        if (characters[getItemCount() - position - 1] != ' ') {
-            holder.imageView.setBackgroundResource(R.drawable.place_holder);
-            holder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(characters[getItemCount() - position - 1]), context));
-
-            holder.imageView.setTag(characters[getItemCount() - position - 1]);
-            holder.imageView.setOnClickListener(this);
+        if (status[getLocalPosition(position)] == '-') {
+            holder.textView.setText("");
+            holder.textView.setVisibility(View.VISIBLE);
+        } else if (status[getLocalPosition(position)] == ' ') {
+            holder.textView.setVisibility(View.INVISIBLE);
+        } else if (status[getLocalPosition(position)] == '*') {
+            holder.textView.setTextColor(0xFF00FF00);
+            holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
+            holder.textView.setVisibility(View.VISIBLE);
+        } else {
+            holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
+            holder.textView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public int getItemCount() {
-        Log.d("armin strings size", String.valueOf(characters.length));
+        switch (n) {
+            case 0:
+                return break0;
 
-        return characters.length;
-    }
+            case 1:
+                return characters.length - break0 - 1;
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.itemkeboard) {
-            Log.d("armin the tag is ", v.getTag().toString());
+            case 2:
+                return characters.length - break1;
+
+            default:
+                return characters.length;
+
         }
     }
 
+    public int getLocalPosition(int position) {
+
+        switch (n) {
+            case 0:
+                return position;
+
+            case 1:
+                return position + break0 + 1;
+
+            case 2:
+                return position + break1 + 1;
+
+            default:
+                return position;
+
+        }
+    }
 }

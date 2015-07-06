@@ -56,7 +56,7 @@ public class MainActivity extends FragmentActivity {
 //        LengthManager.initialize(this); //todo delete
 
         // set main activity background
-        setOriginalBackgroundColor();
+//        setOriginalBackgroundColor();
 
         context = this;
         loadDownloadedObject();
@@ -71,6 +71,7 @@ public class MainActivity extends FragmentActivity {
                 .add("محبوب‌ترین‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
                 .create()
         );
+
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 

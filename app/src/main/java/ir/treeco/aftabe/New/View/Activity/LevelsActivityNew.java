@@ -56,10 +56,10 @@ public class LevelsActivityNew extends FragmentActivity {
 
 
         // set background drawable
-        setOriginalBackgroundColor();
+//        setOriginalBackgroundColor();
 
         // set top and bottom curved bar
-        setTopAndBottomBar();
+//        setTopAndBottomBar();
 
         parseJson();
 
@@ -89,7 +89,7 @@ public class LevelsActivityNew extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
-        MainApplication.saveDataAndBackUpData(this);
+//        MainApplication.saveDataAndBackUpData(this);
     }
 
     public void parseJson() {
