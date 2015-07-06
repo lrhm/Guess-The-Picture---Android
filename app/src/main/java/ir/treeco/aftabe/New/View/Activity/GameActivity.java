@@ -32,6 +32,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     private String status;
     private char[] statusAdapter;
     private char[] keyboardChars;
+    private char[] solutionAdapter;
     private SolutionAdapter solutionAdapter0;
     private SolutionAdapter solutionAdapter1;
     private SolutionAdapter solutionAdapter2;
@@ -42,6 +43,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     private boolean[] keyboardStatus;
     Button hazf;
     Button azafe;
+    private Random random;
 
 
     @Override
@@ -80,7 +82,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
 
         Log.e("solotion", solution);
 
-        char[] solutionAdapter = solution.toCharArray();
+        solutionAdapter = solution.toCharArray();
         statusAdapter = status.toCharArray();
         sAndkIndex = new int[statusAdapter.length];
 
@@ -146,16 +148,16 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         keyboardStatus = new boolean[21];
 
         ArrayList<Integer> list = new ArrayList<>();
-        Random random = new Random();
+        random = new Random();
         for (int i = 0; i < 21; i++) {
             keyboardChars[i] = alphabet[random.nextInt(33)];
             list.add(i);
         }
 
-        for (int i = 0; i < solution.length() && i < 21; i++) {
-            if (solution.charAt(i) != ' ' && solution.charAt(i) != '.') {
+        for (int i = 0; i < solutionAdapter.length; i++) { //fuck
+            if (solutionAdapter[i] != ' ' && solutionAdapter[i] != '.') {
                 int j = random.nextInt(list.size());
-                keyboardChars[list.get(j)] = solution.charAt(i);
+                keyboardChars[list.get(j)] = solutionAdapter[i];
                 list.remove(j);
             }
         }
@@ -252,9 +254,36 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void cheatAzafe() {
+        int rand;
+        while (true) {
+            rand = random.nextInt(statusAdapter.length);
 
+            if (statusAdapter[rand] != '*' && statusAdapter[rand] != ' ' && statusAdapter[rand] != '.') {
+                break;
+            }
+        }
+
+        statusAdapter[rand] = '*';
+
+        int i = 0;
+        while (true) {
+            if (keyboardChars[i] == solutionAdapter[rand] && !keyboardStatus[i]) {
+                keyboardStatus[i] = true;
+                keyboardAdapter.notifyDataSetChanged();
+                break;
+            } else {
+                i++;
+            }
+        }
+
+        if (rand <= break0) {
+            solutionAdapter0.notifyDataSetChanged();
+        } else if(rand <= break1) {
+            solutionAdapter1.notifyDataSetChanged();
+        } else {
+            solutionAdapter2.notifyDataSetChanged();
+        }
     }
-
 
     @Override
     public void onClick(View v) {

@@ -57,6 +57,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         } else if (status[getLocalPosition(position)] == ' ') {
             holder.textView.setVisibility(View.INVISIBLE);
         } else if (status[getLocalPosition(position)] == '*') {
+            holder.textView.setTextColor(0xFF00FF00);
             holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
         } else {
