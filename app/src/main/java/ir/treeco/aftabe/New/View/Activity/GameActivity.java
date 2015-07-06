@@ -200,6 +200,17 @@ public class GameActivity extends FragmentActivity {
         }
     }
 
+    public void removeFromSolution (int adapterPosition) {
+        statusAdapter[adapterPosition] = '-';
+        if (adapterPosition <= break0) {
+            solutionAdapter0.notifyDataSetChanged();
+        } else if(adapterPosition <= break1) {
+            solutionAdapter1.notifyDataSetChanged();
+        } else {
+            solutionAdapter2.notifyDataSetChanged();
+        }
+    }
+
     private int getBreak (char[] string, int n) {
         int number = n;
         for (int i = 0; i < string.length; i++) {

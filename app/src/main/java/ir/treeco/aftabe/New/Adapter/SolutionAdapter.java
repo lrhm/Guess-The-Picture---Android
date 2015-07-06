@@ -1,26 +1,26 @@
 package ir.treeco.aftabe.New.Adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> {
     char[] characters;
     char[] status;
-    Context context;
+    GameActivity gameActivity;
     int n;
     int break0;
     int break1;
 
-    public SolutionAdapter(char[] characters, Context context, char[] status, int n, int break0, int break1) {
+    public SolutionAdapter(char[] characters, GameActivity gameActivity, char[] status, int n, int break0, int break1) {
         this.characters = characters;
         this.status = status;
-        this.context = context;
+        this.gameActivity = gameActivity;
         this.break0 = break0;
         this.break1 = break1;
         this.n = n;
@@ -38,6 +38,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
+            gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()));
 
         }
     }
@@ -51,12 +52,13 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
         if (status[getLocalPosition(position)] == '-') {
-            holder.textView.setVisibility(View.VISIBLE);
-        } else if (status[getLocalPosition(position)] == '*') {
-            holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
+            holder.textView.setText("");
             holder.textView.setVisibility(View.VISIBLE);
         } else if (status[getLocalPosition(position)] == ' ') {
             holder.textView.setVisibility(View.INVISIBLE);
+        } else if (status[getLocalPosition(position)] == '*') {
+            holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
+            holder.textView.setVisibility(View.VISIBLE);
         } else {
             holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);

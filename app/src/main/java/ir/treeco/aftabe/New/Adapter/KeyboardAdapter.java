@@ -10,7 +10,7 @@ import android.widget.TextView;
 import ir.treeco.aftabe.New.View.Activity.GameActivity;
 import ir.treeco.aftabe.R;
 
-public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder>{
+public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder> {
     GameActivity gameActivity;
     char[] strings;
 
