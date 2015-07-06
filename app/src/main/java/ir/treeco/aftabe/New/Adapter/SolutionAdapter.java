@@ -38,7 +38,9 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-            gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()));
+            if (status[getLocalPosition(getAdapterPosition())] != '*') {
+                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()));
+            }
 
         }
     }

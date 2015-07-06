@@ -38,7 +38,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     private SolutionAdapter solutionAdapter2;
     int break0;
     int break1;
-    private int[] sAndkIndex;
+    private int[] sAndkIndex;  //!! should use hashMap
     private KeyboardAdapter keyboardAdapter;
     private boolean[] keyboardStatus;
     Button hazf;
@@ -253,26 +253,52 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    private void cheatAzafe() {
+    private void cheatAzafe() { //is bad algoritm
         int rand;
         while (true) {
             rand = random.nextInt(statusAdapter.length);
 
             if (statusAdapter[rand] != '*' && statusAdapter[rand] != ' ' && statusAdapter[rand] != '.') {
-                break;
+
+                if (statusAdapter[rand] != '-') {
+                    if (solutionAdapter[rand] != statusAdapter[rand]) {
+                        removeFromSolution(rand);
+                        break;
+                    }
+                } else {
+                    break;
+                }
             }
         }
 
         statusAdapter[rand] = '*';
 
-        int i = 0;
-        while (true) {
+        boolean key = false;
+
+        for (int i = 0; i < keyboardChars.length; i++) {
             if (keyboardChars[i] == solutionAdapter[rand] && !keyboardStatus[i]) {
                 keyboardStatus[i] = true;
                 keyboardAdapter.notifyDataSetChanged();
+                key = true;
                 break;
-            } else {
-                i++;
+            }
+        }
+
+        if (!key) {
+            for (int i = 0; i < keyboardChars.length; i++) {
+                if (keyboardChars[i] == solutionAdapter[rand]) {
+                    for (int j = 0; j < sAndkIndex.length; j++) {
+                        if (sAndkIndex[j] == i) {
+                            removeFromSolution(j);
+                            break;
+                        }
+                    }
+
+                    keyboardStatus[i] = true;
+                    keyboardAdapter.notifyDataSetChanged();
+                    break;
+                }
+
             }
         }
 
