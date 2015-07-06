@@ -13,10 +13,12 @@ import ir.treeco.aftabe.R;
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder> {
     GameActivity gameActivity;
     char[] strings;
+    boolean[] status;
 
-    public KeyboardAdapter(GameActivity gameActivity, char[] strings) {
+    public KeyboardAdapter(GameActivity gameActivity, char[] strings, boolean[] status) {
         this.gameActivity = gameActivity;
         this.strings = strings;
+        this.status = status;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -45,7 +47,14 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     @Override
     public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int position) {
 //        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
-        viewHolder.textView.setText(String.valueOf(strings[position]));
+
+
+
+        if (status[position]) {
+            viewHolder.textView.setText("");
+        } else {
+            viewHolder.textView.setText(String.valueOf(strings[position]));
+        }
     }
 
     @Override

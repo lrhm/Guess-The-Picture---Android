@@ -36,6 +36,10 @@ public class GameActivity extends FragmentActivity {
     private SolutionAdapter solutionAdapter2;
     int break0;
     int break1;
+    private int[] sAndkIndex;
+    private KeyboardAdapter keyboardAdapter;
+    private boolean[] keyboardStatus;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class GameActivity extends FragmentActivity {
 
         char[] solutionAdapter = solution.toCharArray();
         statusAdapter = status.toCharArray();
+        sAndkIndex = new int[statusAdapter.length];
 
         if (solution.length() > 12) {
             break0 = getBreak(solutionAdapter, 0);
@@ -130,6 +135,7 @@ public class GameActivity extends FragmentActivity {
                 'س','ژ' , 'ز', 'ر', 'ذ','د' , 'خ', 'ح', 'چ', 'ج', 'ث', 'ت', 'پ', 'ب', 'ا', 'آ' };
 
         keyboardChars = new char[21];
+        keyboardStatus = new boolean[21];
 
         ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
@@ -151,7 +157,8 @@ public class GameActivity extends FragmentActivity {
 
         recyclerView_keyboard.setHasFixedSize(true);
         recyclerView_keyboard.setLayoutManager(new GridLayoutManager(this, 7));
-        recyclerView_keyboard.setAdapter(new KeyboardAdapter(this, keyboardChars));
+        keyboardAdapter = new KeyboardAdapter(this, keyboardChars, keyboardStatus);
+        recyclerView_keyboard.setAdapter(keyboardAdapter);
 
         imageView = (ImageView) findViewById(R.id.image_game);
 //        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
@@ -187,6 +194,10 @@ public class GameActivity extends FragmentActivity {
         for (int i = 0; i < statusAdapter.length; i++) {
             if (statusAdapter[i] == '-') {
                 statusAdapter[i] = keyboardChars[adapterPosition];
+                sAndkIndex[i] = adapterPosition;
+                keyboardStatus[adapterPosition] = true;
+
+                keyboardAdapter.notifyDataSetChanged();
 
                 if (i <= break0) {
                     solutionAdapter0.notifyDataSetChanged();
@@ -202,6 +213,9 @@ public class GameActivity extends FragmentActivity {
 
     public void removeFromSolution (int adapterPosition) {
         statusAdapter[adapterPosition] = '-';
+        keyboardStatus[sAndkIndex[adapterPosition]] = false;
+        keyboardAdapter.notifyDataSetChanged();
+
         if (adapterPosition <= break0) {
             solutionAdapter0.notifyDataSetChanged();
         } else if(adapterPosition <= break1) {
