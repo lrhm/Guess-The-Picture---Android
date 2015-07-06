@@ -6,9 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
-import ir.treeco.aftabe.LetterButtonDrawable;
 import ir.treeco.aftabe.R;
 
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder>{
@@ -21,10 +20,11 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imageView;
+        TextView textView;
+
         public ViewHolder(View v) {
             super(v);
-            imageView = (ImageView) itemView.findViewById(R.id.itemkeboard);
+            textView = (TextView) itemView.findViewById(R.id.itemKeyboard);
 
             v.setOnClickListener(this);
         }
@@ -42,10 +42,9 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.imageView.setBackgroundResource(R.drawable.albutton);
+    public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int position) {
 //        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
-        viewHolder.imageView.setImageDrawable(new LetterButtonDrawable(String.valueOf(strings[i]),context));
+        viewHolder.textView.setText(String.valueOf(strings[position]));
     }
 
     @Override

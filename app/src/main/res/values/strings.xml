@@ -14,39 +14,4 @@
     <string name="updated_time_shared_preference">updatedTime</string>
     <string name="domain_url_head_json">http://rsdn.ir/files/aftabe/head.json</string>
 
-    <string-array name="alphabet">
-        <item>آ</item>
-        <item>ا</item>
-        <item>ب</item>
-        <item>پ</item>
-        <item>ت</item>
-        <item>ث</item>
-        <item>ج</item>
-        <item>چ</item>
-        <item>ح</item>
-        <item>خ</item>
-        <item>د</item>
-        <item>ذ</item>
-        <item>ر</item>
-        <item>ز</item>
-        <item>ژ</item>
-        <item>س</item>
-        <item>ش</item>
-        <item>ص</item>
-        <item>ض</item>
-        <item>ط</item>
-        <item>ظ</item>
-        <item>ع</item>
-        <item>غ</item>
-        <item>ف</item>
-        <item>ق</item>
-        <item>ک</item>
-        <item>گ</item>
-        <item>ل</item>
-        <item>م</item>
-        <item>ن</item>
-        <item>و</item>
-        <item>ه</item>
-        <item>ی</item>
-    </string-array>
 </resources>

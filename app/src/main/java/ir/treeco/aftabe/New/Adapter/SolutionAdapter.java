@@ -2,7 +2,6 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,6 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
-        Log.e("test char", String.valueOf(status.charAt(position)));
         if (status.charAt(position) == '-') {
         } else if (status.charAt(position) == ' ') {
             holder.textView.setVisibility(View.INVISIBLE);
