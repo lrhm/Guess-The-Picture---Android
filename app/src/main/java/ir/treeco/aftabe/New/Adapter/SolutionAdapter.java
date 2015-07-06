@@ -2,7 +2,6 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         this.break1 = break1;
         this.n = n;
 
-        Log.e("n", "break0: " + break0 +  " break1: " + break1 + " n: " + n + " n: " + characters.length);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -52,15 +50,17 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
-        holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
-//        if (status[getLocalPosition(position)] == '-') {
-//        } else if (status[getLocalPosition(position)] == ' ') {
-//            holder.textView.setVisibility(View.INVISIBLE);
-//        } else if (status[getLocalPosition(position)] == '*') {
-//            holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
-//        } else {
-//            holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
-//        }
+        if (status[getLocalPosition(position)] == '-') {
+            holder.textView.setVisibility(View.VISIBLE);
+        } else if (status[getLocalPosition(position)] == '*') {
+            holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
+            holder.textView.setVisibility(View.VISIBLE);
+        } else if (status[getLocalPosition(position)] == ' ') {
+            holder.textView.setVisibility(View.INVISIBLE);
+        } else {
+            holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
+            holder.textView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

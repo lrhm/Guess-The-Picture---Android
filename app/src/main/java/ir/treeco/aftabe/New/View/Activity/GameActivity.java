@@ -29,6 +29,13 @@ public class GameActivity extends FragmentActivity {
     int packageNumber;
     private Tools tools;
     private String status;
+    private char[] statusAdapter;
+    private char[] keyboardChars;
+    private SolutionAdapter solutionAdapter0;
+    private SolutionAdapter solutionAdapter1;
+    private SolutionAdapter solutionAdapter2;
+    int break0;
+    int break1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,10 +69,7 @@ public class GameActivity extends FragmentActivity {
         Log.e("solotion", solution);
 
         char[] solutionAdapter = solution.toCharArray();
-        char[] statusAdapter = status.toCharArray();
-
-        int break0;
-        int break1;
+        statusAdapter = status.toCharArray();
 
         if (solution.length() > 12) {
             break0 = getBreak(solutionAdapter, 0);
@@ -88,8 +92,8 @@ public class GameActivity extends FragmentActivity {
         recyclerView_solution1.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-        recyclerView_solution1.setAdapter(
-                new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1));
+        solutionAdapter0 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1);
+        recyclerView_solution1.setAdapter(solutionAdapter0);
 
         if (solutionAdapter.length > 12) {
             RecyclerView recyclerView_solution2 = (
@@ -97,11 +101,11 @@ public class GameActivity extends FragmentActivity {
 
             recyclerView_solution2.setHasFixedSize(true);
 
-            recyclerView_solution2.setLayoutManager (
-                    new LinearLayoutManager (this, LinearLayoutManager.HORIZONTAL, true));
+            recyclerView_solution2.setLayoutManager(
+                    new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-            recyclerView_solution2.setAdapter (
-                    new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1));
+            solutionAdapter1 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1);
+            recyclerView_solution2.setAdapter (solutionAdapter1);
 
             recyclerView_solution2.setVisibility(View.VISIBLE);
         }
@@ -112,11 +116,11 @@ public class GameActivity extends FragmentActivity {
 
             recyclerView_solution3.setHasFixedSize(true);
 
-            recyclerView_solution3.setLayoutManager (
+            recyclerView_solution3.setLayoutManager(
                     new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-            recyclerView_solution3.setAdapter (
-                    new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1));
+            solutionAdapter2 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1);
+            recyclerView_solution3.setAdapter (solutionAdapter2);
 
             recyclerView_solution3.setVisibility(View.VISIBLE);
         }
@@ -125,7 +129,7 @@ public class GameActivity extends FragmentActivity {
                 'ی', 'ه','و' , 'ن', 'م', 'ل', 'گ', 'ک', 'ق', 'ف', 'غ', 'ع', 'ظ', 'ط', 'ض', 'ص', 'ش',
                 'س','ژ' , 'ز', 'ر', 'ذ','د' , 'خ', 'ح', 'چ', 'ج', 'ث', 'ت', 'پ', 'ب', 'ا', 'آ' };
 
-        char[] keyboardChars = new char[21];
+        keyboardChars = new char[21];
 
         ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
@@ -180,9 +184,18 @@ public class GameActivity extends FragmentActivity {
     //endregion
 
     public void selectKeyboard(int adapterPosition) {
-        for (int i = 0; i < status.length(); i++) {
-            if (status.charAt(i) != '-') {
+        for (int i = 0; i < statusAdapter.length; i++) {
+            if (statusAdapter[i] == '-') {
+                statusAdapter[i] = keyboardChars[adapterPosition];
 
+                if (i <= break0) {
+                    solutionAdapter0.notifyDataSetChanged();
+                } else if(i <= break1) {
+                    solutionAdapter1.notifyDataSetChanged();
+                } else {
+                    solutionAdapter2.notifyDataSetChanged();
+                }
+                return;
             }
         }
     }
