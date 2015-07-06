@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -23,7 +24,7 @@ import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
-public class GameActivity extends FragmentActivity {
+public class GameActivity extends FragmentActivity implements View.OnClickListener {
     int levelId;
     ImageView imageView;
     int packageNumber;
@@ -39,6 +40,8 @@ public class GameActivity extends FragmentActivity {
     private int[] sAndkIndex;
     private KeyboardAdapter keyboardAdapter;
     private boolean[] keyboardStatus;
+    Button hazf;
+    Button azafe;
 
 
     @Override
@@ -50,6 +53,11 @@ public class GameActivity extends FragmentActivity {
 //        HeaderFragmentNew header = (HeaderFragmentNew) getSupportFragmentManager().findFragmentById(R.id.header);
 //        header.setUpHeader(R.drawable.cheat_button);
 //        setOriginalBackgroundColor();
+
+        hazf = (Button) findViewById(R.id.hazf);
+        azafe = (Button) findViewById(R.id.azafe);
+        hazf.setOnClickListener(this);
+        azafe.setOnClickListener(this);
 
         tools = new Tools();
 
@@ -239,5 +247,25 @@ public class GameActivity extends FragmentActivity {
         return n;
     }
 
+    private void cheatHazf() {
 
+    }
+
+    private void cheatAzafe() {
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.hazf:
+                cheatHazf();
+                break;
+
+            case R.id.azafe:
+                cheatAzafe();
+                break;
+        }
+    }
 }
