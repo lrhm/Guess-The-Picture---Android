@@ -221,9 +221,9 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    public void removeFromSolution (int adapterPosition) {
+    public void removeFromSolution (int adapterPosition, boolean keyboard) {
         statusAdapter[adapterPosition] = '-';
-        keyboardStatus[sAndkIndex[adapterPosition]] = false;
+        keyboardStatus[sAndkIndex[adapterPosition]] = keyboard;
         keyboardAdapter.notifyDataSetChanged();
 
         if (adapterPosition <= break0) {
@@ -260,13 +260,13 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
 
             if (statusAdapter[rand] != '*' && statusAdapter[rand] != ' ' && statusAdapter[rand] != '.') {
 
-                if (statusAdapter[rand] != '-') {
+                if (statusAdapter[rand] == '-') {
+                    break;
+                } else {
                     if (solutionAdapter[rand] != statusAdapter[rand]) {
-                        removeFromSolution(rand);
+                        removeFromSolution(rand, false);
                         break;
                     }
-                } else {
-                    break;
                 }
             }
         }
@@ -285,20 +285,11 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         }
 
         if (!key) {
-            for (int i = 0; i < keyboardChars.length; i++) {
-                if (keyboardChars[i] == solutionAdapter[rand]) {
-                    for (int j = 0; j < sAndkIndex.length; j++) {
-                        if (sAndkIndex[j] == i) {
-                            removeFromSolution(j);
-                            break;
-                        }
-                    }
-
-                    keyboardStatus[i] = true;
-                    keyboardAdapter.notifyDataSetChanged();
+            for (int i = 0; i < statusAdapter.length; i++) {
+                if (statusAdapter[i] == solutionAdapter[rand]) {
+                    removeFromSolution(i, true);
                     break;
                 }
-
             }
         }
 

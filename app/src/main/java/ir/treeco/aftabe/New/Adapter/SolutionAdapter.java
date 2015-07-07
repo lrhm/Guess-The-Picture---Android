@@ -39,7 +39,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         @Override
         public void onClick(View v) {
             if (status[getLocalPosition(getAdapterPosition())] != '*') {
-                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()));
+                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()), false);
             }
 
         }
@@ -54,6 +54,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
         if (status[getLocalPosition(position)] == '-') {
+            holder.textView.setTextColor(0xFFFFFFFF);
             holder.textView.setText("");
             holder.textView.setVisibility(View.VISIBLE);
         } else if (status[getLocalPosition(position)] == ' ') {
@@ -63,6 +64,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
             holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
         } else {
+            holder.textView.setTextColor(0xFFFFFFFF);
             holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
         }
