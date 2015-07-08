@@ -24,7 +24,6 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         this.break0 = break0;
         this.break1 = break1;
         this.n = n;
-
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -39,9 +38,8 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         @Override
         public void onClick(View v) {
             if (status[getLocalPosition(getAdapterPosition())] != '*') {
-                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()), false);
+                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()), 0);
             }
-
         }
     }
 
@@ -84,7 +82,6 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
             default:
                 return characters.length;
-
         }
     }
 
@@ -102,7 +99,6 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
 
             default:
                 return position;
-
         }
     }
 }

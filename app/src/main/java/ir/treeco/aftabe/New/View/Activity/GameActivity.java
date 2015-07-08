@@ -40,11 +40,11 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     int break1;
     private int[] sAndkIndex;  //!! should use hashMap
     private KeyboardAdapter keyboardAdapter;
-    private boolean[] keyboardStatus;
+    private int[] keyboardStatus;
     Button hazf;
     Button azafe;
     private Random random;
-
+    private boolean[] keyboardB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,7 +145,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
                 'س','ژ' , 'ز', 'ر', 'ذ','د' , 'خ', 'ح', 'چ', 'ج', 'ث', 'ت', 'پ', 'ب', 'ا', 'آ' };
 
         keyboardChars = new char[21];
-        keyboardStatus = new boolean[21];
+        keyboardStatus = new int[21];
 
         ArrayList<Integer> list = new ArrayList<>();
         random = new Random();
@@ -185,7 +185,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
+//        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
 //        MainApplication.saveDataAndBackUpData(this);
     }
 
@@ -205,7 +205,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
             if (statusAdapter[i] == '-') {
                 statusAdapter[i] = keyboardChars[adapterPosition];
                 sAndkIndex[i] = adapterPosition;
-                keyboardStatus[adapterPosition] = true;
+                keyboardStatus[adapterPosition] = 1;
 
                 keyboardAdapter.notifyDataSetChanged();
 
@@ -221,7 +221,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    public void removeFromSolution (int adapterPosition, boolean keyboard) {
+    public void removeFromSolution (int adapterPosition, int keyboard) {
         statusAdapter[adapterPosition] = '-';
         keyboardStatus[sAndkIndex[adapterPosition]] = keyboard;
         keyboardAdapter.notifyDataSetChanged();
@@ -264,7 +264,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
                     break;
                 } else {
                     if (solutionAdapter[rand] != statusAdapter[rand]) {
-                        removeFromSolution(rand, false);
+                        removeFromSolution(rand, 0);
                         break;
                     }
                 }
@@ -276,8 +276,8 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         boolean key = false;
 
         for (int i = 0; i < keyboardChars.length; i++) {
-            if (keyboardChars[i] == solutionAdapter[rand] && !keyboardStatus[i]) {
-                keyboardStatus[i] = true;
+            if (keyboardChars[i] == solutionAdapter[rand] && keyboardStatus[i] == 0) {
+                keyboardStatus[i] = 1;
                 keyboardAdapter.notifyDataSetChanged();
                 key = true;
                 break;
@@ -287,8 +287,10 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         if (!key) {
             for (int i = 0; i < statusAdapter.length; i++) {
                 if (statusAdapter[i] == solutionAdapter[rand]) {
-                    removeFromSolution(i, true);
-                    break;
+                    if (statusAdapter[i] != '*' && statusAdapter[i] != solutionAdapter[i]) {
+                        removeFromSolution(i, 1);
+                        break;
+                    }
                 }
             }
         }
