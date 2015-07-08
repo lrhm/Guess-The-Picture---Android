@@ -146,6 +146,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
 
         keyboardChars = new char[21];
         keyboardStatus = new int[21];
+        keyboardB = new boolean[21];
 
         ArrayList<Integer> list = new ArrayList<>();
         random = new Random();
@@ -158,6 +159,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
             if (solutionAdapter[i] != ' ' && solutionAdapter[i] != '.') {
                 int j = random.nextInt(list.size());
                 keyboardChars[list.get(j)] = solutionAdapter[i];
+                keyboardB[list.get(j)] = true;
                 list.remove(j);
             }
         }
@@ -250,7 +252,29 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void cheatHazf() {
+        ArrayList<Integer> array = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            if (!keyboardB[i] && keyboardStatus[i] != 2) {
+                array.add(i);
+            }
+        }
 
+        for (int i = 0; i < 7 && 0 < array.size(); i++) {
+
+            int j = random.nextInt(array.size());
+            if (keyboardStatus[array.get(j)] == 1) {
+                for (int n = 0; n < sAndkIndex.length; n++){
+                    if (sAndkIndex[n] == array.get(j)) {
+                        removeFromSolution(n, 2);
+                        break;
+                    }
+                }
+            } else {
+                keyboardStatus[array.get(j)] = 2;
+                keyboardAdapter.notifyDataSetChanged();
+            }
+            array.remove(j);
+        }
     }
 
     private void cheatAzafe() { //is bad algoritm
