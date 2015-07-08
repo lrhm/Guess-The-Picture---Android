@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,9 @@ import ir.treeco.aftabe.R;
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder> {
     GameActivity gameActivity;
     char[] strings;
-    boolean[] status;
+    int[] status;
 
-    public KeyboardAdapter(GameActivity gameActivity, char[] strings, boolean[] status) {
+    public KeyboardAdapter(GameActivity gameActivity, char[] strings, int[] status) {
         this.gameActivity = gameActivity;
         this.strings = strings;
         this.status = status;
@@ -27,14 +26,12 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
         public ViewHolder(View v) {
             super(v);
             textView = (TextView) itemView.findViewById(R.id.itemKeyboard);
-
             v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             gameActivity.selectKeyboard(getAdapterPosition());
-            Log.d("armin adapter position", String.valueOf(getAdapterPosition()));
         }
     }
 
@@ -46,11 +43,7 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int position) {
-//        Log.d("armin string keyboard", String.valueOf(i)+" " +String.valueOf(strings[i]));
-
-
-
-        if (status[position]) {
+        if (status[position] == 1) {
             viewHolder.textView.setText("");
         } else {
             viewHolder.textView.setText(String.valueOf(strings[position]));
@@ -59,7 +52,6 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-//        Log.d("armin strings length", String.valueOf(strings.length));
         return strings.length;
     }
 }

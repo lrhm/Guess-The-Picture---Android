@@ -17,7 +17,6 @@
         android:layout_height="100dp"
         tools:layout="@layout/new_fragment_header" />
 
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
