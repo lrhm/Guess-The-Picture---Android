@@ -2,6 +2,7 @@ package ir.treeco.aftabe.New.View.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -72,35 +74,11 @@ public class HeaderFragmentNew extends Fragment {
                 getActivity().startActivity(new Intent(getActivity(), StoreActivity.class));
             }
         });
-
-
-        LinearLayout digits = (LinearLayout) v.findViewById(R.id.digits);
-        digits.removeAllViews();
-        String number = "1234";
-
-        int[] digitResource = new int[]{
-                R.drawable.digit_0,
-                R.drawable.digit_1,
-                R.drawable.digit_2,
-                R.drawable.digit_3,
-                R.drawable.digit_4,
-                R.drawable.digit_5,
-                R.drawable.digit_6,
-                R.drawable.digit_7,
-                R.drawable.digit_8,
-                R.drawable.digit_9,
-        };
-
-
-        for (int i = 0; i < number.length(); i++) {   //is bad cod
-            int d = number.charAt(i) - '0';
-            ImageView digit = new ImageView(getActivity());
-
-            Picasso.with(getActivity()).load(digitResource[d]).into(digit);
-//            int digitHeight = LengthManager.getScreenWidth() / 21;
-//            digit.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
-            digits.addView(digit);
-        }
+        TextView digits = ((TextView) v.findViewById(R.id.digits));
+        digits.setTypeface(Typeface.createFromAsset(activity.getAssets(),"yekan.ttf"));
+        digits.setTextSize(20);
+        String number = "۱۲۳۴۷۶۶۷۷۸۸۷۶۶۵۴۶";
+        digits.append(number);
 
 /*
         CoinManager.setCoinsChangedListener(new CoinManager.CoinsChangedListener() {
