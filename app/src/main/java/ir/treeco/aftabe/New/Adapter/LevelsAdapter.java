@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -20,15 +21,15 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     Context context;
     int page;
     int packageNumber;
-//    Bitmap levelLocked;
-//    Bitmap levelUnlocked;
+    Bitmap levelLocked;
+    Bitmap levelUnlocked;
 
-    public LevelsAdapter(Context context, int packageNumber, int page) {
+    public LevelsAdapter(Context context, int packageNumber, int page, Bitmap levelLocked, Bitmap levelUnlocked) {
         this.context = context;
         this.page = page;
         this.packageNumber = packageNumber;
-//        this.levelLocked = levelLocked;
-//        this.levelUnlocked = levelUnlocked;
+        this.levelLocked = levelLocked;
+        this.levelUnlocked = levelUnlocked;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -57,12 +58,6 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             transaction.replace(R.id.fragment_container, gameActivity);
             transaction.addToBackStack(null);
             transaction.commit();
-
-//            Intent intent = new Intent(context, GameActivity.class);
-//            int a = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(page * 16  + getAdapterPosition()).getId();
-//            intent.putExtra("id", a);
-//            intent.putExtra("packageNumber", packageNumber);
-//            context.startActivity(intent);
         }
     }
 
@@ -76,19 +71,19 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
         int b = page * 16 + i;
-//        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
+        if (MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
 
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
                     + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
-//            Log.e("tes", a);
-        Picasso.with(context).load(a).into(viewHolder.imageView);
-        Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
-//            viewHolder.frame.setImageBitmap(levelUnlocked);
-//        } else {
-//            viewHolder.imageView.setImageBitmap(null);
-//            viewHolder.frame.setImageBitmap(levelLocked);
-//        }
+
+            Picasso.with(context).load(a).into(viewHolder.imageView);
+            Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
+            viewHolder.frame.setImageBitmap(levelUnlocked);
+        } else {
+            viewHolder.imageView.setImageBitmap(levelLocked);
+            viewHolder.frame.setImageBitmap(levelUnlocked);
+        }
     }
 
     @Override

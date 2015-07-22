@@ -47,7 +47,7 @@ import ir.treeco.aftabe.New.Util.Zip;
 public class MainApplication extends Application {
 
     public static HeadObject downloadedObject;
-    public  static LengthManager lengthManager;
+    public static LengthManager lengthManager;
 
     private HeadObject headObject;
 

@@ -22,12 +22,10 @@ import ir.treeco.aftabe.R;
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
     private ArrayList<PackageObject> packageObjects;
     Context context;
-    private MainActivity mainActivity;
 
-    public PackageAdapter(Context context, ArrayList<PackageObject> packageObjects, MainActivity mainActivity) {
+    public PackageAdapter(Context context, ArrayList<PackageObject> packageObjects) {
         this.context = context;
         this.packageObjects = packageObjects;
-        this.mainActivity = mainActivity;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -59,15 +57,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 levelsActivityNew.setArguments(bundle);
 
                 FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, levelsActivityNew);
+                transaction.replace(R.id.fragment_container, levelsActivityNew, "LevelsActivityNew1");
                 transaction.addToBackStack(null);
                 transaction.commit();
-
-
-
-//                Intent intent = new Intent(context, LevelsActivityNew.class);
-//                intent.putExtra("id", packageObjects.get(getAdapterPosition()).getId());
-//                context.startActivity(intent);
             }
         }
     }
@@ -81,7 +73,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
         String a = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects.get(i).getId() + "_front" + ".png";
-//        Log.e("tes", a);
         Picasso.with(context).load(a).into(viewHolder.imageView);
     }
 

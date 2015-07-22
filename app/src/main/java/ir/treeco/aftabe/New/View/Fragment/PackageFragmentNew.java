@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.PackageAdapter;
 import ir.treeco.aftabe.New.Object.PackageObject;
-import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
 public class PackageFragmentNew extends Fragment {
@@ -52,7 +51,7 @@ public class PackageFragmentNew extends Fragment {
 
 
 
-        adapter = new PackageAdapter(getActivity(), packageObjects, (MainActivity) getActivity());
+        adapter = new PackageAdapter(getActivity(), packageObjects);
         recyclerView.setAdapter(adapter);
 
         return view;
