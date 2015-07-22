@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import ir.treeco.aftabe.New.Object.HeadObject;
+import ir.treeco.aftabe.New.Util.LengthManager;
 import ir.treeco.aftabe.New.Util.Zip;
 
 /*
@@ -39,15 +38,17 @@ import ir.treeco.aftabe.New.Util.Zip;
 public class MainApplication extends Application {
 
     public static HeadObject downloadedObject;
+    public  static LengthManager lengthManager;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         //ACRA.init(this);
-        Picasso picasso = new Picasso.Builder(this)
-                .memoryCache(new LruCache(10000000))
-                .build();
-        Picasso.setSingletonInstance(picasso);
+//        Picasso picasso = new Picasso.Builder(this)
+//                .memoryCache(new LruCache(10000000))
+//                .build();
+//        Picasso.setSingletonInstance(picasso);
 
         new Prefs.Builder()
                 .setContext(this)
@@ -58,7 +59,13 @@ public class MainApplication extends Application {
 
         downloadedObject = new HeadObject();
 
+        lengthManager = new LengthManager(this);
+
         copyRawFiles();
+    }
+
+    public LengthManager getLengthManager() {
+        return lengthManager;
     }
 
     public void copyRawFiles() {
