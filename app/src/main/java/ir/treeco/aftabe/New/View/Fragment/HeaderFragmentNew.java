@@ -67,13 +67,12 @@ public class HeaderFragmentNew extends Fragment implements View.OnClickListener 
         TextView digits = (TextView) v.findViewById(R.id.digits);
 
         RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-        digitsLayoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() * 40 / 360;
-        digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 575 / 3600;
+        digitsLayoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() * 34 / 400;
+        digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 577 / 3600;
         digitsLayoutParams.width = MainApplication.lengthManager.getScreenWidth() / 5;
 
         digits.setTypeface(Typeface.createFromAsset(activity.getAssets(), "yekan.ttf"));
-        digits.setTextSize(20);
-        String number = "۱۲۳۵۴۶";
+        String number = "۸۸۸۸۸";
         digits.setText(number);
 
         coinBox.setOnClickListener(this);
