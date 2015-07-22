@@ -36,7 +36,7 @@ public class PackageFragmentNew extends Fragment {
 
         switch (type) {
             case 0:
-                packageObjects = ((MainActivity) this.getActivity()).getHeadObject().getNews();
+                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getNews();
                 break;
 
             case 1:
@@ -46,7 +46,7 @@ public class PackageFragmentNew extends Fragment {
                 break;
 
             case 2:
-                packageObjects = ((MainActivity) this.getActivity()).getHeadObject().getSaller();
+                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
                 break;
         }
 

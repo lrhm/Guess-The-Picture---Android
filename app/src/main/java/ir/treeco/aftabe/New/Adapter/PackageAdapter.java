@@ -45,11 +45,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             //todo chack md5
 
             if (!file.exists()) {
-                mainActivity.downloadPackage(
-                        packageObjects.get(getAdapterPosition()).getUrl(),
-                        context.getFilesDir().getPath(),
-                        packageObjects.get(getAdapterPosition()).getId(),
-                        packageObjects.get(getAdapterPosition()).getName());
+//                mainActivity.downloadPackage(
+//                        packageObjects.get(getAdapterPosition()).getUrl(),
+//                        context.getFilesDir().getPath(),
+//                        packageObjects.get(getAdapterPosition()).getId(),
+//                        packageObjects.get(getAdapterPosition()).getName());
             } else {
                 Intent intent = new Intent(context, LevelsActivityNew.class);
                 intent.putExtra("id", packageObjects.get(getAdapterPosition()).getId());
