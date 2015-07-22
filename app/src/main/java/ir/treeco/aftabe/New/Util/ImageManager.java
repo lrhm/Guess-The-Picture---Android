@@ -76,7 +76,7 @@ public class ImageManager {
         scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
         if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
-        cache.put(key, scaledBitmap);
+//        cache.put(key, scaledBitmap); //todo comented for cheke memory leak
         return scaledBitmap;
     }
 

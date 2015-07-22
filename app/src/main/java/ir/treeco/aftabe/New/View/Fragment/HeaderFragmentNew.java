@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.New.View.Fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,14 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
-import ir.treeco.aftabe.New.View.Activity.StoreActivity;
 import ir.treeco.aftabe.R;
 
-public class HeaderFragmentNew extends Fragment {
+public class HeaderFragmentNew extends Fragment implements View.OnClickListener {
 //    SharedPreferences preferences;
     View v;
     Activity activity;
@@ -51,7 +48,7 @@ public class HeaderFragmentNew extends Fragment {
     private void setUpCoinBox() {
         ImageView coinBox = (ImageView) v.findViewById(R.id.coin_box);
 
-        Picasso.with(getActivity()).load(R.drawable.coin_box).into(coinBox);
+//        Picasso.with(getActivity()).load(R.drawable.coin_box).into(coinBox);
 //        int coinBoxWidth = LengthManager.getScreenWidth() * 9 / 20;
 //        int coinBoxHeight = LengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
 //        coinBox.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
@@ -66,40 +63,35 @@ public class HeaderFragmentNew extends Fragment {
 //        digitsLayoutParams.leftMargin = LengthManager.getScreenWidth() * 575 / 3600;
 //        digitsLayoutParams.width = LengthManager.getScreenWidth() / 5;
 
-        coinBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().startActivity(new Intent(getActivity(), StoreActivity.class));
-            }
-        });
+        coinBox.setOnClickListener(this);
 
 
-        LinearLayout digits = (LinearLayout) v.findViewById(R.id.digits);
-        digits.removeAllViews();
-        String number = "1234";
+//        LinearLayout digits = (LinearLayout) v.findViewById(R.id.digits);
+//        digits.removeAllViews();
+//        String number = "1234";
+//
+//        int[] digitResource = new int[]{
+//                R.drawable.digit_0,
+//                R.drawable.digit_1,
+//                R.drawable.digit_2,
+//                R.drawable.digit_3,
+//                R.drawable.digit_4,
+//                R.drawable.digit_5,
+//                R.drawable.digit_6,
+//                R.drawable.digit_7,
+//                R.drawable.digit_8,
+//                R.drawable.digit_9,
+//        };
+//
+//
+//        for (int i = 0; i < number.length(); i++) {   //is bad cod
+//            int d = number.charAt(i) - '0';
+//            ImageView digit = new ImageView(getActivity());
 
-        int[] digitResource = new int[]{
-                R.drawable.digit_0,
-                R.drawable.digit_1,
-                R.drawable.digit_2,
-                R.drawable.digit_3,
-                R.drawable.digit_4,
-                R.drawable.digit_5,
-                R.drawable.digit_6,
-                R.drawable.digit_7,
-                R.drawable.digit_8,
-                R.drawable.digit_9,
-        };
-
-
-        for (int i = 0; i < number.length(); i++) {   //is bad cod
-            int d = number.charAt(i) - '0';
-            ImageView digit = new ImageView(getActivity());
-
-            Picasso.with(getActivity()).load(digitResource[d]).into(digit);
+//            Picasso.with(getActivity()).load(digitResource[d]).into(digit);
 //            int digitHeight = LengthManager.getScreenWidth() / 21;
 //            digit.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), digitResource[d], LengthManager.getWidthWithFixedHeight(digitResource[d], digitHeight), digitHeight));
-            digits.addView(digit);
+//            digits.addView(digit);
         }
 
 /*
@@ -138,7 +130,7 @@ public class HeaderFragmentNew extends Fragment {
 
         */
 
-    }
+//    }
     //endregion
 
     //region SetUpHeader
@@ -146,7 +138,7 @@ public class HeaderFragmentNew extends Fragment {
 //        RelativeLayout header = (RelativeLayout) v.findViewById(R.id.header);
 //        header.setLayoutParams(new RelativeLayout.LayoutParams(LengthManager.getScreenWidth(), LengthManager.getHeaderHeight()));
         ImageView logo = (ImageView) v.findViewById(R.id.logo);
-        Picasso.with(getActivity()).load(R.drawable.header).into(logo);
+//        Picasso.with(getActivity()).load(R.drawable.header).into(logo);
 //        logo.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), R.drawable.header, LengthManager.getScreenWidth(), LengthManager.getScreenWidth() / 4));
 
     }
@@ -157,6 +149,17 @@ public class HeaderFragmentNew extends Fragment {
         /*FrameLayout.LayoutParams layoutParams = ((FrameLayout.LayoutParams) logo.getLayoutParams());
         cheatButton.setLayoutParams(layoutParams);*/
         Picasso.with(getActivity()).load(resourceID).into(cheatButton);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.coin_box:
+//                getActivity().startActivity(new Intent(getActivity(), StoreActivity.class));
+                break;
+        }
+
     }
     //endregion
 }
