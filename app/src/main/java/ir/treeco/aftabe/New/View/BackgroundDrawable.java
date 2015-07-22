@@ -9,8 +9,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.ImageManager;
 
 public class BackgroundDrawable extends GradientDrawable {
     Bitmap background;

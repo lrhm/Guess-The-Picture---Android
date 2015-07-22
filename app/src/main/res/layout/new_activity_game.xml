@@ -10,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <fragment
-        android:id="@+id/header"
-        android:name="ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        tools:layout="@layout/new_fragment_header" />
+    <!--<fragment-->
+        <!--android:id="@+id/header"-->
+        <!--android:name="ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp"-->
+        <!--tools:layout="@layout/new_fragment_header" />-->
 
     <Button
         android:layout_width="wrap_content"
