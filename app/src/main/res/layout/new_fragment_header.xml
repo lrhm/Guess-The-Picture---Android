@@ -4,20 +4,16 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="10dp"
-        android:background="@android:color/transparent"
-        android:id="@+id/header"
-        android:layout_weight="1">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/header">
         <ImageView
-            android:id="@+id/coin_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/coin_box"
-            android:layout_centerVertical="true" />
+            android:id="@+id/coin_box"
+            android:contentDescription="@string/coin_box"/>
 
         <TextView
             android:id="@+id/digits"
@@ -31,28 +27,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
-
-    </RelativeLayout>
-
-    <FrameLayout
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:layout_width="match_parent">
-
         <ImageView
-            android:id="@+id/logo"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:contentDescription="@string/logo"
-            android:layout_weight="1" />
-        <ImageView
-            android:id="@+id/cheat_button"
             android:layout_width="wrap_content"
-            android:paddingLeft="30dp"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/nothing" />
-    </FrameLayout>
-
+            android:id="@+id/logo"
+            android:contentDescription="@string/logo"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:id="@+id/cheat_button"
+            android:contentDescription="@string/nothing"/>
+    </RelativeLayout>
 
 </LinearLayout>
