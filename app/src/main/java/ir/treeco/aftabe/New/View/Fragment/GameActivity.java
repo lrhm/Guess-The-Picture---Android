@@ -49,12 +49,11 @@ public class GameActivity extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.new_activity_game, container, false);
 
 
-
         tools = new Tools();
 
 //        Intent intent = getIntent();
-        levelId = 0; //intent.getIntExtra("id", 0);
-        packageNumber = 0; // intent.getIntExtra("packageNumber", 0);
+        levelId = getArguments().getInt("id");//0; //intent.getIntExtra("id", 0);
+        packageNumber = getArguments().getInt("packageNumber");//0; // intent.getIntExtra("packageNumber", 0);
 
         String solution = tools.decodeBase64(MainApplication
                 .downloadedObject.getDownloaded()

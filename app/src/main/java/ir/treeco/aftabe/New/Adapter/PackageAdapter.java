@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,12 +52,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 //                        packageObjects.get(getAdapterPosition()).getId(),
 //                        packageObjects.get(getAdapterPosition()).getName());
             } else {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", packageObjects.get(getAdapterPosition()).getId());
+
                 LevelsActivityNew levelsActivityNew = new LevelsActivityNew();
+                levelsActivityNew.setArguments(bundle);
 
                 FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, levelsActivityNew);
                 transaction.addToBackStack(null);
                 transaction.commit();
+
 
 
 //                Intent intent = new Intent(context, LevelsActivityNew.class);

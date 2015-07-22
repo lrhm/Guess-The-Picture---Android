@@ -35,7 +35,10 @@ public class LevelsActivityNew extends Fragment {
 
         super.onCreate(savedInstanceState);
 //        Intent intent = getIntent();
-        packageId = 0;//= intent.getIntExtra("id", 0);
+
+
+
+        packageId = getArguments().getInt("id"); //0;//= intent.getIntExtra("id", 0);
 
 //        thumbnailHSV = new float[] {Float.parseFloat("130"),Float.parseFloat("0"),Float.parseFloat("-0.1")};
 //
