@@ -3,7 +3,6 @@ package ir.treeco.aftabe.New.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +62,6 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
         int b = page * 16 + i;
-        Log.e("teeee", " " + page + " - " + b);
 //        if (MainActivity.downlodedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
 
             String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"

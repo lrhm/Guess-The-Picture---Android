@@ -1,7 +1,7 @@
 package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.New.Object.PackageObject;
-import ir.treeco.aftabe.New.View.Fragment.LevelsActivityNew;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
+import ir.treeco.aftabe.New.View.Fragment.LevelsActivityNew;
 import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
@@ -51,9 +51,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 //                        packageObjects.get(getAdapterPosition()).getId(),
 //                        packageObjects.get(getAdapterPosition()).getName());
             } else {
-                Intent intent = new Intent(context, LevelsActivityNew.class);
-                intent.putExtra("id", packageObjects.get(getAdapterPosition()).getId());
-                context.startActivity(intent);
+                LevelsActivityNew levelsActivityNew = new LevelsActivityNew();
+
+                FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, levelsActivityNew);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+
+//                Intent intent = new Intent(context, LevelsActivityNew.class);
+//                intent.putExtra("id", packageObjects.get(getAdapterPosition()).getId());
+//                context.startActivity(intent);
             }
         }
     }

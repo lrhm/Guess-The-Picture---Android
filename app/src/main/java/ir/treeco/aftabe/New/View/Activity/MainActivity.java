@@ -22,7 +22,6 @@ import ir.treeco.aftabe.R;
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     Context context;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

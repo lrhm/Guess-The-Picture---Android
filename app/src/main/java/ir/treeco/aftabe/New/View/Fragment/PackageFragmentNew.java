@@ -50,6 +50,8 @@ public class PackageFragmentNew extends Fragment {
                 break;
         }
 
+
+
         adapter = new PackageAdapter(getActivity(), packageObjects, (MainActivity) getActivity());
         recyclerView.setAdapter(adapter);
 
