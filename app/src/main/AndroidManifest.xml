@@ -57,12 +57,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"></activity>
         <activity
-            android:name=".New.View.Activity.LevelsActivityNew"
+            android:name=".New.View.Fragment.LevelsActivityNew"
             android:label="Aftabe"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"></activity>
         <activity
-            android:name=".New.View.Activity.GameActivity"
+            android:name=".New.View.Fragment.GameActivity"
             android:label="Aftabe"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"></activity>

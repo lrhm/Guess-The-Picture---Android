@@ -3,11 +3,6 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/adImageView"
-        android:layout_width="match_parent"
-        android:background="@android:color/holo_orange_light"
-        android:layout_height="50dp" />
 
     <FrameLayout android:layout_height="match_parent" android:layout_width="match_parent">
 

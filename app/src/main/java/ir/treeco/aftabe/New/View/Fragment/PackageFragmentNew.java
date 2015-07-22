@@ -28,7 +28,7 @@ public class PackageFragmentNew extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_fragment_package, container, false);
 
-        type = getArguments().getInt(MainActivity.FRAGMENT_TYPE);
+        type = getArguments().getInt(MainFragment.FRAGMENT_TYPE);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.package_recycler_view);
         recyclerView.setHasFixedSize(true);

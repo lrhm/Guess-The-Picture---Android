@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ir.treeco.aftabe.New.Adapter.LevelsAdapter;
-import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
 import ir.treeco.aftabe.R;
 
 public class LevelsFragmentNew extends Fragment {

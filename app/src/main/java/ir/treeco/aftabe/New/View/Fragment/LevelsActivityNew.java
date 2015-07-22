@@ -1,4 +1,4 @@
-package ir.treeco.aftabe.New.View.Activity;
+package ir.treeco.aftabe.New.View.Fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,7 +15,6 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.View.Fragment.LevelsFragmentNew;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.utils.ImageManager;
 import ir.treeco.aftabe.utils.LengthManager;

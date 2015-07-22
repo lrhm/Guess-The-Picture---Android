@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.New.Object.PackageObject;
-import ir.treeco.aftabe.New.View.Activity.LevelsActivityNew;
+import ir.treeco.aftabe.New.View.Fragment.LevelsActivityNew;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 

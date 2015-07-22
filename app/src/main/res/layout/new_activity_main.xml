@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <RelativeLayout
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:contentDescription="@string/nothing" />
 
-      <fragment
-          android:id="@+id/header"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:name="ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew"
-          tools:layout="@layout/new_fragment_header" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/header">
 
-        <com.ogaclejapan.smarttablayout.SmartTabLayout
-            android:id="@+id/viewpagertab"
-            android:layout_below="@id/header"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/coin_box"
+                android:contentDescription="@string/coin_box"/>
+
+            <TextView
+                android:id="@+id/digits"
+                android:textSize="30sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/logo"
+                android:contentDescription="@string/logo"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:id="@+id/cheat_button"
+                android:contentDescription="@string/nothing"/>
+
+        </RelativeLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:stl_indicatorAlwaysInCenter="false"
-            app:stl_indicatorInterpolation="smart"
-            app:stl_indicatorColor="#44000000"
-            app:stl_indicatorThickness="40dp"
-            app:stl_indicatorCornerRadius="20dp"
-            app:stl_underlineColor="#66000000"
-            app:stl_underlineThickness="0dp"
-            app:stl_dividerColor="#00000000"
-            app:stl_dividerThickness="0dp"
-            app:stl_defaultTabTextAllCaps="true"
-            app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
-            app:stl_defaultTabTextSize="16sp"
-            app:stl_defaultTabTextHorizontalPadding="25dp"
-            app:stl_defaultTabTextMinWidth="0dp"
-            app:stl_distributeEvenly="true" />
+            android:layout_height="fill_parent"
+            android:id="@+id/fragment_container">
+        </FrameLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/viewpagertab" />
-    </RelativeLayout>
-
+    </LinearLayout>
 
 </FrameLayout>

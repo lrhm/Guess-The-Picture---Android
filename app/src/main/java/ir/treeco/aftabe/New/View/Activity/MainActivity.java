@@ -2,18 +2,20 @@ package ir.treeco.aftabe.New.View.Activity;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,18 +28,16 @@ import java.util.ArrayList;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
-import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
+import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Zip;
-import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
+import ir.treeco.aftabe.New.View.BackgroundDrawable;
+import ir.treeco.aftabe.New.View.Fragment.MainFragment;
 import ir.treeco.aftabe.R;
 
-public class MainActivity extends FragmentActivity {
-    public final static String FRAGMENT_TYPE = "fragment_type";
-    private FragmentPagerItemAdapter fragmentPagerItemAdapter;
-    private ViewPager viewPager;
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private HeadObject headObject;
     //NotificationAdapter notificationAdapter;
     Context context;
@@ -50,34 +50,28 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
 
-//        preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
 
-        // Initialize Height Manager
-//        LengthManager.initialize(this); //todo delete
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        // set main activity background
-//        setOriginalBackgroundColor();
+        if (fragmentManager.getBackStackEntryCount() != 0) throw new IllegalStateException();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MainFragment mainFragment = new MainFragment();
+        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
+        fragmentTransaction.commit();
+
+
 
         context = this;
         loadDownloadedObject();
         headObject = new HeadObject();
         parseJson();
 
-        //region Setup fragments in ViewPager
-        fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add("تازه‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
-                .add("دانلود شده‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
-                .add("محبوب‌ترین‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
-                .create()
-        );
+        setUpCoinBox();
+        setUpHeader();
+        setOriginalBackgroundColor();
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(fragmentPagerItemAdapter);
-
-        SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
-        viewPagerTab.setViewPager(viewPager);
-        //endregion
 
         //region Downloads
         DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
@@ -240,21 +234,56 @@ public class MainActivity extends FragmentActivity {
         }
     }*/
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
-        MainApplication.saveDataAndBackUpData(this);
+
+
+    //region SetUpCoinBox
+    private void setUpCoinBox() {
+        ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
+
+        int coinBoxWidth = MainApplication.lengthManager.getScreenWidth() * 9 / 20;
+        int coinBoxHeight = MainApplication.lengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
+        coinBox.setImageBitmap(ImageManager.loadImageFromResource(this, R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
+        layoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() / 15;
+        layoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() / 50;
+
+        TextView digits = (TextView) findViewById(R.id.digits);
+
+        RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
+        digitsLayoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() * 34 / 400;
+        digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 577 / 3600;
+        digitsLayoutParams.width = MainApplication.lengthManager.getScreenWidth() / 5;
+
+        digits.setTypeface(Typeface.createFromAsset(getAssets(), "yekan.ttf"));
+        String number = "۸۸۸۸۸";
+        digits.setText(number);
+
+        coinBox.setOnClickListener(this);
     }
 
-    //region SetBackGroundDrawable
+    //region SetUpHeader
+    private void setUpHeader() {
+        RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
+        header.setLayoutParams(new LinearLayout.LayoutParams(MainApplication.lengthManager.getScreenWidth(), MainApplication.lengthManager.getHeaderHeight()));
+
+        ImageView logo = (ImageView) findViewById(R.id.logo);
+        logo.setImageBitmap(ImageManager.loadImageFromResource(this, R.drawable.header, MainApplication.lengthManager.getScreenWidth(), MainApplication.lengthManager.getScreenWidth() / 4));
+
+    }
+
+
     private void setOriginalBackgroundColor() {
         ImageView background = (ImageView) findViewById(R.id.background);
         background.setImageDrawable(new BackgroundDrawable(this, new int[]{
-                Color.parseColor("#F3C81D"),
-                Color.parseColor("#F3C01E"),
-                Color.parseColor("#F49C14")
+                Color.parseColor("#29CDB8"),
+                Color.parseColor("#1FB8AA"),
+                Color.parseColor("#0A8A8C")
         }));
     }
-    //endregion
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }

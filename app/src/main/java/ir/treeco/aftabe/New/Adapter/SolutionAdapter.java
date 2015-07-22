@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ir.treeco.aftabe.New.View.Activity.GameActivity;
+import ir.treeco.aftabe.New.View.Fragment.GameActivity;
 import ir.treeco.aftabe.R;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> {

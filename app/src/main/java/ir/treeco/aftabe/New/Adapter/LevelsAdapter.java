@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.View.Activity.GameActivity;
+import ir.treeco.aftabe.New.View.Fragment.GameActivity;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {

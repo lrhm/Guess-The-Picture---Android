@@ -1,4 +1,4 @@
-package ir.treeco.aftabe.New.View.Activity;
+package ir.treeco.aftabe.New.View.Fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
