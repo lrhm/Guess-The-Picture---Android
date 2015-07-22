@@ -1,51 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#77aaff">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/background"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <fragment
-        android:id="@+id/header"
-        android:name="ir.treeco.aftabe.New.View.Fragment.HeaderFragmentNew"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        tools:layout="@layout/new_fragment_header" />
-
-    <Button
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/hazf"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/header"
-        android:text="حذف چند حرف"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/azafe"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/header"
-        android:text="نمایش یک حرف"/>
+        android:layout_marginBottom="10dp"
+        android:id="@+id/quation"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/recycler_view_solution1">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/image_game"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/quation"
-            android:layout_below="@id/hazf"
-            android:layout_above="@+id/recycler_view_solution1">
+            android:layout_height="300dp"/>
 
-            <ImageView
-                android:id="@+id/image_game"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
-
-        </RelativeLayout>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_solution1"
@@ -75,12 +46,12 @@
         android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_keyboard"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="20dp"
-            android:overScrollMode="never"
-            android:scrollbars="vertical" />
+        android:id="@+id/recycler_view_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:overScrollMode="never"
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

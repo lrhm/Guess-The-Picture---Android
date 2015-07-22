@@ -2,6 +2,7 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Fragment.GameActivity;
+import ir.treeco.aftabe.New.View.Fragment.LevelsActivityNew;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
@@ -43,11 +46,19 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(context, GameActivity.class);
-            int a = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(page * 16  + getAdapterPosition()).getId();
-            intent.putExtra("id", a);
-            intent.putExtra("packageNumber", packageNumber);
-            context.startActivity(intent);
+            GameActivity gameActivity = new GameActivity();
+
+            FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, gameActivity);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+
+//            Intent intent = new Intent(context, GameActivity.class);
+//            int a = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(page * 16  + getAdapterPosition()).getId();
+//            intent.putExtra("id", a);
+//            intent.putExtra("packageNumber", packageNumber);
+//            context.startActivity(intent);
 
         }
     }

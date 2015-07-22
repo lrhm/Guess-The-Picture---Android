@@ -1,15 +1,15 @@
 package ir.treeco.aftabe.New.View.Fragment;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -21,10 +21,9 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.Util.Tools;
-import ir.treeco.aftabe.New.View.BackgroundDrawable;
 import ir.treeco.aftabe.R;
 
-public class GameActivity extends FragmentActivity implements View.OnClickListener {
+public class GameActivity extends Fragment implements View.OnClickListener {
     int levelId;
     ImageView imageView;
     int packageNumber;
@@ -41,31 +40,21 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     private int[] sAndkIndex;  //!! should use hashMap
     private KeyboardAdapter keyboardAdapter;
     private int[] keyboardStatus;
-    Button hazf;
-    Button azafe;
     private Random random;
     private boolean[] keyboardB;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_activity_game);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.new_activity_game, container, false);
 
-//        LengthManager.initialize(this);
-//        HeaderFragmentNew header = (HeaderFragmentNew) getSupportFragmentManager().findFragmentById(R.id.header);
-//        header.setUpHeader(R.drawable.cheat_button);
-        setOriginalBackgroundColor();
 
-        hazf = (Button) findViewById(R.id.hazf);
-        azafe = (Button) findViewById(R.id.azafe);
-        hazf.setOnClickListener(this);
-        azafe.setOnClickListener(this);
 
         tools = new Tools();
 
-        Intent intent = getIntent();
-        levelId = intent.getIntExtra("id", 0);
-        packageNumber = intent.getIntExtra("packageNumber", 0);
+//        Intent intent = getIntent();
+        levelId = 0; //intent.getIntExtra("id", 0);
+        packageNumber = 0; // intent.getIntExtra("packageNumber", 0);
 
         String solution = tools.decodeBase64(MainApplication
                 .downloadedObject.getDownloaded()
@@ -100,24 +89,24 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         }
 
         RecyclerView recyclerView_solution1 =
-                (RecyclerView) findViewById(R.id.recycler_view_solution1);
+                (RecyclerView) view.findViewById(R.id.recycler_view_solution1);
 
         recyclerView_solution1.setHasFixedSize(true);
 
         recyclerView_solution1.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
         solutionAdapter0 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1);
         recyclerView_solution1.setAdapter(solutionAdapter0);
 
         if (solutionAdapter.length > 12) {
             RecyclerView recyclerView_solution2 = (
-                    RecyclerView) findViewById(R.id.recycler_view_solution2);
+                    RecyclerView) view.findViewById(R.id.recycler_view_solution2);
 
             recyclerView_solution2.setHasFixedSize(true);
 
             recyclerView_solution2.setLayoutManager(
-                    new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+                    new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
             solutionAdapter1 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1);
             recyclerView_solution2.setAdapter (solutionAdapter1);
@@ -127,12 +116,12 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
 
         if (solutionAdapter.length > 24) {
             RecyclerView recyclerView_solution3 = (
-                    RecyclerView) findViewById(R.id.recycler_view_solution3);
+                    RecyclerView) view.findViewById(R.id.recycler_view_solution3);
 
             recyclerView_solution3.setHasFixedSize(true);
 
             recyclerView_solution3.setLayoutManager(
-                    new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+                    new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
             solutionAdapter2 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1);
             recyclerView_solution3.setAdapter (solutionAdapter2);
@@ -165,42 +154,28 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
         }
 
         RecyclerView recyclerView_keyboard = (
-                RecyclerView) findViewById(R.id.recycler_view_keyboard);
+                RecyclerView) view.findViewById(R.id.recycler_view_keyboard);
 
         recyclerView_keyboard.setHasFixedSize(true);
-        recyclerView_keyboard.setLayoutManager(new GridLayoutManager(this, 7));
+        recyclerView_keyboard.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         keyboardAdapter = new KeyboardAdapter(this, keyboardChars, keyboardStatus);
         recyclerView_keyboard.setAdapter(keyboardAdapter);
 
-        imageView = (ImageView) findViewById(R.id.image_game);
+        imageView = (ImageView) view.findViewById(R.id.image_game);
 //        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
 //        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
-        String a = "file://" + getFilesDir().getPath() + "/Downloaded/"
+        String a = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
                 + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
                 + "_" + MainApplication.downloadedObject.getDownloaded()
                 .get(packageNumber).getLevels().get(levelId).getResources();
 
-        Picasso.with(this).load(a).into(imageView);
+        Picasso.with(getActivity()).load(a).into(imageView);
+
+        return view;
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        Log.d("armin onPause", this.getClass().toString() + " is on Pause and we save data");
-//        MainApplication.saveDataAndBackUpData(this);
-    }
 
-    //region SetBackGroundDrawable
-    private void setOriginalBackgroundColor() {
-        ImageView background = (ImageView) findViewById(R.id.background);
-        background.setImageDrawable(new BackgroundDrawable(this, new int[]{
-                Color.parseColor("#29CDB8"),
-                Color.parseColor("#1FB8AA"),
-                Color.parseColor("#0A8A8C")
-        }));
-    }
-    //endregion
 
     public void selectKeyboard(int adapterPosition) {
         for (int i = 0; i < statusAdapter.length; i++) {
@@ -331,13 +306,6 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.hazf:
-                cheatHazf();
-                break;
-
-            case R.id.azafe:
-                cheatAzafe();
-                break;
         }
     }
 }
