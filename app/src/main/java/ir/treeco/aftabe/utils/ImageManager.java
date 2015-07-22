@@ -2,7 +2,11 @@ package ir.treeco.aftabe.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.util.LruCache;
 
 import java.io.InputStream;

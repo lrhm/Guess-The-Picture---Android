@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.New.View.Fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -70,11 +68,11 @@ public class HeaderFragmentNew extends Fragment implements View.OnClickListener 
         coinBox.setOnClickListener(this);
 
 
-        TextView digits = ((TextView) v.findViewById(R.id.digits));
+        TextView digits = (TextView) v.findViewById(R.id.digits);
         digits.setTypeface(Typeface.createFromAsset(activity.getAssets(), "yekan.ttf"));
         digits.setTextSize(20);
         String number = "۱۲۳۴۷۶۶۷۷۸۸۷۶۶۵۴۶";
-        digits.append(number);
+        digits.setText(number);
     }
 
 /*

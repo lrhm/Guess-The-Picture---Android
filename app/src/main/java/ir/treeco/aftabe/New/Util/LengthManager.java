@@ -9,7 +9,6 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.Utils;
 
 public class LengthManager {
 //    private static boolean initialized = false;
@@ -301,7 +300,7 @@ public class LengthManager {
     }
 
     public int getPackagesListColumnCount() {
-        return Math.min(Math.max((int) (Utils.convertPixelsToDp(getScreenWidth(), context) / 150), 1), 3);
+        return Math.min(Math.max((int) (Tools.convertPixelsToDp(getScreenWidth(), context) / 150), 1), 3);
     }
 
     public int getLevelFinishedDialogTopPadding() {
