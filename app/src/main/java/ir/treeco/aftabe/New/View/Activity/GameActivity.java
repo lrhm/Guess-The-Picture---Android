@@ -17,11 +17,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ir.treeco.aftabe.BackgroundDrawable;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.Util.Tools;
+import ir.treeco.aftabe.New.View.BackgroundDrawable;
 import ir.treeco.aftabe.R;
 
 public class GameActivity extends FragmentActivity implements View.OnClickListener {
@@ -54,7 +54,7 @@ public class GameActivity extends FragmentActivity implements View.OnClickListen
 //        LengthManager.initialize(this);
 //        HeaderFragmentNew header = (HeaderFragmentNew) getSupportFragmentManager().findFragmentById(R.id.header);
 //        header.setUpHeader(R.drawable.cheat_button);
-//        setOriginalBackgroundColor();
+        setOriginalBackgroundColor();
 
         hazf = (Button) findViewById(R.id.hazf);
         azafe = (Button) findViewById(R.id.azafe);
