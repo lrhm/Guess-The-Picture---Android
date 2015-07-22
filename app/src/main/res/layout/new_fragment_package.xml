@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
-
     <ImageView
+        android:id="@+id/adImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/shadow_top" />
+        android:background="@android:color/holo_orange_light"
+        android:layout_height="50dp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/package_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="@android:color/transparent"
-        android:fadingEdge="none"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        android:cacheColorHint="@android:color/transparent" />
+    <FrameLayout android:layout_height="match_parent" android:layout_width="match_parent">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shadow_top" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/package_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:listSelector="@android:color/transparent"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:cacheColorHint="@android:color/transparent" />
+    </FrameLayout>
+
+
+</LinearLayout>

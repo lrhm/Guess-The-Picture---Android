@@ -165,8 +165,9 @@ public class MainApplication extends Application {
             FileWriter writerBackUp = new FileWriter(backUpDataPath);
             writerBackUp.write(backUpJson);
             writer.close();
+            writerBackUp.close();
 
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
 

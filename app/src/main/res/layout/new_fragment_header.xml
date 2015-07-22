@@ -19,7 +19,7 @@
             android:contentDescription="@string/coin_box"
             android:layout_centerVertical="true" />
 
-        <LinearLayout
+        <TextView
             android:id="@+id/digits"
             android:layout_marginTop="33dp"
             android:layout_marginBottom="41dp"
@@ -28,8 +28,7 @@
             android:layout_marginStart="58dp"
             android:layout_marginLeft="58dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
+            android:layout_height="wrap_content" />
 
 
 
