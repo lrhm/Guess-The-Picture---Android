@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
-import ir.treeco.aftabe.New.View.Fragment.GameActivity;
+import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
@@ -51,11 +51,11 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             bundle.putInt("id", a);
             bundle.putInt("packageNumber", packageNumber);
 
-            GameActivity gameActivity = new GameActivity();
-            gameActivity.setArguments(bundle);
+            GameFragmentNew gameFragmentNew = new GameFragmentNew();
+            gameFragmentNew.setArguments(bundle);
 
             FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, gameActivity);
+            transaction.replace(R.id.fragment_container, gameFragmentNew);
             transaction.addToBackStack(null);
             transaction.commit();
         }

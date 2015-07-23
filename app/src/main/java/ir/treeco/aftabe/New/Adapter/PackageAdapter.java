@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
-import ir.treeco.aftabe.New.View.Fragment.LevelsActivityNew;
+import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
@@ -53,11 +53,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", packageObjects.get(getAdapterPosition()).getId());
 
-                LevelsActivityNew levelsActivityNew = new LevelsActivityNew();
-                levelsActivityNew.setArguments(bundle);
+                PackageFragmentNew packageFragmentNew = new PackageFragmentNew();
+                packageFragmentNew.setArguments(bundle);
 
                 FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, levelsActivityNew, "LevelsActivityNew1");
+                transaction.replace(R.id.fragment_container, packageFragmentNew, "LevelsActivityNew1");
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

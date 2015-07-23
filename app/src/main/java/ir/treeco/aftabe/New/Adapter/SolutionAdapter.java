@@ -6,21 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ir.treeco.aftabe.New.View.Fragment.GameActivity;
+import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> {
     char[] characters;
     char[] status;
-    GameActivity gameActivity;
+    GameFragmentNew gameFragmentNew;
     int n;
     int break0;
     int break1;
 
-    public SolutionAdapter(char[] characters, GameActivity gameActivity, char[] status, int n, int break0, int break1) {
+    public SolutionAdapter(char[] characters, GameFragmentNew gameFragmentNew, char[] status, int n, int break0, int break1) {
         this.characters = characters;
         this.status = status;
-        this.gameActivity = gameActivity;
+        this.gameFragmentNew = gameFragmentNew;
         this.break0 = break0;
         this.break1 = break1;
         this.n = n;
@@ -38,7 +38,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         @Override
         public void onClick(View v) {
             if (status[getLocalPosition(getAdapterPosition())] != '*') {
-                gameActivity.removeFromSolution(getLocalPosition(getAdapterPosition()), 0);
+                gameFragmentNew.removeFromSolution(getLocalPosition(getAdapterPosition()), 0);
             }
         }
     }

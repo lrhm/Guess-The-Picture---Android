@@ -23,7 +23,7 @@ import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
-public class GameActivity extends Fragment implements View.OnClickListener {
+public class GameFragmentNew extends Fragment implements View.OnClickListener {
     int levelId;
     ImageView imageView;
     int packageNumber;

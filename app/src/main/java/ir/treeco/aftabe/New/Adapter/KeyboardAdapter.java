@@ -6,16 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ir.treeco.aftabe.New.View.Fragment.GameActivity;
+import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHolder> {
-    GameActivity gameActivity;
+    GameFragmentNew gameFragmentNew;
     char[] strings;
     int[] status;
 
-    public KeyboardAdapter(GameActivity gameActivity, char[] strings, int[] status) {
-        this.gameActivity = gameActivity;
+    public KeyboardAdapter(GameFragmentNew gameFragmentNew, char[] strings, int[] status) {
+        this.gameFragmentNew = gameFragmentNew;
         this.strings = strings;
         this.status = status;
     }
@@ -31,7 +31,7 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-            gameActivity.selectKeyboard(getAdapterPosition());
+            gameFragmentNew.selectKeyboard(getAdapterPosition());
         }
     }
 

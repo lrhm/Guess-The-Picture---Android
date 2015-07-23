@@ -29,9 +29,9 @@ public class MainFragment extends Fragment {
 
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
-                .add("تازه‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
-                .add("دانلود شده‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
-                .add("محبوب‌ترین‌ها", PackageFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
+                .add("تازه‌ها", PackagesFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
+                .add("دانلود شده‌ها", PackagesFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
+                .add("محبوب‌ترین‌ها", PackagesFragmentNew.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
                 .create()
         );
 

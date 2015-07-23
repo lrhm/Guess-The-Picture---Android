@@ -26,14 +26,14 @@ public class LevelsFragmentNew extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_fragment_levels, container, false);
 
-        LevelsActivityNew fragment = (LevelsActivityNew) getParentFragment();
+        PackageFragmentNew fragment = (PackageFragmentNew) getParentFragment();
 //        LevelsActivityNew fragment = (LevelsActivityNew)fm.findFragmentByTag("LevelsActivityNew1");
 
         levelLocked = fragment.getLevelLocked();
         levelUnlocked = fragment.getLevelUnlocked();
 
-        page = getArguments().getInt(LevelsActivityNew.LEVEL_PAGE);
-        packageNumber = getArguments().getInt(LevelsActivityNew.PACKAGE_NUMBER);
+        page = getArguments().getInt(PackageFragmentNew.LEVEL_PAGE);
+        packageNumber = getArguments().getInt(PackageFragmentNew.PACKAGE_NUMBER);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.levels_recycler_view);
         recyclerView.setHasFixedSize(true);
