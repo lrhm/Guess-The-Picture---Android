@@ -65,20 +65,24 @@ public class MainApplication extends Application {
 
         downloadedObject = new HeadObject();
         headObject = new HeadObject();
-
         lengthManager = new LengthManager(this);
 
         loadDownloadedObject();
-        copyRawFiles();
 
 
-        DLManager.getInstance(this).dlStart("http://rsdn.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
+        if (Prefs.getBoolean("firstAppRun", true)) {
+            copyRawFiles();
+            Prefs.putBoolean("firstAppRun", false);
+
+        }
+
+        DLManager.getInstance(this).dlStart("http://pfont.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
                 new DLTaskListener() {
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file);
-                        parseJson();
-                        downloadTask();
+//                        parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
+//                        downloadTask();
                     }
                 }
         );
@@ -103,12 +107,9 @@ public class MainApplication extends Application {
         }
     }
 
-
-
-    public void parseJson() {
+    public void parseJson(String path) {
         try {
-            String a = this.getFilesDir().getPath() + "/head.json";
-            InputStream inputStream = new FileInputStream(a);
+            InputStream inputStream = new FileInputStream(path);
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             Gson gson = new GsonBuilder().create();
             headObject = gson.fromJson(reader, HeadObject.class);
@@ -142,75 +143,43 @@ public class MainApplication extends Application {
     }
 
     public void copyRawFiles() {
-        if (Prefs.getBoolean("firstAppRun", true)) {
-            Prefs.putBoolean("firstAppRun", false);
-            MainApplication.downloadedObject = new Gson().
-                    fromJson(new InputStreamReader(
-                            getResources().openRawResource(R.raw.downloaded)), HeadObject.class);
-            String backImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_back";
-            String frontImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_front";
-            String zipFile = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId();
+        downloadedObject = new Gson().fromJson(new InputStreamReader(
+                        getResources().openRawResource(R.raw.downloaded)), HeadObject.class);
 
-            try {
-                writeRawFiles(backImage, "png");
-                writeRawFiles(frontImage, "png");
-                writeRawFiles(zipFile, "zip");
-            } catch (NullPointerException | IOException e) {
-                e.printStackTrace();
-            }
-        }
+        String backImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_back";
+        String frontImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_front";
+        String zipFile = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId();
 
+        writeRawFiles(backImage, "png");
+        writeRawFiles(frontImage, "png");
+        writeRawFiles(zipFile, "zip");
     }
 
-    FileOutputStream fileOutputStream;
-
-    public void writeRawFiles(String name, String type) throws IOException {
+    public void writeRawFiles(String name, String type) {
+        FileOutputStream fileOutputStream;
         InputStream inputStream = getResources().openRawResource(getResources().getIdentifier("raw/" + name, type, getPackageName()));
 
-        String path;
+        String path = getFilesDir().getPath() + File.separator + name + "." + type;
 
-        switch (type) {
-            case "png":
-                path = getFilesDir().getPath() + File.separator + name + "." + type;
-                try {
-                    Log.d("armin etsting path", path);
-                    fileOutputStream = new FileOutputStream(path);
-                    byte[] bytes = new byte[1024];
-                    int read;
-                    while ((read = inputStream.read(bytes)) > 0) {
-                        fileOutputStream.write(bytes, 0, read);
-                    }
-                } finally {
-                    inputStream.close();
-                    fileOutputStream.close();
-                }
-                break;
-            case "zip":
-                /**
-                 * First we write the zip file in /files/ directory then unpack it
-                 * to /Downloaded/ directory, the zip file name is packageID.zip
-                 * The images file name is packageID_level_levelNumber.png
-                 * The package back and front images file name is packageID_back.png
-                 * and packageID_front.png
-                 */
-                path = getFilesDir().getPath() + File.separator + name + "." + type;
-                try {
-                    fileOutputStream = new FileOutputStream(path);
-                    byte[] bytes = new byte[1024];
-                    int read;
-                    while ((read = inputStream.read(bytes)) > 0) {
-                        fileOutputStream.write(bytes, 0, read);
-                    }
-                } finally {
-                    inputStream.close();
-                    fileOutputStream.close();
-                    Zip zip = new Zip();
-                    Log.d("armin zip path", path);
-                    zip.unpackZip(path, MainApplication.downloadedObject.getDownloaded().get(0).getId(), getBaseContext());
-                }
-                break;
+        try {
+            fileOutputStream = new FileOutputStream(path);
+            byte[] bytes = new byte[1024];
+            int read;
+
+            while ((read = inputStream.read(bytes)) > 0) {
+                fileOutputStream.write(bytes, 0, read);
+            }
+
+            inputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        inputStream.close();
+
+        if (type.equals("zip")) {
+            Zip zip = new Zip();
+            zip.unpackZip(path, MainApplication.downloadedObject.getDownloaded().get(0).getId(), getBaseContext());
+        }
     }
 
 
