@@ -73,16 +73,25 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         int b = page * 16 + i;
         if (MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
 
-            String a = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+            String imagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
                     + "_" + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().get(b).getResources();
 
-            Picasso.with(context).load(a).into(viewHolder.imageView);
-            Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
-            viewHolder.frame.setImageBitmap(levelUnlocked);
+            String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                    + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
+                    + "_levelUnlocked.png";
+
+            Picasso.with(context).load(imagePath).into(viewHolder.imageView);
+            Picasso.with(context).load(frame).into(viewHolder.frame);
+
+            viewHolder.imageView.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.imageView.setImageBitmap(levelLocked);
-            viewHolder.frame.setImageBitmap(levelUnlocked);
+            viewHolder.imageView.setVisibility(View.GONE);
+
+            String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                    + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
+                    + "_levelLocked.png";
+            Picasso.with(context).load(frame).into(viewHolder.frame);
         }
     }
 

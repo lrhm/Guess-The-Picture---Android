@@ -15,8 +15,6 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.Util.ImageManager;
-import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
 public class PackageFragmentNew extends Fragment {
@@ -39,12 +37,6 @@ public class PackageFragmentNew extends Fragment {
         super.onCreate(savedInstanceState);
 
         packageId = getArguments().getInt("id");
-
-        float[] thumbnailHSV = {1, 1, 1};  //todo
-        levelLocked = Tools.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_locked, MainApplication.lengthManager.getLevelFrameWidth(), MainApplication.lengthManager.getLevelFrameHeight()), thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-        levelUnlocked = Tools.updateHSV(ImageManager.loadImageFromResource(getActivity(), R.drawable.level_unlocked, MainApplication.lengthManager.getLevelFrameWidth(), MainApplication.lengthManager.getLevelFrameHeight()), thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-
-
 
 //        thumbnailHSV = new float[] {Float.parseFloat("130"),Float.parseFloat("0"),Float.parseFloat("-0.1")};
 //

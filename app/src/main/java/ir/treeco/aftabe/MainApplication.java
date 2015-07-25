@@ -2,6 +2,7 @@ package ir.treeco.aftabe;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
@@ -25,7 +26,9 @@ import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
+import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.LengthManager;
+import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.Util.Zip;
 
 /*
@@ -175,6 +178,42 @@ public class MainApplication extends Application {
             Zip zip = new Zip();
             zip.unpackZip(path, id, getBaseContext());
             saveToDownloadsJason(id);
+            makeFirstHSV(id);
+        }
+    }
+
+    public void makeFirstHSV(int id) {
+        float[] thumbnailHSV = {130, 0, 0};  //todo load for json
+        Bitmap levelLocked = Tools.updateHSV(
+                ImageManager.loadImageFromResource(
+                        this, R.drawable.level_locked,
+                        lengthManager.getLevelFrameWidth(),
+                        lengthManager.getLevelFrameHeight()),
+                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+
+        saveBitmap(levelLocked, id + "_levelLocked.png");
+
+        Bitmap levelUnlocked = Tools.updateHSV(
+                ImageManager.loadImageFromResource(
+                        this, R.drawable.level_unlocked,
+                        lengthManager.getLevelFrameWidth(),
+                        lengthManager.getLevelFrameHeight()),
+                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+
+        saveBitmap(levelUnlocked, id + "_levelUnlocked.png");
+    }
+
+    public void saveBitmap (Bitmap bitmap, String name) {
+
+        File file = new File (this.getFilesDir().getPath() + "/Downloaded/", name);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
