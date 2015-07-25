@@ -7,6 +7,7 @@ public class HeadObject {
     private ArrayList<PackageObject> news;
     private ArrayList<PackageObject> downloaded;
     private ArrayList<PackageObject> downloadtask;
+    private ArrayList<PackageObject> local;
 
     public ArrayList<PackageObject> getSaller ()
     {
@@ -44,7 +45,13 @@ public class HeadObject {
         this.downloadtask = downloadtask;
     }
 
+    public ArrayList<PackageObject> getLocal() {
+        return local;
+    }
 
+    public void setLocal(ArrayList<PackageObject> local) {
+        this.local = local;
+    }
 }
 
 

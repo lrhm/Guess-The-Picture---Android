@@ -5,15 +5,24 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.FrameLayout;
-import ir.treeco.aftabe.View.Activity.IntroActivity;
-import ir.treeco.aftabe.Adapter.PackageListAdapter;
-import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.utils.Utils;
+
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+
+import ir.treeco.aftabe.Adapter.PackageListAdapter;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.IntroActivity;
+import ir.treeco.aftabe.utils.Utils;
 
 public class PackageManager {
     private final static String TAG = "PackagerManager";
@@ -71,7 +80,7 @@ public class PackageManager {
         {
             Log.i(TAG, "Loading built-in packages");
 
-            InputStream inputStream = context.getResources().openRawResource(R.raw.header);
+            InputStream inputStream = context.getResources().openRawResource(R.raw.local);  //edit by behdad
 
             List<HashMap<String, Object>> headerInfo = (List<HashMap<String, Object>>) yaml.load(inputStream);
             Log.i(TAG, "Got the header for built-ins");

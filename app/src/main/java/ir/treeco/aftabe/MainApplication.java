@@ -45,12 +45,9 @@ import ir.treeco.aftabe.New.Util.Zip;
         resToastText = R.string.toast_crash
 )*/
 public class MainApplication extends Application {
-
     public static HeadObject downloadedObject;
     public static LengthManager lengthManager;
-
     private HeadObject headObject;
-
 
     @Override
     public void onCreate() {
@@ -67,14 +64,12 @@ public class MainApplication extends Application {
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
 
-        loadDownloadedObject();
-
-
         if (Prefs.getBoolean("firstAppRun", true)) {
-            copyRawFiles();
+            copyLocalpackages();
             Prefs.putBoolean("firstAppRun", false);
-
         }
+
+        loadDownloadedObject();
 
         DLManager.getInstance(this).dlStart("http://pfont.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
                 new DLTaskListener() {
@@ -87,7 +82,6 @@ public class MainApplication extends Application {
                 }
         );
     }
-
 
     public void downloadTask() {
         for (int i = 0; i < headObject.getDownloadtask().size(); i++) {
@@ -119,7 +113,6 @@ public class MainApplication extends Application {
         }
     }
 
-
     public void loadDownloadedObject() {
         try {
             String downloadedPAth = this.getFilesDir().getPath() + "/downloaded.json";
@@ -142,23 +135,25 @@ public class MainApplication extends Application {
         return lengthManager;
     }
 
-    public void copyRawFiles() {
-        downloadedObject = new Gson().fromJson(new InputStreamReader(
-                        getResources().openRawResource(R.raw.downloaded)), HeadObject.class);
+    public void copyLocalpackages() {
+        HeadObject localObject = new Gson().fromJson(new InputStreamReader(
+                getResources().openRawResource(R.raw.local)), HeadObject.class);
 
-        String backImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_back";
-        String frontImage = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId() + "_front";
-        String zipFile = "p_" + MainApplication.downloadedObject.getDownloaded().get(0).getId();
+        for (int i = 0; i < localObject.getLocal().size(); i++) {
+            int id = localObject.getLocal().get(i).getId();
+            String backImage = "p_" + id + "_back";
+            String frontImage = "p_" + id + "_front";
+            String zipFile = "p_" + id;
 
-        writeRawFiles(backImage, "png");
-        writeRawFiles(frontImage, "png");
-        writeRawFiles(zipFile, "zip");
+            writeRawFiles(backImage, "png", id);
+            writeRawFiles(frontImage, "png", id);
+            writeRawFiles(zipFile, "zip", id);
+        }
     }
 
-    public void writeRawFiles(String name, String type) {
+    public void writeRawFiles(String name, String type, int id) {
         FileOutputStream fileOutputStream;
         InputStream inputStream = getResources().openRawResource(getResources().getIdentifier("raw/" + name, type, getPackageName()));
-
         String path = getFilesDir().getPath() + File.separator + name + "." + type;
 
         try {
@@ -178,10 +173,10 @@ public class MainApplication extends Application {
 
         if (type.equals("zip")) {
             Zip zip = new Zip();
-            zip.unpackZip(path, MainApplication.downloadedObject.getDownloaded().get(0).getId(), getBaseContext());
+            zip.unpackZip(path, id, getBaseContext());
+            saveToDownloadsJason(id);
         }
     }
-
 
     public static void saveDataAndBackUpData(Context context) {
         String aa = context.getFilesDir().getPath() + "/downloaded.json";
@@ -215,14 +210,11 @@ public class MainApplication extends Application {
 
     }
 
-
-
-    public void saveToDownloads(int id) {
+    public void saveToDownloadsJason(int id) {
         PackageObject packageObject = null;
 
         try {
             String a = this.getFilesDir().getPath() + "/Downloaded/" + id + "_level_list.json";
-            Log.e("path", a);
             InputStream inputStream = new FileInputStream(a);
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             Gson gson = new GsonBuilder().create();
@@ -232,14 +224,32 @@ public class MainApplication extends Application {
             e.printStackTrace();
         }
 
-        if (MainApplication.downloadedObject.getDownloaded() == null) {
+        if (downloadedObject.getDownloaded() == null) {
             ArrayList<PackageObject> a = new ArrayList<>();
-            MainApplication.downloadedObject.setDownloaded(a);
+            downloadedObject.setDownloaded(a);
         }
 
-        MainApplication.downloadedObject.getDownloaded().add(packageObject);
-        MainApplication.saveDataAndBackUpData(this);
+        if (id == 0) {
+            downloadedObject.getDownloaded().add(packageObject);
 
+        } else if (downloadedObject.getDownloaded().get(id) == null) {
+            if (downloadedObject.getDownloaded().get(id - 1) != null) {
+                downloadedObject.getDownloaded().add(packageObject);
+
+            } else {
+                for (int i = 0; i < id; i++) {
+                    if (downloadedObject.getDownloaded().get(i) == null) {
+                        PackageObject packageObj = new PackageObject();
+                        downloadedObject.getDownloaded().set(i, packageObj);
+                    }
+                }
+                downloadedObject.getDownloaded().add(packageObject);
+            }
+
+        } else {
+            downloadedObject.getDownloaded().set(id, packageObject);
+        }
+        MainApplication.saveDataAndBackUpData(this);
     }
 
     public void downloadPackage(String url, String path, final int id, final String name) {
@@ -276,7 +286,7 @@ public class MainApplication extends Application {
                         Log.e("don", "finish " + file.getPath());
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, getApplicationContext());
-                        saveToDownloads(id);
+                        saveToDownloadsJason(id);
                     }
                 }
         );
@@ -312,6 +322,4 @@ public class MainApplication extends Application {
             e.printStackTrace();
         }
     }*/
-
-
 }

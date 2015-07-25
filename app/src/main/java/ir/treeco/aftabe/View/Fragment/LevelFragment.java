@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -772,7 +771,7 @@ public class LevelFragment extends Fragment {
             coinFrame.setVisibility(View.GONE);
         }*/
 
-        MediaPlayer.create(getActivity(), R.raw.sound_correct).start();
+//        MediaPlayer.create(getActivity(), R.raw.sound_correct).start(); comented by behdad
 
         mLevel.yeahHeSolvedIt();
     }
