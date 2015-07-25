@@ -12,6 +12,7 @@
             android:id="@+id/viewpagertab"
             android:layout_below="@id/header"
             android:layout_width="match_parent"
+            android:clipToPadding="false"
             android:layout_height="40dp"
             app:stl_indicatorAlwaysInCenter="false"
             app:stl_indicatorInterpolation="smart"

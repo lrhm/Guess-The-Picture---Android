@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -79,8 +78,8 @@ public class MainApplication extends Application {
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file);
-//                        parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
-//                        downloadTask();
+                        parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
+                        downloadTask();
                     }
                 }
         );
@@ -89,6 +88,7 @@ public class MainApplication extends Application {
     public void downloadTask() {
         for (int i = 0; i < headObject.getDownloadtask().size(); i++) {
             File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask().get(i).getName());
+
             if (!file.exists()) {
                 DLManager.getInstance(this).dlStart(headObject.getDownloadtask().get(i).getUrl(), this.getFilesDir().getPath(),
                         new DLTaskListener() {
@@ -96,7 +96,6 @@ public class MainApplication extends Application {
                             @Override
                             public void onFinish(File file) {
                                 super.onFinish(file);
-                                Log.e("don", file.getPath());
                             }
                         }
                 );
@@ -219,7 +218,6 @@ public class MainApplication extends Application {
 
     public static void saveDataAndBackUpData(Context context) {
         String aa = context.getFilesDir().getPath() + "/downloaded.json";
-        Log.d("armin path", aa);
         File parentDir = new File(Environment.getExternalStorageDirectory() + "/Android");
         parentDir.mkdir();
         String backUpDataPath = parentDir.getPath() + "/file.json";
@@ -305,8 +303,6 @@ public class MainApplication extends Application {
                         if (n == 30) {
                             //notificationAdapter.notifyDownload(progress, id, name);
                             n = 0;
-
-                            Log.e("don", "progress" + progress);
                         }
                     }
 
@@ -314,15 +310,12 @@ public class MainApplication extends Application {
                     public void onError(String error) {
                         super.onError(error);
                         //notificationAdapter.faildDownload(id, name);
-
-                        Log.e("don", "error");
                     }
 
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file); //todo chack md5 & save in json file
                         //notificationAdapter.finalDownload(id, name);
-                        Log.e("don", "finish " + file.getPath());
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, getApplicationContext());
                         saveToDownloadsJason(id);
