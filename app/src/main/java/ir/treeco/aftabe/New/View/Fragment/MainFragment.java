@@ -20,12 +20,10 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
     public final static String FRAGMENT_TYPE = "fragment_type";
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_fragment_main, container, false);
-
 
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
@@ -35,13 +33,11 @@ public class MainFragment extends Fragment {
                 .create()
         );
 
-
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
-        //endregion
 
         return view;
     }

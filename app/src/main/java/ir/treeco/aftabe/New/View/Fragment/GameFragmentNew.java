@@ -26,7 +26,7 @@ import ir.treeco.aftabe.R;
 public class GameFragmentNew extends Fragment implements View.OnClickListener {
     int levelId;
     ImageView imageView;
-    int packageNumber;
+    int packageId;
     private Tools tools;
     private String status;
     private char[] statusAdapter;
@@ -52,12 +52,12 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         tools = new Tools();
 
 //        Intent intent = getIntent();
-        levelId = getArguments().getInt("id");//0; //intent.getIntExtra("id", 0);
-        packageNumber = getArguments().getInt("packageNumber");//0; // intent.getIntExtra("packageNumber", 0);
+        levelId = getArguments().getInt("LevelId");//0; //intent.getIntExtra("id", 0);
+        packageId = getArguments().getInt("id");//0; // intent.getIntExtra("packageNumber", 0);
 
         String solution = tools.decodeBase64(MainApplication
                 .downloadedObject.getDownloaded()
-                .get(packageNumber).getLevels().get(levelId).getJavab());
+                .get(packageId).getLevels().get(levelId).getJavab());
 
         StringBuilder stringBuilder = new StringBuilder(solution);
 
@@ -165,16 +165,14 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 //        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
         String a = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
-                + MainApplication.downloadedObject.getDownloaded().get(packageNumber).getId()
+                + MainApplication.downloadedObject.getDownloaded().get(packageId).getId()
                 + "_" + MainApplication.downloadedObject.getDownloaded()
-                .get(packageNumber).getLevels().get(levelId).getResources();
+                .get(packageId).getLevels().get(levelId).getResources();
 
         Picasso.with(getActivity()).load(a).into(imageView);
 
         return view;
     }
-
-
 
     public void selectKeyboard(int adapterPosition) {
         for (int i = 0; i < statusAdapter.length; i++) {

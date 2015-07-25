@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.New.View.Fragment;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,9 +16,7 @@ public class LevelsFragmentNew extends Fragment {
     private RecyclerView recyclerView;
     private LevelsAdapter adapter;
     private int page;
-    private int packageNumber;
-    private Bitmap levelLocked;
-    private Bitmap levelUnlocked;
+    private int packageId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -29,18 +26,15 @@ public class LevelsFragmentNew extends Fragment {
         PackageFragmentNew fragment = (PackageFragmentNew) getParentFragment();
 //        LevelsActivityNew fragment = (LevelsActivityNew)fm.findFragmentByTag("LevelsActivityNew1");
 
-        levelLocked = fragment.getLevelLocked();
-        levelUnlocked = fragment.getLevelUnlocked();
-
         page = getArguments().getInt(PackageFragmentNew.LEVEL_PAGE);
-        packageNumber = getArguments().getInt(PackageFragmentNew.PACKAGE_NUMBER);
+        packageId = getArguments().getInt("id");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.levels_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
-        adapter = new LevelsAdapter(getActivity(), packageNumber, page, levelLocked, levelUnlocked);
+        adapter = new LevelsAdapter(getActivity(), packageId, page);
         recyclerView.setAdapter(adapter);
 
         return view;

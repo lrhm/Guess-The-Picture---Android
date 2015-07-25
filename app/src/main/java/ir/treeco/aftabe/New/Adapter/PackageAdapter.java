@@ -1,6 +1,6 @@
 package ir.treeco.aftabe.New.Adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +22,9 @@ import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
     private ArrayList<PackageObject> packageObjects;
-    Context context;
+    Activity context;
 
-    public PackageAdapter(Context context, ArrayList<PackageObject> packageObjects) {
+    public PackageAdapter(Activity context, ArrayList<PackageObject> packageObjects) {
         this.context = context;
         this.packageObjects = packageObjects;
     }
@@ -45,7 +45,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             //todo chack md5
 
             if (!file.exists()) {
-                ((MainApplication) context.getApplicationContext()).downloadPackage(
+                ((MainApplication) context.getApplication()).downloadPackage(
                         packageObjects.get(getAdapterPosition()).getUrl(),
                         context.getFilesDir().getPath(),
                         packageObjects.get(getAdapterPosition()).getId(),

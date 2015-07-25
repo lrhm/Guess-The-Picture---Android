@@ -24,8 +24,8 @@ public class PackageFragmentNew extends Fragment {
     int packageId;
     //    PackageObject packageObject;
     public final static String LEVEL_PAGE = "level_page";
-    public final static String PACKAGE_NUMBER = "package_number";
-    int packageNumber;
+//    public final static String PACKAGE_NUMBER = "package_number";
+//    int packageNumber;
 
     private Tools tools;
 
@@ -38,11 +38,9 @@ public class PackageFragmentNew extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_activity_levels, container, false);
-
         super.onCreate(savedInstanceState);
 
         tools = new Tools();
-
         packageId = getArguments().getInt("id");
 
         // set top and bottom curved bar
@@ -70,14 +68,14 @@ public class PackageFragmentNew extends Fragment {
                 MainApplication.lengthManager.getScreenWidth(),
                 MainApplication.lengthManager.getLevelsBackBottomHeight());
 
-        int pageSize = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
-        if ((MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() % 16) != 0) {
+        int pageSize = MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().size() / 16;
+        if ((MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().size() % 16) != 0) {
             pageSize++;
         }
 
         FragmentPagerItems.Creator fragmentPagerItemsCreator = FragmentPagerItems.with(getActivity());
         for (int i = 0; i < pageSize; i++) {
-            fragmentPagerItemsCreator.add("", LevelsFragmentNew.class, new Bundler().putInt(LEVEL_PAGE, i).putInt(PACKAGE_NUMBER, packageNumber).get());
+            fragmentPagerItemsCreator.add("", LevelsFragmentNew.class, new Bundler().putInt(LEVEL_PAGE, i).putInt("id", packageId).get());
         }
 
         FragmentPagerItems fragmentPagerItems = fragmentPagerItemsCreator.create();
