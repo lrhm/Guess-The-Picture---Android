@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.io.UnsupportedEncodingException;
 
@@ -82,5 +84,13 @@ public class Tools {
 
         return Bitmap.createBitmap(mapDestColor, w, h, Bitmap.Config.ARGB_8888);
 
+    }
+
+    public void resizeView(View view, int width, int height) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (width != layoutParams.width || height != layoutParams.height) {
+            layoutParams.width = width;
+            layoutParams.height = height;
+        }
     }
 }

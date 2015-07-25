@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
@@ -15,6 +16,8 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Util.ImageManager;
+import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
 public class PackageFragmentNew extends Fragment {
@@ -23,6 +26,8 @@ public class PackageFragmentNew extends Fragment {
     public final static String LEVEL_PAGE = "level_page";
     public final static String PACKAGE_NUMBER = "package_number";
     int packageNumber;
+
+    private Tools tools;
 
     public Bitmap levelLocked;
     public Bitmap levelUnlocked;
@@ -36,32 +41,42 @@ public class PackageFragmentNew extends Fragment {
 
         super.onCreate(savedInstanceState);
 
-        packageId = getArguments().getInt("id");
+        tools = new Tools();
 
-//        thumbnailHSV = new float[] {Float.parseFloat("130"),Float.parseFloat("0"),Float.parseFloat("-0.1")};
-//
-//        levelLocked = Utils.updateHSV(ImageManager
-//                        .loadImageFromResource(this, R.drawable.level_locked,
-//                                LengthManager.getLevelFrameWidth(),
-//                                LengthManager.getLevelFrameHeight()),
-//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-//
-//        levelUnlocked = Utils.updateHSV(ImageManager
-//                        .loadImageFromResource(this, R.drawable.level_unlocked,
-//                                LengthManager.getLevelFrameWidth(),
-//                                LengthManager.getLevelFrameHeight()),
-//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+        packageId = getArguments().getInt("id");
 
         // set top and bottom curved bar
 //        setTopAndBottomBar();
 
-        int pagesize = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
+        ImageView levelsBackTop = (ImageView) view.findViewById(R.id.levels_back_top);
+
+        levelsBackTop.setImageBitmap(ImageManager.loadImageFromResource(
+                getActivity(), R.drawable.levels_back_top,
+                MainApplication.lengthManager.getScreenWidth(),
+                MainApplication.lengthManager.getLevelsBackTopHeight()));
+
+        tools.resizeView(levelsBackTop,
+                MainApplication.lengthManager.getScreenWidth(),
+                MainApplication.lengthManager.getLevelsBackTopHeight());
+
+        ImageView levelsBackBottom = (ImageView) view.findViewById(R.id.levels_back_bottom);
+
+        levelsBackBottom.setImageBitmap(ImageManager.loadImageFromResource(
+                getActivity(), R.drawable.levels_back_bottom,
+                MainApplication.lengthManager.getScreenWidth(),
+                MainApplication.lengthManager.getLevelsBackBottomHeight()));
+
+        tools.resizeView(levelsBackBottom,
+                MainApplication.lengthManager.getScreenWidth(),
+                MainApplication.lengthManager.getLevelsBackBottomHeight());
+
+        int pageSize = MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() / 16;
         if ((MainApplication.downloadedObject.getDownloaded().get(packageNumber).getLevels().size() % 16) != 0) {
-            pagesize++;
+            pageSize++;
         }
 
         FragmentPagerItems.Creator fragmentPagerItemsCreator = FragmentPagerItems.with(getActivity());
-        for (int i = 0; i < pagesize; i++) {
+        for (int i = 0; i < pageSize; i++) {
             fragmentPagerItemsCreator.add("", LevelsFragmentNew.class, new Bundler().putInt(LEVEL_PAGE, i).putInt(PACKAGE_NUMBER, packageNumber).get());
         }
 
@@ -70,6 +85,8 @@ public class PackageFragmentNew extends Fragment {
                 getChildFragmentManager(), fragmentPagerItems);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        tools.resizeView(viewPager, MainApplication.lengthManager.getScreenWidth(), MainApplication.lengthManager.getLevelsViewpagerHeight());
+
         viewPager.setAdapter(adapter);
 
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
