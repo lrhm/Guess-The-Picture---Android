@@ -46,6 +46,7 @@ import ir.treeco.aftabe.New.Util.Zip;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.toast_crash
 )*/
+
 public class MainApplication extends Application {
     public static HeadObject downloadedObject;
     public static LengthManager lengthManager;

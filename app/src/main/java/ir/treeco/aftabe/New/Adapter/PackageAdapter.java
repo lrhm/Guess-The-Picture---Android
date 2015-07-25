@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
@@ -44,11 +45,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             //todo chack md5
 
             if (!file.exists()) {
-//                mainActivity.downloadPackage(
-//                        packageObjects.get(getAdapterPosition()).getUrl(),
-//                        context.getFilesDir().getPath(),
-//                        packageObjects.get(getAdapterPosition()).getId(),
-//                        packageObjects.get(getAdapterPosition()).getName());
+                ((MainApplication) context.getApplicationContext()).downloadPackage(
+                        packageObjects.get(getAdapterPosition()).getUrl(),
+                        context.getFilesDir().getPath(),
+                        packageObjects.get(getAdapterPosition()).getId(),
+                        packageObjects.get(getAdapterPosition()).getName());
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", packageObjects.get(getAdapterPosition()).getId());
@@ -72,8 +73,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
-        String a = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects.get(i).getId() + "_front" + ".png";
-        Picasso.with(context).load(a).into(viewHolder.imageView);
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects.get(i).getId() + "_front" + ".png";
+        Picasso.with(context).load(imagePath).into(viewHolder.imageView);
     }
 
     @Override

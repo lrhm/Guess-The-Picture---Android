@@ -49,8 +49,6 @@ public class PackagesFragmentNew extends Fragment {
                 break;
         }
 
-
-
         adapter = new PackageAdapter(getActivity(), packageObjects);
         recyclerView.setAdapter(adapter);
 
