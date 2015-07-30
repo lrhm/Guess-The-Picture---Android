@@ -19,10 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
+import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.ImageManager;
@@ -51,6 +51,7 @@ public class MainApplication extends Application {
     public static HeadObject downloadedObject;
     public static LengthManager lengthManager;
     private HeadObject headObject;
+    private DBAdapter db;
 
     @Override
     public void onCreate() {
@@ -62,6 +63,8 @@ public class MainApplication extends Application {
                 .setPrefsName(getPackageName())
                 .setUseDefaultSharedPreference(true)
                 .build();
+
+        db = DBAdapter.getInstance(this);
 
         downloadedObject = new HeadObject();
         headObject = new HeadObject();
@@ -262,32 +265,8 @@ public class MainApplication extends Application {
             e.printStackTrace();
         }
 
-        if (downloadedObject.getDownloaded() == null) {
-            ArrayList<PackageObject> a = new ArrayList<>();
-            downloadedObject.setDownloaded(a);
-        }
+        db.insertPackage(packageObject);
 
-        if (id == 0) {
-            downloadedObject.getDownloaded().add(packageObject);
-
-        } else if (downloadedObject.getDownloaded().get(id) == null) {
-            if (downloadedObject.getDownloaded().get(id - 1) != null) {
-                downloadedObject.getDownloaded().add(packageObject);
-
-            } else {
-                for (int i = 0; i < id; i++) {
-                    if (downloadedObject.getDownloaded().get(i) == null) {
-                        PackageObject packageObj = new PackageObject();
-                        downloadedObject.getDownloaded().set(i, packageObj);
-                    }
-                }
-                downloadedObject.getDownloaded().add(packageObject);
-            }
-
-        } else {
-            downloadedObject.getDownloaded().set(id, packageObject);
-        }
-        MainApplication.saveDataAndBackUpData(this);
     }
 
     public void downloadPackage(String url, String path, final int id, final String name) {
