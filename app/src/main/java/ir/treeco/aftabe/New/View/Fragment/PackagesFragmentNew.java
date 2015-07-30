@@ -9,9 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.PackageAdapter;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.R;
@@ -20,12 +19,15 @@ public class PackagesFragmentNew extends Fragment {
     private RecyclerView recyclerView;
     private PackageAdapter adapter;
     int type;
-    ArrayList<PackageObject> packageObjects;
+    PackageObject[] packageObjects;
+    private DBAdapter db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_fragment_package, container, false);
+
+        db = DBAdapter.getInstance(getActivity());
 
         type = getArguments().getInt(MainFragment.FRAGMENT_TYPE);
 
@@ -39,8 +41,9 @@ public class PackagesFragmentNew extends Fragment {
                 break;
 
             case 1:
-                if (MainApplication.downloadedObject != null) {
-                    packageObjects = MainApplication.downloadedObject.getDownloaded();
+                PackageObject[] downloadedPackage = db.getPackages();
+                if (downloadedPackage != null) {
+                    packageObjects = downloadedPackage;
                 }
                 break;
 

@@ -11,20 +11,22 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
-    Context context;
-    int page;
-    int packageId;
+    private Context context;
+    private int page;
+    private int packageId;
+    private Level[] levels;
 
-    public LevelsAdapter(Context context, int packageId, int page) {
+    public LevelsAdapter(Context context, int packageId, int page, Level[] levels) {
         this.context = context;
         this.page = page;
         this.packageId = packageId;
+        this.levels = levels;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -42,8 +44,8 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             Bundle bundle = new Bundle();
-            int a = MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().get(page * 16  + getAdapterPosition()).getId();
-            bundle.putInt("LevelId", a);
+            int levelID = levels[page * 16 + getAdapterPosition()].getId();
+            bundle.putInt("LevelId", levelID);
             bundle.putInt("id", packageId);
 
             GameFragmentNew gameFragmentNew = new GameFragmentNew();
@@ -64,17 +66,15 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int i) {
-        int b = page * 16 + i;
-        if (MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().get(b).isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
+    public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int position) {
+        int levelPosition = page * 16 + position;
+        if (levels[levelPosition].isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
 
             String imagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + MainApplication.downloadedObject.getDownloaded().get(packageId).getId()
-                    + "_" + MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().get(b).getResources();
+                    + packageId + "_" +levels[levelPosition].getResources();
 
             String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + MainApplication.downloadedObject.getDownloaded().get(packageId).getId()
-                    + "_levelUnlocked.png";
+                    + packageId + "_levelUnlocked.png";
 
             Picasso.with(context).load(imagePath).into(viewHolder.imageView);
             Picasso.with(context).load(frame).into(viewHolder.frame);
@@ -82,19 +82,18 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             viewHolder.imageView.setVisibility(View.VISIBLE);
         } else {
             viewHolder.imageView.setVisibility(View.GONE);
-
             String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + MainApplication.downloadedObject.getDownloaded().get(packageId).getId()
-                    + "_levelLocked.png";
+                    + packageId + "_levelLocked.png";
+
             Picasso.with(context).load(frame).into(viewHolder.frame);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (((MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().size() - (page * 16)) / 16) >= 1) { //todo chek for 5 - 16 - 20 - 32 - 40
+        if (((levels.length - (page * 16)) / 16) >= 1) { //todo test for 5 - 16 - 20 - 32 - 40
             return 16;
         } else
-            return (MainApplication.downloadedObject.getDownloaded().get(packageId).getLevels().size() - (page * 16)) % 16;
+            return (levels.length - (page * 16)) % 16;
     }
 }

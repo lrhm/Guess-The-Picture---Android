@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Object.PackageObject;
@@ -21,10 +20,10 @@ import ir.treeco.aftabe.New.View.Fragment.PackageFragmentNew;
 import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
-    private ArrayList<PackageObject> packageObjects;
+    private PackageObject[] packageObjects;
     Activity context;
 
-    public PackageAdapter(Activity context, ArrayList<PackageObject> packageObjects) {
+    public PackageAdapter(Activity context, PackageObject[] packageObjects) {
         this.context = context;
         this.packageObjects = packageObjects;
     }
@@ -41,18 +40,18 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         @Override
         public void onClick(View v) {
 
-            File file = new File(context.getFilesDir().getPath() + "/p_" + packageObjects.get(getAdapterPosition()).getId() + ".zip");
+            File file = new File(context.getFilesDir().getPath() + "/p_" + packageObjects[getAdapterPosition()].getId() + ".zip");
             //todo chack md5
 
             if (!file.exists()) {
                 ((MainApplication) context.getApplication()).downloadPackage(
-                        packageObjects.get(getAdapterPosition()).getUrl(),
+                        packageObjects[getAdapterPosition()].getUrl(),
                         context.getFilesDir().getPath(),
-                        packageObjects.get(getAdapterPosition()).getId(),
-                        packageObjects.get(getAdapterPosition()).getName());
+                        packageObjects[getAdapterPosition()].getId(),
+                        packageObjects[getAdapterPosition()].getName());
             } else {
                 Bundle bundle = new Bundle();
-                bundle.putInt("id", packageObjects.get(getAdapterPosition()).getId());
+                bundle.putInt("id", packageObjects[getAdapterPosition()].getId());
 
                 PackageFragmentNew packageFragmentNew = new PackageFragmentNew();
                 packageFragmentNew.setArguments(bundle);
@@ -73,7 +72,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
-        String imagePath = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects.get(i).getId() + "_front" + ".png";
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects[i].getId() + "_front" + ".png";
         Picasso.with(context).load(imagePath).into(viewHolder.imageView);
     }
 
@@ -81,6 +80,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public int getItemCount() {
         if (packageObjects == null)
             return 0;
-        return packageObjects.size();
+        return packageObjects.length;
     }
 }

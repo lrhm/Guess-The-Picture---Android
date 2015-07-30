@@ -48,7 +48,6 @@ import ir.treeco.aftabe.New.Util.Zip;
 )*/
 
 public class MainApplication extends Application {
-    public static HeadObject downloadedObject;
     public static LengthManager lengthManager;
     private HeadObject headObject;
     private DBAdapter db;
@@ -66,7 +65,6 @@ public class MainApplication extends Application {
 
         db = DBAdapter.getInstance(this);
 
-        downloadedObject = new HeadObject();
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
 
@@ -74,8 +72,6 @@ public class MainApplication extends Application {
             copyLocalpackages();
             Prefs.putBoolean("firstAppRun", false);
         }
-
-        loadDownloadedObject();
 
         DLManager.getInstance(this).dlStart("http://pfont.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
                 new DLTaskListener() {
@@ -90,11 +86,11 @@ public class MainApplication extends Application {
     }
 
     public void downloadTask() {
-        for (int i = 0; i < headObject.getDownloadtask().size(); i++) {
-            File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask().get(i).getName());
+        for (int i = 0; i < headObject.getDownloadtask().length; i++) {
+            File file = new File(this.getFilesDir().getPath() + "/" + headObject.getDownloadtask()[i].getName());
 
             if (!file.exists()) {
-                DLManager.getInstance(this).dlStart(headObject.getDownloadtask().get(i).getUrl(), this.getFilesDir().getPath(),
+                DLManager.getInstance(this).dlStart(headObject.getDownloadtask()[i].getUrl(), this.getFilesDir().getPath(),
                         new DLTaskListener() {
 
                             @Override
@@ -119,24 +115,6 @@ public class MainApplication extends Application {
         }
     }
 
-    public void loadDownloadedObject() {
-        try {
-            String downloadedPAth = this.getFilesDir().getPath() + "/downloaded.json";
-
-            File file = new File(downloadedPAth);
-            if (file.exists()) {
-                InputStream downloadedPAthinputStream = new FileInputStream(downloadedPAth);
-                Reader readerd = new InputStreamReader(downloadedPAthinputStream, "UTF-8");
-                Gson gsond = new GsonBuilder().create();
-                downloadedObject = gsond.fromJson(readerd, HeadObject.class);
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public LengthManager getLengthManager() {
         return lengthManager;
     }
@@ -145,8 +123,8 @@ public class MainApplication extends Application {
         HeadObject localObject = new Gson().fromJson(new InputStreamReader(
                 getResources().openRawResource(R.raw.local)), HeadObject.class);
 
-        for (int i = 0; i < localObject.getLocal().size(); i++) {
-            int id = localObject.getLocal().get(i).getId();
+        for (int i = 0; i < localObject.getLocal().length; i++) {
+            int id = localObject.getLocal()[i].getId();
             String backImage = "p_" + id + "_back";
             String frontImage = "p_" + id + "_front";
             String zipFile = "p_" + id;
@@ -226,7 +204,7 @@ public class MainApplication extends Application {
         parentDir.mkdir();
         String backUpDataPath = parentDir.getPath() + "/file.json";
         Gson backupGson = new Gson();
-        String backUpJson = backupGson.toJson(downloadedObject);
+        String backUpJson = null;// = backupGson.toJson(downloadedObject);
 
         File file = new File(aa);
         file.delete();
@@ -266,7 +244,6 @@ public class MainApplication extends Application {
         }
 
         db.insertPackage(packageObject);
-
     }
 
     public void downloadPackage(String url, String path, final int id, final String name) {
@@ -308,9 +285,6 @@ public class MainApplication extends Application {
         return headObject;
     }
 
-    public static HeadObject getDownloadedObject() {
-        return downloadedObject;
-    }
 
 /*public void saveData(){
         String aa = this.getFilesDir().getPath() + "/downloaded.json";

@@ -1,55 +1,40 @@
 package ir.treeco.aftabe.New.Object;
 
-import java.util.ArrayList;
-
 public class HeadObject {
-    private ArrayList<PackageObject> saller;
-    private ArrayList<PackageObject> news;
-    private ArrayList<PackageObject> downloaded;
-    private ArrayList<PackageObject> downloadtask;
-    private ArrayList<PackageObject> local;
+    private PackageObject[] saller;
+    private PackageObject[] news;
+    private PackageObject[] downloadtask;
+    private PackageObject[] local;
 
-    public ArrayList<PackageObject> getSaller ()
-    {
+    public PackageObject[] getSaller() {
         return saller;
     }
 
-    public void setSaller (ArrayList<PackageObject> saller)
-    {
+    public void setSaller(PackageObject[] saller) {
         this.saller = saller;
     }
 
-    public ArrayList<PackageObject> getNews ()
-    {
+    public PackageObject[] getNews() {
         return news;
     }
 
-    public void setNews (ArrayList<PackageObject> news)
-    {
+    public void setNews(PackageObject[] news) {
         this.news = news;
     }
 
-    public ArrayList<PackageObject> getDownloaded() {
-        return downloaded;
-    }
-
-    public void setDownloaded(ArrayList<PackageObject> downloaded) {
-        this.downloaded = downloaded;
-    }
-
-    public ArrayList<PackageObject> getDownloadtask() {
+    public PackageObject[] getDownloadtask() {
         return downloadtask;
     }
 
-    public void setDownloadtask(ArrayList<PackageObject> downloadtask) {
+    public void setDownloadtask(PackageObject[] downloadtask) {
         this.downloadtask = downloadtask;
     }
 
-    public ArrayList<PackageObject> getLocal() {
+    public PackageObject[] getLocal() {
         return local;
     }
 
-    public void setLocal(ArrayList<PackageObject> local) {
+    public void setLocal(PackageObject[] local) {
         this.local = local;
     }
 }

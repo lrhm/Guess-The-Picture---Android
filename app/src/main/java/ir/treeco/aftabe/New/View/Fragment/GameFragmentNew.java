@@ -17,9 +17,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
+import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
@@ -42,6 +43,8 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     private int[] keyboardStatus;
     private Random random;
     private boolean[] keyboardB;
+    DBAdapter db;
+    private Level level;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -50,15 +53,15 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
 
         tools = new Tools();
+        db = DBAdapter.getInstance(getActivity());
+
+        level = db.getLevel(packageId, levelId);
 
 //        Intent intent = getIntent();
         levelId = getArguments().getInt("LevelId");//0; //intent.getIntExtra("id", 0);
         packageId = getArguments().getInt("id");//0; // intent.getIntExtra("packageNumber", 0);
 
-        String solution = tools.decodeBase64(MainApplication
-                .downloadedObject.getDownloaded()
-                .get(packageId).getLevels().get(levelId).getJavab());
-
+        String solution = tools.decodeBase64(level.getJavab());
         StringBuilder stringBuilder = new StringBuilder(solution);
 
         for (int i = 0; i < solution.length(); i++) {
@@ -165,12 +168,9 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 //        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
         String a = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
-                + MainApplication.downloadedObject.getDownloaded().get(packageId).getId()
-                + "_" + MainApplication.downloadedObject.getDownloaded()
-                .get(packageId).getLevels().get(levelId).getResources();
+                + packageId + "_" + level.getResources();
 
         Picasso.with(getActivity()).load(a).into(imageView);
-
         return view;
     }
 

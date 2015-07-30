@@ -9,32 +9,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.LevelsAdapter;
+import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.R;
 
 public class LevelsFragmentNew extends Fragment {
-    private RecyclerView recyclerView;
-    private LevelsAdapter adapter;
-    private int page;
-    private int packageId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_fragment_levels, container, false);
 
-        PackageFragmentNew fragment = (PackageFragmentNew) getParentFragment();
+//        PackageFragmentNew fragment = (PackageFragmentNew) getParentFragment();
 //        LevelsActivityNew fragment = (LevelsActivityNew)fm.findFragmentByTag("LevelsActivityNew1");
 
-        page = getArguments().getInt(PackageFragmentNew.LEVEL_PAGE);
-        packageId = getArguments().getInt("id");
+        int page = getArguments().getInt(PackageFragmentNew.LEVEL_PAGE);
+        int packageId = getArguments().getInt("id");
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.levels_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.levels_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
-        adapter = new LevelsAdapter(getActivity(), packageId, page);
+        DBAdapter db = DBAdapter.getInstance(getActivity());
+        Level[] levels = db.getLevels(packageId);
+
+        LevelsAdapter adapter = new LevelsAdapter(getActivity(), packageId, page, levels);
         recyclerView.setAdapter(adapter);
 
         return view;
