@@ -2,6 +2,7 @@ package ir.treeco.aftabe.New.Adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,11 +16,12 @@ import ir.treeco.aftabe.New.Object.PackageObject;
 /**
  * Created by behdad on 7/30/15.
  */
+
 public class DBAdapter {
     private static DBAdapter ourInstance;
 
     private static final String TAG = "DBAdapter";
-    private static final String DATABASE_NAME = "da";
+    private static final String DATABASE_NAME = "aftabe.db";
     private static final int DATABASE_VERSION = 1;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -39,39 +41,38 @@ public class DBAdapter {
     private static final String DROP_TABLE_IF_EXISTS  = "DROP TABLE IF EXISTS ";
 
     private static final String PACKAGES = "PACKAGES";
-    private static final String PACKAGESQLID = "PACKAGESQLID";
-    private static final String PACKAGEID = "PACKAGEID";
-    private static final String PACKAGENAME = "PACKAGENAME";
-    private static final String PACKAGEURL = "PACKAGEURL";
-    private static final String PACKAGEDOWNLOADED = "PACKAGEDOWNLOADED";
+    private static final String PACKAGE_SQL_ID = "PACKAGE_SQL_ID";
+    private static final String PACKAGE_ID = "PACKAGE_ID";
+    private static final String PACKAGE_NAME = "PACKAGE_NAME";
+    private static final String PACKAGE_URL = "PACKAGE_URL";
+    private static final String PACKAGE_DOWNLOADED = "PACKAGE_DOWNLOADED";
 
     private static final String SQL_CREATE_PACKAGES = CREATE_TABLE + PACKAGES + BRACKET_OPEN_SEP +
-            PACKAGESQLID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_SEP +
-            PACKAGEID + INTEGER_TYPE + NOT_NULL + UNIQUE +
-            PACKAGENAME + TEXT_TYPE + COMMA_SEP +
-            PACKAGEURL + TEXT_TYPE + COMMA_SEP +
-            PACKAGEDOWNLOADED + BLOB + BRACKET_CLOSE_SEP + SEMICOLON;
+            PACKAGE_SQL_ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_SEP +
+            PACKAGE_ID + INTEGER_TYPE + NOT_NULL + UNIQUE + COMMA_SEP +
+            PACKAGE_NAME + TEXT_TYPE + COMMA_SEP +
+            PACKAGE_URL + TEXT_TYPE + COMMA_SEP +
+            PACKAGE_DOWNLOADED + BLOB + BRACKET_CLOSE_SEP + SEMICOLON;
 
     private static final String LEVELS = "LEVELS";
-    private static final String LEVELSQLID = "LEVELSQLID";
-    private static final String LEVELID = "LEVELID";
-    private static final String LEVELSOLUTION = "LEVELSOLUTION";
-    private static final String LEVELRESOLVES = "LEVELRESOLVES";
-    private static final String LEVELRESOURCES = "LEVELRESOURCES";
-    private static final String LEVELTHUMBNAIL = "LEVELTHUMBNAIL";
-    private static final String LEVELTYPE = "LEVELTYPE";
-    private static final String LEVELPACKAGEID = "LEVELPACKAGEID";
+    private static final String LEVEL_SQL_ID = "LEVEL_SQL_ID";
+    private static final String LEVEL_ID = "LEVEL_ID";
+    private static final String LEVEL_SOLUTION = "LEVEL_SOLUTION";
+    private static final String LEVEL_RESOLVE = "LEVEL_RESOLVE";
+    private static final String LEVEL_RESOURCES = "LEVEL_RESOURCES";
+    private static final String LEVEL_THUMBNAIL = "LEVEL_THUMBNAIL";
+    private static final String LEVEL_TYPE = "LEVEL_TYPE";
+    private static final String LEVEL_PACKAGE_ID = "LEVEL_PACKAGE_ID";
 
-    private static final String SQL_CREATE_LEVELS = CREATE_TABLE + PACKAGES + BRACKET_OPEN_SEP +
-            LEVELSQLID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_SEP +
-            LEVELID + INTEGER_TYPE + NOT_NULL +
-            LEVELSOLUTION + TEXT_TYPE + COMMA_SEP +
-            LEVELRESOURCES + TEXT_TYPE + COMMA_SEP +
-            LEVELTHUMBNAIL + TEXT_TYPE + COMMA_SEP +
-            LEVELTYPE + TEXT_TYPE + COMMA_SEP +
-            LEVELRESOLVES + BLOB +
-            LEVELPACKAGEID + INTEGER_TYPE +BRACKET_CLOSE_SEP + SEMICOLON;
-
+    private static final String SQL_CREATE_LEVELS = CREATE_TABLE + LEVELS + BRACKET_OPEN_SEP +
+            LEVEL_SQL_ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_SEP +
+            LEVEL_ID + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
+            LEVEL_SOLUTION + TEXT_TYPE + COMMA_SEP +
+            LEVEL_RESOURCES + TEXT_TYPE + COMMA_SEP +
+            LEVEL_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
+            LEVEL_TYPE + TEXT_TYPE + COMMA_SEP +
+            LEVEL_RESOLVE + BLOB + COMMA_SEP +
+            LEVEL_PACKAGE_ID + INTEGER_TYPE +BRACKET_CLOSE_SEP + SEMICOLON;
 
     public static DBAdapter getInstance(Context context) {
         if (ourInstance == null) {
@@ -121,28 +122,102 @@ public class DBAdapter {
     public void insertPackage(PackageObject packageObject) {
         open();
         ContentValues values = new ContentValues();
-        values.put(PACKAGEID, packageObject.getId());
-        values.put(PACKAGENAME, packageObject.getName());
-        values.put(PACKAGEURL, packageObject.getUrl());
-        values.put(PACKAGEDOWNLOADED, true);
+        values.put(PACKAGE_ID, packageObject.getId());
+        values.put(PACKAGE_NAME, packageObject.getName());
+        values.put(PACKAGE_URL, packageObject.getUrl());
+        values.put(PACKAGE_DOWNLOADED, true);
+        db.insert(PACKAGES, null, values);
         close();
 
         insertLevels(packageObject.getLevels(), packageObject.getId());
     }
 
-    public void insertLevels(ArrayList<Level> levels, int packageID) {
+    private void insertLevels(ArrayList<Level> levels, int packageID) {
         open();
 
         for (int i = 0; i < levels.size(); i++) {
             ContentValues values = new ContentValues();
-            values.put(LEVELID, levels.get(i).getId());
-            values.put(LEVELSOLUTION, levels.get(i).getJavab());
-            values.put(LEVELRESOLVES, false);
-            values.put(LEVELRESOURCES, levels.get(i).getResources());
-            values.put(LEVELTHUMBNAIL, levels.get(i).getThumbnail());
-            values.put(LEVELTYPE, levels.get(i).getType());
-            values.put(LEVELPACKAGEID, packageID);
+            values.put(LEVEL_ID, levels.get(i).getId());
+            values.put(LEVEL_SOLUTION, levels.get(i).getJavab());
+            values.put(LEVEL_RESOLVE, false);
+            values.put(LEVEL_RESOURCES, levels.get(i).getResources());
+            values.put(LEVEL_THUMBNAIL, levels.get(i).getThumbnail());
+            values.put(LEVEL_TYPE, levels.get(i).getType());
+            values.put(LEVEL_PACKAGE_ID, packageID);
+            db.insert(LEVELS, null, values);
         }
         close();
+    }
+
+    public Level getLevel(int packageID, int levelID) {
+        open();
+        Cursor cursor = db.query(LEVELS,
+                new String[] {LEVEL_ID, LEVEL_SOLUTION, LEVEL_RESOLVE,
+                        LEVEL_RESOURCES, LEVEL_THUMBNAIL, LEVEL_TYPE},
+                LEVEL_PACKAGE_ID + " = " + packageID + " AND " + LEVEL_ID + " = " + levelID,
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Level level = new Level();
+            level.setId(cursor.getInt(cursor.getColumnIndex(LEVEL_ID)));
+            level.setJavab(cursor.getString(cursor.getColumnIndex(LEVEL_SOLUTION)));
+            level.setResolved(cursor.getInt(cursor.getColumnIndex(LEVEL_RESOLVE)) > 0); //todo test this
+            level.setResources(cursor.getString(cursor.getColumnIndex(LEVEL_RESOURCES)));
+            level.setThumbnail(cursor.getString(cursor.getColumnIndex(LEVEL_THUMBNAIL)));
+            level.setType(cursor.getString(cursor.getColumnIndex(LEVEL_TYPE)));
+            close();
+            return level;
+        }
+        close();
+        return null;
+    }
+
+    public Level[] getLevels(int packageID) {
+        open();
+        Cursor cursor = db.query(LEVELS,
+                new String[] {LEVEL_ID, LEVEL_SOLUTION, LEVEL_RESOLVE,
+                        LEVEL_RESOURCES, LEVEL_THUMBNAIL, LEVEL_TYPE},
+                LEVEL_PACKAGE_ID + " = " + packageID,
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Level[] levels = new Level[cursor.getCount()];
+            for (int i = 0; i < cursor.getCount(); i++) {
+                Level level = new Level();
+                level.setId(cursor.getInt(cursor.getColumnIndex(LEVEL_ID)));
+                level.setJavab(cursor.getString(cursor.getColumnIndex(LEVEL_SOLUTION)));
+                level.setResolved(cursor.getInt(cursor.getColumnIndex(LEVEL_RESOLVE)) > 0); //todo test this
+                level.setResources(cursor.getString(cursor.getColumnIndex(LEVEL_RESOURCES)));
+                level.setThumbnail(cursor.getString(cursor.getColumnIndex(LEVEL_THUMBNAIL)));
+                level.setType(cursor.getString(cursor.getColumnIndex(LEVEL_TYPE)));
+                levels[i] = level;
+            }
+            close();
+            return levels;
+        }
+        close();
+        return null;
+    }
+
+    public PackageObject[] getPackages() {
+        open();
+        Cursor cursor = db.query(PACKAGES,
+                new String[] {PACKAGE_ID, PACKAGE_NAME, PACKAGE_URL, PACKAGE_DOWNLOADED},
+                null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            PackageObject[] packages = new PackageObject[cursor.getCount()];
+            for (int i = 0; i < cursor.getCount(); i++) {
+                PackageObject packageObject = new PackageObject();
+                packageObject.setId(cursor.getInt(cursor.getColumnIndex(PACKAGE_ID)));
+                packageObject.setName(cursor.getString(cursor.getColumnIndex(PACKAGE_NAME)));
+                packageObject.setUrl(cursor.getString(cursor.getColumnIndex(PACKAGE_URL)));
+                packages[i] = packageObject;
+            }
+            close();
+            return packages;
+        }
+        close();
+        return null;
     }
 }
