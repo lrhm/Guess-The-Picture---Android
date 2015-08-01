@@ -182,7 +182,7 @@ public class DBAdapter {
 
         if (cursor != null && cursor.moveToFirst()) {
             Level[] levels = new Level[cursor.getCount()];
-            for (int i = 0; i < cursor.getCount(); i++) {
+            for (int i = 0; i < cursor.getCount(); i++, cursor.moveToNext()) {
                 Level level = new Level();
                 level.setId(cursor.getInt(cursor.getColumnIndex(LEVEL_ID)));
                 level.setJavab(cursor.getString(cursor.getColumnIndex(LEVEL_SOLUTION)));
@@ -207,7 +207,7 @@ public class DBAdapter {
 
         if (cursor != null && cursor.moveToFirst()) {
             PackageObject[] packages = new PackageObject[cursor.getCount()];
-            for (int i = 0; i < cursor.getCount(); i++) {
+            for (int i = 0; i < cursor.getCount(); i++ , cursor.moveToNext()) {
                 PackageObject packageObject = new PackageObject();
                 packageObject.setId(cursor.getInt(cursor.getColumnIndex(PACKAGE_ID)));
                 packageObject.setName(cursor.getString(cursor.getColumnIndex(PACKAGE_NAME)));

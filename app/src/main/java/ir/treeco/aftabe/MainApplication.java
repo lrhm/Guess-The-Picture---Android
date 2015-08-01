@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
+import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.New.Object.HeadObject;
 import ir.treeco.aftabe.New.Object.PackageObject;
 import ir.treeco.aftabe.New.Util.ImageManager;
@@ -51,6 +52,7 @@ public class MainApplication extends Application {
     public static LengthManager lengthManager;
     private HeadObject headObject;
     private DBAdapter db;
+    private NotificationAdapter notificationAdapter;
 
     @Override
     public void onCreate() {
@@ -67,6 +69,8 @@ public class MainApplication extends Application {
 
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
+
+        parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
         if (Prefs.getBoolean("firstAppRun", true)) {
             copyLocalpackages();
@@ -158,7 +162,7 @@ public class MainApplication extends Application {
         if (type.equals("zip")) {
             Zip zip = new Zip();
             zip.unpackZip(path, id, getBaseContext());
-            saveToDownloadsJason(id);
+            saveToDownloadsJson(id);
             makeFirstHSV(id);
         }
     }
@@ -229,7 +233,7 @@ public class MainApplication extends Application {
 
     }
 
-    public void saveToDownloadsJason(int id) {
+    public void saveToDownloadsJson(int id) {
         PackageObject packageObject = null;
 
         try {
@@ -248,34 +252,32 @@ public class MainApplication extends Application {
 
     public void downloadPackage(String url, String path, final int id, final String name) {
 
-        //notificationAdapter = new NotificationAdapter(id, this, name);
+        notificationAdapter = new NotificationAdapter(id, this, name);
         DLManager.getInstance(this).dlStart(url, path, new DLTaskListener() {
                     int n = 0;
 
                     @Override
                     public void onProgress(int progress) {
                         super.onProgress(progress);
-
-                        n++;
-                        if (n == 30) {
-                            //notificationAdapter.notifyDownload(progress, id, name);
-                            n = 0;
+                        if (progress % 10 == 0) {
+                            notificationAdapter.notifyDownload(progress, id, name);
                         }
                     }
 
                     @Override
                     public void onError(String error) {
                         super.onError(error);
-                        //notificationAdapter.faildDownload(id, name);
+                        notificationAdapter.faildDownload(id, name);
                     }
 
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file); //todo chack md5 & save in json file
-                        //notificationAdapter.finalDownload(id, name);
+                        notificationAdapter.finalDownload(id, name);
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, getApplicationContext());
-                        saveToDownloadsJason(id);
+                        saveToDownloadsJson(id);
+                        makeFirstHSV(id);
                     }
                 }
         );

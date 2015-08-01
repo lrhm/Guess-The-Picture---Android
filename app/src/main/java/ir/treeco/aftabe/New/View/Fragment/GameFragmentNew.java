@@ -55,11 +55,11 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
 
-        level = db.getLevel(packageId, levelId);
-
 //        Intent intent = getIntent();
         levelId = getArguments().getInt("LevelId");//0; //intent.getIntExtra("id", 0);
         packageId = getArguments().getInt("id");//0; // intent.getIntExtra("packageNumber", 0);
+
+        level = db.getLevel(packageId, levelId);
 
         String solution = tools.decodeBase64(level.getJavab());
         StringBuilder stringBuilder = new StringBuilder(solution);

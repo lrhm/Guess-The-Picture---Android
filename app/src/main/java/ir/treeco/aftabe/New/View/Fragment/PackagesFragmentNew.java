@@ -28,7 +28,6 @@ public class PackagesFragmentNew extends Fragment {
         View view = inflater.inflate(R.layout.new_fragment_package, container, false);
 
         db = DBAdapter.getInstance(getActivity());
-
         type = getArguments().getInt(MainFragment.FRAGMENT_TYPE);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.package_recycler_view);
