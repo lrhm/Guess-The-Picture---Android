@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
@@ -61,14 +62,21 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     @Override
     public LevelsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.new_item_levels, viewGroup, false);
+        v.setLayoutParams(new RecyclerView.LayoutParams(
+                ((MainApplication) context.getApplicationContext()).lengthManager.getLevelFrameWidth(),
+                ((MainApplication) context.getApplicationContext()).lengthManager.getLevelFrameHeight()));
         return new ViewHolder(v);
 
     }
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int position) {
+
+        int myPadding = ((MainApplication) context.getApplicationContext()).lengthManager.getLevelThumbnailPadding();
+        viewHolder.imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
+
         int levelPosition = page * 16 + position;
-        if (levels[levelPosition].isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
+        if (levelPosition == 0 || levels[levelPosition].isResolved() || levels[levelPosition - 1].isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
 
             String imagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + packageId + "_" +levels[levelPosition].getResources();
