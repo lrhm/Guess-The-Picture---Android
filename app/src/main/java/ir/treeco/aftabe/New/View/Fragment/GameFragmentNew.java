@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -17,10 +18,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.Object.Level;
+import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
@@ -46,15 +49,18 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     private boolean[] keyboardB;
     DBAdapter db;
     private Level level;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.new_activity_game, container, false);
+        view = inflater.inflate(R.layout.new_activity_game, container, false);
 
 
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
+
+        setUpImagePlace();
 
         ((MainActivity)getActivity()).setupCheatButton(packageId);
 
@@ -301,6 +307,17 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         } else {
             solutionAdapter2.notifyDataSetChanged();
         }
+    }
+
+
+    private void setUpImagePlace() {
+        FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
+        tools.resizeView(box, MainApplication.lengthManager.getLevelImageWidth(), MainApplication.lengthManager.getLevelImageHeight());
+
+
+        ImageView frame = (ImageView) view.findViewById(R.id.frame);
+        frame.setImageBitmap(ImageManager.loadImageFromResource(view.getContext(), R.drawable.frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight()));
+        tools.resizeView(frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight());
     }
 
     @Override
