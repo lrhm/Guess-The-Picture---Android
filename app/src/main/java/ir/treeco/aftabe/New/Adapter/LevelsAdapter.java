@@ -44,18 +44,21 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            Bundle bundle = new Bundle();
-            int levelID = levels[page * 16 + getAdapterPosition()].getId();
-            bundle.putInt("LevelId", levelID);
-            bundle.putInt("id", packageId);
+            int levelPosition = page * 16 + getAdapterPosition();
+            if (levelPosition == 0 || levels[levelPosition].isResolved() || levels[levelPosition - 1].isResolved()) {
+                Bundle bundle = new Bundle();
+                int levelID = levels[page * 16 + getAdapterPosition()].getId();
+                bundle.putInt("LevelId", levelID);
+                bundle.putInt("id", packageId);
 
-            GameFragmentNew gameFragmentNew = new GameFragmentNew();
-            gameFragmentNew.setArguments(bundle);
+                GameFragmentNew gameFragmentNew = new GameFragmentNew();
+                gameFragmentNew.setArguments(bundle);
 
-            FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, gameFragmentNew);
-            transaction.addToBackStack(null);
-            transaction.commit();
+                FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, gameFragmentNew);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
         }
     }
 
