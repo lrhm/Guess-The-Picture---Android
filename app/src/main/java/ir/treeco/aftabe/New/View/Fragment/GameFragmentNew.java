@@ -10,9 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
+import ir.treeco.aftabe.New.View.CheatDrawable;
 import ir.treeco.aftabe.R;
 
 public class GameFragmentNew extends Fragment implements View.OnClickListener {
@@ -50,6 +55,8 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     DBAdapter db;
     private Level level;
     private View view;
+    private View[] cheatButtons;
+    private View blackWidow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -60,18 +67,17 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
 
-        setUpImagePlace();
-
         ((MainActivity)getActivity()).setupCheatButton(packageId);
 
-//        Intent intent = getIntent();
-        levelId = getArguments().getInt("LevelId");//0; //intent.getIntExtra("id", 0);
-        packageId = getArguments().getInt("id");//0; // intent.getIntExtra("packageNumber", 0);
+        levelId = getArguments().getInt("LevelId");
+        packageId = getArguments().getInt("id");
 
         level = db.getLevel(packageId, levelId);
 
         String solution = tools.decodeBase64(level.getJavab());
         StringBuilder stringBuilder = new StringBuilder(solution);
+
+        setUpImagePlace();
 
         for (int i = 0; i < solution.length(); i++) {
             if (solution.charAt(i) != '.' && solution.charAt(i) != ' ') {
@@ -309,15 +315,51 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         }
     }
 
-
     private void setUpImagePlace() {
         FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
         tools.resizeView(box, MainApplication.lengthManager.getLevelImageWidth(), MainApplication.lengthManager.getLevelImageHeight());
 
-
         ImageView frame = (ImageView) view.findViewById(R.id.frame);
         frame.setImageBitmap(ImageManager.loadImageFromResource(view.getContext(), R.drawable.frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight()));
         tools.resizeView(frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight());
+
+        cheatButtons = new View[] {
+                view.findViewById(R.id.cheat_remove_some_letters),
+                view.findViewById(R.id.cheat_reveal_a_letter),
+                view.findViewById(R.id.cheat_skip_level)
+        };
+
+        for (View cheatView: cheatButtons) {
+            final ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
+            layoutParams.width = MainApplication.lengthManager.getCheatButtonWidth();
+            layoutParams.height = MainApplication.lengthManager.getCheatButtonHeight();
+        }
+
+        String[] cheatTitles = new String[] {  //// TODO: 8/7/15
+                "حذف چند حرف",
+                "نمایش یک حرف",
+                "رد کردن مرحله"
+        };
+
+        int[] cheatCosts = new int[] {40, 50, 130};
+//                CoinManager.ALPHABET_HIDING_COST,  //todo use enum
+//                CoinManager.LETTER_REVEAL_COST,
+//                CoinManager.SKIP_LEVEL_COST
+//        };
+
+        for (int i = 0; i < 3; i++)
+            tools.setViewBackground(
+                    cheatButtons[i],
+                    new CheatDrawable(
+                            view.getContext(),
+                            i,
+                            cheatTitles[i],
+                            level.isResolved() ? "مفت" : tools.numeralStringToPersianDigits("" + cheatCosts[i])
+                    )
+            );
+
+
+        blackWidow = view.findViewById(R.id.black_widow);
     }
 
     @Override
@@ -331,5 +373,88 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         super.onDestroy();
 
         ((MainActivity)getActivity()).hideCheatButton();
+    }
+
+    public void showCheats() {
+        for (View view: cheatButtons)
+            view.setVisibility(View.VISIBLE);
+
+        blackWidow.setVisibility(View.VISIBLE);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new DecelerateInterpolator());
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(blackWidow, "alpha", 0, 0.60f),
+                ObjectAnimator.ofFloat(cheatButtons[0], "translationX", -cheatButtons[0].getWidth(), 0),
+                ObjectAnimator.ofFloat(cheatButtons[1], "translationX", +cheatButtons[1].getWidth(), 0),
+                ObjectAnimator.ofFloat(cheatButtons[2], "translationX", -cheatButtons[2].getWidth(), 0)
+        );
+
+
+        animatorSet.setDuration(600).start();
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+//                cheatButton.setClickable(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+//                cheatButton.setClickable(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+    }
+
+    public void hideCheats() {
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(blackWidow, "alpha", 0.60f, 0),
+                ObjectAnimator.ofFloat(cheatButtons[0], "translationX", 0, -cheatButtons[0].getWidth()),
+                ObjectAnimator.ofFloat(cheatButtons[1], "translationX", 0, +cheatButtons[1].getWidth()),
+                ObjectAnimator.ofFloat(cheatButtons[2], "translationX", 0, -cheatButtons[2].getWidth())
+        );
+
+        animatorSet.setInterpolator(new DecelerateInterpolator());
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+//                cheatButton.setClickable(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                for (View view : cheatButtons) {
+                    view.setVisibility(View.GONE);
+                    view.clearAnimation();
+                }
+
+                blackWidow.setVisibility(View.GONE);
+//                cheatButton.setClickable(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        animatorSet.setDuration(600).start();
     }
 }

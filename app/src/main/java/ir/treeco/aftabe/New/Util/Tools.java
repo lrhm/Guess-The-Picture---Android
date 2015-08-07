@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -90,6 +92,22 @@ public class Tools {
         if (width != layoutParams.width || height != layoutParams.height) {
             layoutParams.width = width;
             layoutParams.height = height;
+        }
+    }
+
+    public String numeralStringToPersianDigits(String s) {
+        String persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+        char[] result = new char[s.length()];
+        for (int i = 0; i < s.length(); i++)
+            result[i] = Character.isDigit(s.charAt(i)) ? persianDigits.charAt(s.charAt(i) - '0') : s.charAt(i);
+        return new String(result);
+    }
+
+    public void setViewBackground(final View view, Drawable dialogDrawable) {
+        if (Build.VERSION.SDK_INT >= 16)
+            view.setBackground(dialogDrawable);
+        else {
+            view.setBackgroundDrawable(dialogDrawable);
         }
     }
 }

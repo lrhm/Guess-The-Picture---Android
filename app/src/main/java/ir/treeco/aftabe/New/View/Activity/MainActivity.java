@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.New.View.Activity;
 
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.View.BackgroundDrawable;
+import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
 import ir.treeco.aftabe.R;
 
@@ -118,7 +120,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void setupCheatButton(int id) {
         cheatButton.setVisibility(View.VISIBLE);
         logo.setVisibility(View.INVISIBLE);
-        areCheatsVisible = true;
+        areCheatsVisible = false;
         currentLevel = id;
 
         String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
@@ -139,12 +141,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             Picasso.with(context).load(cheatImagePath).into(cheatButton);
             areCheatsVisible = true;
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (fragment instanceof GameFragmentNew)
+                ((GameFragmentNew) fragment).showCheats();
+
         } else {
             String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + currentLevel + "_cheatBitmap.png";
 
             Picasso.with(context).load(cheatImagePath).into(cheatButton);
             areCheatsVisible = false;
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (fragment instanceof GameFragmentNew)
+                ((GameFragmentNew) fragment).hideCheats();
         }
     }
 
