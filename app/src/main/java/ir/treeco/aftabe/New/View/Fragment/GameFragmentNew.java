@@ -22,6 +22,7 @@ import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.Tools;
+import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
 public class GameFragmentNew extends Fragment implements View.OnClickListener {
@@ -54,6 +55,8 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
+
+        ((MainActivity)getActivity()).setupCheatButton(packageId);
 
 //        Intent intent = getIntent();
         levelId = getArguments().getInt("LevelId");//0; //intent.getIntExtra("id", 0);
@@ -304,5 +307,12 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        ((MainActivity)getActivity()).hideCheatButton();
     }
 }

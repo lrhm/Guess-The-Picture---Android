@@ -186,6 +186,29 @@ public class MainApplication extends Application {
                 thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
 
         saveBitmap(levelUnlocked, id + "_levelUnlocked.png");
+
+
+        float[] cheatButtonHSV = {130, 0, 0};//mLevel.getWrapperPackage().meta.getCheatButtonHSV();
+
+        Bitmap cheatBitmap = Tools.updateHSV(
+                ImageManager.loadImageFromResource(
+                        this, R.drawable.cheat_button,
+                        MainApplication.lengthManager.getCheatButtonSize(),
+                        MainApplication.lengthManager.getCheatButtonSize()),
+                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+
+        saveBitmap(cheatBitmap, id + "_cheatBitmap.png");
+
+
+        Bitmap backBitmap = Tools.updateHSV(
+                ImageManager.loadImageFromResource(
+                        this, R.drawable.back_button,
+                        MainApplication.lengthManager.getCheatButtonSize(),
+                        MainApplication.lengthManager.getCheatButtonSize()),
+                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+
+        saveBitmap(backBitmap, id + "_backBitmap.png");
+
     }
 
     public void saveBitmap (Bitmap bitmap, String name) {

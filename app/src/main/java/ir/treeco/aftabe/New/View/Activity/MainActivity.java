@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.View.BackgroundDrawable;
@@ -21,11 +23,20 @@ import ir.treeco.aftabe.R;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     Context context;
+    private ImageView cheatButton;
+    private ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
+
+        cheatButton = (ImageView) findViewById(R.id.cheat_button);
+        logo = (ImageView) findViewById(R.id.logo);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
+        layoutParams.leftMargin = (int) (0.724 * MainApplication.lengthManager.getScreenWidth());
+        layoutParams.topMargin = (int) (0.07 * MainApplication.lengthManager.getScreenWidth());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -76,7 +87,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 MainApplication.lengthManager.getHeaderHeight()
         ));
 
-        ImageView logo = (ImageView) findViewById(R.id.logo);
         logo.setImageBitmap(ImageManager.loadImageFromResource(
                 this, R.drawable.header, MainApplication.lengthManager.getScreenWidth(),
                 MainApplication.lengthManager.getScreenWidth() / 4
@@ -94,6 +104,33 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+
+    }
+
+    public void setupCheatButton(int id) {
+        cheatButton.setVisibility(View.VISIBLE);
+        logo.setVisibility(View.INVISIBLE);
+//        cheatButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View _view) {
+//                if (!areCheatsVisible) {
+//                    showCheats();
+//                } else {
+//                    hideCheats();
+//                }
+//            }
+//        });
+
+
+        String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                + id + "_cheatBitmap.png";
+
+        Picasso.with(context).load(cheatImagePath).into(cheatButton);
+    }
+
+    public void hideCheatButton() {
+        cheatButton.setVisibility(View.INVISIBLE);
+        logo.setVisibility(View.VISIBLE);
 
     }
 }

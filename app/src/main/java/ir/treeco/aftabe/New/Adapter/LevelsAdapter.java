@@ -66,8 +66,8 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     public LevelsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.new_item_levels, viewGroup, false);
         v.setLayoutParams(new RecyclerView.LayoutParams(
-                ((MainApplication) context.getApplicationContext()).lengthManager.getLevelFrameWidth(),
-                ((MainApplication) context.getApplicationContext()).lengthManager.getLevelFrameHeight()));
+                MainApplication.lengthManager.getLevelFrameWidth(),
+                MainApplication.lengthManager.getLevelFrameHeight()));
         return new ViewHolder(v);
 
     }
@@ -75,7 +75,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int position) {
 
-        int myPadding = ((MainApplication) context.getApplicationContext()).lengthManager.getLevelThumbnailPadding();
+        int myPadding = MainApplication.lengthManager.getLevelThumbnailPadding();
         viewHolder.imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
 
         int levelPosition = page * 16 + position;
