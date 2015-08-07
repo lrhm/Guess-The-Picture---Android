@@ -58,6 +58,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     private View[] cheatButtons;
     private View blackWidow;
     private String solution;
+    private int solutionSize;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -106,6 +107,8 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
             break1 = 0;
         }
 
+        solutionSize = MainApplication.lengthManager.getSolutionButtonSize();
+
         RecyclerView recyclerView_solution1 =
                 (RecyclerView) view.findViewById(R.id.recycler_view_solution1);
 
@@ -116,6 +119,9 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
         solutionAdapter0 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1);
         recyclerView_solution1.setAdapter(solutionAdapter0);
+
+        ViewGroup.LayoutParams layoutParams = recyclerView_solution1.getLayoutParams();
+        layoutParams.width = solutionSize*break0;
 
         if (solutionAdapter.length > 12) {
             RecyclerView recyclerView_solution2 = (
@@ -333,7 +339,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         for (View cheatView: cheatButtons) {
             cheatView.setOnClickListener(this);
 
-            final ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
             layoutParams.width = MainApplication.lengthManager.getCheatButtonWidth();
             layoutParams.height = MainApplication.lengthManager.getCheatButtonHeight();
         }

@@ -4,8 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.R;
 
@@ -16,6 +18,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     int n;
     int break0;
     int break1;
+    int solutionSize;
 
     public SolutionAdapter(char[] characters, GameFragmentNew gameFragmentNew, char[] status, int n, int break0, int break1) {
         this.characters = characters;
@@ -24,6 +27,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
         this.break0 = break0;
         this.break1 = break1;
         this.n = n;
+        this.solutionSize = MainApplication.lengthManager.getSolutionButtonSize();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -52,16 +56,20 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     @Override
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
         if (status[getLocalPosition(position)] == '-') {
+            holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize, solutionSize));
             holder.textView.setTextColor(0xFFFFFFFF);
             holder.textView.setText("");
             holder.textView.setVisibility(View.VISIBLE);
         } else if (status[getLocalPosition(position)] == ' ') {
+            holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize/2, solutionSize/2));
             holder.textView.setVisibility(View.INVISIBLE);
         } else if (status[getLocalPosition(position)] == '*') {
+            holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize, solutionSize));
             holder.textView.setTextColor(0xFF00FF00);
             holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
         } else {
+            holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize, solutionSize));
             holder.textView.setTextColor(0xFFFFFFFF);
             holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
