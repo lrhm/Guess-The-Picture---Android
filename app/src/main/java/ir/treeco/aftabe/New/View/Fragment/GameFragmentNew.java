@@ -396,12 +396,11 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         animatorSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-//                cheatButton.setClickable(false);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-//                cheatButton.setClickable(true);
+                ((MainActivity)getActivity()).disableCheatButton(true);
             }
 
             @Override
@@ -430,7 +429,6 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         animatorSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-//                cheatButton.setClickable(false);
             }
 
             @Override
@@ -441,7 +439,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 }
 
                 blackWidow.setVisibility(View.GONE);
-//                cheatButton.setClickable(true);
+                ((MainActivity)getActivity()).disableCheatButton(true);
             }
 
             @Override

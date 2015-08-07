@@ -135,6 +135,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void toggleCheatButton() {
+        disableCheatButton(false);
         if (!areCheatsVisible) {
             String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + currentLevel + "_backBitmap.png";
@@ -157,6 +158,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (fragment instanceof GameFragmentNew)
                 ((GameFragmentNew) fragment).hideCheats();
         }
+    }
+
+
+    public void disableCheatButton(boolean enable) {
+        cheatButton.setClickable(enable);
     }
 
 }
