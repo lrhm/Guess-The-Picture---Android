@@ -33,13 +33,11 @@
         android:layout_below="@id/levels_back_bottom"
         android:layout_centerHorizontal="true"
         app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
-        app:stl_dividerColor="#40C4FF"
         app:stl_dividerThickness="0dp"
-        app:stl_indicatorColor="#40C4FF"
-        app:stl_indicatorCornerRadius="8dp"
+        app:stl_indicatorColor="#88ffffff"
+        app:stl_indicatorCornerRadius="7dp"
         app:stl_indicatorInterpolation="linear"
         app:stl_indicatorThickness="16dp"
-        app:stl_underlineColor="#00000000"
         app:stl_underlineThickness="0dp"/>
 
 </RelativeLayout>
