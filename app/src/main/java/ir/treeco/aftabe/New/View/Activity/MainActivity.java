@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import ir.treeco.aftabe.New.AdItemAdapter;
+
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.AutoScrollViewPager;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.View.BackgroundDrawable;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
@@ -25,6 +28,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Context context;
     private ImageView cheatButton;
     private ImageView logo;
+    private AutoScrollViewPager autoScrollViewPager;
     private boolean areCheatsVisible = false;
     private int currentLevel;
 
@@ -35,6 +39,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
+
+        autoScrollViewPager = ((AutoScrollViewPager) findViewById(R.id.ad_view_pager));
 
         cheatButton.setOnClickListener(this);
 
@@ -56,6 +62,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setUpCoinBox();
         setUpHeader();
+        setUpAds(autoScrollViewPager, new AdItemAdapter(context));
         setOriginalBackgroundColor();
     }
 
@@ -111,7 +118,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.cheat_button:
                 toggleCheatButton();
-            break;
+                break;
         }
     }
 
@@ -146,6 +153,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Picasso.with(context).load(cheatImagePath).into(cheatButton);
             areCheatsVisible = false;
         }
+    }
+
+    private void setUpAds(AutoScrollViewPager autoScrollViewPager, AdItemAdapter adItemAdapter) {
+        autoScrollViewPager.setAdapter(adItemAdapter);
+        autoScrollViewPager.setOffscreenPageLimit(1);
+        autoScrollViewPager.setInterval(5000);
+        autoScrollViewPager.startAutoScroll(5000);
     }
 
 }
