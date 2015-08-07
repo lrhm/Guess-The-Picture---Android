@@ -121,11 +121,12 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         recyclerView_solution1.setAdapter(solutionAdapter0);
 
         ViewGroup.LayoutParams layoutParams = recyclerView_solution1.getLayoutParams();
-        layoutParams.width = solutionSize*break0;
+        layoutParams.width = getWidth(solutionAdapter, 1);
+//        layoutParams.height = solutionSize;
 
         if (solutionAdapter.length > 12) {
-            RecyclerView recyclerView_solution2 = (
-                    RecyclerView) view.findViewById(R.id.recycler_view_solution2);
+            RecyclerView recyclerView_solution2 =
+                    (RecyclerView) view.findViewById(R.id.recycler_view_solution2);
 
             recyclerView_solution2.setHasFixedSize(true);
 
@@ -133,7 +134,11 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                     new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
             solutionAdapter1 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1);
-            recyclerView_solution2.setAdapter (solutionAdapter1);
+            recyclerView_solution2.setAdapter(solutionAdapter1);
+
+            ViewGroup.LayoutParams layoutParams2 = recyclerView_solution2.getLayoutParams();
+            layoutParams2.width = getWidth(solutionAdapter, 2);
+            layoutParams2.height = solutionSize;
 
             recyclerView_solution2.setVisibility(View.VISIBLE);
         }
@@ -148,7 +153,12 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                     new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
             solutionAdapter2 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1);
-            recyclerView_solution3.setAdapter (solutionAdapter2);
+            recyclerView_solution3.setAdapter(solutionAdapter2);
+
+            ViewGroup.LayoutParams layoutParams3 = recyclerView_solution3.getLayoutParams();
+            layoutParams3.width = getWidth(solutionAdapter, 3);
+            layoutParams3.height = solutionSize;
+
 
             recyclerView_solution3.setVisibility(View.VISIBLE);
         }
@@ -243,6 +253,27 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
             }
         }
         return n;
+    }
+
+
+    private int getWidth (char[] string, int n) {
+        int number = n - 1;
+        int width = 0;
+        for (int i = 0; i < string.length; i++) {
+            if (string[i] == ' ') {
+                width += solutionSize/2;
+            } else if (string[i] != '.') {
+                width += solutionSize;
+            } else if (string[i] == '.'){
+                if (number == 0) {
+                    return width;
+                } else {
+                    width = 0;
+                    number--;
+                }
+            }
+        }
+        return width;
     }
 
     private void cheatHazf() {
