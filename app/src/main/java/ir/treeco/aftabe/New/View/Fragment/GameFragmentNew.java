@@ -57,12 +57,13 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     private View view;
     private View[] cheatButtons;
     private View blackWidow;
+    private String solution;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.new_activity_game, container, false);
 
+        view = inflater.inflate(R.layout.new_activity_game, container, false);
 
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
@@ -74,7 +75,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
         level = db.getLevel(packageId, levelId);
 
-        String solution = tools.decodeBase64(level.getJavab());
+        solution = tools.decodeBase64(level.getJavab());
         StringBuilder stringBuilder = new StringBuilder(solution);
 
         setUpImagePlace();
@@ -330,6 +331,8 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         };
 
         for (View cheatView: cheatButtons) {
+            cheatView.setOnClickListener(this);
+
             final ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
             layoutParams.width = MainApplication.lengthManager.getCheatButtonWidth();
             layoutParams.height = MainApplication.lengthManager.getCheatButtonHeight();
@@ -350,7 +353,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         for (int i = 0; i < 3; i++)
             tools.setViewBackground(
                     cheatButtons[i],
-                    new CheatDrawable(
+                    new CheatDrawable(  // TODO: 8/7/15 bad performance
                             view.getContext(),
                             i,
                             cheatTitles[i],
@@ -363,8 +366,20 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View view) {
+        ((MainActivity) getActivity()).toggleCheatButton();
+
+        switch (view.getId()) {
+            case R.id.cheat_remove_some_letters:
+                cheatHazf();
+                break;
+
+            case R.id.cheat_reveal_a_letter:
+                cheatAzafe();
+                break;
+
+            case R.id.cheat_skip_level:
+                break;
         }
     }
 
