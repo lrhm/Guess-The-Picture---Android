@@ -25,6 +25,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Context context;
     private ImageView cheatButton;
     private ImageView logo;
+    private boolean areCheatsVisible = false;
+    private int currentLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
+
+        cheatButton.setOnClickListener(this);
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
         layoutParams.leftMargin = (int) (0.724 * MainApplication.lengthManager.getScreenWidth());
@@ -104,23 +108,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.cheat_button:
+                toggleCheatButton();
+            break;
+        }
     }
 
     public void setupCheatButton(int id) {
         cheatButton.setVisibility(View.VISIBLE);
         logo.setVisibility(View.INVISIBLE);
-//        cheatButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View _view) {
-//                if (!areCheatsVisible) {
-//                    showCheats();
-//                } else {
-//                    hideCheats();
-//                }
-//            }
-//        });
-
+        areCheatsVisible = true;
+        currentLevel = id;
 
         String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                 + id + "_cheatBitmap.png";
@@ -131,6 +130,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void hideCheatButton() {
         cheatButton.setVisibility(View.INVISIBLE);
         logo.setVisibility(View.VISIBLE);
-
     }
+
+    public void toggleCheatButton() {
+        if (!areCheatsVisible) {
+            String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                    + currentLevel + "_backBitmap.png";
+
+            Picasso.with(context).load(cheatImagePath).into(cheatButton);
+            areCheatsVisible = true;
+        } else {
+            String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+                    + currentLevel + "_cheatBitmap.png";
+
+            Picasso.with(context).load(cheatImagePath).into(cheatButton);
+            areCheatsVisible = false;
+        }
+    }
+
 }
