@@ -14,7 +14,7 @@ import ir.treeco.aftabe.R;
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> {
     char[] characters;
     char[] status;
-    GameFragmentNew gameFragmentNew;
+    GameFragmentNew gameFragmentNew;  //todo callback, on item click listner
     int n;
     int break0;
     int break1;
@@ -57,6 +57,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     public void onBindViewHolder(SolutionAdapter.ViewHolder holder, int position) {
         if (status[getLocalPosition(position)] == '-') {
             holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize, solutionSize));
+            holder.textView.setBackgroundDrawable(gameFragmentNew.getResources().getDrawable(R.drawable.place_holder));
             holder.textView.setTextColor(0xFFFFFFFF);
             holder.textView.setText("");
             holder.textView.setVisibility(View.VISIBLE);
@@ -65,12 +66,14 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
             holder.textView.setVisibility(View.INVISIBLE);
         } else if (status[getLocalPosition(position)] == '*') {
             holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize, solutionSize));
+            holder.textView.setBackgroundDrawable(gameFragmentNew.getResources().getDrawable(R.drawable.albutton));
             holder.textView.setTextColor(0xFF00FF00);
             holder.textView.setText(String.valueOf(characters[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
         } else {
             holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(solutionSize, solutionSize));
-            holder.textView.setTextColor(0xFFFFFFFF);
+            holder.textView.setBackgroundDrawable(gameFragmentNew.getResources().getDrawable(R.drawable.albutton));
+            holder.textView.setTextColor(0xFF000000);
             holder.textView.setText(String.valueOf(status[getLocalPosition(position)]));
             holder.textView.setVisibility(View.VISIBLE);
         }
