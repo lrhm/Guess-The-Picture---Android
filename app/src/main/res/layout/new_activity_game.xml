@@ -32,27 +32,27 @@
                 android:layout_height="match_parent"
                 android:id="@+id/black_widow"
                 android:background="#000"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/cheat_remove_some_letters"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:layout_gravity="top"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/cheat_reveal_a_letter"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:layout_gravity="center_vertical"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/cheat_skip_level"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:layout_gravity="bottom"/>
 
         </FrameLayout>
@@ -72,18 +72,12 @@
         android:layout_width="match_parent"
         android:layout_weight="3"/>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_solution1"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" />
-
-    <View
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="3"/>
+        android:layout_gravity="center"
+        android:gravity="center" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_solution2"
@@ -101,6 +95,11 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:visibility="gone"/>
+
+    <View
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="3"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_keyboard"

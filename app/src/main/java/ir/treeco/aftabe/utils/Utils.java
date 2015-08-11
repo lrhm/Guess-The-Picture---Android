@@ -16,8 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import ir.treeco.aftabe.packages.DownloadProgressListener;
-import ir.treeco.aftabe.packages.MetaPackage;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +26,9 @@ import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
+import ir.treeco.aftabe.packages.DownloadProgressListener;
+import ir.treeco.aftabe.packages.MetaPackage;
 
 /**
  * Created by hamed on 8/12/14.
@@ -201,7 +202,6 @@ public class Utils {
         return space;
     }
 
-
     public static void resizeView(View view, int width, int height) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (width != layoutParams.width || height != layoutParams.height) {
@@ -209,7 +209,6 @@ public class Utils {
             layoutParams.height = height;
         }
     }
-
 
     public static Bitmap updateHSV(Bitmap src, float settingHue, float settingSat, float settingVal) {
         int w = src.getWidth();
