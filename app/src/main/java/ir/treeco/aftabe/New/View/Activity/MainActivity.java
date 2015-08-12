@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Util.ImageManager;
-import ir.treeco.aftabe.New.View.BackgroundDrawable;
+import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
 import ir.treeco.aftabe.R;

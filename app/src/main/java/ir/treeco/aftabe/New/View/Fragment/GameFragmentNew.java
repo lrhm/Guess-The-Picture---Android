@@ -30,8 +30,9 @@ import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
-import ir.treeco.aftabe.New.View.CheatDrawable;
+import ir.treeco.aftabe.New.View.Custom.CheatDrawable;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.New.View.Dialog.FinishDailog;
 
 public class GameFragmentNew extends Fragment implements View.OnClickListener {
     int levelId;
@@ -222,6 +223,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 } else {
                     solutionAdapter2.notifyDataSetChanged();
                 }
+                cheakSolotion();
                 return;
             }
         }
@@ -239,6 +241,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         } else {
             solutionAdapter2.notifyDataSetChanged();
         }
+        cheakSolotion();
     }
 
     private int getBreak (char[] string, int n) {
@@ -351,6 +354,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         } else {
             solutionAdapter2.notifyDataSetChanged();
         }
+        cheakSolotion();
     }
 
     private void setUpImagePlace() {
@@ -423,7 +427,6 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         ((MainActivity)getActivity()).hideCheatButton();
     }
 
@@ -452,7 +455,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                ((MainActivity)getActivity()).disableCheatButton(true);
+                ((MainActivity) getActivity()).disableCheatButton(true);
             }
 
             @Override
@@ -507,4 +510,37 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
         animatorSet.setDuration(600).start();
     }
+
+    private boolean cheakSolotion() {
+        for (int i = 0; i < solutionAdapter.length; i++) {
+            if (solutionAdapter[i] != statusAdapter[i] && statusAdapter[i] != '*') {
+                return false;
+            }
+        }
+
+        new FinishDailog(getActivity()).show();
+
+//        , new LoginCallback() {
+//            @Override
+//            public void LoginCallback() {
+//                user = db.getUser();
+//                if (Tools.isConnected(activity)) {
+//                    recyclerView.setVisibility(View.GONE);
+//                    loadingKhat.setVisibility(View.VISIBLE);
+//
+//                    getFromServer();
+//                    getCommentFromServer();
+//
+//                } else {
+//                    show();
+//                }
+//                BusProvider.getInstance().post(new LocalBookRefresh());
+//            }
+//        }).show();
+        return true;
+
+    }
+
+
+
 }
