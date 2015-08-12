@@ -3,6 +3,7 @@ package ir.treeco.aftabe.New.View.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,11 +27,13 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
+import ir.treeco.aftabe.New.Interface.FinishLevel;
 import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
-import ir.treeco.aftabe.New.View.CheatDrawable;
+import ir.treeco.aftabe.New.View.Custom.CheatDrawable;
+import ir.treeco.aftabe.New.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.R;
 
 public class GameFragmentNew extends Fragment implements View.OnClickListener {
@@ -59,12 +62,15 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     private View blackWidow;
     private String solution;
     private int solutionSize;
+    private int packageSize;
+    private GameFragmentNew gameFragmentNew;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.new_activity_game, container, false);
+        gameFragmentNew = this;
 
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
@@ -75,6 +81,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         packageId = getArguments().getInt("id");
 
         level = db.getLevel(packageId, levelId);
+        packageSize = db.getLevels(packageId).length;
 
         solution = tools.decodeBase64(level.getJavab());
         StringBuilder stringBuilder = new StringBuilder(solution);
@@ -86,6 +93,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 stringBuilder.setCharAt(i, '-');
             }
         }
+
         status = String.valueOf(stringBuilder);
 
         Log.e("solotion", solution);
@@ -222,6 +230,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 } else {
                     solutionAdapter2.notifyDataSetChanged();
                 }
+                cheakSolotion();
                 return;
             }
         }
@@ -239,6 +248,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         } else {
             solutionAdapter2.notifyDataSetChanged();
         }
+        cheakSolotion();
     }
 
     private int getBreak (char[] string, int n) {
@@ -351,6 +361,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         } else {
             solutionAdapter2.notifyDataSetChanged();
         }
+        cheakSolotion();
     }
 
     private void setUpImagePlace() {
@@ -423,7 +434,6 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         ((MainActivity)getActivity()).hideCheatButton();
     }
 
@@ -452,7 +462,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                ((MainActivity)getActivity()).disableCheatButton(true);
+                ((MainActivity) getActivity()).disableCheatButton(true);
             }
 
             @Override
@@ -506,5 +516,38 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         });
 
         animatorSet.setDuration(600).start();
+    }
+
+    private boolean cheakSolotion() {
+        for (int i = 0; i < solutionAdapter.length; i++) {
+            if (solutionAdapter[i] != statusAdapter[i] && statusAdapter[i] != '*') {
+                return false;
+            }
+        }
+
+        new FinishDailog(getActivity(), level, packageSize,
+                new FinishLevel() {
+                    @Override
+                    public void NextLevel() {
+                        Bundle bundle = new Bundle();
+                        int levelID = level.getId() + 1;
+                        bundle.putInt("LevelId", levelID);
+                        bundle.putInt("id", packageId);
+
+                        GameFragmentNew gameFragmentNew = new GameFragmentNew();
+                        gameFragmentNew.setArguments(bundle);
+
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, gameFragmentNew);
+                        transaction.commit();
+                    }
+
+                    @Override
+                    public void Home() {
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(gameFragmentNew).commit();
+                    }
+                }).show();
+
+        return true;
     }
 }

@@ -44,9 +44,10 @@ public class KeyboardAdapter extends RecyclerView.Adapter<KeyboardAdapter.ViewHo
     @Override
     public void onBindViewHolder(KeyboardAdapter.ViewHolder viewHolder, int position) {
         if (status[position] == 1 || status[position] == 2) {
-            viewHolder.textView.setText("");
+            viewHolder.itemView.setVisibility(View.GONE);
         } else {
             viewHolder.textView.setText(String.valueOf(strings[position]));
+            viewHolder.itemView.setVisibility(View.VISIBLE);
         }
     }
 
