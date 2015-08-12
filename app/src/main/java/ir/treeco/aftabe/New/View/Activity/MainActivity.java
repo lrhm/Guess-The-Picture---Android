@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.New.View.Activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,6 +18,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import ir.treeco.aftabe.New.AdItemAdapter;
 
 import ir.treeco.aftabe.MainApplication;
@@ -31,6 +36,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageView cheatButton;
     private ImageView logo;
     private AutoScrollViewPager autoScrollViewPager;
+   // private AdItemAdapter adItemAdapter;
     private boolean areCheatsVisible = false;
     private int currentLevel;
 
@@ -64,7 +70,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setUpCoinBox();
         setUpHeader();
-        setUpAds(autoScrollViewPager, new AdItemAdapter(context));
+        setUpAds(autoScrollViewPager);
         setOriginalBackgroundColor();
     }
 
@@ -168,11 +174,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    private void setUpAds(AutoScrollViewPager autoScrollViewPager, AdItemAdapter adItemAdapter) {
+    private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
+        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
         autoScrollViewPager.setAdapter(adItemAdapter);
         autoScrollViewPager.setOffscreenPageLimit(1);
         autoScrollViewPager.setInterval(5000);
-        autoScrollViewPager.startAutoScroll(5000);
+        autoScrollViewPager.startAutoScroll();
     }
 
     public void disableCheatButton(boolean enable) {

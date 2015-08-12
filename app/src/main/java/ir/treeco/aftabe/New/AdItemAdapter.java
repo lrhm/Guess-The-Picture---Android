@@ -1,9 +1,7 @@
 package ir.treeco.aftabe.New;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +20,17 @@ public class AdItemAdapter extends PagerAdapter {
     Context context;
     public final static String ADS_KEY = "number_of_ads";
     private String SHARED_PREFRENCES_TAG = "aftabe_plus";
-    private int numberOfAds;
+    // FIXME Here I set the number of ads to 3, but as I Mentioned with a todo in MainApplication we should add number of ads to the DB or SP then load it here in constructor
+    private int numberOfAds = 3;
 
     public AdItemAdapter(Context context) {
         this.context = context;
-        updateAds();
+        //updateAds();
     }
 
     public void updateAds() {
-        SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
-        numberOfAds = preferences.getInt(ADS_KEY, 0);
+        /*SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
+        numberOfAds = preferences.getInt(ADS_KEY, 0);*/
     }
 
     @Override
@@ -40,40 +39,32 @@ public class AdItemAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object o) {
-        return view == o;
+    public boolean isViewFromObject(View view, Object object) {
+        return view == ((RelativeLayout) object);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.view_ad_image, null);
-        ImageView imageView = (ImageView) relativeLayout.findViewById(R.id.adImageView);
 
-        try {
-            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
-            //imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), LengthManager.getScreenWidth(), -1));
+        View v = LayoutInflater.from(context).inflate(R.layout.view_ad_image, container, false);
+        ImageView imageView = (ImageView) v.findViewById(R.id.adImageView);
+       try {
+           imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
             Log.e(TAG, "Could not load ad!", e);
-        }
-
-        ImageView topShadow = (ImageView) relativeLayout.findViewById(R.id.top_shadow);
-        ImageView bottomShadow = (ImageView) relativeLayout.findViewById(R.id.bottom_shadow);
+        }ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
+        ImageView bottomShadow = (ImageView) v.findViewById(R.id.bottom_shadow);
 
         topShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_top,
                 MainApplication.lengthManager.getScreenWidth(), -1));
         bottomShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_bottom,
                 MainApplication.lengthManager.getScreenWidth(), -1));
-
-        /*topShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_top, LengthManager.getScreenWidth(), -1));
-        bottomShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_bottom, LengthManager.getScreenWidth(), -1));*/
-
-        container.addView(relativeLayout);
-        return relativeLayout;
+        container.addView(v);
+        return v;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ((ViewPager) container).removeView((RelativeLayout) object);
+        container.removeView((RelativeLayout) object);
     }
 }
