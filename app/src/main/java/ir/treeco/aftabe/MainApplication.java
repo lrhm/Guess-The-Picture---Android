@@ -113,6 +113,7 @@ public class MainApplication extends Application {
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             Gson gson = new GsonBuilder().create();
             headObject = gson.fromJson(reader, HeadObject.class);
+            // TODO Armin: Here we should save the number of ads in DB or SP
 
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
