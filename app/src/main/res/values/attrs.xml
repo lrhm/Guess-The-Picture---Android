@@ -14,7 +14,7 @@
 		<attr name="typeface" format="string" />
 		
 		<attr name="foreground" format="reference|color"/>
-		<attr name="background" format="reference|color"/>
+		<attr name="background1" format="reference|color"/>
 		
 		<attr name="strokeWidth" format="dimension" />
 		<attr name="strokeMiter" format="dimension" />
