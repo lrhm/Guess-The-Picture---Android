@@ -501,7 +501,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 }
 
                 blackWidow.setVisibility(View.GONE);
-                ((MainActivity)getActivity()).disableCheatButton(true);
+                ((MainActivity) getActivity()).disableCheatButton(true);
             }
 
             @Override
@@ -538,7 +538,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                         gameFragmentNew.setArguments(bundle);
 
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, gameFragmentNew);
+                        transaction.replace(R.id.fragment_container, gameFragmentNew,"GameFragment");
                         transaction.commit();
                     }
 

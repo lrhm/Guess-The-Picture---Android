@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.New.View.Activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,7 +18,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import ir.treeco.aftabe.New.AdItemAdapter;
+
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.AutoScrollViewPager;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
@@ -27,6 +35,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Context context;
     private ImageView cheatButton;
     private ImageView logo;
+    private AutoScrollViewPager autoScrollViewPager;
+   // private AdItemAdapter adItemAdapter;
     private boolean areCheatsVisible = false;
     private int currentLevel;
 
@@ -37,6 +47,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
+
+        autoScrollViewPager = ((AutoScrollViewPager) findViewById(R.id.ad_view_pager));
 
         cheatButton.setOnClickListener(this);
 
@@ -58,6 +70,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setUpCoinBox();
         setUpHeader();
+        setUpAds(autoScrollViewPager);
         setOriginalBackgroundColor();
     }
 
@@ -113,7 +126,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.cheat_button:
                 toggleCheatButton();
-            break;
+                break;
         }
     }
 
@@ -161,8 +174,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    public void disableCheatButton(boolean enable) {
-        cheatButton.setClickable(enable);
+    private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
+        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
+        autoScrollViewPager.setAdapter(adItemAdapter);
+        autoScrollViewPager.setOffscreenPageLimit(1);
+        autoScrollViewPager.setInterval(5000);
+        autoScrollViewPager.startAutoScroll();
     }
+
+    public void disableCheatButton(boolean enable) {
+        cheatButton.setClickable(enable);}
 
 }
