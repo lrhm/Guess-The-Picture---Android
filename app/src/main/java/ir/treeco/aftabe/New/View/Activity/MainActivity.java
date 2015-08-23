@@ -1,12 +1,10 @@
 package ir.treeco.aftabe.New.View.Activity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,12 +16,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
-import ir.treeco.aftabe.New.AdItemAdapter;
-
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.AdItemAdapter;
 import ir.treeco.aftabe.New.AutoScrollViewPager;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
@@ -126,6 +120,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.cheat_button:
                 toggleCheatButton();
+                break;
+
+            case R.id.coin_box:
                 break;
         }
     }
