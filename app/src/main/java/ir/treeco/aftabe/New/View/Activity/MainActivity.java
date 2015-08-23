@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.New.View.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,24 +9,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.BillingWrapper;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.AdItemAdapter;
 import ir.treeco.aftabe.New.AutoScrollViewPager;
+import ir.treeco.aftabe.New.CoinManager;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
+import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.R;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener, BillingProcessor.IBillingHandler, CoinManager.CoinsChangedListener {
     Context context;
     private ImageView cheatButton;
     private ImageView logo;
@@ -33,11 +40,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
    // private AdItemAdapter adItemAdapter;
     private boolean areCheatsVisible = false;
     private int currentLevel;
+    private BillingProcessor billingProcessor;
+    private TextView digits;
+    private CoinManager coinManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
+
+        digits = (TextView) findViewById(R.id.digits);
+        coinManager = new CoinManager(this);
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
@@ -66,6 +79,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpHeader();
         setUpAds(autoScrollViewPager);
         setOriginalBackgroundColor();
+
+
+        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
     }
 
     private void setUpCoinBox() {
@@ -79,8 +95,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         layoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() / 15;
         layoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() / 50;
 
-        TextView digits = (TextView) findViewById(R.id.digits);
-
         RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
         digitsLayoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() * 34 / 400;
         digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 577 / 3600;
@@ -91,6 +105,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits.setText(number);
 
         coinBox.setOnClickListener(this);
+
+        CoinManager coinManager = new CoinManager(getApplicationContext());
+        coinManager.setCoinsChangedListener(this);
     }
 
     private void setUpHeader() {
@@ -123,6 +140,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case R.id.coin_box:
+
+                if (StoreFragment.getIsUsed())
+                    return;
+
+                StoreFragment fragment = StoreFragment.getInstance();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
                 break;
         }
     }
@@ -182,4 +209,70 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void disableCheatButton(boolean enable) {
         cheatButton.setClickable(enable);}
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_SMALL_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
+        else if (productId.equals(StoreFragment.SKU_BIG_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
+        else if (mOnPackagePurchasedListener != null) {
+            mOnPackagePurchasedListener.packagePurchased(productId);
+            mOnPackagePurchasedListener = null;
+        }
+        billingProcessor.consumePurchase(productId);
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+        Log.e("IAB", "Got error(" + errorCode + "):", error);
+    }
+
+    @Override
+    public void onBillingInitialized() {
+        Log.v("IAB", "Billing initialized.");
+    }
+
+
+    OnPackagePurchasedListener mOnPackagePurchasedListener;
+
+    public void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
+        mOnPackagePurchasedListener = onPackagePurchasedListener;
+    }
+
+    @Override
+    public void changed(int newAmount) {
+        digits.setText(newAmount + "");
+    }
+
+    public static interface OnPackagePurchasedListener {
+        void packagePurchased(String sku);
+    }
+
+
+    public void purchase(String sku) {
+        if (billingProcessor.isInitialized())
+            billingProcessor.purchase(sku);
+        else {
+//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (billingProcessor != null)
+            billingProcessor.release();
+
+        super.onDestroy();
+    }
 }

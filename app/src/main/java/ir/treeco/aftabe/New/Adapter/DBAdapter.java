@@ -22,7 +22,7 @@ public class DBAdapter {
 
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "aftabe.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
 
@@ -72,7 +72,13 @@ public class DBAdapter {
             LEVEL_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
             LEVEL_TYPE + TEXT_TYPE + COMMA_SEP +
             LEVEL_RESOLVE + BLOB + COMMA_SEP +
-            LEVEL_PACKAGE_ID + INTEGER_TYPE +BRACKET_CLOSE_SEP + SEMICOLON;
+            LEVEL_PACKAGE_ID + INTEGER_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
+
+    private static final String COINS = "COINS";
+    private static final String COINS_COUNT = "COINS_COUNT";
+
+    private static final String SQL_CREATE_COINS = CREATE_TABLE + COINS + BRACKET_OPEN_SEP +
+            COINS_COUNT + INTEGER_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
     public static DBAdapter getInstance(Context context) {
         if (ourInstance == null) {
@@ -96,6 +102,7 @@ public class DBAdapter {
             try {
                 db.execSQL(SQL_CREATE_PACKAGES);
                 db.execSQL(SQL_CREATE_LEVELS);
+                db.execSQL(SQL_CREATE_COINS);
             } catch ( SQLException e) {
                 e.printStackTrace();
             }
@@ -106,6 +113,7 @@ public class DBAdapter {
             Log.w(TAG, "Upgrading database from version" + oldVersion + "to" + newVersion + ", which will destroy all old data");
             db.execSQL(DROP_TABLE_IF_EXISTS + PACKAGES);
             db.execSQL(DROP_TABLE_IF_EXISTS + LEVELS);
+            db.execSQL(DROP_TABLE_IF_EXISTS + COINS);
             onCreate(db);
         }
     }
@@ -219,5 +227,28 @@ public class DBAdapter {
         }
         close();
         return null;
+    }
+
+    public int getCoins() {
+        open();
+        Cursor cursor = db.query(COINS,
+                new String[] {COINS_COUNT},
+                null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int count =  cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
+            close();
+            return count;
+        }
+        close();
+        return 0;
+    }
+
+    public void insertCoins(int count) {
+        open();
+        ContentValues values = new ContentValues();
+        values.put(COINS_COUNT, count);
+        db.insert(LEVELS, null, values);
+        close();
     }
 }

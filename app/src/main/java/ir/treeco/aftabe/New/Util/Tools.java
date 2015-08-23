@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.io.UnsupportedEncodingException;
 
@@ -93,6 +94,16 @@ public class Tools {
             layoutParams.width = width;
             layoutParams.height = height;
         }
+    }
+
+
+    public void reverseLinearLayout(LinearLayout linearLayout) {
+        View views[] = new View[linearLayout.getChildCount()];
+        for (int i = 0; i < views.length; i++)
+            views[i] = linearLayout.getChildAt(i);
+        linearLayout.removeAllViews();
+        for (int i = views.length - 1; i >= 0; i--)
+            linearLayout.addView(views[i]);
     }
 
     public String numeralStringToPersianDigits(String s) {
