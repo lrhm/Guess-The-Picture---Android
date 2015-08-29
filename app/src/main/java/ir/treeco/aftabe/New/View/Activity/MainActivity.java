@@ -3,7 +3,6 @@ package ir.treeco.aftabe.New.View.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -25,7 +24,9 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.AdItemAdapter;
 import ir.treeco.aftabe.New.AutoScrollViewPager;
 import ir.treeco.aftabe.New.CoinManager;
+import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.ImageManager;
+import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
@@ -33,7 +34,8 @@ import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.R;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, BillingProcessor.IBillingHandler, CoinManager.CoinsChangedListener {
-    Context context;
+    private Context context;
+    private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
     private AutoScrollViewPager autoScrollViewPager;
@@ -49,6 +51,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
+
+        tools = new Tools();
 
         digits = (TextView) findViewById(R.id.digits);
         coinManager = new CoinManager(this);
@@ -101,7 +105,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 577 / 3600;
         digitsLayoutParams.width = MainApplication.lengthManager.getScreenWidth() / 5;
 
-        digits.setTypeface(Typeface.createFromAsset(getAssets(), "yekan.ttf"));
+        digits.setTypeface(FontsHolder.getYekan(this));
         String number = "۸۸۸۸۸";
         digits.setText(number);
 
@@ -249,7 +253,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void changed(int newAmount) {
-        digits.setText(newAmount + "");
+        digits.setText(tools.numeralStringToPersianDigits("" + newAmount));
     }
 
     public interface OnPackagePurchasedListener {

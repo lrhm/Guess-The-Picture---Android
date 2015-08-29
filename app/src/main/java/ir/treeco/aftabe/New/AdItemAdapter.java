@@ -2,14 +2,11 @@ package ir.treeco.aftabe.New;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import java.io.FileNotFoundException;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Util.ImageManager;
@@ -48,11 +45,12 @@ public class AdItemAdapter extends PagerAdapter {
 
         View v = LayoutInflater.from(context).inflate(R.layout.view_ad_image, container, false);
         ImageView imageView = (ImageView) v.findViewById(R.id.adImageView);
-       try {
-           imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "Could not load ad!", e);
-        }ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
+//       try { // TODO: 8/29/15  
+//           imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
+//        } catch (FileNotFoundException e) {
+//            Log.e(TAG, "Could not load ad!", e);
+//        }
+        ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
         ImageView bottomShadow = (ImageView) v.findViewById(R.id.bottom_shadow);
 
         topShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_top,

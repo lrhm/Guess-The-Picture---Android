@@ -13,17 +13,6 @@ import java.lang.reflect.Field;
 
 import ir.treeco.aftabe.CustomDurationScroller;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.animation.Interpolator;
-
-import java.lang.reflect.Field;
-
 
 // https://github.com/Trinea/android-auto-scroll-view-pager
 /**
@@ -232,7 +221,7 @@ public class AutoScrollViewPager extends ViewPager {
 
             switch (msg.what) {
                 case SCROLL_WHAT:
-                    scrollOnce();
+//                    scrollOnce(); //todo
                     sendScrollMessage(interval);
                 default:
                     break;
