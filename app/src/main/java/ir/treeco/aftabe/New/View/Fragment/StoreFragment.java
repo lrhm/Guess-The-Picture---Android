@@ -25,10 +25,6 @@ import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.R;
 
-/**
- * Created by behdad on 8/23/15.
- */
-
 public class StoreFragment extends Fragment {
     private Tools tools;
     private DBAdapter db;
@@ -52,7 +48,6 @@ public class StoreFragment extends Fragment {
             SKU_MEDIUM_COIN,
             SKU_BIG_COIN
     };
-    private static final String CAFEBAZAAR_REVIEWED = "cafebazaar_reviewed";
 
     private static StoreFragment mInstance = null;
     private View layout;
