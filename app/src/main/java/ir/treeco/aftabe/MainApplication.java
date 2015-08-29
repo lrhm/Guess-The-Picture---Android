@@ -66,6 +66,7 @@ public class MainApplication extends Application {
                 .build();
 
         db = DBAdapter.getInstance(this);
+        db.insertCoins(399);
 
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);

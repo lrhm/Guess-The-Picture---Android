@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.CoinManager;
 import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.ImageManager;
@@ -29,7 +30,8 @@ import ir.treeco.aftabe.R;
  */
 
 public class StoreFragment extends Fragment {
-    private static Tools tools;
+    private Tools tools;
+    private DBAdapter db;
     public static final String SKU_VERY_SMALL_COIN = "very_small_coin";
     public static final String SKU_SMALL_COIN = "small_coin";
     public static final String SKU_MEDIUM_COIN = "medium_coin";
@@ -58,10 +60,14 @@ public class StoreFragment extends Fragment {
 
     public static StoreFragment getInstance() {
         if (mInstance == null) {
-            tools = new Tools();
             mInstance = new StoreFragment();
         }
         return mInstance;
+    }
+
+    public StoreFragment() {
+        tools = new Tools();
+        db = DBAdapter.getInstance(getActivity());
     }
 
     public static boolean getIsUsed() {
@@ -92,16 +98,14 @@ public class StoreFragment extends Fragment {
             });
         }
 
-
-//            final SharedPreferences preferences = getActivity().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         final View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
-        if (false)//preferences.getBoolean(CAFEBAZAAR_REVIEWED, false)) //todo
+        if (db.getCoinsReviewed()) {
             reviewBazaar.setVisibility(View.GONE);
-        else {
+        } else {
             reviewBazaar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                        preferences.edit().putBoolean(CAFEBAZAAR_REVIEWED, true).commit(); todo
+                    db.updateReviewed(true);
 
                     CoinManager coinManager = new CoinManager(getActivity());
                     coinManager.earnCoins(30000);

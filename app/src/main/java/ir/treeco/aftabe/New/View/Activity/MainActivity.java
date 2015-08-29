@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private BillingProcessor billingProcessor;
     private TextView digits;
     private CoinManager coinManager;
+    private OnPackagePurchasedListener mOnPackagePurchasedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +141,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case R.id.coin_box:
-
                 if (StoreFragment.getIsUsed())
                     return;
 
@@ -197,7 +197,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-
     private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
         AdItemAdapter adItemAdapter = new AdItemAdapter(context);
         autoScrollViewPager.setAdapter(adItemAdapter);
@@ -207,7 +206,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void disableCheatButton(boolean enable) {
-        cheatButton.setClickable(enable);}
+        cheatButton.setClickable(enable);
+    }
 
 
     @Override
@@ -243,9 +243,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Log.v("IAB", "Billing initialized.");
     }
 
-
-    OnPackagePurchasedListener mOnPackagePurchasedListener;
-
     public void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
         mOnPackagePurchasedListener = onPackagePurchasedListener;
     }
@@ -255,7 +252,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits.setText(newAmount + "");
     }
 
-    public static interface OnPackagePurchasedListener {
+    public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
     }
 
@@ -264,7 +261,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (billingProcessor.isInitialized())
             billingProcessor.purchase(sku);
         else {
-//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
+//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT); //// TODO: 8/24/15  
         }
     }
 
