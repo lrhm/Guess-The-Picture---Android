@@ -13,22 +13,18 @@ import java.util.ArrayList;
 import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Object.PackageObject;
 
-/**
- * Created by behdad on 7/30/15.
- */
-
 public class DBAdapter {
     private static DBAdapter ourInstance;
 
     private static final String TAG = "DBAdapter";
     private static final String DATABASE_NAME = "aftabe.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
-    private static final String BLOB = " BLOB";
+    private static final String BLOB_TYPE = " BLOB";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
     private static final String CREATE_TABLE = "CREATE TABLE ";
     private static final String AUTOINCREMENT = " AUTOINCREMENT";
@@ -52,7 +48,7 @@ public class DBAdapter {
             PACKAGE_ID + INTEGER_TYPE + NOT_NULL + UNIQUE + COMMA_SEP +
             PACKAGE_NAME + TEXT_TYPE + COMMA_SEP +
             PACKAGE_URL + TEXT_TYPE + COMMA_SEP +
-            PACKAGE_DOWNLOADED + BLOB + BRACKET_CLOSE_SEP + SEMICOLON;
+            PACKAGE_DOWNLOADED + BLOB_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
     private static final String LEVELS = "LEVELS";
     private static final String LEVEL_SQL_ID = "LEVEL_SQL_ID";
@@ -71,14 +67,18 @@ public class DBAdapter {
             LEVEL_RESOURCES + TEXT_TYPE + COMMA_SEP +
             LEVEL_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
             LEVEL_TYPE + TEXT_TYPE + COMMA_SEP +
-            LEVEL_RESOLVE + BLOB + COMMA_SEP +
+            LEVEL_RESOLVE + BLOB_TYPE + COMMA_SEP +
             LEVEL_PACKAGE_ID + INTEGER_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
     private static final String COINS = "COINS";
+    private static final String COINS_SQL_ID = "COINS_SQL_ID";
     private static final String COINS_COUNT = "COINS_COUNT";
+    private static final String COINS_REVIEWED = "COINS_REVIEWED";
 
     private static final String SQL_CREATE_COINS = CREATE_TABLE + COINS + BRACKET_OPEN_SEP +
-            COINS_COUNT + INTEGER_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
+            COINS_SQL_ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_SEP +
+            COINS_COUNT + INTEGER_TYPE + COMMA_SEP +
+            COINS_REVIEWED + BLOB_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
     public static DBAdapter getInstance(Context context) {
         if (ourInstance == null) {
@@ -233,7 +233,8 @@ public class DBAdapter {
         open();
         Cursor cursor = db.query(COINS,
                 new String[] {COINS_COUNT},
-                null, null, null, null, null);
+                COINS_SQL_ID + " = 1",
+                null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int count =  cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
@@ -244,11 +245,44 @@ public class DBAdapter {
         return 0;
     }
 
+    public boolean getCoinsReviewed() {
+        open();
+        Cursor cursor = db.query(COINS,
+                new String[] {COINS_REVIEWED},
+                COINS_SQL_ID + " = 1",
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            boolean reviewed = cursor.getInt(cursor.getColumnIndex(COINS_REVIEWED)) > 0;
+            close();
+            return reviewed;
+        }
+        close();
+        return false;
+    }
+
     public void insertCoins(int count) {
         open();
         ContentValues values = new ContentValues();
         values.put(COINS_COUNT, count);
-        db.insert(LEVELS, null, values);
+        values.put(COINS_REVIEWED, false);
+        db.insert(COINS, null, values);
+        close();
+    }
+
+    public void updateCoins(int count) {
+        open();
+        ContentValues values = new ContentValues();
+        values.put(COINS_COUNT, count);
+        db.update(COINS, values, COINS_SQL_ID + " = 1", null);
+        close();
+    }
+
+    public void updateReviewed(boolean reviewed) {
+        open();
+        ContentValues values = new ContentValues();
+        values.put(COINS_REVIEWED, reviewed);
+        db.update(COINS, values, COINS_SQL_ID + " = 1", null);
         close();
     }
 }

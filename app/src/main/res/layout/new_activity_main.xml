@@ -32,7 +32,11 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="1"
+                android:shadowColor="#000"/>
 
             <ImageView
                 android:layout_width="wrap_content"

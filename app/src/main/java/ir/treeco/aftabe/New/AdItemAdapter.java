@@ -48,12 +48,15 @@ public class AdItemAdapter extends PagerAdapter {
 
         View v = LayoutInflater.from(context).inflate(R.layout.view_ad_image, container, false);
         ImageView imageView = (ImageView) v.findViewById(R.id.adImageView);
+
        try {
            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
             Log.e(TAG, "Could not load ad!", e);
            imageView.setImageBitmap(ImageManager.loadImageFromResource(context,R.drawable.ad,MainApplication.lengthManager.getScreenWidth(), -1));
-        }ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
+        }
+
+        ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
         ImageView bottomShadow = (ImageView) v.findViewById(R.id.bottom_shadow);
 
         topShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_top,

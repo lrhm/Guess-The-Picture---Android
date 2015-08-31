@@ -3,7 +3,6 @@ package ir.treeco.aftabe.New.View.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -25,7 +24,9 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.AdItemAdapter;
 import ir.treeco.aftabe.New.AutoScrollViewPager;
 import ir.treeco.aftabe.New.CoinManager;
+import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.ImageManager;
+import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
@@ -33,7 +34,8 @@ import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.R;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener, BillingProcessor.IBillingHandler, CoinManager.CoinsChangedListener {
-    Context context;
+    private Context context;
+    private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
     private boolean areCheatsVisible = false;
@@ -41,11 +43,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private BillingProcessor billingProcessor;
     private TextView digits;
     private CoinManager coinManager;
+    private OnPackagePurchasedListener mOnPackagePurchasedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
+
+        tools = new Tools();
 
         digits = (TextView) findViewById(R.id.digits);
         coinManager = new CoinManager(this);
@@ -96,7 +101,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 577 / 3600;
         digitsLayoutParams.width = MainApplication.lengthManager.getScreenWidth() / 5;
 
-        digits.setTypeface(Typeface.createFromAsset(getAssets(), "yekan.ttf"));
+        digits.setTypeface(FontsHolder.getYekan(this));
         String number = "۸۸۸۸۸";
         digits.setText(number);
 
@@ -136,7 +141,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case R.id.coin_box:
-
                 if (StoreFragment.getIsUsed())
                     return;
 
@@ -193,9 +197,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+<<<<<<< HEAD
+=======
+    private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
+        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
+        autoScrollViewPager.setAdapter(adItemAdapter);
+        autoScrollViewPager.setOffscreenPageLimit(1);
+        autoScrollViewPager.setInterval(5000);
+        autoScrollViewPager.startAutoScroll();
+    }
+>>>>>>> 9c62a1f4edc14f097557ee5a0ff5f66976e11bc9
 
     public void disableCheatButton(boolean enable) {
-        cheatButton.setClickable(enable);}
+        cheatButton.setClickable(enable);
+    }
 
 
     @Override
@@ -231,19 +246,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Log.v("IAB", "Billing initialized.");
     }
 
-
-    OnPackagePurchasedListener mOnPackagePurchasedListener;
-
     public void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
         mOnPackagePurchasedListener = onPackagePurchasedListener;
     }
 
     @Override
     public void changed(int newAmount) {
-        digits.setText(newAmount + "");
+        digits.setText(tools.numeralStringToPersianDigits("" + newAmount));
     }
 
-    public static interface OnPackagePurchasedListener {
+    public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
     }
 
@@ -252,7 +264,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (billingProcessor.isInitialized())
             billingProcessor.purchase(sku);
         else {
-//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
+//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT); //// TODO: 8/24/15  
         }
     }
 

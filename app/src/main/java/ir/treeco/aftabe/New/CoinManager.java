@@ -42,7 +42,7 @@ public class CoinManager {
     }
 
     private void setCoinsCount(int nextAmount) {
-        db.insertCoins(nextAmount);
+        db.updateCoins(nextAmount);
 
         if (listener != null)
             listener.changed(nextAmount);

@@ -27,6 +27,7 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
+import ir.treeco.aftabe.New.CoinManager;
 import ir.treeco.aftabe.New.Interface.FinishLevel;
 import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.ImageManager;
@@ -392,11 +393,11 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 "رد کردن مرحله"
         };
 
-        int[] cheatCosts = new int[] {40, 50, 130};
-//                CoinManager.ALPHABET_HIDING_COST,  //todo use enum
-//                CoinManager.LETTER_REVEAL_COST,
-//                CoinManager.SKIP_LEVEL_COST
-//        };
+        int[] cheatCosts = new int[] {
+                CoinManager.ALPHABET_HIDING_COST,
+                CoinManager.LETTER_REVEAL_COST,
+                CoinManager.SKIP_LEVEL_COST
+        };
 
         for (int i = 0; i < 3; i++)
             tools.setViewBackground(
