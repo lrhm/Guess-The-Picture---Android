@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout android:layout_height="match_parent" android:layout_width="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shadow_top" />
 
-        <ImageView
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/shadow_top" />
+            app:layout_scrollFlags="scroll|enterAlways">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/package_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"
-            android:fadingEdge="none"
-            android:overScrollMode="never"
-            android:scrollbars="none"
-            android:cacheColorHint="@android:color/transparent" />
-    </FrameLayout>
+            <ir.treeco.aftabe.New.AutoScrollViewPager
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/ad_view_pager" />
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
 
-</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/package_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:fadingEdge="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+</android.support.design.widget.CoordinatorLayout>
