@@ -36,8 +36,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Context context;
     private ImageView cheatButton;
     private ImageView logo;
-    private AutoScrollViewPager autoScrollViewPager;
-   // private AdItemAdapter adItemAdapter;
     private boolean areCheatsVisible = false;
     private int currentLevel;
     private BillingProcessor billingProcessor;
@@ -55,7 +53,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
 
-        autoScrollViewPager = ((AutoScrollViewPager) findViewById(R.id.ad_view_pager));
 
         cheatButton.setOnClickListener(this);
 
@@ -77,7 +74,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setUpCoinBox();
         setUpHeader();
-        setUpAds(autoScrollViewPager);
         setOriginalBackgroundColor();
 
 
@@ -197,14 +193,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-
-    private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
-        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
-        autoScrollViewPager.setAdapter(adItemAdapter);
-        autoScrollViewPager.setOffscreenPageLimit(1);
-        autoScrollViewPager.setInterval(5000);
-        autoScrollViewPager.startAutoScroll();
-    }
 
     public void disableCheatButton(boolean enable) {
         cheatButton.setClickable(enable);}

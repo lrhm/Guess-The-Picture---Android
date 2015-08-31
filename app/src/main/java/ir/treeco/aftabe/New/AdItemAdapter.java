@@ -52,6 +52,7 @@ public class AdItemAdapter extends PagerAdapter {
            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
             Log.e(TAG, "Could not load ad!", e);
+           imageView.setImageBitmap(ImageManager.loadImageFromResource(context,R.drawable.ad,MainApplication.lengthManager.getScreenWidth(), -1));
         }ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
         ImageView bottomShadow = (ImageView) v.findViewById(R.id.bottom_shadow);
 

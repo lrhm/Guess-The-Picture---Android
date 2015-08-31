@@ -12,7 +12,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -57,10 +56,5 @@
         </FrameLayout>
 
     </LinearLayout>
-
-    <ir.treeco.aftabe.New.AutoScrollViewPager
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/ad_view_pager"/>
 
 </FrameLayout>
