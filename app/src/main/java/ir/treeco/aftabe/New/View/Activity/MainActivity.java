@@ -197,8 +197,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-<<<<<<< HEAD
-=======
     private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
         AdItemAdapter adItemAdapter = new AdItemAdapter(context);
         autoScrollViewPager.setAdapter(adItemAdapter);
@@ -206,7 +204,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         autoScrollViewPager.setInterval(5000);
         autoScrollViewPager.startAutoScroll();
     }
->>>>>>> 9c62a1f4edc14f097557ee5a0ff5f66976e11bc9
 
     public void disableCheatButton(boolean enable) {
         cheatButton.setClickable(enable);
