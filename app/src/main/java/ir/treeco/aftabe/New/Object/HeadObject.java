@@ -4,7 +4,16 @@ public class HeadObject {
     private PackageObject[] saller;
     private PackageObject[] news;
     private PackageObject[] downloadtask;
+    private PackageObject[] notification;
     private PackageObject[] local;
+
+    public PackageObject[] getNotification() {
+        return notification;
+    }
+
+    public void setNotification(PackageObject[] notification) {
+        this.notification = notification;
+    }
 
     public PackageObject[] getSaller() {
         return saller;

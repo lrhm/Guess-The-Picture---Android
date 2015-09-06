@@ -66,7 +66,6 @@ public class MainApplication extends Application {
                 .build();
 
         db = DBAdapter.getInstance(this);
-        db.insertCoins(399);
 
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
@@ -74,6 +73,7 @@ public class MainApplication extends Application {
         parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
         if (Prefs.getBoolean("firstAppRun", true)) {
+            db.insertCoins(399);
             copyLocalpackages();
             Prefs.putBoolean("firstAppRun", false);
         }
