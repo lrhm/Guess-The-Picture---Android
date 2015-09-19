@@ -21,9 +21,7 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.Adapter.AdItemAdapter;
-import ir.treeco.aftabe.New.View.Custom.AutoScrollViewPager;
-import ir.treeco.aftabe.New.CoinManager;
+import ir.treeco.aftabe.New.Adapter.CoinAdapter;
 import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
@@ -34,7 +32,7 @@ import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.R;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
-        BillingProcessor.IBillingHandler, CoinManager.CoinsChangedListener {
+        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener {
     private Context context;
     private Tools tools;
     private ImageView cheatButton;
@@ -43,7 +41,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private int currentLevel;
     private BillingProcessor billingProcessor;
     private TextView digits;
-    private CoinManager coinManager;
+    private CoinAdapter coinAdapter;
     private OnPackagePurchasedListener mOnPackagePurchasedListener;
 
     @Override
@@ -52,7 +50,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.new_activity_main);
 
         digits = (TextView) findViewById(R.id.digits);
-        coinManager = new CoinManager(this);
+        coinAdapter = new CoinAdapter(this);
         tools = new Tools();
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
@@ -105,8 +103,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         coinBox.setOnClickListener(this);
 
-        CoinManager coinManager = new CoinManager(getApplicationContext());
-        coinManager.setCoinsChangedListener(this);
+        CoinAdapter coinAdapter = new CoinAdapter(getApplicationContext());
+        coinAdapter.setCoinsChangedListener(this);
     }
 
     private void setUpHeader() {
@@ -208,10 +206,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_SMALL_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
-        else if (productId.equals(StoreFragment.SKU_BIG_COIN)) coinManager.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
+        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_SMALL_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
+        else if (productId.equals(StoreFragment.SKU_BIG_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
         else if (mOnPackagePurchasedListener != null) {
             mOnPackagePurchasedListener.packagePurchased(productId);
             mOnPackagePurchasedListener = null;

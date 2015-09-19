@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
-import ir.treeco.aftabe.New.CoinManager;
+import ir.treeco.aftabe.New.Adapter.CoinAdapter;
 import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
@@ -102,8 +102,8 @@ public class StoreFragment extends Fragment {
                 public void onClick(View view) {
                     db.updateReviewed(true);
 
-                    CoinManager coinManager = new CoinManager(getActivity());
-                    coinManager.earnCoins(30000);
+                    CoinAdapter coinAdapter = new CoinAdapter(getActivity());
+                    coinAdapter.earnCoins(30000);
 
                     Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
                     startActivity(browserIntent);

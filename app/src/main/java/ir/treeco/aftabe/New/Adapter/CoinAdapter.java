@@ -1,14 +1,12 @@
-package ir.treeco.aftabe.New;
+package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
-
-import ir.treeco.aftabe.New.Adapter.DBAdapter;
 
 /**
  * Created by behdad on 8/23/15.
  */
 
-public class CoinManager {
+public class CoinAdapter {
     public static final int LEVEL_COMPELETED_PRIZE = 30;
     public static final int ALPHABET_HIDING_COST = 40;
     public static final int LETTER_REVEAL_COST = 50;
@@ -16,7 +14,7 @@ public class CoinManager {
     private static final String TAG = "CoinManager";
     private DBAdapter db;
 
-    public CoinManager(Context context) {
+    public CoinAdapter(Context context) {
         db = DBAdapter.getInstance(context);
     }
 
@@ -51,7 +49,7 @@ public class CoinManager {
     private static CoinsChangedListener listener;
 
     public void setCoinsChangedListener(CoinsChangedListener listener) {
-        CoinManager.listener = listener;
+        CoinAdapter.listener = listener;
         listener.changed(getCoinsCount());
     }
 }
