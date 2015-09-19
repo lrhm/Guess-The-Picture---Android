@@ -530,6 +530,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 new FinishLevel() {
                     @Override
                     public void NextLevel() {
+                        db.resolveLevel(packageId, levelId);
                         Bundle bundle = new Bundle();
                         int levelID = level.getId() + 1;
                         bundle.putInt("LevelId", levelID);

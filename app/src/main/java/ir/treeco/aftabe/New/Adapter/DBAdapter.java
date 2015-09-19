@@ -285,4 +285,15 @@ public class DBAdapter {
         db.update(COINS, values, COINS_SQL_ID + " = 1", null);
         close();
     }
+
+    public void resolveLevel(int packageID, int levelID) {
+        open();
+
+            ContentValues values = new ContentValues();
+            values.put(LEVEL_RESOLVE, true);
+            db.update(LEVELS, values,
+                    LEVEL_PACKAGE_ID + " = " + packageID + " AND " + LEVEL_ID + " = " + levelID, null);
+
+        close();
+    }
 }
