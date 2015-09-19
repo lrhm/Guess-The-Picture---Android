@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
@@ -78,11 +80,23 @@ public class MainApplication extends Application {
             Prefs.putBoolean("firstAppRun", false);
         }
 
-        DLManager.getInstance(this).dlStart("http://pfont.ir/files/aftabe/head.json", this.getFilesDir().getPath(), //todo in hamishe nabayad ejra she
+        downloadHead();
+    }
+
+    public void downloadHead() {
+        DLManager.getInstance(this)
+                .dlStart("http://pfont.ir/files/aftabe/head.json", this.getFilesDir().getPath(),
                 new DLTaskListener() {
                     @Override
                     public void onFinish(File file) {
                         super.onFinish(file);
+
+                        Prefs.putString(
+                                getResources()
+                                        .getString(R.string.updated_time_shared_preference),
+                                new SimpleDateFormat("dd-MM-yyyy")
+                                        .format(Calendar.getInstance().getTime()));
+
                         parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
                         downloadTask();
                     }

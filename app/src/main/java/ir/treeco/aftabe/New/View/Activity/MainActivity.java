@@ -21,8 +21,8 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.AdItemAdapter;
-import ir.treeco.aftabe.New.AutoScrollViewPager;
+import ir.treeco.aftabe.New.Adapter.AdItemAdapter;
+import ir.treeco.aftabe.New.View.Custom.AutoScrollViewPager;
 import ir.treeco.aftabe.New.CoinManager;
 import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.ImageManager;
@@ -33,7 +33,8 @@ import ir.treeco.aftabe.New.View.Fragment.MainFragment;
 import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.R;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, BillingProcessor.IBillingHandler, CoinManager.CoinsChangedListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener,
+        BillingProcessor.IBillingHandler, CoinManager.CoinsChangedListener {
     private Context context;
     private Tools tools;
     private ImageView cheatButton;
@@ -50,14 +51,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
 
-        tools = new Tools();
-
         digits = (TextView) findViewById(R.id.digits);
         coinManager = new CoinManager(this);
+        tools = new Tools();
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
-
 
         cheatButton.setOnClickListener(this);
 
@@ -80,7 +79,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpCoinBox();
         setUpHeader();
         setOriginalBackgroundColor();
-
 
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
     }
@@ -261,7 +259,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (billingProcessor.isInitialized())
             billingProcessor.purchase(sku);
         else {
-//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT); //// TODO: 8/24/15  
+//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT); //// TODO: 8/24/15
         }
     }
 

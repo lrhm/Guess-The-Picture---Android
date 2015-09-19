@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ir.treeco.aftabe.New.AutoScrollViewPager;
+import ir.treeco.aftabe.New.View.Custom.AutoScrollViewPager;
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.AdItemAdapter;
+import ir.treeco.aftabe.New.Adapter.AdItemAdapter;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.PackageAdapter;
 import ir.treeco.aftabe.New.Object.PackageObject;

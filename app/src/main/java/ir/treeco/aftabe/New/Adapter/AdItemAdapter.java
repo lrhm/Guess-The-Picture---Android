@@ -1,8 +1,7 @@
-package ir.treeco.aftabe.New;
+package ir.treeco.aftabe.New.Adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ public class AdItemAdapter extends PagerAdapter {
     private static final String TAG = "PagerAdapter";
     Context context;
     public final static String ADS_KEY = "number_of_ads";
-    private String SHARED_PREFRENCES_TAG = "aftabe_plus";
     // FIXME Here I set the number of ads to 3, but as I Mentioned with a todo in MainApplication we should add number of ads to the DB or SP then load it here in constructor
     private int numberOfAds = 3;
 
@@ -40,7 +38,7 @@ public class AdItemAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((RelativeLayout) object);
+        return view == object;
     }
 
     @Override
@@ -52,7 +50,6 @@ public class AdItemAdapter extends PagerAdapter {
        try {
            imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "Could not load ad!", e);
            imageView.setImageBitmap(ImageManager.loadImageFromResource(context,R.drawable.ad,MainApplication.lengthManager.getScreenWidth(), -1));
         }
 
