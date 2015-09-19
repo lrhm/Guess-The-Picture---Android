@@ -50,22 +50,12 @@
             android:name=".View.Activity.IntroActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"></activity>
+            android:theme="@style/noAnimTheme"/>
         <activity
             android:name=".View.Activity.AdActivity"
             android:label="Aftabe"
             android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"></activity>
-        <activity
-            android:name=".New.View.Fragment.PackageFragmentNew"
-            android:label="Aftabe"
-            android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"></activity>
-        <activity
-            android:name=".New.View.Fragment.GameFragmentNew"
-            android:label="Aftabe"
-            android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"></activity>
+            android:theme="@style/noAnimTheme"/>
         <activity
             android:name=".New.View.Activity.MainActivity"
             android:label="Aftabe"
@@ -81,7 +71,7 @@
             android:name=".New.View.Activity.StoreActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"></activity>
+            android:theme="@style/noAnimTheme"/>
     </application>
 
 </manifest>
