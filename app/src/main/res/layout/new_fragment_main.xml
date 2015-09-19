@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/adtest">
 
-        <com.ogaclejapan.smarttablayout.SmartTabLayout
-            android:id="@+id/viewpagertab"
-            android:layout_below="@id/header"
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/viewpagertab"
+        android:layout_below="@id/header"
+        android:layout_width="match_parent"
+        android:clipToPadding="false"
+        android:layout_height="40dp"
+        app:stl_indicatorAlwaysInCenter="false"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorColor="#44000000"
+        app:stl_indicatorThickness="40dp"
+        app:stl_indicatorCornerRadius="20dp"
+        app:stl_underlineColor="#66000000"
+        app:stl_underlineThickness="0dp"
+        app:stl_dividerColor="#00000000"
+        app:stl_dividerThickness="0dp"
+        app:stl_defaultTabTextAllCaps="true"
+        app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
+        app:stl_defaultTabTextSize="16sp"
+        app:stl_defaultTabTextHorizontalPadding="25dp"
+        app:stl_defaultTabTextMinWidth="0dp"
+        app:stl_distributeEvenly="true" />
+
+
+        <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:clipToPadding="false"
-            android:layout_height="40dp"
-            app:stl_indicatorAlwaysInCenter="false"
-            app:stl_indicatorInterpolation="smart"
-            app:stl_indicatorColor="#44000000"
-            app:stl_indicatorThickness="40dp"
-            app:stl_indicatorCornerRadius="20dp"
-            app:stl_underlineColor="#66000000"
-            app:stl_underlineThickness="0dp"
-            app:stl_dividerColor="#00000000"
-            app:stl_dividerThickness="0dp"
-            app:stl_defaultTabTextAllCaps="true"
-            app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
-            app:stl_defaultTabTextSize="16sp"
-            app:stl_defaultTabTextHorizontalPadding="25dp"
-            app:stl_defaultTabTextMinWidth="0dp"
-            app:stl_distributeEvenly="true" />
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <ir.treeco.aftabe.New.View.Custom.AutoScrollViewPager
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/ad_view_pager" />
+
+        </android.support.v7.widget.Toolbar>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/viewpagertab" />
+            android:layout_height="match_parent"/>
 
-    </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

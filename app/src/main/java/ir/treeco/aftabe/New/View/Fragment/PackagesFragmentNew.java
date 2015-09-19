@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ir.treeco.aftabe.New.View.Custom.AutoScrollViewPager;
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.Adapter.AdItemAdapter;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.PackageAdapter;
 import ir.treeco.aftabe.New.Object.PackageObject;
@@ -24,8 +22,6 @@ public class PackagesFragmentNew extends Fragment {
     PackageObject[] packageObjects;
     private DBAdapter db;
 
-    private AutoScrollViewPager autoScrollViewPager;
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -33,8 +29,6 @@ public class PackagesFragmentNew extends Fragment {
 
         db = DBAdapter.getInstance(getActivity());
         type = getArguments().getInt(MainFragment.FRAGMENT_TYPE);
-
-        autoScrollViewPager = (AutoScrollViewPager) view.findViewById(R.id.ad_view_pager);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.package_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -60,16 +54,7 @@ public class PackagesFragmentNew extends Fragment {
         adapter = new PackageAdapter(getActivity(), packageObjects);
         recyclerView.setAdapter(adapter);
 
-        setUpAds(autoScrollViewPager);
         return view;
-    }
-
-    private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
-        AdItemAdapter adItemAdapter = new AdItemAdapter(recyclerView.getContext());
-        autoScrollViewPager.setAdapter(adItemAdapter);
-        autoScrollViewPager.setOffscreenPageLimit(1);
-        autoScrollViewPager.setInterval(5000);
-        autoScrollViewPager.startAutoScroll();
     }
 
     @Override

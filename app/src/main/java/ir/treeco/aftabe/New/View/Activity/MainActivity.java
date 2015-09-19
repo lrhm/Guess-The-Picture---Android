@@ -195,14 +195,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
-        AdItemAdapter adItemAdapter = new AdItemAdapter(context);
-        autoScrollViewPager.setAdapter(adItemAdapter);
-        autoScrollViewPager.setOffscreenPageLimit(1);
-        autoScrollViewPager.setInterval(5000);
-        autoScrollViewPager.startAutoScroll();
-    }
-
     public void disableCheatButton(boolean enable) {
         cheatButton.setClickable(enable);
     }
