@@ -22,6 +22,7 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
     public final static String FRAGMENT_TYPE = "fragment_type";
     private AutoScrollViewPager autoScrollViewPager;
+    AdItemAdapter adItemAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -29,6 +30,7 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.new_fragment_main, container, false);
 
         autoScrollViewPager = (AutoScrollViewPager) view.findViewById(R.id.ad_view_pager);
+        adItemAdapter = new AdItemAdapter(getActivity());
 
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
@@ -44,13 +46,12 @@ public class MainFragment extends Fragment {
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
 
-        setUpAds(autoScrollViewPager);
+//        setUpAds(autoScrollViewPager); // TODO: 9/19/15 @armin this only memoryLeak!!
 
         return view;
     }
 
     private void setUpAds(AutoScrollViewPager autoScrollViewPager) {
-        AdItemAdapter adItemAdapter = new AdItemAdapter(getActivity());
         autoScrollViewPager.setAdapter(adItemAdapter);
         autoScrollViewPager.setOffscreenPageLimit(1);
         autoScrollViewPager.setInterval(5000);
