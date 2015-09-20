@@ -19,7 +19,6 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Interface.FinishLevel;
 import ir.treeco.aftabe.New.Object.Level;
 import ir.treeco.aftabe.New.Util.FontsHolder;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.R;
@@ -71,7 +70,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
             customizeTextView(prize, prizeString, MainApplication.lengthManager.getLevelAuthorTextSize());
 
             tools.resizeView(prize, MainApplication.lengthManager.getPrizeBoxSize(), MainApplication.lengthManager.getPrizeBoxSize());
-            tools.setViewBackground(prize, new BitmapDrawable(context.getResources(), ImageManager.loadImageFromResource(context, R.drawable.coin, MainApplication.lengthManager.getPrizeBoxSize(), MainApplication.lengthManager.getPrizeBoxSize())));
+            tools.setViewBackground(prize, new BitmapDrawable(context.getResources(), MainApplication.imageManager.loadImageFromResource(R.drawable.coin, MainApplication.lengthManager.getPrizeBoxSize(), MainApplication.lengthManager.getPrizeBoxSize())));
 
             ObjectAnimator.ofFloat(prize, "rotation", 0, 315).setDuration(0).start();
         } else {
@@ -80,7 +79,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
 
         ImageView tickView = (ImageView) findViewById(R.id.tickView);
         ((ViewGroup.MarginLayoutParams) tickView.getLayoutParams()).rightMargin = (int) (0.125 * MainApplication.lengthManager.getTickViewSize());
-        tickView.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.correct, MainApplication.lengthManager.getTickViewSize(), MainApplication.lengthManager.getTickViewSize()));
+        tickView.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.correct, MainApplication.lengthManager.getTickViewSize(), MainApplication.lengthManager.getTickViewSize()));
         tools.resizeView(tickView, MainApplication.lengthManager.getTickViewSize(), MainApplication.lengthManager.getTickViewSize());
 
         ImageView nextButton = (ImageView) findViewById(R.id.next_level_button);
@@ -88,7 +87,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
 
 
         if (level.getId() + 1 < packageSize) {
-            nextButton.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.next_button, MainApplication.lengthManager.getLevelFinishedButtonsSize(), MainApplication.lengthManager.getLevelFinishedButtonsSize()));
+            nextButton.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.next_button, MainApplication.lengthManager.getLevelFinishedButtonsSize(), MainApplication.lengthManager.getLevelFinishedButtonsSize()));
             tools.resizeView(nextButton, MainApplication.lengthManager.getLevelFinishedButtonsSize(), MainApplication.lengthManager.getLevelFinishedButtonsSize());
             nextButton.setOnClickListener(this);
 
@@ -97,7 +96,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
             findViewById(R.id.separatorSpace).setVisibility(View.GONE);
         }
 
-        homeButton.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.home_button, MainApplication.lengthManager.getLevelFinishedButtonsSize(), MainApplication.lengthManager.getLevelFinishedButtonsSize()));
+        homeButton.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.home_button, MainApplication.lengthManager.getLevelFinishedButtonsSize(), MainApplication.lengthManager.getLevelFinishedButtonsSize()));
         tools.resizeView(homeButton, MainApplication.lengthManager.getLevelFinishedButtonsSize(), MainApplication.lengthManager.getLevelFinishedButtonsSize());
         homeButton.setOnClickListener(this);
 

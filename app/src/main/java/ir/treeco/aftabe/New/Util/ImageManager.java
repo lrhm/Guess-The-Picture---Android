@@ -13,51 +13,20 @@ import java.io.InputStream;
 
 import ir.treeco.aftabe.MainApplication;
 
-class ImageKey {
-    String data;
-
-    ImageKey(int resourceId, int width, int height) {
-        data = "_" + resourceId + "," + width + "," + height;
-    }
-
-    ImageKey(String relativePath, int width, int height) {
-        data = "@" + relativePath + "," + width + "," + height;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ImageKey imageKey = (ImageKey) o;
-
-        if (data != null ? !data.equals(imageKey.data) : imageKey.data != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return data != null ? data.hashCode() : 0;
-    }
-
-
-    @Override
-    public String toString() {
-        return data;
-    }
-}
-
 public class ImageManager {
-    private static final String TAG = "ImageManager";
-    static LruCache<ImageKey, Bitmap> cache = new LruCache<ImageKey, Bitmap>(1) {
+    private Context context;
+    public ImageManager(Context context) {
+        this.context = context;
+    }
+
+    LruCache<ImageKey, Bitmap> cache = new LruCache<ImageKey, Bitmap>(1) {
         @Override
         protected int sizeOf(ImageKey key, Bitmap value) {
             return 0;
         }
     };
 
-    public static Bitmap loadImageFromResource(Context activity, int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
+    public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
         if (outWidth == -1) outWidth = MainApplication.lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
         if (outHeight == -1) outHeight = MainApplication.lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
 
@@ -72,19 +41,19 @@ public class ImageManager {
         Bitmap scaledBitmap;
         Bitmap unscaledBitmap;
 
-        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, activity.getResources());
+        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, context.getResources());
         scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
         if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
-//        cache.put(key, scaledBitmap); //todo comented for cheke memory leak
+        cache.put(key, scaledBitmap);
         return scaledBitmap;
     }
 
-    public static Bitmap loadImageFromResource(Context activity, int resourceId, int outWidth, int outHeight) {
-        return loadImageFromResource(activity, resourceId, outWidth, outHeight, ScalingLogic.CROP);
+    public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight) {
+        return loadImageFromResource(resourceId, outWidth, outHeight, ScalingLogic.CROP);
     }
 
-    public static Bitmap loadImageFromInputStream(InputStream inputStream, int outWidth, int outHeight) {
+    public Bitmap loadImageFromInputStream(InputStream inputStream, int outWidth, int outHeight) {
         System.gc();
 
         Bitmap scaledBitmap;
@@ -110,7 +79,7 @@ public class ImageManager {
 
     public enum ScalingLogic {FIT, CROP, ALL_TOP}
 
-    public static Rect calculateSrcRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
+    public Rect calculateSrcRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
         switch (scalingLogic) {
             case CROP:
                 final float srcAspect = (float) srcWidth / (float) srcHeight;
@@ -121,7 +90,7 @@ public class ImageManager {
                     return new Rect(srcRectLeft, 0, srcRectLeft + srcRectWidth, srcHeight);
                 } else {
                     final int srcRectHeight = (int) (srcWidth / dstAspect);
-                    final int scrRectTop = (int) (srcHeight - srcRectHeight) / 2;
+                    final int scrRectTop = (srcHeight - srcRectHeight) / 2;
                     return new Rect(0, scrRectTop, srcWidth, scrRectTop + srcRectHeight);
                 }
             case FIT:
@@ -133,7 +102,7 @@ public class ImageManager {
         }
     }
 
-    public static Rect calculateDstRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
+    public Rect calculateDstRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
         switch (scalingLogic) {
             case FIT:
                 final float srcAspect = (float) srcWidth / (float) srcHeight;
@@ -151,7 +120,7 @@ public class ImageManager {
         }
     }
 
-    public static Bitmap createScaledBitmap(Bitmap unscaledBitmap, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
+    public Bitmap createScaledBitmap(Bitmap unscaledBitmap, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
         Rect srcRect = calculateSrcRect(unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), dstWidth, dstHeight, scalingLogic);
         Rect dstRect = calculateDstRect(unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), dstWidth, dstHeight, scalingLogic);
         Bitmap scaledBitmap = Bitmap.createBitmap(dstRect.width(), dstRect.height(), Bitmap.Config.ARGB_8888);
@@ -160,13 +129,13 @@ public class ImageManager {
         return scaledBitmap;
     }
 
-    public static Bitmap decodeFile(int resourceId, int dstWidth, int dstHeight, ScalingLogic scalingLogic, Resources resources) {
+    public Bitmap decodeFile(int resourceId, int dstWidth, int dstHeight, ScalingLogic scalingLogic, Resources resources) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         return BitmapFactory.decodeResource(resources, resourceId, options);
     }
 
-    public static Bitmap decodeInputStream(InputStream inputStream) {
+    public Bitmap decodeInputStream(InputStream inputStream) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         return BitmapFactory.decodeStream(inputStream, null, options);

@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Util.FontsHolder;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.R;
 
 /**
@@ -37,8 +36,7 @@ public class CheatDrawable extends Drawable {
         this.mContext = mContext;
 
 
-        background = ImageManager.loadImageFromResource(
-                mContext,
+        background = MainApplication.imageManager.loadImageFromResource(
                 R.drawable.cheat_right,
                 MainApplication.lengthManager.getCheatButtonWidth(),
                 -1);

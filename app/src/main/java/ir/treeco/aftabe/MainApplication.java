@@ -52,6 +52,7 @@ import ir.treeco.aftabe.New.Util.Zip;
 
 public class MainApplication extends Application {
     public static LengthManager lengthManager;
+    public static ImageManager imageManager;
     private HeadObject headObject;
     private DBAdapter db;
     private NotificationAdapter notificationAdapter;
@@ -71,6 +72,7 @@ public class MainApplication extends Application {
 
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
+        imageManager = new ImageManager(this);
 
         parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
@@ -139,6 +141,10 @@ public class MainApplication extends Application {
         return lengthManager;
     }
 
+    public static ImageManager getImageManager() {
+        return imageManager;
+    }
+
     public void copyLocalpackages() {
         HeadObject localObject = new Gson().fromJson(new InputStreamReader(
                 getResources().openRawResource(R.raw.local)), HeadObject.class);
@@ -186,8 +192,8 @@ public class MainApplication extends Application {
     public void makeFirstHSV(int id) {
         float[] thumbnailHSV = {130, 0, 0};  //todo load for json
         Bitmap levelLocked = Tools.updateHSV(
-                ImageManager.loadImageFromResource(
-                        this, R.drawable.level_locked,
+                imageManager.loadImageFromResource(
+                        R.drawable.level_locked,
                         lengthManager.getLevelFrameWidth(),
                         lengthManager.getLevelFrameHeight()),
                 thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
@@ -195,8 +201,8 @@ public class MainApplication extends Application {
         saveBitmap(levelLocked, id + "_levelLocked.png");
 
         Bitmap levelUnlocked = Tools.updateHSV(
-                ImageManager.loadImageFromResource(
-                        this, R.drawable.level_unlocked,
+                imageManager.loadImageFromResource(
+                        R.drawable.level_unlocked,
                         lengthManager.getLevelFrameWidth(),
                         lengthManager.getLevelFrameHeight()),
                 thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
@@ -207,8 +213,8 @@ public class MainApplication extends Application {
         float[] cheatButtonHSV = {130, 0, 0};//mLevel.getWrapperPackage().meta.getCheatButtonHSV();
 
         Bitmap cheatBitmap = Tools.updateHSV(
-                ImageManager.loadImageFromResource(
-                        this, R.drawable.cheat_button,
+                imageManager.loadImageFromResource(
+                        R.drawable.cheat_button,
                         MainApplication.lengthManager.getCheatButtonSize(),
                         MainApplication.lengthManager.getCheatButtonSize()),
                 cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
@@ -217,8 +223,8 @@ public class MainApplication extends Application {
 
 
         Bitmap backBitmap = Tools.updateHSV(
-                ImageManager.loadImageFromResource(
-                        this, R.drawable.back_button,
+                imageManager.loadImageFromResource(
+                        R.drawable.back_button,
                         MainApplication.lengthManager.getCheatButtonSize(),
                         MainApplication.lengthManager.getCheatButtonSize()),
                 cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);

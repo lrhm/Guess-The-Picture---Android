@@ -16,10 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.CoinAdapter;
+import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Util.FontsHolder;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Custom.DialogDrawable;
@@ -114,7 +113,7 @@ public class StoreFragment extends Fragment {
         }
 
         ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
-        Bitmap shopTitleBitmap = ImageManager.loadImageFromResource(shopTitle.getContext(), R.drawable.shoptitle, MainApplication.lengthManager.getShopTitleWidth(), -1);
+        Bitmap shopTitleBitmap = MainApplication.imageManager.loadImageFromResource(R.drawable.shoptitle, MainApplication.lengthManager.getShopTitleWidth(), -1);
 
         shopTitle.setImageBitmap(shopTitleBitmap);
         tools.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
@@ -159,7 +158,7 @@ public class StoreFragment extends Fragment {
         itemLayoutParams.width = MainApplication.lengthManager.getStoreItemWidth();
 
         ImageView itemBackground = (ImageView) item.findViewById(R.id.item_background);
-        itemBackground.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), reversed? R.drawable.single_button_green: R.drawable.single_button_red, MainApplication.lengthManager.getStoreItemWidth(), MainApplication.lengthManager.getStoreItemHeight()));
+        itemBackground.setImageBitmap(MainApplication.imageManager.loadImageFromResource(reversed? R.drawable.single_button_green: R.drawable.single_button_red, MainApplication.lengthManager.getStoreItemWidth(), MainApplication.lengthManager.getStoreItemHeight()));
 
         TextView title = (TextView) item.findViewById(R.id.label);
         customizeTextView(title, label);

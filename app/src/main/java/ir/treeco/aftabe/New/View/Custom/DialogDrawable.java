@@ -51,13 +51,13 @@ public class DialogDrawable extends Drawable {
         }
 
         topHeight = MainApplication.lengthManager.getHeightWithFixedWidth(getTopResourceId(), bounds.width());
-        dialogTop = ImageManager.loadImageFromResource(mContext, getTopResourceId(), bounds.width(), topHeight);
+        dialogTop = MainApplication.imageManager.loadImageFromResource(getTopResourceId(), bounds.width(), topHeight);
 
         int centerHeight = MainApplication.lengthManager.getHeightWithFixedWidth(getCenterResourceId(), bounds.width());
-        dialogCenter = ImageManager.loadImageFromResource(mContext, getCenterResourceId(), bounds.width(), centerHeight);
+        dialogCenter = MainApplication.imageManager.loadImageFromResource(getCenterResourceId(), bounds.width(), centerHeight);
 
         bottomHeight = MainApplication.lengthManager.getHeightWithFixedWidth(getBottomResourceId(), bounds.width());
-        dialogBottom = ImageManager.loadImageFromResource(mContext, getBottomResourceId(), bounds.width(), bottomHeight);
+        dialogBottom = MainApplication.imageManager.loadImageFromResource(getBottomResourceId(), bounds.width(), bottomHeight);
 
         isDrawable = true;
     }

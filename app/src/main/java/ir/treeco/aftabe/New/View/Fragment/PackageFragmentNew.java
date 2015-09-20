@@ -17,7 +17,6 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Object.Level;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.R;
 
@@ -39,8 +38,8 @@ public class PackageFragmentNew extends Fragment {
 
         ImageView levelsBackTop = (ImageView) view.findViewById(R.id.levels_back_top);
 
-        levelsBackTop.setImageBitmap(ImageManager.loadImageFromResource(
-                getActivity(), R.drawable.levels_back_top,
+        levelsBackTop.setImageBitmap(MainApplication.imageManager.loadImageFromResource(
+                R.drawable.levels_back_top,
                 MainApplication.lengthManager.getScreenWidth(),
                 MainApplication.lengthManager.getLevelsBackTopHeight()));
 
@@ -50,8 +49,8 @@ public class PackageFragmentNew extends Fragment {
 
         ImageView levelsBackBottom = (ImageView) view.findViewById(R.id.levels_back_bottom);
 
-        levelsBackBottom.setImageBitmap(ImageManager.loadImageFromResource(
-                getActivity(), R.drawable.levels_back_bottom,
+        levelsBackBottom.setImageBitmap(MainApplication.imageManager.loadImageFromResource(
+                R.drawable.levels_back_bottom,
                 MainApplication.lengthManager.getScreenWidth(),
                 MainApplication.lengthManager.getLevelsBackBottomHeight()));
 

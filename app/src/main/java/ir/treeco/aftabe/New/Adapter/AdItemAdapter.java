@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import java.io.FileNotFoundException;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.R;
 
 public class AdItemAdapter extends PagerAdapter {
@@ -20,9 +18,11 @@ public class AdItemAdapter extends PagerAdapter {
     public final static String ADS_KEY = "number_of_ads";
     // FIXME Here I set the number of ads to 3, but as I Mentioned with a todo in MainApplication we should add number of ads to the DB or SP then load it here in constructor
     private int numberOfAds = 3;
+    private LayoutInflater inflater;
 
     public AdItemAdapter(Context context) {
         this.context = context;
+        inflater = LayoutInflater.from(context);
         //updateAds();
     }
 
@@ -43,22 +43,21 @@ public class AdItemAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
-        View v = LayoutInflater.from(context).inflate(R.layout.view_ad_image, container, false);
+        View v = inflater.inflate(R.layout.view_ad_image, null);
         ImageView imageView = (ImageView) v.findViewById(R.id.adImageView);
 
        try {
-           imageView.setImageBitmap(ImageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
+           imageView.setImageBitmap(MainApplication.imageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
-           imageView.setImageBitmap(ImageManager.loadImageFromResource(context,R.drawable.ad,MainApplication.lengthManager.getScreenWidth(), -1));
+           imageView.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.ad,MainApplication.lengthManager.getScreenWidth(), -1));
         }
 
         ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
         ImageView bottomShadow = (ImageView) v.findViewById(R.id.bottom_shadow);
 
-        topShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_top,
+        topShadow.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.shadow_top,
                 MainApplication.lengthManager.getScreenWidth(), -1));
-        bottomShadow.setImageBitmap(ImageManager.loadImageFromResource(context, R.drawable.shadow_bottom,
+        bottomShadow.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.shadow_bottom,
                 MainApplication.lengthManager.getScreenWidth(), -1));
         container.addView(v);
         return v;
@@ -66,6 +65,6 @@ public class AdItemAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((RelativeLayout) object);
+        container.removeView((View) object);
     }
 }

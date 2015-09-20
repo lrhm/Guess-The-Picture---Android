@@ -46,7 +46,7 @@ public class MainFragment extends Fragment {
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
 
-//        setUpAds(autoScrollViewPager); // TODO: 9/19/15 @armin this only memoryLeak!!
+        setUpAds(autoScrollViewPager); // TODO: 9/19/15 @armin this only memoryLeak!!
 
         return view;
     }

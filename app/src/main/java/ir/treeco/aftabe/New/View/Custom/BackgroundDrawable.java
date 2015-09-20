@@ -27,7 +27,7 @@ public class BackgroundDrawable extends GradientDrawable {
 
         paint = new Paint();
         paint.setAlpha(30);
-        background = ImageManager.loadImageFromResource(mContext, R.drawable.circles, MainApplication.lengthManager.getScreenWidth() / 2, MainApplication.lengthManager.getScreenHeight() / 2, ImageManager.ScalingLogic.ALL_TOP);
+        background = MainApplication.imageManager.loadImageFromResource(R.drawable.circles, MainApplication.lengthManager.getScreenWidth() / 2, MainApplication.lengthManager.getScreenHeight() / 2, ImageManager.ScalingLogic.ALL_TOP);
 
         srcRect = new Rect(0, 0, background.getWidth(), background.getHeight());
         dstRect = new Rect(0, 0, background.getWidth() * 2, background.getHeight() * 2);

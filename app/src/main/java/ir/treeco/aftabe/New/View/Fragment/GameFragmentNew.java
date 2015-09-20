@@ -24,13 +24,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.New.Adapter.CoinAdapter;
 import ir.treeco.aftabe.New.Adapter.DBAdapter;
 import ir.treeco.aftabe.New.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.New.Adapter.SolutionAdapter;
-import ir.treeco.aftabe.New.Adapter.CoinAdapter;
 import ir.treeco.aftabe.New.Interface.FinishLevel;
 import ir.treeco.aftabe.New.Object.Level;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Activity.MainActivity;
 import ir.treeco.aftabe.New.View.Custom.CheatDrawable;
@@ -370,7 +369,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
         tools.resizeView(box, MainApplication.lengthManager.getLevelImageWidth(), MainApplication.lengthManager.getLevelImageHeight());
 
         ImageView frame = (ImageView) view.findViewById(R.id.frame);
-        frame.setImageBitmap(ImageManager.loadImageFromResource(view.getContext(), R.drawable.frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight()));
+        frame.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight()));
         tools.resizeView(frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight());
 
         cheatButtons = new View[] {

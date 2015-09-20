@@ -86,7 +86,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         int coinBoxWidth = MainApplication.lengthManager.getScreenWidth() * 9 / 20;
         int coinBoxHeight = MainApplication.lengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
-        coinBox.setImageBitmap(ImageManager.loadImageFromResource(this, R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
+        coinBox.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
         layoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() / 15;
@@ -114,8 +114,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 MainApplication.lengthManager.getHeaderHeight()
         ));
 
-        logo.setImageBitmap(ImageManager.loadImageFromResource(
-                this, R.drawable.header, MainApplication.lengthManager.getScreenWidth(),
+        logo.setImageBitmap(MainApplication.imageManager.loadImageFromResource(
+                R.drawable.header, MainApplication.lengthManager.getScreenWidth(),
                 MainApplication.lengthManager.getScreenWidth() / 4
         ));
     }
