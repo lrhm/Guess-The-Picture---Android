@@ -64,6 +64,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     private int solutionSize;
     private int packageSize;
     private GameFragmentNew gameFragmentNew;
+    private CoinAdapter coinAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -74,6 +75,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
         tools = new Tools();
         db = DBAdapter.getInstance(getActivity());
+        coinAdapter = new CoinAdapter(getActivity());
 
         ((MainActivity)getActivity()).setupCheatButton(packageId);
 
@@ -287,6 +289,17 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     }
 
     private void cheatHazf() {
+        if (level.isResolved()) {
+            hazf();
+        } else if (coinAdapter.spendCoins(CoinAdapter.ALPHABET_HIDING_COST)) {
+            hazf();
+        } else {
+            // TODO: 9/21/15
+
+        }
+    }
+
+    private void hazf() {
         ArrayList<Integer> array = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
             if (!keyboardB[i] && keyboardStatus[i] != 2) {
@@ -313,6 +326,17 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
     }
 
     private void cheatAzafe() { //is bad algoritm
+        if (level.isResolved()) {
+            ezafe();
+        } else if (coinAdapter.spendCoins(CoinAdapter.LETTER_REVEAL_COST)) {
+            ezafe();
+        } else {
+            // TODO: 9/21/15
+
+        }
+    }
+
+    private void ezafe() {
         int rand;
         while (true) {
             rand = random.nextInt(statusAdapter.length);
@@ -356,7 +380,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
 
         if (rand <= break0) {
             solutionAdapter0.notifyDataSetChanged();
-        } else if(rand <= break1) {
+        } else if (rand <= break1) {
             solutionAdapter1.notifyDataSetChanged();
         } else {
             solutionAdapter2.notifyDataSetChanged();
@@ -524,6 +548,8 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 return false;
             }
         }
+
+        coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
 
         new FinishDailog(getActivity(), level, packageSize,
                 new FinishLevel() {
