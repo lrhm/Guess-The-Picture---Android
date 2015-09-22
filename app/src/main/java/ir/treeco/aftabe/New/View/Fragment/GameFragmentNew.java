@@ -451,6 +451,7 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.cheat_skip_level:
+                cheatNext();
                 break;
         }
     }
@@ -549,13 +550,32 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
             }
         }
 
-        coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
+        if (!level.isResolved()) {
+            coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
+        }
 
+        nextLevel();
+        return true;
+    }
+
+    private void cheatNext() {
+        if (level.isResolved()) {
+            nextLevel();
+        } else if (coinAdapter.spendCoins(CoinAdapter.SKIP_LEVEL_COST)) {
+            nextLevel();
+        } else {
+            // TODO: 9/21/15
+
+        }
+
+    }
+
+    private void nextLevel() {
+        db.resolveLevel(packageId, levelId);
         new FinishDailog(getActivity(), level, packageSize,
                 new FinishLevel() {
                     @Override
                     public void NextLevel() {
-                        db.resolveLevel(packageId, levelId);
                         Bundle bundle = new Bundle();
                         int levelID = level.getId() + 1;
                         bundle.putInt("LevelId", levelID);
@@ -574,7 +594,6 @@ public class GameFragmentNew extends Fragment implements View.OnClickListener {
                         getActivity().getSupportFragmentManager().beginTransaction().remove(gameFragmentNew).commit();
                     }
                 }).show();
-
-        return true;
     }
+
 }
