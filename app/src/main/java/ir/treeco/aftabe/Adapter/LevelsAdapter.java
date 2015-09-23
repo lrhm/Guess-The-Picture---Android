@@ -69,17 +69,15 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
                 MainApplication.lengthManager.getLevelFrameWidth(),
                 MainApplication.lengthManager.getLevelFrameHeight()));
         return new ViewHolder(v);
-
     }
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int position) {
-
         int myPadding = MainApplication.lengthManager.getLevelThumbnailPadding();
         viewHolder.imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
 
         int levelPosition = page * 16 + position;
-        if (levelPosition == 0 || levels[levelPosition].isResolved() || levels[levelPosition - 1].isResolved()) { //todo getLevels().get(i) ehtemalan in bayad ba page * 16 jam she
+        if (levelPosition == 0 || levels[levelPosition].isResolved() || levels[levelPosition - 1].isResolved()) {
 
             String imagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + packageId + "_" +levels[levelPosition].getResources();
@@ -102,7 +100,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        if (((levels.length - (page * 16)) / 16) >= 1) { //todo test for 5 - 16 - 20 - 32 - 40
+        if (((levels.length - (page * 16)) / 16) >= 1) {
             return 16;
         } else
             return (levels.length - (page * 16)) % 16;

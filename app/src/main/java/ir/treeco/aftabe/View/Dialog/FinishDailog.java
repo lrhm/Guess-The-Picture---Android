@@ -23,10 +23,6 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.R;
 
-/**
- * Created by behdad on 8/12/15.
- */
-
 public class FinishDailog extends Dialog implements View.OnClickListener {
     private Context context;
     private Level level;
@@ -56,7 +52,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
 
         View contents = findViewById(R.id.contents);
 
-        DialogDrawable drawable = new DialogDrawable(context);
+        DialogDrawable drawable = new DialogDrawable();
         drawable.setTopPadding(MainApplication.lengthManager.getLevelFinishedDialogTopPadding());
         Tools tools = new Tools();
         tools.setViewBackground(contents, drawable);

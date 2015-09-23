@@ -36,7 +36,6 @@ public class Tools {
         return px / (metrics.densityDpi / 160f);
     }
 
-
     public static Bitmap updateHSV(Bitmap src, float settingHue, float settingSat, float settingVal) {
         int w = src.getWidth();
         int h = src.getHeight();
@@ -95,7 +94,6 @@ public class Tools {
             layoutParams.height = height;
         }
     }
-
 
     public void reverseLinearLayout(LinearLayout linearLayout) {
         View views[] = new View[linearLayout.getChildCount()];

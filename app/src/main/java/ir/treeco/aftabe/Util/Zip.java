@@ -13,20 +13,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Zip {
-    public Zip() {
-    }
-
     public boolean unpackZip(String path, int id, Context context) {
-        Log.e("path", "start");
-//        String fileName=path.substring(path.lastIndexOf("/")+1);
-//        Log.e("path", "filename: " + fileName);
-
-//        String zipdir = path.substring(path.lastIndexOf("/"));
-//
-//        Log.e("path", "zipdir: " + zipdir);
-//        File newpathdir = new File(zipdir + fileName);
-//        newpathdir.mkdirs();
-
         String newPath = context.getFilesDir().getPath() + "/Downloaded/";
         Log.e("path", "newPath: " + newPath);
 
@@ -43,20 +30,9 @@ public class Zip {
             int count;
 
             while ((ze = zis.getNextEntry()) != null) {
-                // zapis do souboru
                 filename = ze.getName();
-
-                // Need to create directories if not exists, or
-                // it will generate an Exception...
-//                if (ze.isDirectory()) {
-//                    File fmd = new File(newPath + filename);
-//                    fmd.mkdirs();
-//                    continue;
-//                }
-
                 FileOutputStream fout = new FileOutputStream(newPath + id + "_" + filename);
 
-                // cteni zipu a zapis
                 while ((count = zis.read(buffer)) != -1) {
                     fout.write(buffer, 0, count);
                 }

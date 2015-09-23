@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.View.Custom;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -14,7 +13,6 @@ import ir.treeco.aftabe.R;
 
 public class DialogDrawable extends Drawable {
     private Paint mPaint;
-    private Context mContext;
     private Bitmap dialogTop;
     private Bitmap dialogCenter;
     private Bitmap dialogBottom;
@@ -27,8 +25,7 @@ public class DialogDrawable extends Drawable {
         this.topPadding = topPadding;
     }
 
-    public DialogDrawable(Context mContext) {
-        this.mContext = mContext;
+    public DialogDrawable() {
         mPaint = new Paint();
         reloadBitmaps(getBounds());
     }

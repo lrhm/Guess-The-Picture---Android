@@ -77,7 +77,7 @@ public class StoreFragment extends Fragment {
         int margin = MainApplication.lengthManager.getStoreDialogMargin();
         layout.setPadding(margin, margin, margin, margin);
         View dialog = layout.findViewById(R.id.dialog);
-        tools.setViewBackground(dialog, new DialogDrawable(container.getContext()));
+        tools.setViewBackground(dialog, new DialogDrawable());
 
         int padding = MainApplication.lengthManager.getStoreDialogPadding();
         dialog.setPadding(padding, padding, padding, padding);

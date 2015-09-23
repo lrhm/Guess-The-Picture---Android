@@ -169,7 +169,7 @@ public class DBAdapter {
             Level level = new Level();
             level.setId(cursor.getInt(cursor.getColumnIndex(LEVEL_ID)));
             level.setJavab(cursor.getString(cursor.getColumnIndex(LEVEL_SOLUTION)));
-            level.setResolved(cursor.getInt(cursor.getColumnIndex(LEVEL_RESOLVE)) > 0); //todo test this
+            level.setResolved(cursor.getInt(cursor.getColumnIndex(LEVEL_RESOLVE)) > 0);
             level.setResources(cursor.getString(cursor.getColumnIndex(LEVEL_RESOURCES)));
             level.setThumbnail(cursor.getString(cursor.getColumnIndex(LEVEL_THUMBNAIL)));
             level.setType(cursor.getString(cursor.getColumnIndex(LEVEL_TYPE)));
@@ -194,7 +194,7 @@ public class DBAdapter {
                 Level level = new Level();
                 level.setId(cursor.getInt(cursor.getColumnIndex(LEVEL_ID)));
                 level.setJavab(cursor.getString(cursor.getColumnIndex(LEVEL_SOLUTION)));
-                level.setResolved(cursor.getInt(cursor.getColumnIndex(LEVEL_RESOLVE)) > 0); //todo test this
+                level.setResolved(cursor.getInt(cursor.getColumnIndex(LEVEL_RESOLVE)) > 0);
                 level.setResources(cursor.getString(cursor.getColumnIndex(LEVEL_RESOURCES)));
                 level.setThumbnail(cursor.getString(cursor.getColumnIndex(LEVEL_THUMBNAIL)));
                 level.setType(cursor.getString(cursor.getColumnIndex(LEVEL_TYPE)));

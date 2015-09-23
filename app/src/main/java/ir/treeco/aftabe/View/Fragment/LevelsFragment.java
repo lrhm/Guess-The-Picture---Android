@@ -21,9 +21,6 @@ public class LevelsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_levels, container, false);
 
-//        PackageFragmentNew fragment = (PackageFragmentNew) getParentFragment();
-//        LevelsActivityNew fragment = (LevelsActivityNew)fm.findFragmentByTag("LevelsActivityNew1");
-
         int page = getArguments().getInt(PackageFragment.LEVEL_PAGE);
         int packageId = getArguments().getInt("id");
 

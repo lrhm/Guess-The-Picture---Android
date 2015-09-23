@@ -14,10 +14,6 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.R;
 
-/**
- * Created by hamed on 9/26/14.
- * behdad: what the faz hamed?
- */
 public class CheatDrawable extends Drawable {
     private Bitmap background;
     private String title;

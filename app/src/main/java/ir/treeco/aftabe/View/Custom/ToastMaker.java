@@ -16,7 +16,7 @@ public class ToastMaker {
     public static void show(Context context, String content, int duration) {
         Tools tools = new Tools();
         TextView textView = new TextView(context);
-        tools.setViewBackground(textView, new ToastBackgroundDrawable(context));
+        tools.setViewBackground(textView, new ToastBackgroundDrawable());
         textView.setText(content);
         textView.setTypeface(FontsHolder.getHoma(context));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, MainApplication.lengthManager.getToastFontSize());
@@ -24,7 +24,7 @@ public class ToastMaker {
         textView.setTextColor(Color.WHITE);
         textView.setGravity(Gravity.CENTER);
         textView.setLayoutParams(new ViewGroup.LayoutParams(MainApplication.lengthManager.getToastWidth(), ViewGroup.LayoutParams.WRAP_CONTENT));
-        final int padding = MainApplication.lengthManager.getToastPadding();
+        int padding = MainApplication.lengthManager.getToastPadding();
         textView.setPadding(padding, padding, padding, padding);
         Toast toast = new Toast(context);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);

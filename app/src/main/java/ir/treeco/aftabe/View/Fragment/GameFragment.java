@@ -293,9 +293,6 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             hazf();
         } else if (coinAdapter.spendCoins(CoinAdapter.ALPHABET_HIDING_COST)) {
             hazf();
-        } else {
-            // TODO: 9/21/15
-
         }
     }
 
@@ -330,9 +327,6 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             ezafe();
         } else if (coinAdapter.spendCoins(CoinAdapter.LETTER_REVEAL_COST)) {
             ezafe();
-        } else {
-            // TODO: 9/21/15
-
         }
     }
 
@@ -410,7 +404,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             layoutParams.height = MainApplication.lengthManager.getCheatButtonHeight();
         }
 
-        String[] cheatTitles = new String[] {  //// TODO: 8/7/15
+        String[] cheatTitles = new String[] {
                 "حذف چند حرف",
                 "نمایش یک حرف",
                 "رد کردن مرحله"
@@ -563,11 +557,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             nextLevel();
         } else if (coinAdapter.spendCoins(CoinAdapter.SKIP_LEVEL_COST)) {
             nextLevel();
-        } else {
-            // TODO: 9/21/15
-
         }
-
     }
 
     private void nextLevel() {

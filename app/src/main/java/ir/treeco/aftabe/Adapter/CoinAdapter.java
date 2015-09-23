@@ -11,7 +11,6 @@ public class CoinAdapter {
     public static final int ALPHABET_HIDING_COST = 40;
     public static final int LETTER_REVEAL_COST = 50;
     public static final int SKIP_LEVEL_COST = 130;
-    private static final String TAG = "CoinManager";
     private DBAdapter db;
     private Context context;
 

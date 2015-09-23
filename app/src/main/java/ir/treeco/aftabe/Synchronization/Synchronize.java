@@ -17,9 +17,6 @@ import java.util.Date;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
 
-/**
- * Created by armin on 6/14/15.
- */
 public class Synchronize extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
