@@ -1,17 +1,11 @@
 package ir.treeco.aftabe.View.Fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +14,19 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import ir.treeco.aftabe.CoinManager;
-import ir.treeco.aftabe.DialogDrawable;
-import ir.treeco.aftabe.New.View.Activity.StoreActivity;
-import ir.treeco.aftabe.View.Activity.IntroActivity;
+import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
+import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Toast.ToastMaker;
-import ir.treeco.aftabe.utils.*;
-
 
 public class StoreFragment extends Fragment {
+    private Tools tools;
+    private DBAdapter db;
     public static final String SKU_VERY_SMALL_COIN = "very_small_coin";
     public static final String SKU_SMALL_COIN = "small_coin";
     public static final String SKU_MEDIUM_COIN = "medium_coin";
@@ -52,81 +47,77 @@ public class StoreFragment extends Fragment {
             SKU_MEDIUM_COIN,
             SKU_BIG_COIN
     };
-    private static final String CAFEBAZAAR_REVIEWED = "cafebazaar_reviewed";
 
+    private static StoreFragment mInstance = null;
     private View layout;
+    private static boolean isUsed;
 
-    public StoreFragment(){
+    public static StoreFragment getInstance() {
+        if (mInstance == null) {
+            mInstance = new StoreFragment();
+        }
+        return mInstance;
     }
 
+    public StoreFragment() {
+        tools = new Tools();
+        db = DBAdapter.getInstance(getActivity());
+    }
+
+    public static boolean getIsUsed() {
+        return isUsed;
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        /**
-         * @param container is null here
-         */
-
-        Point point = new Point();
+        isUsed = true;
 
         layout = inflater.inflate(R.layout.fragment_store, container, false);
 
-        {
-            View dialog = layout.findViewById(R.id.dialog);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                this.getActivity().getWindowManager().getDefaultDisplay().getRealSize(point);
-                dialog.setBackground(new DialogDrawable(getActivity().getBaseContext()));
-            }else {
-                point.x = this.getActivity().getWindowManager().getDefaultDisplay().getWidth();
-                point.y = this.getActivity().getWindowManager().getDefaultDisplay().getHeight();
-                dialog.setBackgroundDrawable(new DialogDrawable(getActivity().getBaseContext()));
-            }
+        int margin = MainApplication.lengthManager.getStoreDialogMargin();
+        layout.setPadding(margin, margin, margin, margin);
+        View dialog = layout.findViewById(R.id.dialog);
+        tools.setViewBackground(dialog, new DialogDrawable(container.getContext()));
 
-            layout.setPadding(point.x/20,point.y/20,point.x/20,point.y/20);
-            dialog.setPadding(point.x/15,point.y/15,point.x/15,point.y/15);
-        }
-
-        final StoreActivity activity = (StoreActivity) getActivity();
+        int padding = MainApplication.lengthManager.getStoreDialogPadding();
+        dialog.setPadding(padding, padding, padding, padding);
 
         for (int i = 0; i < SKUs.length; i++) {
             final int finalI = i;
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.purchase(SKUs[finalI]);
+                    ((MainActivity)getActivity()).purchase(SKUs[finalI]);
                 }
             });
         }
 
-        {
-            final SharedPreferences preferences = getActivity().getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
-            final View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
-            if (preferences.getBoolean(CAFEBAZAAR_REVIEWED, false))
-                reviewBazaar.setVisibility(View.GONE);
-            else {
-                reviewBazaar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        preferences.edit().putBoolean(CAFEBAZAAR_REVIEWED, true).commit();
+        final View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
+        if (db.getCoinsReviewed()) {
+            reviewBazaar.setVisibility(View.GONE);
+        } else {
+            reviewBazaar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    db.updateReviewed(true);
 
-                        CoinManager.earnCoins(30000, preferences);
+                    CoinAdapter coinAdapter = new CoinAdapter(getActivity());
+                    coinAdapter.earnCoins(30000);
 
-                        Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
-                        startActivity(browserIntent);
+                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
+                    startActivity(browserIntent);
 
-                        reviewBazaar.setVisibility(View.GONE);
-                    }
-                });
-            }
+                    reviewBazaar.setVisibility(View.GONE);
+                }
+            });
         }
 
-        {
-            ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
-            Bitmap shopTitleBitmap = ImageManager.loadImageFromResource(shopTitle.getContext(), R.drawable.shoptitle, LengthManager.getShopTitleWidth(), -1);
+        ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
+        Bitmap shopTitleBitmap = MainApplication.imageManager.loadImageFromResource(R.drawable.shoptitle, MainApplication.lengthManager.getShopTitleWidth(), -1);
 
-            shopTitle.setImageBitmap(shopTitleBitmap);
-            Utils.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
-            ((ViewGroup.MarginLayoutParams) shopTitle.getLayoutParams()).bottomMargin = LengthManager.getShopTitleBottomMargin();
-        }
+        shopTitle.setImageBitmap(shopTitleBitmap);
+        tools.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
+        ((ViewGroup.MarginLayoutParams) shopTitle.getLayoutParams()).bottomMargin = MainApplication.lengthManager.getShopTitleBottomMargin();
 
         setupItemsList();
 
@@ -144,7 +135,7 @@ public class StoreFragment extends Fragment {
             items[i] = (FrameLayout) itemsList.getChildAt(i);
 
         for (int i = 0; i < items.length; i++) {
-            String persianPrice = "فقط " + Utils.numeralStringToPersianDigits("" + prices[i]) + " تومان";
+            String persianPrice = "فقط " + tools.numeralStringToPersianDigits("" + prices[i]) + " تومان";
             if (i == 4)
                 persianPrice = "نظر در بازار";
             setupItem(items[i],  persianPrice, revenues[i], i % 2 == 1);
@@ -155,7 +146,7 @@ public class StoreFragment extends Fragment {
         textView.setText(label);
 
         textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, LengthManager.getStoreItemFontSize());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, MainApplication.lengthManager.getStoreItemFontSize());
         textView.setTextColor(Color.WHITE);
 
         textView.setShadowLayer(1, 2, 2, Color.BLACK);
@@ -163,32 +154,27 @@ public class StoreFragment extends Fragment {
 
     private void setupItem(FrameLayout item, String label, int revenueAmount, boolean reversed) {
         final ViewGroup.LayoutParams itemLayoutParams = item.getLayoutParams();
-        itemLayoutParams.height = LengthManager.getStoreItemHeight();
-        itemLayoutParams.width = LengthManager.getStoreItemWidth();
+        itemLayoutParams.height = MainApplication.lengthManager.getStoreItemHeight();
+        itemLayoutParams.width = MainApplication.lengthManager.getStoreItemWidth();
 
         ImageView itemBackground = (ImageView) item.findViewById(R.id.item_background);
-        itemBackground.setImageBitmap(ImageManager.loadImageFromResource(getActivity(), reversed ? R.drawable.single_button_green : R.drawable.single_button_red, LengthManager.getStoreItemWidth(), LengthManager.getStoreItemHeight()));
+        itemBackground.setImageBitmap(MainApplication.imageManager.loadImageFromResource(reversed? R.drawable.single_button_green: R.drawable.single_button_red, MainApplication.lengthManager.getStoreItemWidth(), MainApplication.lengthManager.getStoreItemHeight()));
 
         TextView title = (TextView) item.findViewById(R.id.label);
         customizeTextView(title, label);
 
         TextView revenue = (TextView) item.findViewById(R.id.price);
-        customizeTextView(revenue, Utils.numeralStringToPersianDigits("" + revenueAmount));
+        customizeTextView(revenue, tools.numeralStringToPersianDigits("" + revenueAmount));
 
         if (reversed) {
             LinearLayout textViews = (LinearLayout) item.findViewById(R.id.text_views);
-            Utils.reverseLinearLayout(textViews);
+            tools.reverseLinearLayout(textViews);
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
+        isUsed = false;
     }
 }

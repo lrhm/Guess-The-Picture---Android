@@ -32,23 +32,23 @@
 
                 <include
                     android:id="@+id/very_small_coin"
-                    layout="@layout/view_store_item" />
+                    layout="@layout/item_store" />
 
                 <include
                     android:id="@+id/small_coin"
-                    layout="@layout/view_store_item" />
+                    layout="@layout/item_store" />
 
                 <include
                     android:id="@+id/medium_coin"
-                    layout="@layout/view_store_item" />
+                    layout="@layout/item_store" />
 
                 <include
                     android:id="@+id/big_coin"
-                    layout="@layout/view_store_item" />
+                    layout="@layout/item_store" />
 
                 <include
                     android:id="@+id/review_cafebazaar"
-                    layout="@layout/view_store_item" />
+                    layout="@layout/item_store" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

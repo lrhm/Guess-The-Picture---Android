@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/adtest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <ir.treeco.aftabe.View.Custom.AutoScrollViewPager
+                android:id="@+id/ad_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+        </android.support.v7.widget.Toolbar>
+
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+            android:id="@+id/viewpagertab"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/header"
+            android:clipToPadding="false"
+            app:stl_defaultTabTextAllCaps="true"
+            app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
+            app:stl_defaultTabTextHorizontalPadding="25dp"
+            app:stl_defaultTabTextMinWidth="0dp"
+            app:stl_defaultTabTextSize="16sp"
+            app:stl_distributeEvenly="true"
+            app:stl_dividerColor="#00000000"
+            app:stl_dividerThickness="0dp"
+            app:stl_indicatorAlwaysInCenter="false"
+            app:stl_indicatorColor="#44000000"
+            app:stl_indicatorCornerRadius="20dp"
+            app:stl_indicatorInterpolation="smart"
+            app:stl_indicatorThickness="40dp"
+            app:stl_underlineColor="#66000000"
+            app:stl_underlineThickness="0dp" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</android.support.design.widget.CoordinatorLayout>

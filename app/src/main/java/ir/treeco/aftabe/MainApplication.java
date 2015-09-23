@@ -25,15 +25,15 @@ import java.util.Calendar;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
-import ir.treeco.aftabe.New.Adapter.DBAdapter;
-import ir.treeco.aftabe.New.Adapter.NotificationAdapter;
-import ir.treeco.aftabe.New.Object.HeadObject;
-import ir.treeco.aftabe.New.Object.PackageObject;
-import ir.treeco.aftabe.New.Util.ImageManager;
-import ir.treeco.aftabe.New.Util.LengthManager;
-import ir.treeco.aftabe.New.Util.Tools;
-import ir.treeco.aftabe.New.Util.Zip;
-import ir.treeco.aftabe.View.Toast.ToastMaker;
+import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Adapter.NotificationAdapter;
+import ir.treeco.aftabe.Object.HeadObject;
+import ir.treeco.aftabe.Object.PackageObject;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.Zip;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 
 /*
 @ReportsCrashes(
