@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +33,7 @@ import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.New.Util.LengthManager;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.Util.Zip;
+import ir.treeco.aftabe.View.Toast.ToastMaker;
 
 /*
 @ReportsCrashes(
@@ -313,6 +315,7 @@ public class MainApplication extends Application {
                     public void onError(String error) {
                         super.onError(error);
                         notificationAdapter.faildDownload(id, name);
+                        ToastMaker.show(getApplicationContext(), "دانلود بسته با مشکل روبرو شد :(", Toast.LENGTH_LONG);
                     }
 
                     @Override

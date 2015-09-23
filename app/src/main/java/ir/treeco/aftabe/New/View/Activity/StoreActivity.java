@@ -1,8 +1,6 @@
 package ir.treeco.aftabe.New.View.Activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,23 +14,24 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
-import ir.treeco.aftabe.BackgroundDrawable;
-import ir.treeco.aftabe.CoinManager;
+import ir.treeco.aftabe.New.Adapter.CoinAdapter;
+import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
+import ir.treeco.aftabe.New.View.Custom.ToastMaker;
+import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Fragment.StoreFragment;
-import ir.treeco.aftabe.View.Toast.ToastMaker;
-import ir.treeco.aftabe.utils.Utils;
 
 public class StoreActivity extends FragmentActivity implements BillingProcessor.IBillingHandler {
 
-    OnPackagePurchasedListener mOnPackagePurchasedListener;
+    private OnPackagePurchasedListener mOnPackagePurchasedListener;
     private BillingProcessor billingProcessor;
+    private CoinAdapter coinAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
 
+        coinAdapter = new CoinAdapter(getApplicationContext());
         setOriginalBackgroundColor();
 
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.CAFE_BAZAAR);
@@ -77,15 +76,14 @@ public class StoreActivity extends FragmentActivity implements BillingProcessor.
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails transactionDetails) {
-        SharedPreferences preferences = getSharedPreferences(Utils.SHARED_PREFRENCES_TAG, Context.MODE_PRIVATE);
         if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN))
-            CoinManager.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN, preferences);
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
         else if (productId.equals(StoreFragment.SKU_SMALL_COIN))
-            CoinManager.earnCoins(StoreFragment.AMOUNT_SMALL_COIN, preferences);
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
         else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN))
-            CoinManager.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN, preferences);
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
         else if (productId.equals(StoreFragment.SKU_BIG_COIN))
-            CoinManager.earnCoins(StoreFragment.AMOUNT_BIG_COIN, preferences);
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
         else if (mOnPackagePurchasedListener != null) {
             mOnPackagePurchasedListener.packagePurchased(productId);
             mOnPackagePurchasedListener = null;

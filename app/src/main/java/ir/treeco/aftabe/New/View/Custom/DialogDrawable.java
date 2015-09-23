@@ -10,12 +10,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.New.Util.ImageManager;
 import ir.treeco.aftabe.R;
-
-/**
- * Created by behdad on 8/12/15.
- */
 
 public class DialogDrawable extends Drawable {
     private Paint mPaint;

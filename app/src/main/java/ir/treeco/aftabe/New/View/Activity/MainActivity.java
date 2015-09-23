@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
@@ -25,6 +26,7 @@ import ir.treeco.aftabe.New.Adapter.CoinAdapter;
 import ir.treeco.aftabe.New.Util.FontsHolder;
 import ir.treeco.aftabe.New.Util.Tools;
 import ir.treeco.aftabe.New.View.Custom.BackgroundDrawable;
+import ir.treeco.aftabe.New.View.Custom.ToastMaker;
 import ir.treeco.aftabe.New.View.Fragment.GameFragmentNew;
 import ir.treeco.aftabe.New.View.Fragment.MainFragment;
 import ir.treeco.aftabe.New.View.Fragment.StoreFragment;
@@ -248,7 +250,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (billingProcessor.isInitialized())
             billingProcessor.purchase(sku);
         else {
-//            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT); //// TODO: 8/24/15
+            ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
         }
     }
 
