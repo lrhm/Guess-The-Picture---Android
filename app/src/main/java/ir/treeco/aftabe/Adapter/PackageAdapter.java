@@ -13,19 +13,21 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
-import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.PackageObject;
+import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
-import ir.treeco.aftabe.R;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
     private PackageObject[] packageObjects;
-    Activity context;
+    private Activity context;
+    private Tools tools;
 
     public PackageAdapter(Activity context, PackageObject[] packageObjects) {
         this.context = context;
         this.packageObjects = packageObjects;
+        tools = new Tools(context);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -44,7 +46,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             //todo chack md5
 
             if (!file.exists()) {
-                ((MainApplication) context.getApplication()).downloadPackage(
+                tools.downloadPackage(
                         packageObjects[getAdapterPosition()].getUrl(),
                         context.getFilesDir().getPath(),
                         packageObjects[getAdapterPosition()].getId(),

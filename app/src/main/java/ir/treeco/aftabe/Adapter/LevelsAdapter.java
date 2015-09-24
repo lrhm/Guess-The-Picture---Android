@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.Level;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.R;
@@ -22,12 +23,14 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     private int page;
     private int packageId;
     private Level[] levels;
+    private LengthManager lengthManager;
 
     public LevelsAdapter(Context context, int packageId, int page, Level[] levels) {
         this.context = context;
         this.page = page;
         this.packageId = packageId;
         this.levels = levels;
+        lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -66,14 +69,14 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     public LevelsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_levels, viewGroup, false);
         v.setLayoutParams(new RecyclerView.LayoutParams(
-                MainApplication.lengthManager.getLevelFrameWidth(),
-                MainApplication.lengthManager.getLevelFrameHeight()));
+                lengthManager.getLevelFrameWidth(),
+                lengthManager.getLevelFrameHeight()));
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(LevelsAdapter.ViewHolder viewHolder, int position) {
-        int myPadding = MainApplication.lengthManager.getLevelThumbnailPadding();
+        int myPadding = lengthManager.getLevelThumbnailPadding();
         viewHolder.imageView.setPadding(myPadding, myPadding, myPadding, myPadding);
 
         int levelPosition = page * 16 + position;

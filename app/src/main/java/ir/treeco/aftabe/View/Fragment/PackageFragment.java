@@ -17,11 +17,15 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Object.Level;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.R;
 
 public class PackageFragment extends Fragment {
     public final static String LEVEL_PAGE = "level_page";
+    private LengthManager lengthManager;
+    private ImageManager imageManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -29,30 +33,33 @@ public class PackageFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_levels, container, false);
         super.onCreate(savedInstanceState);
 
-        Tools tools = new Tools();
+        lengthManager = ((MainApplication) getActivity().getApplication()).getLengthManager();
+        imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
+
+        Tools tools = new Tools(getActivity());
         DBAdapter db = DBAdapter.getInstance(getActivity());
         int packageId = getArguments().getInt("id");
         ImageView levelsBackTop = (ImageView) view.findViewById(R.id.levels_back_top);
 
-        levelsBackTop.setImageBitmap(MainApplication.imageManager.loadImageFromResource(
+        levelsBackTop.setImageBitmap(imageManager.loadImageFromResource(
                 R.drawable.levels_back_top,
-                MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getLevelsBackTopHeight()));
+                lengthManager.getScreenWidth(),
+                lengthManager.getLevelsBackTopHeight()));
 
         tools.resizeView(levelsBackTop,
-                MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getLevelsBackTopHeight());
+                lengthManager.getScreenWidth(),
+                lengthManager.getLevelsBackTopHeight());
 
         ImageView levelsBackBottom = (ImageView) view.findViewById(R.id.levels_back_bottom);
 
-        levelsBackBottom.setImageBitmap(MainApplication.imageManager.loadImageFromResource(
+        levelsBackBottom.setImageBitmap(imageManager.loadImageFromResource(
                 R.drawable.levels_back_bottom,
-                MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getLevelsBackBottomHeight()));
+                lengthManager.getScreenWidth(),
+                lengthManager.getLevelsBackBottomHeight()));
 
         tools.resizeView(levelsBackBottom,
-                MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getLevelsBackBottomHeight());
+                lengthManager.getScreenWidth(),
+                lengthManager.getLevelsBackBottomHeight());
 
         Level[] levels = db.getLevels(packageId);
         int pageSize = levels.length / 16;
@@ -71,8 +78,8 @@ public class PackageFragment extends Fragment {
                 getChildFragmentManager(), fragmentPagerItems);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        tools.resizeView(viewPager, MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getLevelsViewpagerHeight());
+        tools.resizeView(viewPager, lengthManager.getScreenWidth(),
+                lengthManager.getLevelsViewpagerHeight());
 
         viewPager.setAdapter(adapter);
 

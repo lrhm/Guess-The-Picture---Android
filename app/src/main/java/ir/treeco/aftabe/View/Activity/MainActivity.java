@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.View.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,20 +20,21 @@ import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.squareup.picasso.Picasso;
 
-import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
+import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
-import ir.treeco.aftabe.R;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener {
-    private Context context;
     private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
@@ -44,6 +44,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private TextView digits;
     private CoinAdapter coinAdapter;
     private OnPackagePurchasedListener mOnPackagePurchasedListener;
+    private LengthManager lengthManager;
+    private ImageManager imageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         digits = (TextView) findViewById(R.id.digits);
         coinAdapter = new CoinAdapter(this);
-        tools = new Tools();
+        tools = new Tools(this);
+        lengthManager = ((MainApplication) getApplicationContext()).getLengthManager();
+        imageManager = ((MainApplication) getApplicationContext()).getImageManager();
 
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
@@ -60,8 +64,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         cheatButton.setOnClickListener(this);
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
-        layoutParams.leftMargin = (int) (0.724 * MainApplication.lengthManager.getScreenWidth());
-        layoutParams.topMargin = (int) (0.07 * MainApplication.lengthManager.getScreenWidth());
+        layoutParams.leftMargin = (int) (0.724 * lengthManager.getScreenWidth());
+        layoutParams.topMargin = (int) (0.07 * lengthManager.getScreenWidth());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -73,8 +77,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fragmentTransaction.replace(R.id.fragment_container, mainFragment);
         fragmentTransaction.commit();
 
-        context = this;
-
         setUpCoinBox();
         setUpHeader();
         setOriginalBackgroundColor();
@@ -85,18 +87,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void setUpCoinBox() {
         ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
 
-        int coinBoxWidth = MainApplication.lengthManager.getScreenWidth() * 9 / 20;
-        int coinBoxHeight = MainApplication.lengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
-        coinBox.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
+        int coinBoxWidth = lengthManager.getScreenWidth() * 9 / 20;
+        int coinBoxHeight = lengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);
+        coinBox.setImageBitmap(imageManager.loadImageFromResource(R.drawable.coin_box, coinBoxWidth, coinBoxHeight));
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) coinBox.getLayoutParams();
-        layoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() / 15;
-        layoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() / 50;
+        layoutParams.topMargin = lengthManager.getScreenWidth() / 15;
+        layoutParams.leftMargin = lengthManager.getScreenWidth() / 50;
 
         RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-        digitsLayoutParams.topMargin = MainApplication.lengthManager.getScreenWidth() * 34 / 400;
-        digitsLayoutParams.leftMargin = MainApplication.lengthManager.getScreenWidth() * 577 / 3600;
-        digitsLayoutParams.width = MainApplication.lengthManager.getScreenWidth() / 5;
+        digitsLayoutParams.topMargin = lengthManager.getScreenWidth() * 577 / 3600;
+        digitsLayoutParams.width = lengthManager.getScreenWidth() / 5;
 
         digits.setTypeface(FontsHolder.getYekan(this));
         String number = "۸۸۸۸۸";
@@ -111,13 +112,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void setUpHeader() {
         RelativeLayout header = (RelativeLayout) findViewById(R.id.header);
         header.setLayoutParams(new LinearLayout.LayoutParams(
-                MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getHeaderHeight()
+                        lengthManager.getScreenWidth(),
+                        lengthManager.getHeaderHeight()
         ));
 
-        logo.setImageBitmap(MainApplication.imageManager.loadImageFromResource(
-                R.drawable.header, MainApplication.lengthManager.getScreenWidth(),
-                MainApplication.lengthManager.getScreenWidth() / 4
+        logo.setImageBitmap(imageManager.loadImageFromResource(
+                        R.drawable.header, lengthManager.getScreenWidth(),
+                        lengthManager.getScreenWidth() / 4
         ));
     }
 
@@ -157,10 +158,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         areCheatsVisible = false;
         currentLevel = id;
 
-        String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+        String cheatImagePath = "file://" + getFilesDir().getPath() + "/Downloaded/"
                 + id + "_cheatBitmap.png";
 
-        Picasso.with(context).load(cheatImagePath).into(cheatButton);
+        Picasso.with(this).load(cheatImagePath).into(cheatButton);
     }
 
     public void hideCheatButton() {
@@ -171,10 +172,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void toggleCheatButton() {
         disableCheatButton(false);
         if (!areCheatsVisible) {
-            String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+            String cheatImagePath = "file://" + getFilesDir().getPath() + "/Downloaded/"
                     + currentLevel + "_backBitmap.png";
 
-            Picasso.with(context).load(cheatImagePath).into(cheatButton);
+            Picasso.with(this).load(cheatImagePath).into(cheatButton);
             areCheatsVisible = true;
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -182,10 +183,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 ((GameFragment) fragment).showCheats();
 
         } else {
-            String cheatImagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+            String cheatImagePath = "file://" + getFilesDir().getPath() + "/Downloaded/"
                     + currentLevel + "_cheatBitmap.png";
 
-            Picasso.with(context).load(cheatImagePath).into(cheatButton);
+            Picasso.with(this).load(cheatImagePath).into(cheatButton);
             areCheatsVisible = false;
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);

@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 
 public class AdItemAdapter extends PagerAdapter {
     private static final String TAG = "PagerAdapter";
@@ -19,9 +21,13 @@ public class AdItemAdapter extends PagerAdapter {
     // FIXME Here I set the number of ads to 3, but as I Mentioned with a todo in MainApplication we should add number of ads to the DB or SP then load it here in constructor
     private int numberOfAds = 3;
     private LayoutInflater inflater;
+    private ImageManager imageManager;
+    private LengthManager lengthManager;
 
     public AdItemAdapter(Context context) {
         this.context = context;
+        imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
+        lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
         inflater = LayoutInflater.from(context);
         //updateAds();
     }
@@ -47,18 +53,18 @@ public class AdItemAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) v.findViewById(R.id.adImageView);
 
        try {
-           imageView.setImageBitmap(MainApplication.imageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), MainApplication.lengthManager.getScreenWidth(), -1));
+           imageView.setImageBitmap(imageManager.loadImageFromInputStream(context.openFileInput("ad" + position + ".jpg"), lengthManager.getScreenWidth(), -1));
         } catch (FileNotFoundException e) {
-           imageView.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.ad,MainApplication.lengthManager.getScreenWidth(), -1));
+           imageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.ad, lengthManager.getScreenWidth(), -1));
         }
 
         ImageView topShadow = (ImageView) v.findViewById(R.id.top_shadow);
         ImageView bottomShadow = (ImageView) v.findViewById(R.id.bottom_shadow);
 
-        topShadow.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.shadow_top,
-                MainApplication.lengthManager.getScreenWidth(), -1));
-        bottomShadow.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.shadow_bottom,
-                MainApplication.lengthManager.getScreenWidth(), -1));
+        topShadow.setImageBitmap(imageManager.loadImageFromResource(R.drawable.shadow_top,
+                lengthManager.getScreenWidth(), -1));
+        bottomShadow.setImageBitmap(imageManager.loadImageFromResource(R.drawable.shadow_bottom,
+                lengthManager.getScreenWidth(), -1));
         container.addView(v);
         return v;
     }

@@ -15,18 +15,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
-import ir.treeco.aftabe.R;
 
 public class StoreFragment extends Fragment {
     private Tools tools;
     private DBAdapter db;
+    private ImageManager imageManager;
+    private LengthManager lengthManager;
     public static final String SKU_VERY_SMALL_COIN = "very_small_coin";
     public static final String SKU_SMALL_COIN = "small_coin";
     public static final String SKU_MEDIUM_COIN = "medium_coin";
@@ -59,11 +63,6 @@ public class StoreFragment extends Fragment {
         return mInstance;
     }
 
-    public StoreFragment() {
-        tools = new Tools();
-        db = DBAdapter.getInstance(getActivity());
-    }
-
     public static boolean getIsUsed() {
         return isUsed;
     }
@@ -74,12 +73,17 @@ public class StoreFragment extends Fragment {
 
         layout = inflater.inflate(R.layout.fragment_store, container, false);
 
-        int margin = MainApplication.lengthManager.getStoreDialogMargin();
+        tools = new Tools(getActivity());
+        db = DBAdapter.getInstance(getActivity());
+        imageManager = ((MainApplication) getActivity().getApplicationContext()).getImageManager();
+        lengthManager = ((MainApplication) getActivity().getApplicationContext()).getLengthManager();
+
+        int margin = lengthManager.getStoreDialogMargin();
         layout.setPadding(margin, margin, margin, margin);
         View dialog = layout.findViewById(R.id.dialog);
-        tools.setViewBackground(dialog, new DialogDrawable());
+        tools.setViewBackground(dialog, new DialogDrawable(getActivity()));
 
-        int padding = MainApplication.lengthManager.getStoreDialogPadding();
+        int padding = lengthManager.getStoreDialogPadding();
         dialog.setPadding(padding, padding, padding, padding);
 
         for (int i = 0; i < SKUs.length; i++) {
@@ -113,11 +117,11 @@ public class StoreFragment extends Fragment {
         }
 
         ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
-        Bitmap shopTitleBitmap = MainApplication.imageManager.loadImageFromResource(R.drawable.shoptitle, MainApplication.lengthManager.getShopTitleWidth(), -1);
+        Bitmap shopTitleBitmap = imageManager.loadImageFromResource(R.drawable.shoptitle, lengthManager.getShopTitleWidth(), -1);
 
         shopTitle.setImageBitmap(shopTitleBitmap);
         tools.resizeView(shopTitle, shopTitleBitmap.getWidth(), shopTitleBitmap.getHeight());
-        ((ViewGroup.MarginLayoutParams) shopTitle.getLayoutParams()).bottomMargin = MainApplication.lengthManager.getShopTitleBottomMargin();
+        ((ViewGroup.MarginLayoutParams) shopTitle.getLayoutParams()).bottomMargin = lengthManager.getShopTitleBottomMargin();
 
         setupItemsList();
 
@@ -146,7 +150,7 @@ public class StoreFragment extends Fragment {
         textView.setText(label);
 
         textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, MainApplication.lengthManager.getStoreItemFontSize());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getStoreItemFontSize());
         textView.setTextColor(Color.WHITE);
 
         textView.setShadowLayer(1, 2, 2, Color.BLACK);
@@ -154,11 +158,11 @@ public class StoreFragment extends Fragment {
 
     private void setupItem(FrameLayout item, String label, int revenueAmount, boolean reversed) {
         final ViewGroup.LayoutParams itemLayoutParams = item.getLayoutParams();
-        itemLayoutParams.height = MainApplication.lengthManager.getStoreItemHeight();
-        itemLayoutParams.width = MainApplication.lengthManager.getStoreItemWidth();
+        itemLayoutParams.height = lengthManager.getStoreItemHeight();
+        itemLayoutParams.width = lengthManager.getStoreItemWidth();
 
         ImageView itemBackground = (ImageView) item.findViewById(R.id.item_background);
-        itemBackground.setImageBitmap(MainApplication.imageManager.loadImageFromResource(reversed? R.drawable.single_button_green: R.drawable.single_button_red, MainApplication.lengthManager.getStoreItemWidth(), MainApplication.lengthManager.getStoreItemHeight()));
+        itemBackground.setImageBitmap(imageManager.loadImageFromResource(reversed ? R.drawable.single_button_green : R.drawable.single_button_red, lengthManager.getStoreItemWidth(), lengthManager.getStoreItemHeight()));
 
         TextView title = (TextView) item.findViewById(R.id.label);
         customizeTextView(title, label);

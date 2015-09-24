@@ -30,6 +30,8 @@ import ir.treeco.aftabe.Adapter.KeyboardAdapter;
 import ir.treeco.aftabe.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.Interface.FinishLevel;
 import ir.treeco.aftabe.Object.Level;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.CheatDrawable;
@@ -37,9 +39,9 @@ import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.R;
 
 public class GameFragment extends Fragment implements View.OnClickListener {
-    int levelId;
-    ImageView imageView;
-    int packageId;
+    private int levelId;
+    private ImageView imageView;
+    private int packageId;
     private Tools tools;
     private String status;
     private char[] statusAdapter;
@@ -48,14 +50,14 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private SolutionAdapter solutionAdapter0;
     private SolutionAdapter solutionAdapter1;
     private SolutionAdapter solutionAdapter2;
-    int break0;
-    int break1;
+    private int break0;
+    private int break1;
     private int[] sAndkIndex;  //!! should use hashMap
     private KeyboardAdapter keyboardAdapter;
     private int[] keyboardStatus;
     private Random random;
     private boolean[] keyboardB;
-    DBAdapter db;
+    private DBAdapter db;
     private Level level;
     private View view;
     private View[] cheatButtons;
@@ -65,6 +67,8 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private int packageSize;
     private GameFragment gameFragment;
     private CoinAdapter coinAdapter;
+    private LengthManager lengthManager;
+    private ImageManager imageManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -73,9 +77,11 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_game, container, false);
         gameFragment = this;
 
-        tools = new Tools();
+        tools = new Tools(getContext());
         db = DBAdapter.getInstance(getActivity());
         coinAdapter = new CoinAdapter(getActivity());
+        lengthManager = ((MainApplication) getActivity().getApplication()).getLengthManager();
+        imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
         ((MainActivity)getActivity()).setupCheatButton(packageId);
 
@@ -117,7 +123,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             break1 = 0;
         }
 
-        solutionSize = MainApplication.lengthManager.getSolutionButtonSize();
+        solutionSize = lengthManager.getSolutionButtonSize();
 
         RecyclerView recyclerView_solution1 =
                 (RecyclerView) view.findViewById(R.id.recycler_view_solution1);
@@ -127,7 +133,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         recyclerView_solution1.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
-        solutionAdapter0 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 0, break0, break1);
+        solutionAdapter0 = new SolutionAdapter(lengthManager, solutionAdapter, this, statusAdapter, 0, break0, break1);
         recyclerView_solution1.setAdapter(solutionAdapter0);
 
         ViewGroup.LayoutParams layoutParams = recyclerView_solution1.getLayoutParams();
@@ -143,7 +149,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             recyclerView_solution2.setLayoutManager(
                     new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
-            solutionAdapter1 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 1, break0, break1);
+            solutionAdapter1 = new SolutionAdapter(lengthManager, solutionAdapter, this, statusAdapter, 1, break0, break1);
             recyclerView_solution2.setAdapter(solutionAdapter1);
 
             ViewGroup.LayoutParams layoutParams2 = recyclerView_solution2.getLayoutParams();
@@ -162,7 +168,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             recyclerView_solution3.setLayoutManager(
                     new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
 
-            solutionAdapter2 = new SolutionAdapter(solutionAdapter, this, statusAdapter, 2, break0, break1);
+            solutionAdapter2 = new SolutionAdapter(lengthManager, solutionAdapter, this, statusAdapter, 2, break0, break1);
             recyclerView_solution3.setAdapter(solutionAdapter2);
 
             ViewGroup.LayoutParams layoutParams3 = recyclerView_solution3.getLayoutParams();
@@ -384,11 +390,11 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     private void setUpImagePlace() {
         FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
-        tools.resizeView(box, MainApplication.lengthManager.getLevelImageWidth(), MainApplication.lengthManager.getLevelImageHeight());
+        tools.resizeView(box, lengthManager.getLevelImageWidth(), lengthManager.getLevelImageHeight());
 
         ImageView frame = (ImageView) view.findViewById(R.id.frame);
-        frame.setImageBitmap(MainApplication.imageManager.loadImageFromResource(R.drawable.frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight()));
-        tools.resizeView(frame, MainApplication.lengthManager.getLevelImageFrameWidth(), MainApplication.lengthManager.getLevelImageFrameHeight());
+        frame.setImageBitmap(imageManager.loadImageFromResource(R.drawable.frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight()));
+        tools.resizeView(frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight());
 
         cheatButtons = new View[] {
                 view.findViewById(R.id.cheat_remove_some_letters),
@@ -400,8 +406,8 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             cheatView.setOnClickListener(this);
 
             ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
-            layoutParams.width = MainApplication.lengthManager.getCheatButtonWidth();
-            layoutParams.height = MainApplication.lengthManager.getCheatButtonHeight();
+            layoutParams.width = lengthManager.getCheatButtonWidth();
+            layoutParams.height = lengthManager.getCheatButtonHeight();
         }
 
         String[] cheatTitles = new String[] {

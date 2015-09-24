@@ -15,8 +15,11 @@ import ir.treeco.aftabe.MainApplication;
 
 public class ImageManager {
     private Context context;
+    private LengthManager lengthManager;
     public ImageManager(Context context) {
         this.context = context;
+        lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
+
     }
 
     LruCache<ImageKey, Bitmap> cache = new LruCache<ImageKey, Bitmap>(1) {
@@ -27,8 +30,8 @@ public class ImageManager {
     };
 
     public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
-        if (outWidth == -1) outWidth = MainApplication.lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
-        if (outHeight == -1) outHeight = MainApplication.lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
+        if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
+        if (outHeight == -1) outHeight = lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
 
         ImageKey key = new ImageKey(resourceId, outWidth, outHeight);
 

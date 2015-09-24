@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.View.Custom;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -10,6 +11,8 @@ import android.graphics.drawable.Drawable;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 
 public class DialogDrawable extends Drawable {
     private Paint mPaint;
@@ -20,12 +23,16 @@ public class DialogDrawable extends Drawable {
     private int bottomHeight;
     private int topPadding;
     private boolean isDrawable;
+    private ImageManager imageManager;
+    private LengthManager lengthManager;
 
     public void setTopPadding(int topPadding) {
         this.topPadding = topPadding;
     }
 
-    public DialogDrawable() {
+    public DialogDrawable(Context context) {
+        imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
+        lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
         mPaint = new Paint();
         reloadBitmaps(getBounds());
     }
@@ -42,14 +49,14 @@ public class DialogDrawable extends Drawable {
             return;
         }
 
-        topHeight = MainApplication.lengthManager.getHeightWithFixedWidth(getTopResourceId(), bounds.width());
-        dialogTop = MainApplication.imageManager.loadImageFromResource(getTopResourceId(), bounds.width(), topHeight);
+        topHeight = lengthManager.getHeightWithFixedWidth(getTopResourceId(), bounds.width());
+        dialogTop = imageManager.loadImageFromResource(getTopResourceId(), bounds.width(), topHeight);
 
-        int centerHeight = MainApplication.lengthManager.getHeightWithFixedWidth(getCenterResourceId(), bounds.width());
-        dialogCenter = MainApplication.imageManager.loadImageFromResource(getCenterResourceId(), bounds.width(), centerHeight);
+        int centerHeight = lengthManager.getHeightWithFixedWidth(getCenterResourceId(), bounds.width());
+        dialogCenter = imageManager.loadImageFromResource(getCenterResourceId(), bounds.width(), centerHeight);
 
-        bottomHeight = MainApplication.lengthManager.getHeightWithFixedWidth(getBottomResourceId(), bounds.width());
-        dialogBottom = MainApplication.imageManager.loadImageFromResource(getBottomResourceId(), bounds.width(), bottomHeight);
+        bottomHeight = lengthManager.getHeightWithFixedWidth(getBottomResourceId(), bounds.width());
+        dialogBottom = imageManager.loadImageFromResource(getBottomResourceId(), bounds.width(), bottomHeight);
 
         isDrawable = true;
     }

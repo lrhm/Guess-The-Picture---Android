@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 
 public class CheatDrawable extends Drawable {
     private Bitmap background;
@@ -20,21 +22,24 @@ public class CheatDrawable extends Drawable {
     private String price;
     private boolean rotated;
     private Paint textPaint;
-    private Context mContext;
-    int[] titlePosition = new int[2];
-    int[] pricePosition = new int[2];
+    private Context context;
+    private int[] titlePosition = new int[2];
+    private int[] pricePosition = new int[2];
     private Paint paint;
+    private ImageManager imageManager;
+    private LengthManager lengthManager;
 
-    public CheatDrawable(Context mContext, int index, String title, String price) {
+    public CheatDrawable(Context context, int index, String title, String price) {
         this.title = title;
         this.price = price;
         this.rotated = index == 1;
-        this.mContext = mContext;
+        this.context = context;
+        imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
+        lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
 
-
-        background = MainApplication.imageManager.loadImageFromResource(
+        background = imageManager.loadImageFromResource(
                 R.drawable.cheat_right,
-                MainApplication.lengthManager.getCheatButtonWidth(),
+                lengthManager.getCheatButtonWidth(),
                 -1);
 
 
@@ -45,8 +50,8 @@ public class CheatDrawable extends Drawable {
         }
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setTextSize(MainApplication.lengthManager.getCheatButtonFontSize());
-        textPaint.setTypeface(FontsHolder.getHoma(this.mContext));
+        textPaint.setTextSize(lengthManager.getCheatButtonFontSize());
+        textPaint.setTypeface(FontsHolder.getHoma(this.context));
         textPaint.setColor(Color.WHITE);
         textPaint.setShadowLayer(1, 1, 1, Color.BLACK);
 

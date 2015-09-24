@@ -15,11 +15,13 @@ public class LengthManager {
     private int screenHeight;
     private int screenWidth;
     private Context context;
+    private Tools tools;
 
     public LengthManager(Context context) {
         this.context = context;
         screenHeight = getScreenHeight(context);
         screenWidth = getScreenWidth(context);
+        tools = new Tools(context);
     }
 
     private int getScreenWidth(Context context) {
@@ -300,7 +302,7 @@ public class LengthManager {
     }
 
     public int getPackagesListColumnCount() {
-        return Math.min(Math.max((int) (Tools.convertPixelsToDp(getScreenWidth(), context) / 150), 1), 3);
+        return Math.min(Math.max((int) (tools.convertPixelsToDp(getScreenWidth()) / 150), 1), 3);
     }
 
     public int getLevelFinishedDialogTopPadding() {

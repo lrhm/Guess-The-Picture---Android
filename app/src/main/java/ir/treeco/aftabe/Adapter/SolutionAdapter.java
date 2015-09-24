@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.View.Fragment.GameFragment;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHolder> {
     char[] characters;
@@ -20,14 +20,14 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.ViewHo
     int break1;
     int solutionSize;
 
-    public SolutionAdapter(char[] characters, GameFragment gameFragment, char[] status, int n, int break0, int break1) {
+    public SolutionAdapter(LengthManager lengthManagers, char[] characters, GameFragment gameFragment, char[] status, int n, int break0, int break1) {
         this.characters = characters;
         this.status = status;
         this.gameFragment = gameFragment;
         this.break0 = break0;
         this.break1 = break1;
         this.n = n;
-        this.solutionSize = MainApplication.lengthManager.getSolutionButtonSize();
+        this.solutionSize = lengthManagers.getSolutionButtonSize();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

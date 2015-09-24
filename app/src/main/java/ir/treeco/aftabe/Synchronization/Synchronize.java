@@ -14,8 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.Tools;
 
 public class Synchronize extends BroadcastReceiver {
     @Override
@@ -34,7 +34,8 @@ public class Synchronize extends BroadcastReceiver {
 
         int days = Days.daysBetween(new DateTime(past), new DateTime(now)).getDays();
         if (days >= 4) {
-            ((MainApplication) context.getApplicationContext()).downloadHead();
+            Tools tools = new Tools(context);
+                    tools.downloadHead();
         } else {
             Prefs.putString(context.getResources().
                             getString(R.string.updated_time_shared_preference),

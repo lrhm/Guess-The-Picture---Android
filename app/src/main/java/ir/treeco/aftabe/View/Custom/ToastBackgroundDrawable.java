@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.View.Custom;
 
+import android.content.Context;
+
 import ir.treeco.aftabe.R;
 
 public class ToastBackgroundDrawable extends DialogDrawable {
@@ -18,7 +20,7 @@ public class ToastBackgroundDrawable extends DialogDrawable {
         return R.drawable.toast_buttom;
     }
 
-    public ToastBackgroundDrawable() {
-        super();
+    public ToastBackgroundDrawable(Context context) {
+        super(context);
     }
 }
