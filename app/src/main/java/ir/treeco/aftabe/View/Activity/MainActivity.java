@@ -96,12 +96,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         layoutParams.leftMargin = lengthManager.getScreenWidth() / 50;
 
         RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-        digitsLayoutParams.topMargin = lengthManager.getScreenWidth() * 577 / 3600;
+        digitsLayoutParams.topMargin = lengthManager.getScreenWidth() * 34 / 400;
+        digitsLayoutParams.leftMargin = lengthManager.getScreenWidth() * 577 / 3600;
         digitsLayoutParams.width = lengthManager.getScreenWidth() / 5;
 
         digits.setTypeface(FontsHolder.getYekan(this));
-        String number = "۸۸۸۸۸";
-        digits.setText(number);
 
         coinBox.setOnClickListener(this);
 
