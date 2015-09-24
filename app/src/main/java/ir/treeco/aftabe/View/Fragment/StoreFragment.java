@@ -52,25 +52,9 @@ public class StoreFragment extends Fragment {
             SKU_BIG_COIN
     };
 
-    private static StoreFragment mInstance = null;
     private View layout;
-    private static boolean isUsed;
-
-    public static StoreFragment getInstance() {
-        if (mInstance == null) {
-            mInstance = new StoreFragment();
-        }
-        return mInstance;
-    }
-
-    public static boolean getIsUsed() {
-        return isUsed;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        isUsed = true;
-
         layout = inflater.inflate(R.layout.fragment_store, container, false);
 
         tools = new Tools(getActivity());
@@ -179,6 +163,6 @@ public class StoreFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isUsed = false;
+        ((MainActivity)getActivity()).setStore(false);
     }
 }

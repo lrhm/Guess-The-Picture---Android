@@ -46,6 +46,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private OnPackagePurchasedListener mOnPackagePurchasedListener;
     private LengthManager lengthManager;
     private ImageManager imageManager;
+    private boolean store = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         if (fragmentManager.getBackStackEntryCount() != 0) throw new IllegalStateException();
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         MainFragment mainFragment = new MainFragment();
         fragmentTransaction.replace(R.id.fragment_container, mainFragment);
         fragmentTransaction.commit();
@@ -116,8 +117,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ));
 
         logo.setImageBitmap(imageManager.loadImageFromResource(
-                        R.drawable.header, lengthManager.getScreenWidth(),
-                        lengthManager.getScreenWidth() / 4
+                R.drawable.header, lengthManager.getScreenWidth(),
+                lengthManager.getScreenWidth() / 4
         ));
     }
 
@@ -138,17 +139,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case R.id.coin_box:
-                if (StoreFragment.getIsUsed())
-                    return;
-
-                StoreFragment fragment = StoreFragment.getInstance();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
+                if (!store) {
+                    store = true;
+                    StoreFragment storeFragment = new StoreFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, storeFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
                 break;
         }
+    }
+
+    public void setStore(boolean store) {
+        this.store = store;
     }
 
     public void setupCheatButton(int id) {
