@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "ir.treeco.aftabe.plus"
+        applicationId "ir.treeco.aftabe"
         minSdkVersion 7
         targetSdkVersion 23
     }
