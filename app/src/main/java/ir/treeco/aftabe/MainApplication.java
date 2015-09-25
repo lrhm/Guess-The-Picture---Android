@@ -32,8 +32,10 @@ public class MainApplication extends Application {
         lengthManager = new LengthManager(this);
         imageManager = new ImageManager(this);
 
-        db = DBAdapter.getInstance(this);
         tools = new Tools(this);
+
+        tools.checkDB();
+        db = DBAdapter.getInstance(this);
 
         tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
@@ -61,27 +63,4 @@ public class MainApplication extends Application {
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
-
-    /*public void saveData(){
-        String aa = this.getFilesDir().getPath() + "/downloaded.json";
-
-        Gson gson = new Gson();
-        // convert java object to JSON format,
-        // and returned as JSON formatted string
-        String json = gson.toJson(downlodedObject);
-
-        File file = new File(aa);
-        file.delete();
-
-        try {
-            String backUpData = "/data/Android System/file.json";
-            //write converted json data to a file named "file.json"
-            FileWriter writer = new FileWriter(backUpData);
-            writer.write(json);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 }

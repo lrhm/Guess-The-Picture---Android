@@ -53,12 +53,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        digits = (TextView) findViewById(R.id.digits);
-        coinAdapter = new CoinAdapter(this);
-        tools = new Tools(this);
+        tools = new Tools(getApplication());
+        coinAdapter = new CoinAdapter(getApplicationContext());
         lengthManager = ((MainApplication) getApplicationContext()).getLengthManager();
         imageManager = ((MainApplication) getApplicationContext()).getImageManager();
 
+        digits = (TextView) findViewById(R.id.digits);
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
 

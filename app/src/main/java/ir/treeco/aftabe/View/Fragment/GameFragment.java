@@ -568,6 +568,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     private void nextLevel() {
         db.resolveLevel(packageId, levelId);
+        tools.backUpDB();
         new FinishDailog(getActivity(), level, packageSize,
                 new FinishLevel() {
                     @Override

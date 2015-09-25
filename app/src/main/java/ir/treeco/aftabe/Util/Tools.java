@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -22,12 +23,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -202,7 +203,7 @@ public class Tools {
             InputStream inputStream = new FileInputStream(path);
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             Gson gson = new GsonBuilder().create();
-            ((MainApplication)context.getApplicationContext()).setHeadObject(gson.fromJson(reader, HeadObject.class));
+            ((MainApplication) context.getApplicationContext()).setHeadObject(gson.fromJson(reader, HeadObject.class));
 
             headObject = ((MainApplication) context.getApplicationContext()).getHeadObject(); // TODO: 9/24/15 check for Reference
             // TODO Armin: Here we should save the number of ads in DB or SP
@@ -315,32 +316,117 @@ public class Tools {
         }
     }
 
-    public static void saveDataAndBackUpData(Context context) {
-        String aa = context.getFilesDir().getPath() + "/downloaded.json";
-        File parentDir = new File(Environment.getExternalStorageDirectory() + "/Android");
-        parentDir.mkdir();
-        String backUpDataPath = parentDir.getPath() + "/file.json";
-        Gson backupGson = new Gson();
-        String backUpJson = null;// = backupGson.toJson(downloadedObject);
+    public void checkDB() {
+        Log.e("db", "check");
+        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db";
+        File data = Environment.getDataDirectory();
+        File currentDB = new File(data, currentDBPath);
 
-        File file = new File(aa);
-        file.delete();
+        if (!currentDB.exists()) {
+            restore();
+            restoreDBJournal();
+        }
+    }
 
-        File backUpFile = new File(parentDir, backUpDataPath);
-        backUpFile.delete();
-
+    public void restore() {
+        Log.e("db", "Restore1");
+        File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
+        File data = Environment.getDataDirectory();
+        FileChannel source;
+        FileChannel destination;
+        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db";
+        String backupDBPath = "Android/a.mk";
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+        Log.e("aa", currentDB.getPath());
+        Log.e("bb", backupDB.getPath());
         try {
-            //write converted json data to a file named "file.json"
-            FileWriter writer = new FileWriter(aa);
-            writer.write(backUpJson);
-            writer.close();
+            currentDB.getParentFile().mkdirs();
+            currentDB.createNewFile();
+            source = new FileInputStream(backupDB).getChannel();
+            destination = new FileOutputStream(currentDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            Log.e("db", "Restore");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            FileWriter writerBackUp = new FileWriter(backUpDataPath);
-            writerBackUp.write(backUpJson);
-            writer.close();
-            writerBackUp.close();
+    public void restoreDBJournal() {
+        Log.e("db", "Restore1");
+        File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
+        File data = Environment.getDataDirectory();
+        FileChannel source;
+        FileChannel destination;
+        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db-journal";
+        String backupDBPath = "Android/b.mk";
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+        Log.e("aa", currentDB.getPath());
+        Log.e("bb", backupDB.getPath());
+        try {
+            currentDB.getParentFile().mkdirs();
+            currentDB.createNewFile();
+            source = new FileInputStream(backupDB).getChannel();
+            destination = new FileOutputStream(currentDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            Log.e("db", "Restore");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        } catch (IOException e) {
+    public void backUpDB(){
+        File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
+        File data = Environment.getDataDirectory();
+        FileChannel source;
+        FileChannel destination;
+        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db";
+        String backupDBPath = "Android/a.mk";
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+        Log.e("cc", currentDB.getPath());
+        Log.e("dd", backupDB.getPath());
+        try {
+            backupDB.deleteOnExit();
+            backupDB.createNewFile();
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            Log.e("db", "backup");
+            backUpDBJournal();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void backUpDBJournal(){
+        File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
+        File data = Environment.getDataDirectory();
+        FileChannel source;
+        FileChannel destination;
+        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db-journal";
+        String backupDBPath = "Android/b.mk";
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+        Log.e("cc", currentDB.getPath());
+        Log.e("dd", backupDB.getPath());
+        try {
+            backupDB.deleteOnExit();
+            backupDB.createNewFile();
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            Log.e("db", "backup");
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -360,7 +446,9 @@ public class Tools {
         }
 
         DBAdapter db = DBAdapter.getInstance(context);
-        db.insertPackage(packageObject);
+        if (db.getLevels(packageObject.getId()) == null) {
+            db.insertPackage(packageObject);
+        }
     }
 
     public void downloadPackage(String url, String path, final int id, final String name) {

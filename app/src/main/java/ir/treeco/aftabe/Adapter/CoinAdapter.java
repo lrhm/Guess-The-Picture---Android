@@ -3,6 +3,7 @@ package ir.treeco.aftabe.Adapter;
 import android.content.Context;
 import android.widget.Toast;
 
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.R;
 
@@ -13,10 +14,12 @@ public class CoinAdapter {
     public static final int SKIP_LEVEL_COST = 130;
     private DBAdapter db;
     private Context context;
+    private Tools tools;
 
     public CoinAdapter(Context context) {
-        db = DBAdapter.getInstance(context);
         this.context = context;
+        db = DBAdapter.getInstance(context);
+        tools = new Tools(context);
     }
 
     public interface CoinsChangedListener {
@@ -44,6 +47,7 @@ public class CoinAdapter {
 
     private void setCoinsCount(int nextAmount) {
         db.updateCoins(nextAmount);
+        tools.backUpDB();
 
         if (listener != null)
             listener.changed(nextAmount);
