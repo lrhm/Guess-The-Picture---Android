@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#3C515C</item>
+        <item name="colorPrimaryDark">#142E3C</item>
+        <item name="colorAccent">#40C4FF</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#3C515C</item>
+        <item name="colorPrimaryDark">#142E3C</item>
+        <item name="colorAccent">#40C4FF</item>
+    </style>
+
     <style name="genericProgressBackground" parent="android:Theme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -8,7 +21,7 @@
         <item name="android:focusable">false</item>
         <item name="android:clickable">true</item>
     </style>
-    <style name="noAnimTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+    <style name="noAnimTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@null</item>
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
