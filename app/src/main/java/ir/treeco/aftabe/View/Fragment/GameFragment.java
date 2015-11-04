@@ -37,6 +37,7 @@ import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.CheatDrawable;
 import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 
 public class GameFragment extends Fragment implements View.OnClickListener {
     private int levelId;
@@ -69,6 +70,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private CoinAdapter coinAdapter;
     private LengthManager lengthManager;
     private ImageManager imageManager;
+    private String imagePath;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -212,13 +214,14 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         recyclerView_keyboard.setAdapter(keyboardAdapter);
 
         imageView = (ImageView) view.findViewById(R.id.image_game);
+        imageView.setOnClickListener(this);
 //        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
 //        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
-        String a = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
+        imagePath = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
                 + packageId + "_" + level.getResources();
 
-        Picasso.with(getActivity()).load(a).into(imageView);
+        Picasso.with(getActivity()).load(imagePath).into(imageView);
         return view;
     }
 
@@ -439,19 +442,25 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        ((MainActivity) getActivity()).toggleCheatButton();
 
         switch (view.getId()) {
             case R.id.cheat_remove_some_letters:
+                ((MainActivity) getActivity()).toggleCheatButton();
                 cheatHazf();
                 break;
 
             case R.id.cheat_reveal_a_letter:
+                ((MainActivity) getActivity()).toggleCheatButton();
                 cheatAzafe();
                 break;
 
             case R.id.cheat_skip_level:
+                ((MainActivity) getActivity()).toggleCheatButton();
                 cheatNext();
+                break;
+
+            case R.id.image_game:
+                new ImageFullScreenDialog(getContext(), imagePath).show();
                 break;
         }
     }
