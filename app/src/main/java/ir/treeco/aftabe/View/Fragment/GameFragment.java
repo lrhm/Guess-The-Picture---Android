@@ -597,7 +597,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void Home() {
-                        getActivity().getSupportFragmentManager().beginTransaction().remove(gameFragment).commit();
+                        getActivity().getSupportFragmentManager().popBackStack();
                     }
                 }).show();
     }
