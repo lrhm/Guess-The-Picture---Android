@@ -14,8 +14,8 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.Adapter.AdItemAdapter;
-import ir.treeco.aftabe.View.Custom.AutoScrollViewPager;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Custom.AutoScrollViewPager;
 
 public class MainFragment extends Fragment {
     private FragmentPagerItemAdapter fragmentPagerItemAdapter;
