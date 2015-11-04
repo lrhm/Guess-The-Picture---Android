@@ -13,8 +13,10 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
@@ -23,11 +25,13 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     private PackageObject[] packageObjects;
     private Activity context;
     private Tools tools;
+    private LengthManager lengthManager;
 
     public PackageAdapter(Activity context, PackageObject[] packageObjects) {
         this.context = context;
         this.packageObjects = packageObjects;
         tools = new Tools(context);
+        lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -69,6 +73,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public PackageAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_package, viewGroup, false);
+        v.setLayoutParams(new RecyclerView.LayoutParams(
+                lengthManager.getPackageIconSize(),
+                lengthManager.getPackageIconSize()));
         return new ViewHolder(v);
     }
 
