@@ -35,11 +35,12 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.CheatDrawable;
+import ir.treeco.aftabe.View.Custom.KeyboardView;
 import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 
-public class GameFragment extends Fragment implements View.OnClickListener {
+public class GameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent {
     private int levelId;
     private ImageView imageView;
     private int packageId;
@@ -71,6 +72,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private String imagePath;
+    private KeyboardView keyboardView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -85,7 +87,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         lengthManager = ((MainApplication) getActivity().getApplication()).getLengthManager();
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
-        ((MainActivity)getActivity()).setupCheatButton(packageId);
+        ((MainActivity) getActivity()).setupCheatButton(packageId);
 
         levelId = getArguments().getInt("LevelId");
         packageId = getArguments().getInt("id");
@@ -96,127 +98,15 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         solution = tools.decodeBase64(level.getJavab());
         StringBuilder stringBuilder = new StringBuilder(solution);
 
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragment_game_keyboard_container);
+
+        keyboardView = new KeyboardView(getContext(), solution);
+        keyboardView.onKeyboardEvent = this;
+        frameLayout.addView(keyboardView);
         setUpImagePlace();
-
-        for (int i = 0; i < solution.length(); i++) {
-            if (solution.charAt(i) != '.' && solution.charAt(i) != ' ') {
-                stringBuilder.setCharAt(i, '-');
-            }
-        }
-
-        status = String.valueOf(stringBuilder);
-
-        Log.e("solotion", solution);
-
-        solutionAdapter = solution.toCharArray();
-        statusAdapter = status.toCharArray();
-        sAndkIndex = new int[statusAdapter.length];
-
-        if (solution.length() > 12) {
-            break0 = getBreak(solutionAdapter, 0);
-
-            if (solution.length() > 24) {
-                break1 = getBreak(solutionAdapter, 1);
-            } else {
-                break1 = solution.length();
-            }
-        } else {
-            break0 = solution.length();
-            break1 = 0;
-        }
-
-        solutionSize = lengthManager.getSolutionButtonSize();
-
-        RecyclerView recyclerView_solution1 =
-                (RecyclerView) view.findViewById(R.id.recycler_view_solution1);
-
-        recyclerView_solution1.setHasFixedSize(true);
-
-        recyclerView_solution1.setLayoutManager(
-                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
-
-        solutionAdapter0 = new SolutionAdapter(lengthManager, solutionAdapter, this, statusAdapter, 0, break0, break1);
-        recyclerView_solution1.setAdapter(solutionAdapter0);
-
-        ViewGroup.LayoutParams layoutParams = recyclerView_solution1.getLayoutParams();
-        layoutParams.width = getWidth(solutionAdapter, 1);
-//        layoutParams.height = solutionSize;
-
-        if (solutionAdapter.length > 12) {
-            RecyclerView recyclerView_solution2 =
-                    (RecyclerView) view.findViewById(R.id.recycler_view_solution2);
-
-            recyclerView_solution2.setHasFixedSize(true);
-
-            recyclerView_solution2.setLayoutManager(
-                    new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
-
-            solutionAdapter1 = new SolutionAdapter(lengthManager, solutionAdapter, this, statusAdapter, 1, break0, break1);
-            recyclerView_solution2.setAdapter(solutionAdapter1);
-
-            ViewGroup.LayoutParams layoutParams2 = recyclerView_solution2.getLayoutParams();
-            layoutParams2.width = getWidth(solutionAdapter, 2);
-            layoutParams2.height = solutionSize;
-
-            recyclerView_solution2.setVisibility(View.VISIBLE);
-        }
-
-        if (solutionAdapter.length > 24) {
-            RecyclerView recyclerView_solution3 = (
-                    RecyclerView) view.findViewById(R.id.recycler_view_solution3);
-
-            recyclerView_solution3.setHasFixedSize(true);
-
-            recyclerView_solution3.setLayoutManager(
-                    new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true));
-
-            solutionAdapter2 = new SolutionAdapter(lengthManager, solutionAdapter, this, statusAdapter, 2, break0, break1);
-            recyclerView_solution3.setAdapter(solutionAdapter2);
-
-            ViewGroup.LayoutParams layoutParams3 = recyclerView_solution3.getLayoutParams();
-            layoutParams3.width = getWidth(solutionAdapter, 3);
-            layoutParams3.height = solutionSize;
-
-
-            recyclerView_solution3.setVisibility(View.VISIBLE);
-        }
-
-        char[] alphabet = {
-                'ی', 'ه','و' , 'ن', 'م', 'ل', 'گ', 'ک', 'ق', 'ف', 'غ', 'ع', 'ظ', 'ط', 'ض', 'ص', 'ش',
-                'س','ژ' , 'ز', 'ر', 'ذ','د' , 'خ', 'ح', 'چ', 'ج', 'ث', 'ت', 'پ', 'ب', 'ا', 'آ' };
-
-        keyboardChars = new char[21];
-        keyboardStatus = new int[21];
-        keyboardB = new boolean[21];
-
-        ArrayList<Integer> list = new ArrayList<>();
-        random = new Random();
-        for (int i = 0; i < 21; i++) {
-            keyboardChars[i] = alphabet[random.nextInt(33)];
-            list.add(i);
-        }
-
-        for (int i = 0; i < solutionAdapter.length; i++) { //fuck
-            if (solutionAdapter[i] != ' ' && solutionAdapter[i] != '.') {
-                int j = random.nextInt(list.size());
-                keyboardChars[list.get(j)] = solutionAdapter[i];
-                keyboardB[list.get(j)] = true;
-                list.remove(j);
-            }
-        }
-
-        RecyclerView recyclerView_keyboard = (
-                RecyclerView) view.findViewById(R.id.recycler_view_keyboard);
-
-        recyclerView_keyboard.setHasFixedSize(true);
-        recyclerView_keyboard.setLayoutManager(new GridLayoutManager(getActivity(), 7));
-        keyboardAdapter = new KeyboardAdapter(this, keyboardChars, keyboardStatus);
-        recyclerView_keyboard.setAdapter(keyboardAdapter);
 
         imageView = (ImageView) view.findViewById(R.id.image_game);
         imageView.setOnClickListener(this);
-//        ImageView imageView_game_frame = (ImageView) findViewById(R.id.image_game_frame);
-//        imageView_game_frame.setBackgroundResource(R.drawable.frame);
 
         imagePath = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
                 + packageId + "_" + level.getResources();
@@ -236,7 +126,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
                 if (i <= break0) {
                     solutionAdapter0.notifyDataSetChanged();
-                } else if(i <= break1) {
+                } else if (i <= break1) {
                     solutionAdapter1.notifyDataSetChanged();
                 } else {
                     solutionAdapter2.notifyDataSetChanged();
@@ -247,14 +137,14 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void removeFromSolution (int adapterPosition, int keyboard) {
+    public void removeFromSolution(int adapterPosition, int keyboard) {
         statusAdapter[adapterPosition] = '-';
         keyboardStatus[sAndkIndex[adapterPosition]] = keyboard;
         keyboardAdapter.notifyDataSetChanged();
 
         if (adapterPosition <= break0) {
             solutionAdapter0.notifyDataSetChanged();
-        } else if(adapterPosition <= break1) {
+        } else if (adapterPosition <= break1) {
             solutionAdapter1.notifyDataSetChanged();
         } else {
             solutionAdapter2.notifyDataSetChanged();
@@ -262,10 +152,10 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         cheakSolotion();
     }
 
-    private int getBreak (char[] string, int n) {
+    private int getBreak(char[] string, int n) {
         int number = n;
         for (int i = 0; i < string.length; i++) {
-            if (string[i] == '.'){
+            if (string[i] == '.') {
                 if (number == 0) {
                     return i;
                 } else {
@@ -277,15 +167,15 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private int getWidth (char[] string, int n) {
+    private int getWidth(char[] string, int n) {
         int number = n - 1;
         int width = 0;
         for (int i = 0; i < string.length; i++) {
             if (string[i] == ' ') {
-                width += solutionSize/2;
+                width += solutionSize / 2;
             } else if (string[i] != '.') {
                 width += solutionSize;
-            } else if (string[i] == '.'){
+            } else if (string[i] == '.') {
                 if (number == 0) {
                     return width;
                 } else {
@@ -299,10 +189,13 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     private void cheatHazf() {
         if (level.isResolved()) {
-            hazf();
+//            hazf();
+            keyboardView.removeSome();
         } else if (coinAdapter.spendCoins(CoinAdapter.ALPHABET_HIDING_COST)) {
-            hazf();
+//            hazf();
+            keyboardView.removeSome();
         }
+
     }
 
     private void hazf() {
@@ -317,7 +210,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
             int j = random.nextInt(array.size());
             if (keyboardStatus[array.get(j)] == 1) {
-                for (int n = 0; n < sAndkIndex.length; n++){
+                for (int n = 0; n < sAndkIndex.length; n++) {
                     if (sAndkIndex[n] == array.get(j)) {
                         removeFromSolution(n, 2);
                         break;
@@ -333,10 +226,13 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     private void cheatAzafe() { //is bad algoritm
         if (level.isResolved()) {
-            ezafe();
+            keyboardView.showOne();
+//            ezafe();
         } else if (coinAdapter.spendCoins(CoinAdapter.LETTER_REVEAL_COST)) {
-            ezafe();
+//            ezafe();
+            keyboardView.showOne();
         }
+
     }
 
     private void ezafe() {
@@ -399,13 +295,13 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         frame.setImageBitmap(imageManager.loadImageFromResource(R.drawable.frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight()));
         tools.resizeView(frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight());
 
-        cheatButtons = new View[] {
+        cheatButtons = new View[]{
                 view.findViewById(R.id.cheat_remove_some_letters),
                 view.findViewById(R.id.cheat_reveal_a_letter),
                 view.findViewById(R.id.cheat_skip_level)
         };
 
-        for (View cheatView: cheatButtons) {
+        for (View cheatView : cheatButtons) {
             cheatView.setOnClickListener(this);
 
             ViewGroup.LayoutParams layoutParams = cheatView.getLayoutParams();
@@ -413,13 +309,13 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             layoutParams.height = lengthManager.getCheatButtonHeight();
         }
 
-        String[] cheatTitles = new String[] {
+        String[] cheatTitles = new String[]{
                 "حذف چند حرف",
                 "نمایش یک حرف",
                 "رد کردن مرحله"
         };
 
-        int[] cheatCosts = new int[] {
+        int[] cheatCosts = new int[]{
                 CoinAdapter.ALPHABET_HIDING_COST,
                 CoinAdapter.LETTER_REVEAL_COST,
                 CoinAdapter.SKIP_LEVEL_COST
@@ -468,11 +364,11 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((MainActivity)getActivity()).hideCheatButton();
+        ((MainActivity) getActivity()).hideCheatButton();
     }
 
     public void showCheats() {
-        for (View view: cheatButtons)
+        for (View view : cheatButtons)
             view.setVisibility(View.VISIBLE);
 
         blackWidow.setVisibility(View.VISIBLE);
@@ -591,7 +487,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
                         gameFragment.setArguments(bundle);
 
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, gameFragment,"GameFragment");
+                        transaction.replace(R.id.fragment_container, gameFragment, "GameFragment");
                         transaction.commit();
                     }
 
@@ -602,4 +498,23 @@ public class GameFragment extends Fragment implements View.OnClickListener {
                 }).show();
     }
 
+    @Override
+    public void onHintClicked() {
+
+    }
+
+    @Override
+    public void onAllAnswered(String guess) {
+
+        if ((guess.replace("آ", "ا")).equals((solution.replace("/",
+                "")).replace("آ", "ا"))) {
+            if (!level.isResolved()) {
+                coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
+            }
+
+            nextLevel();
+
+        }
+
+    }
 }

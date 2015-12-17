@@ -14,6 +14,7 @@
         android:layout_gravity="center"
         android:id="@+id/level_view">
 
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,6 +56,7 @@
                 android:visibility="invisible"
                 android:layout_gravity="bottom"/>
 
+
         </FrameLayout>
 
         <ImageView
@@ -66,52 +68,57 @@
             android:contentDescription="@string/nothing"/>
 
     </FrameLayout>
-
-    <View
-        android:layout_height="0dp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_weight="3"/>
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_game_keyboard_container"
+        ></FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_solution1"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_gravity="center"
-        android:gravity="center" />
+    <!--<View-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_weight="3"/>-->
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_solution2"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:visibility="gone"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recycler_view_solution1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="34dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center" />-->
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_solution3"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:overScrollMode="never"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:visibility="gone"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recycler_view_solution2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="34dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:visibility="gone"/>-->
 
-    <View
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="3"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recycler_view_solution3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="34dp"-->
+        <!--android:overScrollMode="never"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:visibility="gone"/>-->
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_keyboard"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_margin="20dp"
-        android:overScrollMode="never"
-        android:scrollbars="vertical" />
+    <!--<View-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_weight="3"/>-->
 
-    <View
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="4"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recycler_view_keyboard"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="150dp"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:overScrollMode="never"-->
+        <!--android:scrollbars="vertical" />-->
+
+    <!--<View-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_weight="4"/>-->
 
 </LinearLayout>

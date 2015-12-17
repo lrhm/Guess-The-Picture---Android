@@ -2,11 +2,14 @@ package ir.treeco.aftabe.View.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +31,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
@@ -86,8 +90,41 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpCoinBox();
         setUpHeader();
         setOriginalBackgroundColor();
-
+        initSizes();
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
+    }
+
+
+    public void initSizes() {
+        int screenWidth = 0;
+        int screenHeight = 0;
+        if (Build.VERSION.SDK_INT >= 11) {
+            Point size = new Point();
+            try {
+                // this.getWindowManager().getDefaultDisplay().getRealSize(size);
+
+                this.getWindowManager().getDefaultDisplay().getSize(size);
+                screenWidth = size.x;
+                screenHeight = size.y;
+            } catch (NoSuchMethodError e) {
+
+                DisplayMetrics metrics = new DisplayMetrics();
+                this.getWindowManager().getDefaultDisplay()
+                        .getRealMetrics(metrics);
+                screenWidth = metrics.widthPixels;
+                screenHeight = metrics.heightPixels;
+
+            }
+
+        } else {
+            DisplayMetrics metrics = new DisplayMetrics();
+            this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            screenWidth = metrics.widthPixels;
+            screenHeight = metrics.heightPixels;
+        }
+        SizeManager.setScreenHeight(screenHeight);
+        SizeManager.setScreenWidth(screenWidth);
+
     }
 
     private void setUpCoinBox() {
@@ -130,9 +167,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void setOriginalBackgroundColor() {
         ImageView background = (ImageView) findViewById(R.id.background);
         background.setImageDrawable(new BackgroundDrawable(this, new int[]{
-                Color.parseColor("#29CDB8"),
-                Color.parseColor("#1FB8AA"),
-                Color.parseColor("#0A8A8C")
+                Color.parseColor("#F3C51C"),//F3c51c
+                Color.parseColor("#F3B91A"),
+                Color.parseColor("#F4A516")
         }));
     }
 
