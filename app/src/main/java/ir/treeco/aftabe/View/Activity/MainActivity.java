@@ -53,6 +53,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private boolean store = false;
+    public MainFragment mainFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +85,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (fragmentManager.getBackStackEntryCount() != 0) throw new IllegalStateException();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        MainFragment mainFragment = new MainFragment();
+        mainFragment = new MainFragment();
         fragmentTransaction.replace(R.id.fragment_container, mainFragment);
         fragmentTransaction.commit();
 

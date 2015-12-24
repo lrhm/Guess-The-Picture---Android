@@ -41,8 +41,14 @@ public class PackagesFragment extends Fragment {
 
             case 1:
                 PackageObject[] downloadedPackage = db.getPackages();
+                PackageObject[] temp = new PackageObject[10];
+                for(int i = 0 ; i < 10 ; i++){
+                    temp[i] = downloadedPackage[0];
+//                    temp[i].setId(i);
+                }
                 if (downloadedPackage != null) {
                     packageObjects = downloadedPackage;
+                    packageObjects = temp;
                 }
                 break;
 
