@@ -51,7 +51,7 @@ public class KeyboardView extends RelativeLayout {
 
         for (Character charr : string.toCharArray())
             unshuffledavailableGuesses.add(charr);
-        while (unshuffledavailableGuesses.size() != 20) {
+        while (unshuffledavailableGuesses.size() != 21) {
             unshuffledavailableGuesses.add(allStrings.charAt(random
                     .nextInt(allStrings.length())));
         }
@@ -61,7 +61,7 @@ public class KeyboardView extends RelativeLayout {
                     .nextInt(unshuffledavailableGuesses.size())));
         }
 
-        buttons = new KeyView[20];
+        buttons = new KeyView[21];
         answers = new KeyView[solution.replace("/", "").length()];
 
         setLayoutParams(new LayoutParams(
@@ -171,10 +171,15 @@ public class KeyboardView extends RelativeLayout {
                 getLayoutParams());
         paramsLamp.topMargin = buttonConvertor.getHeight()
                 + buttonConvertor.getHeight() / 10;
-        KeyView lamp = new KeyView(context, KeyView.TYPE_LEFT,
-                KeyView.MODE_LAMP);
+        KeyView lamp = new KeyView(context, KeyView.TYPE_CENTER,
+                KeyView.MODE_BUTTON , availableGuesses.get(k++));
+
         paramsLamp.leftMargin = mmiddle - moffSet;
+        lamp.setXY(paramsLamp.leftMargin , paramsLamp.topMargin + buttonContainerParams.topMargin );
         buttonContainer.addView(lamp, paramsLamp);
+        buttons[j++] = lamp;
+        buttons[j-1].index = j-1;
+
 
         for (int i = 0; i < 3; i++) {
             middle = SizeManager.getScreenWidth() / 2;
@@ -851,6 +856,11 @@ public class KeyboardView extends RelativeLayout {
                         drawAble = R.drawable.answer_vasat;
                         height = answerConverter.mHeight;
                         width = answerConverter.mWidth;
+                    }
+                    if(mode == MODE_BUTTON){
+                        drawAble =R.drawable.keyboardcenterbutton;
+                        height = buttonConvertor.mHeight;
+                        width = buttonConvertor.mWidth;
                     }
                 default:
                     break;
