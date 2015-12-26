@@ -64,6 +64,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.Scroller;
 
 import java.lang.reflect.Method;
@@ -1364,6 +1365,10 @@ public class VerticalViewPager extends ViewGroup {
         for (int i = 0; i < size; ++i) {
             final View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
+
+                if(child.getParent() instanceof FrameLayout)
+                    continue;
+
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 if (lp != null && lp.isDecor) {
                     final int hgrav = lp.gravity & Gravity.HORIZONTAL_GRAVITY_MASK;
@@ -1420,13 +1425,21 @@ public class VerticalViewPager extends ViewGroup {
             if (child.getVisibility() != GONE) {
                 if (DEBUG) Log.v(TAG, "Measuring #" + i + " " + child
                         + ": " + mChildWidthMeasureSpec);
+                if(child.getParent() instanceof FrameLayout)
+                    continue;
 
+
+                Log.d("TAG", "geting lp");
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+
+                Log.d("TAG", child.getParent().toString() + "");
+                Log.d("TAG", child.toString());
+                Log.d("TAG", "after geting lp");
                 if (lp == null || !lp.isDecor) {
                     final int heightSpec = MeasureSpec.makeMeasureSpec(
                             (int) (childHeightSize * lp.heightFactor), MeasureSpec.EXACTLY);
                     child.measure(mChildWidthMeasureSpec, heightSpec);
-                }
+                }   Log.d("TAG", "after measuer");
             }
         }
     }

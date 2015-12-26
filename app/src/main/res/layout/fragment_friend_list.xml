@@ -6,43 +6,64 @@
     tools:context="ir.treeco.aftabe.View.Fragment.FriendListFragment"
 
     >
-
     <TextView
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
+        android:id="@+id/search_friends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="جست و جو"
-        android:id="@+id/search_friends"
-        />
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:text="جست و جو" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/search_text_input_layout"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         >
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:id="@+id/search_friend_image"
+            />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/search_text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
         <AutoCompleteTextView
+            android:id="@+id/search_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/search_text_view"
-            android:hint="اسم و فامیل و نام گل فروش محلتون"
+            android:cursorVisible="true"
+            android:background="@android:color/transparent"
+            android:hint="...شماره تلفن یا نام کاربری "
             android:inputType="textFilter"
             android:maxLines="1"
             android:singleLine="true"
-            />
-    </android.support.design.widget.TextInputLayout>
+
+            android:textCursorDrawable="@drawable/cursor_color" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+
+    </FrameLayout>
+
+
+
+
+
 
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="20dp"
+        android:id="@+id/friends_recyler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/friends_recyler_view"
-        ></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="20dp"></android.support.v7.widget.RecyclerView>
 
 
-        />
 </LinearLayout>
