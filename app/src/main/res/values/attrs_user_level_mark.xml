@@ -1,8 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="UserLevelMark">
-        <attr name="textString" format="string" />
-        <attr name="exampleDimension" format="dimension" />
-        <attr name="textColor" format="color" />
-        <attr name="exampleDrawable" format="color|reference" />
+    <declare-styleable name="UserLevelMarkView">
+        <attr name="customDimension" format="float" />
+        <attr name="isUser" format="boolean" />
     </declare-styleable>
 </resources>

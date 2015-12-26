@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,41 +24,90 @@ import ir.treeco.aftabe.Util.LengthManager;
 public class UserLevelMarkView extends RelativeLayout {
     private int mUserMark;
     private int mUserExp;
-    private final int markCount = 8;
+    private float mDimension;
+
+
+    private boolean isUser;
+    private final int maxMarkCount = 8;
     private ImageView expView;
     private ImageView baseView;
     private ImageView coverView;
+
     private LengthManager lengthManager;
     private ImageManager imageManager;
 
-    public UserLevelMarkView(Context context, int userMark, int userExp) {
+
+    public UserLevelMarkView(Context context) {
+
         super(context);
-        mUserMark = userMark;
+        init(context, null, 0);
+        mUserLevelMarkView(context);
+    }
+
+    public UserLevelMarkView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs, 0);
+        mUserLevelMarkView(context);
+    }
+
+    public UserLevelMarkView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+
+        init(context, attrs, defStyle);
+        mUserLevelMarkView(context);
+    }
+
+    private void mUserLevelMarkView(Context context) {
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
         imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
 
         baseView = new ImageView(context);
         baseView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.base),
-                (int) (lengthManager.getScreenWidth() * (0.8d)), (int) (lengthManager.getScreenWidth() * (0.8d)) , ImageManager.ScalingLogic.CROP));
+                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
 
 
         coverView = new ImageView(context);
         coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.cover),
-                (int) (lengthManager.getScreenWidth() * (0.8d)), (int) (lengthManager.getScreenWidth() * (0.8d)), ImageManager.ScalingLogic.CROP));
+                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
+
 
         expView = new ImageView(context);
-        setUserExp(userExp);
 
         addView(baseView);
         addView(expView);
         addView(coverView);
+
+        if (!isUser)
+            setUserExp(10);
+        else
+            setUserExp(3);
+//        TODO remove the line above
+    }
+
+    public boolean isUser() {
+        return isUser;
+    }
+
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        // Load attributes
+
+        final TypedArray a = context.obtainStyledAttributes(
+                attrs, R.styleable.UserLevelMarkView, defStyle, 0);
+        mDimension = a.getFloat(0, 0.5f);
+        if (a.hasValue(1)) {
+            isUser = a.getBoolean(1, true);
+        } else
+            isUser = true;
+
+        a.recycle();
+
 
     }
 
     public void setUserExp(int userExp) {
         mUserExp = userExp;
         expView.setImageBitmap(imageManager.loadImageFromResource(getExpID(mUserExp),
-                (int) (lengthManager.getScreenWidth() * (0.8d)), (int) (lengthManager.getScreenWidth() * (0.8d)), ImageManager.ScalingLogic.CROP));
+                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
 
     }
 
@@ -83,10 +133,12 @@ public class UserLevelMarkView extends RelativeLayout {
                 return R.drawable.exp7;
             case 8:
                 return R.drawable.exp8;
+            case 10:
+                return R.drawable.avatarcover;
 
 
-
-        }   return 0;
+        }
+        return 0;
     }
 
 

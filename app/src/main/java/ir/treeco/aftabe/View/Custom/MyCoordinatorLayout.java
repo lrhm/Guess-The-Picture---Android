@@ -5,6 +5,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -22,18 +23,16 @@ public class MyCoordinatorLayout extends CoordinatorLayout {
         super(context, attrs);
     }
 
-    @Override public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-//        Log.d("MyCoordinator" , target.toString() );
-//        Log.d("MyCoordinator" , child.toString() );
-//        if (child instanceof ViewPager){
-//            Log.d("MyCoordinator", ((ViewPager) child).getCurrentItem() + "");
-//            if (((ViewPager) child).getCurrentItem() == 3)
-//                return  false;
-//        }
 
-        Log.d("TAG" , allowForScrool + " allow for scroll");
+
+    @Override public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+
+
+        Log.d("TAG" , allowForScrool + " allow for scroll + " + nestedScrollAxes);
         return allowForScrool && super.onStartNestedScroll(child, target, nestedScrollAxes);
     }
+
+
 
     public boolean isAllowForScrool() {
         return allowForScrool;

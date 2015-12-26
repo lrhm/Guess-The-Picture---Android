@@ -9,6 +9,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -31,7 +32,7 @@ public class MainFragment extends Fragment {
     public MyCoordinatorLayout myCoordinatorLayout;
     public CollapsingToolbarLayout mCollapsingToolbarLayout;
     public AppBarLayout mAppBarLayout;
-
+    public SmartTabLayout mSmartTabLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,33 +45,42 @@ public class MainFragment extends Fragment {
 
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
-                .add("تازه‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
+//                .add("تازه‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
                 .add("دانلود شده‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
-                .add("محبوب‌ترین‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
-                .add("test" , OnlineMenuFragment.class )
+//                .add("محبوب‌ترین‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
+                .add("انلاین", OnlineMenuFragment.class)
                 .create()
         );
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 
-        SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
-        viewPagerTab.setViewPager(viewPager);
+        mSmartTabLayout = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
+        mSmartTabLayout.setViewPager(viewPager);
+
+
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.toolbar);
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.adtest);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-              Log.d("MainFragment" , verticalOffset + " vertical offset " + mCollapsingToolbarLayout.getHeight() );
-                if(Math.abs(verticalOffset) == mCollapsingToolbarLayout.getHeight() && myCoordinatorLayout.isAllowForScrool()){
+
+
+                Log.d("MainFragment", verticalOffset + " vertical offset " + mCollapsingToolbarLayout.getHeight());
+                if (Math.abs(verticalOffset) == mCollapsingToolbarLayout.getHeight() && myCoordinatorLayout.isAllowForScrool()) {
                     myCoordinatorLayout.setAllowForScrool(false);
                     Log.d("TAG", "set allow for scroll false");
+                }
+                else if(!myCoordinatorLayout.isAllowForScrool() &&Math.abs(verticalOffset) != mCollapsingToolbarLayout.getHeight() ) {
+                    Log.d("TAG", "set expanded to false");
+                    mAppBarLayout.setExpanded(false, false);
                 }
 
 
             }
         });
+
         setUpAds(autoScrollViewPager);
 
         return view;
@@ -82,4 +92,5 @@ public class MainFragment extends Fragment {
         autoScrollViewPager.setInterval(5000);
         autoScrollViewPager.startAutoScroll();
     }
+
 }

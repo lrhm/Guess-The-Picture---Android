@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:overScrollMode="never"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+    <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:customDimension="0.4"
+        ></ir.treeco.aftabe.View.Custom.UserLevelMarkView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+    <ImageView
+        android:id="@+id/multiplay_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+         />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="دوستان"
+        android:id="@+id/friends"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
+        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:customDimension="0.2"
+            app:isUser="false"
+           />
+
+        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:customDimension="0.2"
+            app:isUser="false"
+            />
+
+        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:customDimension="0.2"
+            app:isUser="false"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+</LinearLayout>
