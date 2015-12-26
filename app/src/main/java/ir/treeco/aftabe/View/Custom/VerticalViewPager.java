@@ -1834,11 +1834,9 @@ public class VerticalViewPager extends ViewGroup {
                 * Locally do absolute value. mLastMotionY is set to the y value
                 * of the down event.
                 */
-                Log.d(TAG, "action move");
                 final int activePointerId = mActivePointerId;
                 if (activePointerId == INVALID_POINTER) {
                     // If we don't have a valid id, the touch down wasn't on content.
-                    Log.d(TAG, "activate pointer id invalid");
                     break;
                 }
 
@@ -1850,10 +1848,6 @@ public class VerticalViewPager extends ViewGroup {
                 final float dy = y - mLastMotionY;
                 final float yDiff = Math.abs(y - mLastMotionY);
                 mTouchSlop = (int) (mOriginalTouchSlop / degreeOfFreedom);
-                if (true) Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
-                Log.v(TAG, "mTouchSlop " + mTouchSlop);
-                Log.v(TAG, "originalTouchSlop " + mOriginalTouchSlop);
-                Log.v(TAG, "degreeOfFreedom " + degreeOfFreedom);
 
 
                 if (dy != 0 && !isGutterDrag(mLastMotionY, dy) &&

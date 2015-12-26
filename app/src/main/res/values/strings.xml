@@ -14,4 +14,7 @@
     <string name="updated_time_shared_preference">updatedTime</string>
     <string name="domain_url_head_json">http://rsdn.ir/files/aftabe/head.json</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

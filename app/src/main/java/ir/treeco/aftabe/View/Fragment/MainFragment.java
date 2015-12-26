@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
@@ -19,7 +20,11 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.Adapter.AdItemAdapter;
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.SizeConverter;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.View.Custom.AutoScrollViewPager;
 import ir.treeco.aftabe.View.Custom.MyCoordinatorLayout;
 
@@ -33,6 +38,8 @@ public class MainFragment extends Fragment {
     public CollapsingToolbarLayout mCollapsingToolbarLayout;
     public AppBarLayout mAppBarLayout;
     public SmartTabLayout mSmartTabLayout;
+    private ImageManager imageManager;
+    ImageView shaderImageView ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -42,6 +49,7 @@ public class MainFragment extends Fragment {
         autoScrollViewPager = (AutoScrollViewPager) view.findViewById(R.id.ad_view_pager);
         adItemAdapter = new AdItemAdapter(getActivity());
         myCoordinatorLayout = (MyCoordinatorLayout) view.findViewById(R.id.my_coordinator_layout);
+        imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
@@ -70,9 +78,9 @@ public class MainFragment extends Fragment {
                 Log.d("MainFragment", verticalOffset + " vertical offset " + mCollapsingToolbarLayout.getHeight());
                 if (Math.abs(verticalOffset) == mCollapsingToolbarLayout.getHeight() && myCoordinatorLayout.isAllowForScrool()) {
                     myCoordinatorLayout.setAllowForScrool(false);
+                    shaderImageView.setVisibility(View.VISIBLE);
                     Log.d("TAG", "set allow for scroll false");
-                }
-                else if(!myCoordinatorLayout.isAllowForScrool() &&Math.abs(verticalOffset) != mCollapsingToolbarLayout.getHeight() ) {
+                } else if (!myCoordinatorLayout.isAllowForScrool() && Math.abs(verticalOffset) != mCollapsingToolbarLayout.getHeight()) {
                     Log.d("TAG", "set expanded to false");
                     mAppBarLayout.setExpanded(false, false);
                 }
@@ -80,6 +88,10 @@ public class MainFragment extends Fragment {
 
             }
         });
+
+        shaderImageView = (ImageView) view.findViewById(R.id.shadeview);
+        SizeConverter shadeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1857, 23);
+        shaderImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.shade , shadeConverter.mWidth , shadeConverter.mHeight , ImageManager.ScalingLogic.FIT));
 
         setUpAds(autoScrollViewPager);
 
