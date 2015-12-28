@@ -3,5 +3,9 @@
     <declare-styleable name="UserLevelMarkView">
         <attr name="customDimension" format="float" />
         <attr name="isUser" format="boolean" />
+        <attr name="textAlign" format="enum" >
+            <enum name="left" value="0"/>
+            <enum name="below" value="1"/>
+        </attr>
     </declare-styleable>
 </resources>

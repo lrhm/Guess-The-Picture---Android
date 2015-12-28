@@ -1,7 +1,5 @@
 package ir.treeco.aftabe.View.Fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -9,9 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +15,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.Object.Friend;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
@@ -37,11 +35,12 @@ import ir.treeco.aftabe.Util.SizeManager;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends Fragment implements TextWatcher {
+public class FriendListFragment extends Fragment implements TextWatcher{
 
 
     ImageManager imageManager;
-
+    RecyclerView mFriendsRecylerView;
+    FriendsAdapter mFriendsAdapter;
     public FriendListFragment() {
     }
 
@@ -60,12 +59,13 @@ public class FriendListFragment extends Fragment implements TextWatcher {
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
-        RecyclerView friendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
-        friendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Friend[] friends = new Friend[20];
-        for (int i = 0; i < 20; i++) {
-            friends[i] = new Friend("asghar", 3);
-        }
+
+        mFriendsRecylerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
+
+
+        setUpAdapters();
+        setUpRecylerViews();
+
         String[] objct = new String[6];
         objct[0] = "asghar";
         objct[1] = "ahmad";
@@ -73,14 +73,15 @@ public class FriendListFragment extends Fragment implements TextWatcher {
         objct[2] = "sahar";
         objct[3] = "golpar";
         objct[4] = "saghi";
-        friendsRecyclerView.setAdapter(new FriendsAdapter(friends));
+
+
+//        TODO visibility of headtextview
 
 
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.search_text_input_layout);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.5), (int) (SizeManager.getScreenHeight() * 0.1));
         layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-        int fuck;
         textInputLayout.setLayoutParams(layoutParams);
 
         AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.search_text_view);
@@ -103,6 +104,29 @@ public class FriendListFragment extends Fragment implements TextWatcher {
         return view;
     }
 
+
+    public void setUpAdapters() {
+
+        ArrayList<User> users = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            users.add(new User("asghar", 3));
+        }
+        mFriendsAdapter = new FriendsAdapter(users, null , null , null );
+
+
+    }
+
+    public void setUpRecylerViews() {
+        mFriendsRecylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mFriendsRecylerView.setAdapter(mFriendsAdapter);
+
+    }
+
+
+
+
+
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -111,6 +135,7 @@ public class FriendListFragment extends Fragment implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+        mFriendsAdapter.addUser(new User("ta",23) , FriendsAdapter.TYPE_SEARCHED);
     }
 
     @Override
