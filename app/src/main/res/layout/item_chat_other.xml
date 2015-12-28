@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<ir.treeco.aftabe.View.Custom.UserLevelMarkView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/avatar_chat_other"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    app:customDimension="0.15"
+    app:isUser="false"
+    app:textAlign="below"
+
+    ></ir.treeco.aftabe.View.Custom.UserLevelMarkView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/text_chat_other"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        android:background="@drawable/chat_other_style"
+        />
+
+</LinearLayout>

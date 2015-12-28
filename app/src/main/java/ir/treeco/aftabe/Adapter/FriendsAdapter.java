@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.Adapter;
 
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +17,10 @@ import java.util.Random;
 
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Fragment.ChatFragment;
+import ir.treeco.aftabe.View.Fragment.GameFragment;
 
 /**
  * Created by al on 12/26/15.
@@ -85,7 +90,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             mUserLevelMarkView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeUser(arrayLists.get(type).get(0), type);
+
+                    ChatFragment chatFragment = new ChatFragment();
+
+                    FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, chatFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 }
             });
         }
