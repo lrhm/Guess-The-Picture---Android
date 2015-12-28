@@ -1,22 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/friend_list_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="ir.treeco.aftabe.View.Fragment.FriendListFragment"
-
+    android:focusableInTouchMode="true"
     >
 
-    <TextView
-        android:id="@+id/search_friends"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:text="جست و جو" />
 
-    <FrameLayout
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -35,7 +29,7 @@
 
             >
 
-            <AutoCompleteTextView
+            <ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView
                 android:id="@+id/search_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -44,44 +38,26 @@
                 android:hint="شماره تلفن یا نام کاربری "
                 android:inputType="text"
                 android:maxLines="1"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp" />
 
         </android.support.design.widget.TextInputLayout>
 
+        <ImageView
 
-    </FrameLayout>
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="13dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/search_text_input_layout"
+            />
 
-
-    <!--<TextView-->
-        <!--android:id="@+id/header_searched_items"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="یافت شده ها"-->
-        <!--android:textSize="20sp" />-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/searched_recyler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>-->
-
-
-    <!--<TextView-->
-        <!--android:id="@+id/header_request_items"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="درخواست های دوستی"-->
-        <!--android:textSize="20sp" />-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/request_recyler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>-->
+    </RelativeLayout>
 
 
 
@@ -90,20 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"></android.support.v7.widget.RecyclerView>
-    <!--<TextView-->
-        <!--android:id="@+id/header_contacts_items"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="مخاطبان دفترچه تلفن"-->
-        <!--android:textSize="20sp" />-->
 
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/contacts_recyler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="20dp"></android.support.v7.widget.RecyclerView>-->
 
 
 </LinearLayout>

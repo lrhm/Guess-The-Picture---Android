@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.View.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -7,14 +9,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,6 +34,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,12 +44,16 @@ import ir.treeco.aftabe.Util.SizeManager;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends Fragment implements TextWatcher{
+public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener, MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener {
 
 
     ImageManager imageManager;
     RecyclerView mFriendsRecylerView;
     FriendsAdapter mFriendsAdapter;
+    MyAutoCompleteTextView mAutoCompleteTextView;
+    View clearButton;
+    View mainLayout;
+
     public FriendListFragment() {
     }
 
@@ -59,9 +72,15 @@ public class FriendListFragment extends Fragment implements TextWatcher{
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
-
+        mainLayout = view.findViewById(R.id.friend_list_main_layout);
         mFriendsRecylerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
 
+        clearButton = view.findViewById(R.id.clear_button);
+        clearButton.setOnClickListener(this);
+        clearButton.setVisibility(View.GONE);
+
+        ((ImageView)clearButton).setImageBitmap(imageManager.loadImageFromResource(R.drawable.clear_button,
+                (int) (SizeManager.getScreenWidth() * 0.15), (int) (SizeManager.getScreenWidth() * 0.15)));
 
         setUpAdapters();
         setUpRecylerViews();
@@ -80,20 +99,21 @@ public class FriendListFragment extends Fragment implements TextWatcher{
 
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.search_text_input_layout);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.5), (int) (SizeManager.getScreenHeight() * 0.1));
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.5), (int) (SizeManager.getScreenHeight() * 0.1));
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         textInputLayout.setLayoutParams(layoutParams);
 
-        AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.search_text_view);
+        mAutoCompleteTextView = (MyAutoCompleteTextView) view.findViewById(R.id.search_text_view);
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, objct);
 
 
-        autoCompleteTextView.setAdapter(adapter);
-
-        autoCompleteTextView.addTextChangedListener(this);
+        mAutoCompleteTextView.setAdapter(adapter);
+        mAutoCompleteTextView.setOnKeyboardDismiss(this);
+        mAutoCompleteTextView.addTextChangedListener(this);
+        mAutoCompleteTextView.setOnEditorActionListener(this);
 //
         ImageView searchFriendImageView = (ImageView) view.findViewById(R.id.search_friend_image);
         SizeConverter searchFriendConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.8f, 1373, 227);
@@ -111,7 +131,7 @@ public class FriendListFragment extends Fragment implements TextWatcher{
         for (int i = 0; i < 5; i++) {
             users.add(new User("asghar", 3));
         }
-        mFriendsAdapter = new FriendsAdapter(users, null , null , null );
+        mFriendsAdapter = new FriendsAdapter(users, null, null, null);
 
 
     }
@@ -123,9 +143,23 @@ public class FriendListFragment extends Fragment implements TextWatcher{
     }
 
 
+    @Override
+    public void onClick(View v) {
+        clear();
+    }
 
+    public void clear() {
+        mAutoCompleteTextView.setText("");
+        while (!mFriendsAdapter.mSearched.isEmpty()) {
+            User user = mFriendsAdapter.mSearched.get(0);
+            mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_SEARCHED);
 
+        }
+        clearButton.setVisibility(View.GONE);
+        hideKeyboard();
+        mainLayout.requestFocus();
 
+    }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -135,7 +169,10 @@ public class FriendListFragment extends Fragment implements TextWatcher{
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        mFriendsAdapter.addUser(new User("ta",23) , FriendsAdapter.TYPE_SEARCHED);
+        if (s.length() > 0 && clearButton.getVisibility() != View.VISIBLE)
+            clearButton.setVisibility(View.VISIBLE);
+        if (s.length() > 1)
+            mFriendsAdapter.addUser(new User("ta", 23), FriendsAdapter.TYPE_SEARCHED);
     }
 
     @Override
@@ -143,4 +180,31 @@ public class FriendListFragment extends Fragment implements TextWatcher{
 
     }
 
+
+    @Override
+    public void onKeyboardDismiss() {
+        clear();
+    }
+
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        boolean handled = false;
+        if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                actionId == EditorInfo.IME_ACTION_DONE
+                ){
+            submitSearch();
+            handled = true;
+        }
+        return handled;
+    }
+
+
+    public void submitSearch() {
+        hideKeyboard();
+        Log.d("TAG", "TODO submit search");
+
+    }
+    public  void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity() .getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+    }
 }

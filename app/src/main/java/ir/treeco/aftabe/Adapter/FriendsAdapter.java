@@ -23,10 +23,11 @@ import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
 
 
-    private ArrayList<User> mFriends;
-    private ArrayList<User> mRequests;
-    private ArrayList<User> mContacts;
-    private ArrayList<User> mSearched;
+    public ArrayList<User> mFriends;
+    public ArrayList<User> mRequests;
+    public ArrayList<User> mContacts;
+    public ArrayList<User> mSearched;
+
     ArrayList<ArrayList<User>> arrayLists;
     private final String[] HEADERS = {"یافت شده گان", "درخواست ها", "دوستان", "مخاطبان"};
 
@@ -61,7 +62,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             super(v);
 
 
-            Log.d("TAG", "ViewHolder " + type);
 
             switch (type) {
                 case TYPE_HEADER:
@@ -128,7 +128,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Log.d("TAG", "onBindViewHolder at position" + position);
         int type = getItemViewType(position);
         if (type == TYPE_HEADER) {
 
@@ -140,7 +139,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 ArrayList<User> list = arrayLists.get(i);
                 tempSize = size;
                 size += list.size() + (list.isEmpty() ? 0 : 1);
-                Log.d("TAG", "looking for position " + position + " size is " + size + " and i is" + i);
                 if (list.isEmpty())
                     continue;
                 if (tempSize == position)
@@ -149,8 +147,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             }
 
 
-            Log.d("TAG", holder.getItemViewType() + " item type");
-            Log.d("TAG", HEADERS[i]);
             holder.mHeaderTextView.setText(HEADERS[i]);
             return;
         }
@@ -160,7 +156,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        Log.d("TAG", "onCreateViewHolder " + viewType);
         if (viewType == TYPE_HEADER)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false), viewType);
 
@@ -170,7 +165,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        Log.d("TAG", "getItemViewType " + position);
         int[] sizes = new int[4];
         int size = 0;
         int tempSize = 0;
@@ -179,7 +173,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             sizes[i] = list.size();
             tempSize = size;
             size += list.size() + (list.isEmpty() ? 0 : 1);
-            Log.d("TAG", "looking for position " + position + " with current size of " + size);
             if (list.isEmpty())
                 continue;
             if (tempSize == position)
@@ -201,7 +194,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             ArrayList<User> list = arrayLists.get(i);
             size += list.size() + (list.isEmpty() ? 0 : 1);
         }
-        Log.d("TAG", "whole size is " + size);
         return size;
 
     }
