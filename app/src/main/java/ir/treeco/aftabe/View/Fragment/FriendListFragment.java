@@ -75,6 +75,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         mainLayout = view.findViewById(R.id.friend_list_main_layout);
         mFriendsRecylerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
 
+
         clearButton = view.findViewById(R.id.clear_button);
         clearButton.setOnClickListener(this);
         clearButton.setVisibility(View.GONE);
@@ -139,6 +140,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public void setUpRecylerViews() {
         mFriendsRecylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mFriendsRecylerView.setAdapter(mFriendsAdapter);
+
 
     }
 

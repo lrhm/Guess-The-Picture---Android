@@ -1,32 +1,39 @@
 package ir.treeco.aftabe.View.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.Adapter.ChatAdapter;
+import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.Object.ChatObject;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.SizeManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ChatFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ChatFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements View.OnClickListener {
+
+
+    EditText mEditText;
+    View mMainLayout;
+    ChatAdapter mChatAdapter;
+    RecyclerView mChatView;
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -36,7 +43,6 @@ public class ChatFragment extends Fragment {
 
 
     public ChatFragment() {
-        // Required empty public constructor
     }
 
     public static ChatFragment newInstance(String param1, String param2) {
@@ -61,10 +67,19 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+         mChatView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
+        TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.chat_text_input_layout);
+        mEditText = (EditText) view.findViewById(R.id.chat_input_edit_text);
+        mMainLayout = view.findViewById(R.id.chat_main_layout);
+        Button sendButton = (Button) view.findViewById(R.id.chat_send);
+        sendButton.setOnClickListener(this);
 
-        RecyclerView chatView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
+        LinearLayout.LayoutParams textlp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.8), ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        chatView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        textInputLayout.setLayoutParams(textlp);
+
+
+        mChatView.setLayoutManager(new LinearLayoutManager(getActivity() ,LinearLayoutManager.VERTICAL , true));
 
         ArrayList<ChatObject> list = new ArrayList<>();
 
@@ -74,12 +89,47 @@ public class ChatFragment extends Fragment {
         list.add(o1);
         list.add(o2);
 
+        Log.d("TAG", "this is spartaa");
 
-        ChatAdapter chatAdapter = new ChatAdapter(list);
-        chatView.setAdapter(chatAdapter);
+         mChatAdapter = new ChatAdapter(list);
+        mChatView.setAdapter(mChatAdapter);
+
+
 
         return view;
     }
 
 
+    public void sendMessage(String msg) {
+        ChatObject chatObject = new ChatObject(ChatObject.TYPE_ME, msg);
+
+        mChatAdapter.addChatItem(chatObject);
+        mChatView.scrollToPosition(0);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.chat_send:
+                if(mEditText.getText().length() > 0) {
+                    sendMessage(mEditText.getText().toString());
+                    clear();
+                }
+
+        }
+    }
+
+
+    public void clear() {
+        mEditText.setText("");
+//        hideKeyboard();
+//        mMainLayout.requestFocus();
+
+    }
+    public  void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity() .getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mMainLayout.getWindowToken(), 0);
+    }
 }

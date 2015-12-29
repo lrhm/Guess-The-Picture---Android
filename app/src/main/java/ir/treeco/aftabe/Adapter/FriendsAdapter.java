@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.joda.time.IllegalFieldValueException;
@@ -15,8 +16,11 @@ import org.joda.time.IllegalFieldValueException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
@@ -61,11 +65,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mHeaderTextView;
         UserLevelMarkView mUserLevelMarkView;
+        ImageView mMatchButton;
+        ImageView mChatButton;
 
         public ViewHolder(View v, final int type) {
 
             super(v);
-
 
 
             switch (type) {
@@ -85,20 +90,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             }
 
 
+            mMatchButton = (ImageView) itemView.findViewById(R.id.match_button);
+            mChatButton = (ImageView) itemView.findViewById(R.id.start_chat_button);
+            int size = (int) (SizeManager.getScreenWidth() * 0.1);
+
+            ImageManager imageManager = ((MainApplication) v.getContext().getApplicationContext()).getImageManager();
+
+            mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.challengebutton, size, size));
+            mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, size, size));
+
             mUserLevelMarkView = (UserLevelMarkView) itemView.findViewById(R.id.friend_list_mark_view);
 
-            mUserLevelMarkView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    ChatFragment chatFragment = new ChatFragment();
-
-                    FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, chatFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                }
-            });
         }
 
     }
@@ -108,17 +110,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         mList.add(user);
         notifyDataSetChanged();
 
-//        int size = 0;
-//        for (int i = 0; i < type; i++) {
-//            ArrayList<User> list = arrayLists.get(i);
-//            size += list.size() + (list.isEmpty() ? 0 : 1);
-//        }
-//
-//        if (mList.size() == 1) {
-//            notifyItemRangeInserted(mList.size()  + size, 2);
-//        } else
-//
-//            notifyItemInserted(mList.size() - 1 + size);
     }
 
     public void removeUser(User user, int type) {
@@ -140,27 +131,26 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         int type = getItemViewType(position);
+        final int realPosition = getRealPosition(position, type);
         if (type == TYPE_HEADER) {
 
-            int size = 0;
-            int i = 0;
-            int[] sizes = new int[4];
-            int tempSize = 0;
-            for (i = 0; i < 4; i++) {
-                ArrayList<User> list = arrayLists.get(i);
-                tempSize = size;
-                size += list.size() + (list.isEmpty() ? 0 : 1);
-                if (list.isEmpty())
-                    continue;
-                if (tempSize == position)
-                    break;
-
-            }
-
-
-            holder.mHeaderTextView.setText(HEADERS[i]);
+            holder.mHeaderTextView.setText(HEADERS[realPosition]);
             return;
         }
+
+        holder.mChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ChatFragment chatFragment = new ChatFragment();
+
+                Log.d("TAG", "click Temp real pos " + realPosition);
+                FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, chatFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
     }
 
@@ -209,8 +199,38 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     }
 
+    private int getRealPosition(int position, int type) {
+        if (type == TYPE_HEADER) {
+
+            int size = 0;
+            int i = 0;
+            int tempSize = 0;
+            for (i = 0; i < 4; i++) {
+                ArrayList<User> list = arrayLists.get(i);
+                tempSize = size;
+                size += list.size() + (list.isEmpty() ? 0 : 1);
+                if (list.isEmpty())
+                    continue;
+                if (tempSize == position)
+                    return i;
+
+            }
+            throw new IllegalFieldValueException("position", position + " from type " + type);
+
+        }
+        int size = 0;
+        for (int i = 0; i < 4; i++) {
+            ArrayList<User> list = arrayLists.get(i);
+            size += list.size() + (list.isEmpty() ? 0 : 1);
+            if(position < size)
+                return list.size() - size + position ;
+
+
+        }
+
+        throw new IllegalFieldValueException("position", position + " from type " + type);
+
+    }
+
 
 }
-
-
-

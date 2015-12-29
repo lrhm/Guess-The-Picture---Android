@@ -1,29 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="3dp">
-
-
-
+    android:layout_height="wrap_content">
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
         />
 
-    <ir.treeco.aftabe.View.Custom.UserLevelMarkView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/friend_list_mark_view"
-        app:customDimension="0.2"
-        app:isUser="false"
-        app:textAlign="left"
-        >
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal">
 
 
-    </ir.treeco.aftabe.View.Custom.UserLevelMarkView>
+        <ImageView
+            android:id="@+id/match_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
 
-</LinearLayout>
+            />
+
+
+        <ImageView
+
+            android:id="@+id/start_chat_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+            android:id="@+id/friend_list_mark_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:customDimension="0.2"
+            app:isUser="false"
+            app:textAlign="left">
+
+
+        </ir.treeco.aftabe.View.Custom.UserLevelMarkView>
+
+    </LinearLayout>
+</RelativeLayout>

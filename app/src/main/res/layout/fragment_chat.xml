@@ -1,43 +1,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ir.treeco.aftabe.View.Fragment.ChatFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/chat_recycler_view"
-        ></android.support.v7.widget.RecyclerView>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-
+        android:orientation="vertical"
+        android:weightSum="10"
         >
 
-    <EditText
-        android:id="@+id/chat_input"
-        android:layout_width="wrap_content"
-        android:layout_weight="10"
-        android:layout_height="40dp"
-        android:background="@drawable/chat_input"
 
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:layout_height="40dp"
-        android:text="send"
-        />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:layout_marginBottom="20dp"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/input_container"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+
+            >
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/chat_text_input_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chat_input">
+
+                <EditText
+                    android:id="@+id/chat_input_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textMultiLine"
+                    android:background="@android:color/transparent"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/chat_send"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="send" />
+
+        </LinearLayout>
     </LinearLayout>
+
+
+
 
 </RelativeLayout>
