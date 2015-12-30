@@ -67,6 +67,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         UserLevelMarkView mUserLevelMarkView;
         ImageView mMatchButton;
         ImageView mChatButton;
+        View mDividerButtom;
 
         public ViewHolder(View v, final int type) {
 
@@ -89,7 +90,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     break;
             }
 
-
+            mDividerButtom = itemView.findViewById(R.id.divider_buttom);
             mMatchButton = (ImageView) itemView.findViewById(R.id.match_button);
             mChatButton = (ImageView) itemView.findViewById(R.id.start_chat_button);
             int size = (int) (SizeManager.getScreenWidth() * 0.1);
@@ -137,6 +138,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mHeaderTextView.setText(HEADERS[realPosition]);
             return;
         }
+
+        int size = arrayLists.get(type).size();
+        int visibility = holder.mDividerButtom.getVisibility();
+        if (realPosition + 1 == size ) {
+            if (visibility != View.VISIBLE)
+                holder.mDividerButtom.setVisibility(View.VISIBLE);
+        }
+            else if (visibility != View.GONE)
+                holder.mDividerButtom.setVisibility(View.GONE);
 
         holder.mChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,8 +232,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         for (int i = 0; i < 4; i++) {
             ArrayList<User> list = arrayLists.get(i);
             size += list.size() + (list.isEmpty() ? 0 : 1);
-            if(position < size)
-                return list.size() - size + position ;
+            if (position < size)
+                return list.size() - size + position;
 
 
         }
