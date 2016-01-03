@@ -71,12 +71,12 @@ public class UserLevelMarkView extends LinearLayout {
 
         baseView = new ImageView(context);
         baseView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.base),
-                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
+                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
 
 
         coverView = new ImageView(context);
         coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.cover),
-                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
+                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
 
 
         mUserNameTextView = new TextView(context);

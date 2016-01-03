@@ -16,7 +16,7 @@
     app:isUser="false"
     app:textAlign="below"
 
-    ></ir.treeco.aftabe.View.Custom.UserLevelMarkView>
+    />
 
     <TextView
         android:layout_width="wrap_content"

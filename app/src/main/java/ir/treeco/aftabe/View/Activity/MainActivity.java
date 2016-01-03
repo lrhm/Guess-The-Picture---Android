@@ -35,6 +35,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
+import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
@@ -53,7 +54,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private boolean store = false;
+    private UserLevelMarkView playerOne;
+    private UserLevelMarkView playerTwo;
     public MainFragment mainFragment;
+    public TextView timerTextView;
+    private ImageView coinBox;
 
 
     @Override
@@ -72,6 +77,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits = (TextView) findViewById(R.id.digits);
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
+        playerOne = (UserLevelMarkView) findViewById(R.id.player1_online_game);
+        playerTwo = (UserLevelMarkView) findViewById(R.id.player2_online_game);
+        timerTextView = (TextView) findViewById(R.id.timer_online);
+
+        setUpPlayers();
 
         cheatButton.setOnClickListener(this);
 
@@ -129,8 +139,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    private void setUpPlayers() {
+        RelativeLayout.LayoutParams lp =(RelativeLayout.LayoutParams) playerOne.getLayoutParams();
+        lp.topMargin = (int) (lengthManager.getScreenWidth() / 15f);
+        lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
+
+        RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
+        lpTwo.topMargin = (int) (lengthManager.getScreenWidth() / 15f);
+        lpTwo.leftMargin = (int) (0.8 * lengthManager.getScreenWidth());
+    }
+
+    public void setOnlineGame(boolean isOnline) {
+        int onlineViewsVisibility = (isOnline ? View.VISIBLE : View.GONE);
+        int headerViewsVisibility = (isOnline ? View.GONE : View.VISIBLE);
+        logo.setVisibility(headerViewsVisibility);
+        coinBox.setVisibility(headerViewsVisibility);
+        digits.setVisibility(headerViewsVisibility);
+
+        playerOne.setVisibility(onlineViewsVisibility);
+        playerTwo.setVisibility(onlineViewsVisibility);
+        timerTextView.setVisibility(onlineViewsVisibility);
+
+    }
+
     private void setUpCoinBox() {
-        ImageView coinBox = (ImageView) findViewById(R.id.coin_box);
+        coinBox = (ImageView) findViewById(R.id.coin_box);
 
         int coinBoxWidth = lengthManager.getScreenWidth() * 9 / 20;
         int coinBoxHeight = lengthManager.getHeightWithFixedWidth(R.drawable.coin_box, coinBoxWidth);

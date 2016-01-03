@@ -25,6 +25,7 @@ import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
+import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 /**
  * Created by al on 12/26/15.
@@ -146,6 +147,23 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 Log.d("TAG", "click Temp real pos " + realPosition);
                 FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, chatFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                int levelID = 0;
+                bundle.putInt("LevelId", levelID);
+                bundle.putInt("id", 0);
+
+                OnlineGameFragment gameFragment = new OnlineGameFragment();
+                gameFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, gameFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
