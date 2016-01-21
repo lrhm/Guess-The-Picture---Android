@@ -21,8 +21,11 @@ import android.widget.TextView;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
+import ir.treeco.aftabe.View.Dialog.UserViewDialog;
 
 /**
  * TODO: document your custom view class.
@@ -81,7 +84,7 @@ public class UserLevelMarkView extends LinearLayout {
 
         mUserNameTextView = new TextView(context);
         mUserNameTextView.setText("اسمته");
-        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP , mDimension * 80);
+        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 80);
 
         LayoutParams textLP = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         textLP.gravity = Gravity.CENTER;
@@ -90,36 +93,46 @@ public class UserLevelMarkView extends LinearLayout {
         expView = new ImageView(context);
 
 
-
         imagesContainer.addView(baseView);
         imagesContainer.addView(expView);
         imagesContainer.addView(coverView);
 
         int orientation = VERTICAL;
-        if(mTextAlign == TEXT_ALIGN_LEFT)
+        if (mTextAlign == TEXT_ALIGN_LEFT)
             orientation = HORIZONTAL;
 
         setOrientation(orientation);
 
-        if(orientation == VERTICAL){
-            textLP.topMargin   = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+        if (orientation == VERTICAL) {
+            textLP.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
             mUserNameTextView.setLayoutParams(textLP);
 
             addView(imagesContainer);
             addView(mUserNameTextView);
-        }
-        else {
-            textLP.rightMargin   = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+        } else {
+            textLP.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
             mUserNameTextView.setLayoutParams(textLP);
 
             addView(mUserNameTextView);
             addView(imagesContainer);
         }
+
+        FontsHolder.setFont(mUserNameTextView , FontsHolder.SANS_REGULAR);
 
         if (!isUser)
             setUserExp(10);
         else
             setUserExp(3);
+
+
+        if (!isClickable())
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new UserViewDialog(getContext()).show();
+
+                }
+            });
 //        TODO remove the line above
     }
 
@@ -140,8 +153,7 @@ public class UserLevelMarkView extends LinearLayout {
 
         if (a.hasValue(2)) {
             mTextAlign = a.getInt(2, 1);
-        }
-        else
+        } else
             mTextAlign = 1;
 
         a.recycle();

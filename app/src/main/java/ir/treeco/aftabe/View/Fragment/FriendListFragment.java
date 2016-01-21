@@ -31,6 +31,7 @@ import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
@@ -115,6 +116,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         mAutoCompleteTextView.setOnKeyboardDismiss(this);
         mAutoCompleteTextView.addTextChangedListener(this);
         mAutoCompleteTextView.setOnEditorActionListener(this);
+
+        mAutoCompleteTextView.setTypeface(FontsHolder.getSansRegular(getContext()));
 //
         ImageView searchFriendImageView = (ImageView) view.findViewById(R.id.search_friend_image);
         SizeConverter searchFriendConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.8f, 1373, 227);

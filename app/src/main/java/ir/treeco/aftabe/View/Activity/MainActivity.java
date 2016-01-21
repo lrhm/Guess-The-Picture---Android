@@ -178,7 +178,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digitsLayoutParams.leftMargin = lengthManager.getScreenWidth() * 577 / 3600;
         digitsLayoutParams.width = lengthManager.getScreenWidth() / 5;
 
-        digits.setTypeface(FontsHolder.getYekan(this));
+        digits.setTypeface(FontsHolder.getHoma(this));
 
         coinBox.setOnClickListener(this);
 

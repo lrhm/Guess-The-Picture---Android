@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.ogaclejapan.smarttablayout.MySmartTabLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -37,7 +38,7 @@ public class MainFragment extends Fragment {
     public MyCoordinatorLayout myCoordinatorLayout;
     public CollapsingToolbarLayout mCollapsingToolbarLayout;
     public AppBarLayout mAppBarLayout;
-    public SmartTabLayout mSmartTabLayout;
+    public MySmartTabLayout mSmartTabLayout;
     private ImageManager imageManager;
     ImageView shaderImageView ;
 
@@ -54,16 +55,17 @@ public class MainFragment extends Fragment {
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
 //                .add("تازه‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
-                .add("دانلود شده‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
+                .add(" "+"آفلاین"+ " ", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
 //                .add("محبوب‌ترین‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
-                .add("انلاین", OnlineMenuFragment.class)
+                .add(" "+"آنلاین"+ " ", OnlineMenuFragment.class)
                 .create()
         );
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 
-        mSmartTabLayout = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
+        
+        mSmartTabLayout = (MySmartTabLayout) view.findViewById(R.id.viewpagertab);
         mSmartTabLayout.setViewPager(viewPager);
 
 

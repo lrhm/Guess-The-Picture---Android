@@ -38,7 +38,7 @@
                 android:shadowRadius="1"
                 android:singleLine="true"
                 android:textColor="#ffffff"
-                android:textSize="30sp" />
+                android:textSize="25sp" />
 
             <ImageView
                 android:id="@+id/logo"

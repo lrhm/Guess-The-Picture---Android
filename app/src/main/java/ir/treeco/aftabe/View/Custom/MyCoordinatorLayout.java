@@ -28,7 +28,6 @@ public class MyCoordinatorLayout extends CoordinatorLayout {
     @Override public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
 
 
-        Log.d("TAG" , allowForScrool + " allow for scroll + " + nestedScrollAxes);
         return allowForScrool && super.onStartNestedScroll(child, target, nestedScrollAxes);
     }
 

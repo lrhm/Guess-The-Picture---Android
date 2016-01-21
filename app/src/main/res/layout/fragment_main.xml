@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ir.treeco.aftabe.View.Custom.MyCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:smt="http://schemas.android.com/apk/lib/com.ogaclejapan.smarttablayout"
     android:id="@+id/my_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,7 +25,7 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-        <com.ogaclejapan.smarttablayout.SmartTabLayout
+        <com.ogaclejapan.smarttablayout.MySmartTabLayout
             android:id="@+id/viewpagertab"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -35,7 +36,6 @@
             app:stl_defaultTabTextHorizontalPadding="25dp"
             app:stl_defaultTabTextMinWidth="0dp"
             app:stl_defaultTabTextSize="16sp"
-
             app:stl_distributeEvenly="true"
             app:stl_dividerColor="#00000000"
             app:stl_dividerThickness="0dp"
@@ -43,7 +43,9 @@
             app:stl_indicatorColor="#44000000"
             app:stl_indicatorCornerRadius="20dp"
             app:stl_indicatorInterpolation="smart"
-            app:stl_indicatorThickness="40dp"
+            app:stl_indicatorThickness="35dp"
+            app:stl_indicatorWithoutPadding="true"
+            app:stl_indicatorGravity="center"
             app:stl_underlineColor="#66000000"
             app:stl_underlineThickness="0dp" />
 
