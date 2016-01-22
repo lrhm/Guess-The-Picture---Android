@@ -38,6 +38,7 @@ public class UserLevelMarkView extends LinearLayout {
 
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
+    private static final int TEXT_ALIGN_CENTER =2;
 
     private int mTextAlign;
     private boolean isUser;
@@ -103,17 +104,30 @@ public class UserLevelMarkView extends LinearLayout {
 
         setOrientation(orientation);
 
-        if (orientation == VERTICAL) {
-            textLP.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
-            mUserNameTextView.setLayoutParams(textLP);
+        if(mTextAlign != TEXT_ALIGN_CENTER) {
 
-            addView(imagesContainer);
-            addView(mUserNameTextView);
-        } else {
-            textLP.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
-            mUserNameTextView.setLayoutParams(textLP);
+            if (orientation == VERTICAL) {
+                textLP.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+                mUserNameTextView.setLayoutParams(textLP);
 
-            addView(mUserNameTextView);
+                addView(imagesContainer);
+                addView(mUserNameTextView);
+            } else {
+                textLP.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+                mUserNameTextView.setLayoutParams(textLP);
+
+                addView(mUserNameTextView);
+                addView(imagesContainer);
+            }
+        }
+        else { //Text Align Center
+            imagesContainer.addView(mUserNameTextView);
+
+            mUserNameTextView.setText(mUserNameTextView.getText().subSequence(0, 2));
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mUserNameTextView.getLayoutParams();
+            layoutParams.gravity = Gravity.CENTER;
+            mUserNameTextView.setGravity(Gravity.CENTER);
+
             addView(imagesContainer);
         }
 

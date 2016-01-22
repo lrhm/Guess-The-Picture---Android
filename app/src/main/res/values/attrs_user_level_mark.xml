@@ -6,6 +6,7 @@
         <attr name="textAlign" format="enum" >
             <enum name="left" value="0"/>
             <enum name="below" value="1"/>
+            <enum name="center" value="2" />
         </attr>
     </declare-styleable>
 </resources>

@@ -55,9 +55,9 @@ public class MainFragment extends Fragment {
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
 //                .add("تازه‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
-                .add(" "+"آفلاین"+ " ", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
+                .add("    "+"آفلاین"+ "    ", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
 //                .add("محبوب‌ترین‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
-                .add(" "+"آنلاین"+ " ", OnlineMenuFragment.class)
+                .add("    "+"آنلاین"+ "    ", OnlineMenuFragment.class)
                 .create()
         );
 
@@ -77,13 +77,13 @@ public class MainFragment extends Fragment {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
 
-                Log.d("MainFragment", verticalOffset + " vertical offset " + mCollapsingToolbarLayout.getHeight());
+//                Log.d("MainFragment", verticalOffset + " vertical offset " + mCollapsingToolbarLayout.getHeight());
                 if (Math.abs(verticalOffset) == mCollapsingToolbarLayout.getHeight() && myCoordinatorLayout.isAllowForScrool()) {
                     myCoordinatorLayout.setAllowForScrool(false);
                     shaderImageView.setVisibility(View.VISIBLE);
-                    Log.d("TAG", "set allow for scroll false");
+//                    Log.d("TAG", "set allow for scroll false");
                 } else if (!myCoordinatorLayout.isAllowForScrool() && Math.abs(verticalOffset) != mCollapsingToolbarLayout.getHeight()) {
-                    Log.d("TAG", "set expanded to false");
+//                    Log.d("TAG", "set expanded to false");
                     mAppBarLayout.setExpanded(false, false);
                 }
 

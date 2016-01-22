@@ -4,7 +4,8 @@
     xmlns:smt="http://schemas.android.com/apk/lib/com.ogaclejapan.smarttablayout"
     android:id="@+id/my_coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dp">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/adtest"

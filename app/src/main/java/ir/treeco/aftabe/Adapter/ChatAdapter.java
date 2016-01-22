@@ -97,17 +97,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public synchronized void onBindViewHolder(ViewHolder holder, int position) {
 
         ChatObject chatObject = mList.get(position);
         holder.mChatContent.setText(chatObject.getChatContent());
 
+        Log.d("ChatAdapter", mList.size() + " " + mList.get(position).getType() + " " + position + " " + mList.get(position).getChatContent());
+
+        if (mList.size() > 1 && position != 1) {
+            if (mList.get(1).getType() == chatObject.getType()) {
+                Log.d("ChatAdapter", "Types are Equal , Setting Visibility Gone");
+                holder.mUserLevelMarkView.setVisibility(View.GONE);
+            } else
+                holder.mUserLevelMarkView.setVisibility(View.VISIBLE);
+        } else
+            holder.mUserLevelMarkView.setVisibility(View.VISIBLE);
     }
 
     public void addChatItem(ChatObject chatObject) {
-        mList.add(0 , chatObject);
+        mList.add(0, chatObject);
         notifyItemInserted(0);
-        
+
     }
 
     @Override

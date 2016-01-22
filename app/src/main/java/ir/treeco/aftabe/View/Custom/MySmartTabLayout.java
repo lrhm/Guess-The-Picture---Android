@@ -397,7 +397,7 @@ public class MySmartTabLayout extends HorizontalScrollView {
             if (distributeEvenly) {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabView.getLayoutParams();
 
-                lp.leftMargin = (i == 0) ? (int) (SizeManager.getScreenWidth() * 0.2) : 0;
+                lp.leftMargin = (i == 0) ? (int) (SizeManager.getScreenWidth() * 0.15) : 0;
 
 //                lp.gravity = Gravity.RIGHT;
             }

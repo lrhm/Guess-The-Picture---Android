@@ -24,7 +24,7 @@
         android:layout_marginRight="20dp"
         app:customDimension="0.15"
         app:isUser="false"
-        app:textAlign="below"
+        app:textAlign="center"
 
         />
 
