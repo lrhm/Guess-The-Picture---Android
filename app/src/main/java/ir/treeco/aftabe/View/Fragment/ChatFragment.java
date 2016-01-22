@@ -15,15 +15,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.Adapter.ChatAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
+import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.ChatObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 
 public class ChatFragment extends Fragment implements View.OnClickListener {
@@ -66,13 +69,19 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
+
+
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-         mChatView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
+        mChatView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.chat_text_input_layout);
         mEditText = (EditText) view.findViewById(R.id.chat_input_edit_text);
         mMainLayout = view.findViewById(R.id.chat_main_layout);
-        Button sendButton = (Button) view.findViewById(R.id.chat_send);
+        ImageView sendButton = (ImageView) view.findViewById(R.id.chat_send);
         sendButton.setOnClickListener(this);
+        int size = (int) (SizeManager.getScreenWidth() * 0.1);
+        sendButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, size, size));
+
 
         LinearLayout.LayoutParams textlp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.8), ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -88,7 +97,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
         Log.d("TAG", "this is spartaa");
 
-         mChatAdapter = new ChatAdapter(list);
+        mChatAdapter = new ChatAdapter(list);
         mChatView.setAdapter(mChatAdapter);
         mChatAdapter.addChatItem(o1);
         mChatAdapter.addChatItem(o2);
