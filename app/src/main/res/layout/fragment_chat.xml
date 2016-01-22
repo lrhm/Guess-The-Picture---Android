@@ -4,7 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ir.treeco.aftabe.View.Fragment.ChatFragment">
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/shade_image_chat_fragment"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

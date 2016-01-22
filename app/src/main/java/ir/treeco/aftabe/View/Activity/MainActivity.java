@@ -61,6 +61,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageView coinBox;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

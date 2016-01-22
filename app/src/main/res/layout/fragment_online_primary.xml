@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:customDimension="0.4"
+        app:isUser="true"
         ></ir.treeco.aftabe.View.Custom.UserLevelMarkView>
 
     <View

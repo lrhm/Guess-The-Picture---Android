@@ -1,11 +1,13 @@
 package ir.treeco.aftabe.View.Custom;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.Fragment;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +27,9 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
+import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
 import ir.treeco.aftabe.View.Dialog.UserViewDialog;
 
 /**
@@ -38,7 +43,7 @@ public class UserLevelMarkView extends LinearLayout {
 
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
-    private static final int TEXT_ALIGN_CENTER =2;
+    private static final int TEXT_ALIGN_CENTER = 2;
 
     private int mTextAlign;
     private boolean isUser;
@@ -104,7 +109,7 @@ public class UserLevelMarkView extends LinearLayout {
 
         setOrientation(orientation);
 
-        if(mTextAlign != TEXT_ALIGN_CENTER) {
+        if (mTextAlign != TEXT_ALIGN_CENTER) {
 
             if (orientation == VERTICAL) {
                 textLP.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
@@ -119,8 +124,7 @@ public class UserLevelMarkView extends LinearLayout {
                 addView(mUserNameTextView);
                 addView(imagesContainer);
             }
-        }
-        else { //Text Align Center
+        } else { //Text Align Center
             imagesContainer.addView(mUserNameTextView);
 
             mUserNameTextView.setText(mUserNameTextView.getText().subSequence(0, 2));
@@ -131,7 +135,7 @@ public class UserLevelMarkView extends LinearLayout {
             addView(imagesContainer);
         }
 
-        FontsHolder.setFont(mUserNameTextView , FontsHolder.SANS_REGULAR);
+        FontsHolder.setFont(mUserNameTextView, FontsHolder.SANS_REGULAR);
 
         if (!isUser)
             setUserExp(10);
@@ -139,15 +143,36 @@ public class UserLevelMarkView extends LinearLayout {
             setUserExp(3);
 
 
-        if (!isClickable())
+        if (!isClickable()) {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new UserViewDialog(getContext()).show();
-
+                    if (!isUser) {
+                        new UserViewDialog(getContext()).show();
+                    }
+                    else {
+                        new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
+                    }
                 }
             });
+
+        }
+
 //        TODO remove the line above
+    }
+
+    private MainActivity getActivity() {
+
+
+
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof MainActivity) {
+                return (MainActivity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
     public boolean isUser() {

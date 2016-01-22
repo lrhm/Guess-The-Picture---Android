@@ -27,6 +27,7 @@ import ir.treeco.aftabe.Object.ChatObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 
 public class ChatFragment extends Fragment implements View.OnClickListener {
@@ -101,6 +102,11 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         mChatView.setAdapter(mChatAdapter);
         mChatAdapter.addChatItem(o1);
         mChatAdapter.addChatItem(o2);
+
+
+        ImageView shaderImageView = (ImageView) view.findViewById(R.id.shade_image_chat_fragment);
+        SizeConverter shadeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1857, 23);
+        shaderImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.shade, shadeConverter.mWidth, shadeConverter.mHeight, ImageManager.ScalingLogic.FIT));
 
 
 

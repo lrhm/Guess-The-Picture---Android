@@ -6,9 +6,27 @@ package ir.treeco.aftabe.Object;
 public class User {
     private String userName;
     private int mark;
-
-    public User(String userName, int mark){
+    private int rank;
+    public User(String userName, int mark , int rank){
         this.userName = userName;
         this.mark = mark;
+        this.rank = rank;
+    }
+
+    public User(String userName, int mark ){
+        this.userName = userName;
+        this.mark = mark;
+    }
+
+    public int getRank(){
+        return rank;
+    }
+
+    public String getUserName(){
+        return userName;
+    }
+
+    public int getMark() {
+        return mark;
     }
 }
