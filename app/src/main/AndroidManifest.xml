@@ -29,8 +29,8 @@
             android:name=".View.Activity.MainActivity"
             android:label="Aftabe"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/noAnimTheme">
+            android:theme="@style/noAnimTheme"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

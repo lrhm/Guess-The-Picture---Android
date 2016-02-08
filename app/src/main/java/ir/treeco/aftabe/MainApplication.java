@@ -4,8 +4,13 @@ import android.app.Application;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.io.IOError;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Object.HeadObject;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
@@ -16,6 +21,8 @@ public class MainApplication extends Application {
     private HeadObject headObject;
     private DBAdapter db;
     private Tools tools;
+    private final String USER_ID_KEY = "USER_KEY_TAG";
+    private final String IS_USER_REGISTRATED = "isUserRegistratedKey";
 
     @Override
     public void onCreate() {
@@ -46,6 +53,9 @@ public class MainApplication extends Application {
         }
 
         tools.downloadHead();
+
+
+
     }
 
     public LengthManager getLengthManager() {
@@ -63,4 +73,13 @@ public class MainApplication extends Application {
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
+    public User getSelfUser() {
+        return null;
+
+    }
+
+    public void updateUser(){
+
+    }
+
 }

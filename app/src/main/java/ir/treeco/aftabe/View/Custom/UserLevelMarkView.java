@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -45,6 +46,7 @@ public class UserLevelMarkView extends LinearLayout {
     private static final int TEXT_ALIGN_BELOW = 1;
     private static final int TEXT_ALIGN_CENTER = 2;
 
+    private User mUser;
     private int mTextAlign;
     private boolean isUser;
     private final int maxMarkCount = 8;
@@ -143,26 +145,28 @@ public class UserLevelMarkView extends LinearLayout {
             setUserExp(3);
 
 
+        setDefualtListener();
+
+//        TODO remove the line above
+    }
+
+    public void setDefualtListener(){
         if (!isClickable()) {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!isUser) {
                         new UserViewDialog(getContext()).show();
-                    }
-                    else {
+                    } else {
                         new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
                     }
                 }
             });
 
         }
-
-//        TODO remove the line above
     }
 
     private MainActivity getActivity() {
-
 
 
         Context context = getContext();
@@ -237,5 +241,28 @@ public class UserLevelMarkView extends LinearLayout {
         return 0;
     }
 
+    public void setUser(User user) {
+        this.mUser = user;
+        setmUserMark(user.getMark());
+        setUserExp(user.getRank());
+        setUserName(user.getUserName());
+    }
+
+    private void setUserName(String userName) {
+
+        if (mTextAlign != TEXT_ALIGN_CENTER) {
+            mUserNameTextView.setText(userName);
+
+        } else { //Text Align Center
+
+            mUserNameTextView.setText(userName.subSequence(0, 2));
+
+        }
+
+    }
+
+    public void setUserGuest(){
+        mUserNameTextView.setText("عضویت/ورود");
+    }
 
 }

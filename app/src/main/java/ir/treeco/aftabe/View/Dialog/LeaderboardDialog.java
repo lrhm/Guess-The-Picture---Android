@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.ogaclejapan.smarttablayout.MySmartTabLayout;
@@ -69,10 +70,10 @@ public class LeaderboardDialog extends DialogFragment {
         viewPager.setAdapter(fragmentPagerAdapter);
         smartTabLayout.setViewPager(viewPager);
 
-        RelativeLayout mDataContainer = (RelativeLayout) view.findViewById(R.id.leaderboard_dialog_container);
-        RelativeLayout.LayoutParams layoutParams = new
-                RelativeLayout.LayoutParams((int) (0.8 * SizeManager.getScreenWidth()), (int) (0.7 * SizeManager.getScreenHeight()));
-        layoutParams.topMargin = (int) (SizeManager.getScreenWidth() * 0.09);
+        LinearLayout mDataContainer = (LinearLayout) view.findViewById(R.id.leaderboard_dialog_container);
+        LinearLayout.LayoutParams layoutParams = new
+                LinearLayout.LayoutParams((int) (0.8 * SizeManager.getScreenWidth()), (int) (0.7 * SizeManager.getScreenHeight()));
+//        layoutParams.topMargin = (int) (SizeManager.getScreenWidth() * 0.09);
         mDataContainer.setLayoutParams(layoutParams);
         view.setLayoutParams(layoutParams);
         viewPager.setLayoutParams(layoutParams);
