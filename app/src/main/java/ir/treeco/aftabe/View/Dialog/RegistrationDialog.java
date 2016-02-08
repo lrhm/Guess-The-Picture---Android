@@ -3,12 +3,17 @@ package ir.treeco.aftabe.View.Dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.google.android.gms.common.SignInButton;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
@@ -16,6 +21,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 
 public class RegistrationDialog extends Dialog  {
@@ -55,14 +61,18 @@ public class RegistrationDialog extends Dialog  {
         gmailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithGoogle();
+                ((MainActivity)context).signInWithGoogle();
+                dismiss();
             }
         });
 
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getWindow().setAttributes(lp);
+
     }
 
-    public void signInWithGoogle(){
-
-    }
 }
 

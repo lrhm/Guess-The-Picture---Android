@@ -50,8 +50,7 @@ public class OnlinePrimaryPageFragment extends Fragment {
             mUserLevelMarkView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new RegistrationDialog(getContext()).show();
-                    Log.d("TAGH", "TAHG");
+                    new RegistrationDialog(getActivity()).show();
                 }
             });
         }

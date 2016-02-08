@@ -23,6 +23,12 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.Adapter.CoinAdapter;
@@ -41,7 +47,7 @@ import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
-        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener {
+        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener, GoogleApiClient.OnConnectionFailedListener {
     private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
@@ -59,7 +65,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public MainFragment mainFragment;
     public TextView timerTextView;
     private ImageView coinBox;
-
+    private GoogleSignInOptions mGoogleSignInOptions;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 9001;
 
 
     @Override
@@ -105,6 +113,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setOriginalBackgroundColor();
         initSizes();
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
+
+        mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
+                .build();
     }
 
 
@@ -141,7 +159,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void setUpPlayers() {
-        RelativeLayout.LayoutParams lp =(RelativeLayout.LayoutParams) playerOne.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
         lp.topMargin = (int) (lengthManager.getScreenWidth() / 15f);
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
@@ -195,7 +213,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ));
 
         logo.setImageBitmap(imageManager.loadImageFromResource(
-                R.drawable.header,  lengthManager.getScreenWidth(),
+                R.drawable.header, lengthManager.getScreenWidth(),
                 lengthManager.getScreenWidth() / 4
         ));
     }
@@ -283,16 +301,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+
+
         if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_SMALL_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
-        else if (productId.equals(StoreFragment.SKU_BIG_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
+        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_SMALL_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
+        else if (productId.equals(StoreFragment.SKU_BIG_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
         else if (mOnPackagePurchasedListener != null) {
             mOnPackagePurchasedListener.packagePurchased(productId);
             mOnPackagePurchasedListener = null;
@@ -323,6 +352,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits.setText(tools.numeralStringToPersianDigits("" + newAmount));
     }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(this, "failed to connect to google", Toast.LENGTH_SHORT).show();
+    }
+
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
     }
@@ -343,4 +377,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         super.onDestroy();
     }
+
+    public void signInWithGoogle() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d("MainAcivity", "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            Log.d("MainActivity", acct.getEmail() + " " + acct.getIdToken() + " " + acct.getId());
+
+
+        } else {
+        }
+    }
+
+
+
 }
