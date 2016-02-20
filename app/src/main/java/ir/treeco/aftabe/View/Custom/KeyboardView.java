@@ -579,14 +579,12 @@ public class KeyboardView extends RelativeLayout {
         public SwipeView(Context context) {
             super(context);
 
-            // TODO Auto-generated constructor stub
         }
 
         float xStart;
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            // TODO Auto-generated method stub
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 xStart = event.getX();
             }

@@ -158,7 +158,6 @@ public class UserLevelMarkView extends LinearLayout {
 
         }
 
-//        TODO remove the line above
     }
 
     private MainActivity getActivity() {

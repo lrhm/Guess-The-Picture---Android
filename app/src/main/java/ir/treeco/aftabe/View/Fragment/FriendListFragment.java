@@ -96,7 +96,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         objct[4] = "saghi";
 
 
-//        TODO visibility of headtextview
 
 
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.search_text_input_layout);
