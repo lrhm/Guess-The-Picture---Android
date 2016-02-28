@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -38,6 +39,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.FirstPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.CtaDescription"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.MessagesList"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.ReportPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.ShowVideoPage"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.WebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.DirectAdMiddleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <service android:name="ir.tapsell.tapselldevelopersdk.services.asynchservices.core.HttpService" />
 
     </application>
 

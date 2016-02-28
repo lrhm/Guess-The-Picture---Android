@@ -31,6 +31,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 
+import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.R;
@@ -123,6 +124,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
                 .build();
+
+        String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
+        TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
     }
 
 

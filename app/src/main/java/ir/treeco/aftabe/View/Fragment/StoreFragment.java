@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ir.tapsell.tapselldevelopersdk.FirstPage;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -39,13 +40,13 @@ public class StoreFragment extends Fragment {
     public static final int AMOUNT_SMALL_COIN = 1000;
     public static final int AMOUNT_MEDIUM_COIN = 2000;
     public static final int AMOUNT_BIG_COIN = 5000;
-    static final int[] buttonIds = new int[] {
+    static final int[] buttonIds = new int[]{
             R.id.very_small_coin,
             R.id.small_coin,
             R.id.medium_coin,
             R.id.big_coin
     };
-    static final String[] SKUs = new String[] {
+    static final String[] SKUs = new String[]{
             SKU_VERY_SMALL_COIN,
             SKU_SMALL_COIN,
             SKU_MEDIUM_COIN,
@@ -75,7 +76,7 @@ public class StoreFragment extends Fragment {
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getActivity()).purchase(SKUs[finalI]);
+                    ((MainActivity) getActivity()).purchase(SKUs[finalI]);
                 }
             });
         }
@@ -100,6 +101,15 @@ public class StoreFragment extends Fragment {
             });
         }
 
+        View tapsell = layout.findViewById(R.id.tapsell_free_coin);
+        tapsell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FirstPage.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
         ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
         Bitmap shopTitleBitmap = imageManager.loadImageFromResource(R.drawable.shoptitle, lengthManager.getShopTitleWidth(), -1);
 
@@ -113,20 +123,22 @@ public class StoreFragment extends Fragment {
     }
 
     private void setupItemsList() {
-        int[] revenues = new int[] {500, 1000, 2000, 15000, 300};
-        int[] prices = new int[] {450, 800, 1500, 5000, -1};
+        int[] revenues = new int[]{500, 1000, 2000, 15000, 300, 300};
+        int[] prices = new int[]{450, 800, 1500, 5000, -1, -1};
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);
 
-        FrameLayout[] items = new FrameLayout[5];
-        for (int i = 0; i < 5; i++)
+        FrameLayout[] items = new FrameLayout[6];
+        for (int i = 0; i < 6; i++)
             items[i] = (FrameLayout) itemsList.getChildAt(i);
 
         for (int i = 0; i < items.length; i++) {
             String persianPrice = "فقط " + tools.numeralStringToPersianDigits("" + prices[i]) + " تومان";
             if (i == 4)
                 persianPrice = "نظر در بازار";
-            setupItem(items[i],  persianPrice, revenues[i], i % 2 == 1);
+            if (i == 5)
+                persianPrice = "تبلیغ ببین سکه ببر";
+            setupItem(items[i], persianPrice, revenues[i], i % 2 == 1);
         }
     }
 
@@ -163,6 +175,6 @@ public class StoreFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((MainActivity)getActivity()).setStore(false);
+        ((MainActivity) getActivity()).setStore(false);
     }
 }

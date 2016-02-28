@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "19.1.0"
+    defaultPublishConfig "debug"
 
     defaultConfig {
         applicationId "ir.treeco.aftabe"
@@ -31,10 +32,10 @@ dependencies {
     compile 'com.pixplicity.easyprefs:library:1.7'
     compile 'joda-time:joda-time:2.8.2'
     compile 'com.android.support:design:23.1.1'
-    compile ('io.socket:socket.io-client:0.7.0') {
+    compile('io.socket:socket.io-client:0.7.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
-
+    compile project(':Libraries:ts:tap')
 }
 apply plugin: 'com.google.gms.google-services'
