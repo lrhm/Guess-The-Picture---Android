@@ -1,103 +1,191 @@
 package ir.treeco.aftabe.Object;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.annotations.Expose;
+
+import java.util.Map;
+
+import ir.treeco.aftabe.API.Utils.LoginInfo;
 
 /**
- * Created by al on 12/26/15.
+ * Created by al on 3/4/16.
  */
 public class User {
-    private String userName;
+
+
+    @Expose
+    Map error;
+
+    @Expose
     private String name;
-    private int mark;
-    private int rank;
-    private int id;
 
+    @Expose
+    private String email;
 
-    public User(JSONObject jsonObject) {
-        try {
-            userName = jsonObject.getString("username");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            id = jsonObject.getInt("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            mark = jsonObject.getInt("mark");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            rank = jsonObject.getInt("rank");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    @Expose
+    private String updated;
+
+    @Expose
+    private String created;
+
+    @Expose
+    private boolean bot;
+
+    @Expose
+    private double seed;
+
+    @Expose
+    private int coins;
+
+    @Expose
+    private String imei;
+
+    @Expose
+    private String key;
+
+    @Expose
+    private int score;
+
+    @Expose
+    private String id;
+
+    @Expose
+    private boolean guest;
+
+    @Expose
+    private String code;
+
+    public User() {
+        guest = false;
     }
 
-    public User(String userName, String name, int mark, int rank, int id) {
-        this.userName = userName;
-        this.mark = mark;
-        this.rank = rank;
-        this.id = id;
+    public Map getError() {
+        return error;
+    }
+
+    public void setError(Map error) {
+        this.error = error;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public User(String userName, int mark, int rank) {
-        this.userName = userName;
-        this.mark = mark;
-        this.rank = rank;
+    public String getEmail() {
+        return email;
     }
 
-    public User(String userName, int mark) {
-        this.userName = userName;
-        this.mark = mark;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public int getRank() {
-        return rank;
+    public String getUpdated() {
+        return updated;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setUpdated(String updated) {
+        this.updated = updated;
     }
 
-    public int getMark() {
-        return mark;
+    public String getCreated() {
+        return created;
     }
 
-    public int getId() {
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public boolean isBot() {
+        return bot;
+    }
+
+    public void setBot(boolean bot) {
+        this.bot = bot;
+    }
+
+    public double getSeed() {
+        return seed;
+    }
+
+    public void setSeed(double seed) {
+        this.seed = seed;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
+
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public boolean isGuest() {
+        return guest;
+    }
 
-    public JSONObject toJson() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("username", userName);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsonObject.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsonObject.put("mark", mark);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            jsonObject.put("rank", rank);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void setGuest(boolean guest) {
+        this.guest = guest;
+    }
 
-        return jsonObject;
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public LoginInfo getLoginInfo() {
+        return loginInfo;
+    }
+
+    public void setLoginInfo(LoginInfo loginInfo) {
+        this.loginInfo = loginInfo;
+    }
+
+    private LoginInfo loginInfo;
+
+    public int getRank() {
+        return score / 8 + 1;
+    }
+
+    public int getMark() {
+        return score % 8 ;
     }
 
 }

@@ -243,9 +243,9 @@ public class UserLevelMarkView extends LinearLayout {
 
     public void setUser(User user) {
         this.mUser = user;
-        setmUserMark(user.getMark());
+        setmUserMark(user.getScore() );
         setUserExp(user.getRank());
-        setUserName(user.getUserName());
+        setUserName(user.getName());
     }
 
     private void setUserName(String userName) {

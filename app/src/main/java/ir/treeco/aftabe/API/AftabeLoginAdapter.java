@@ -1,6 +1,5 @@
 package ir.treeco.aftabe.API;
 
-import android.provider.Settings;
 import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -12,7 +11,7 @@ import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
-import ir.treeco.aftabe.API.Utils.User;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
 import retrofit.Call;
 import retrofit.Callback;
@@ -185,7 +184,6 @@ public class AftabeLoginAdapter {
                 c.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Response<User> response) {
-                        Log.d("TAG", "got user " + response.body().guest);
                         response.body().setLoginInfo(loginInfo);
                         apiUserListener.onGetUser(response.body());
 

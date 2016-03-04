@@ -133,7 +133,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         ArrayList<User> users = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            users.add(new User("asghar", 3));
+            User tmp = new User();
+            tmp.setScore(5);
+            tmp.setName("asghar");
+            users.add(tmp);
         }
         mFriendsAdapter = new FriendsAdapter(users, null, null, null);
 
@@ -174,10 +177,13 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+        User tmp = new User();
+        tmp.setScore(32);
+        tmp.setName("no name");
         if (s.length() > 0 && clearButton.getVisibility() != View.VISIBLE)
             clearButton.setVisibility(View.VISIBLE);
         if (s.length() > 1)
-            mFriendsAdapter.addUser(new User("ta", 23), FriendsAdapter.TYPE_SEARCHED);
+            mFriendsAdapter.addUser(tmp, FriendsAdapter.TYPE_SEARCHED);
     }
 
     @Override
