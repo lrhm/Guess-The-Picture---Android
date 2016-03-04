@@ -47,6 +47,7 @@ public class MainApplication extends Application {
         tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
         if (Prefs.getBoolean("firstAppRun", true)) {
+
             db.insertCoins(399);
             tools.copyLocalpackages();
             Prefs.putBoolean("firstAppRun", false);

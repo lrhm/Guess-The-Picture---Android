@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.Util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -17,7 +18,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.pixplicity.easyprefs.library.Prefs;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,11 +34,21 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Scanner;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -47,6 +62,8 @@ public class Tools {
     private LengthManager lengthManager;
     private HeadObject headObject;
     private ImageManager imageManager;
+    private final static String ENCRYPT_KEY = "shared_prefs_last_long";
+    private final static String PACKAGE_SOLVE_CNT = "package_slv_count";
 
     public Tools(Context context) {
         this.context = context;
@@ -302,9 +319,9 @@ public class Tools {
 
     }
 
-    public void saveBitmap (Bitmap bitmap, String name) {
+    public void saveBitmap(Bitmap bitmap, String name) {
 
-        File file = new File (context.getFilesDir().getPath() + "/Downloaded/", name);
+        File file = new File(context.getFilesDir().getPath() + "/Downloaded/", name);
         try {
             FileOutputStream out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
@@ -318,7 +335,7 @@ public class Tools {
 
     public void checkDB() {
         Log.e("db", "check");
-        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db";
+        String currentDBPath = "/data/" + "ir.treeco.aftabe" + "/databases/" + "aftabe.db";
         File data = Environment.getDataDirectory();
         File currentDB = new File(data, currentDBPath);
 
@@ -334,7 +351,7 @@ public class Tools {
         File data = Environment.getDataDirectory();
         FileChannel source;
         FileChannel destination;
-        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db";
+        String currentDBPath = "/data/" + "ir.treeco.aftabe" + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/a.mk";
         File currentDB = new File(data, currentDBPath);
         File backupDB = new File(sd, backupDBPath);
@@ -343,13 +360,34 @@ public class Tools {
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
-            source = new FileInputStream(backupDB).getChannel();
-            destination = new FileOutputStream(currentDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
+            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+
+            backupDB.deleteOnExit();
+            backupDB.createNewFile();
+            FileOutputStream fos = new FileOutputStream(currentDB);
+            FileInputStream fis = new FileInputStream(backupDB);
+
+            CipherInputStream cis = new CipherInputStream(fis, cipher);
+
+            byte[] block = new byte[8];
+            int i;
+            while ((i = cis.read(block)) != -1) {
+                fos.write(block, 0, i);
+            }
+            fos.close();
+            cis.close();
+            fis.close();
             Log.e("db", "Restore");
-        } catch(IOException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
     }
@@ -360,7 +398,7 @@ public class Tools {
         File data = Environment.getDataDirectory();
         FileChannel source;
         FileChannel destination;
-        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db-journal";
+        String currentDBPath = "/data/" + "ir.treeco.aftabe" + "/databases/" + "aftabe.db-journal";
         String backupDBPath = "Android/b.mk";
         File currentDB = new File(data, currentDBPath);
         File backupDB = new File(sd, backupDBPath);
@@ -369,64 +407,130 @@ public class Tools {
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
-            source = new FileInputStream(backupDB).getChannel();
-            destination = new FileOutputStream(currentDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            Log.e("db", "Restore");
-        } catch(IOException e) {
+
+            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+
+            backupDB.deleteOnExit();
+            backupDB.createNewFile();
+            FileOutputStream fos = new FileOutputStream(currentDB);
+            FileInputStream fis = new FileInputStream(backupDB);
+
+            CipherInputStream cis = new CipherInputStream(fis, cipher);
+
+            byte[] block = new byte[8];
+            int i;
+            while ((i = cis.read(block)) != -1) {
+                fos.write(block, 0, i);
+            }
+            fos.close();
+            cis.close();
+            fis.close();
+
+            Log.e("db", "Restore blocks " +i );
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
     }
 
-    public void backUpDB(){
+    public void backUpDB() {
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
         File data = Environment.getDataDirectory();
         FileChannel source;
         FileChannel destination;
-        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db";
+        String currentDBPath = "/data/" + "ir.treeco.aftabe" + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/a.mk";
         File currentDB = new File(data, currentDBPath);
         File backupDB = new File(sd, backupDBPath);
         Log.e("cc", currentDB.getPath());
         Log.e("dd", backupDB.getPath());
         try {
+            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+
             backupDB.deleteOnExit();
             backupDB.createNewFile();
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            Log.e("db", "backup");
+            FileOutputStream fos = new FileOutputStream(backupDB);
+            FileInputStream fis = new FileInputStream(currentDB);
+
+            CipherOutputStream cos = new CipherOutputStream(fos, cipher);
+
+            byte[] block = new byte[8];
+            int i;
+            while ((i = fis.read(block)) != -1) {
+                cos.write(block, 0, i);
+            }
+            cos.close();
+            fis.close();
+            fos.close();
+
+            Log.e("db", "backup ");
             backUpDBJournal();
-        } catch(IOException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
     }
 
-    public void backUpDBJournal(){
+    public void backUpDBJournal() {
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
         File data = Environment.getDataDirectory();
         FileChannel source;
         FileChannel destination;
-        String currentDBPath = "/data/"+ "ir.treeco.aftabe" +"/databases/"+"aftabe.db-journal";
+        String currentDBPath = "/data/" + "ir.treeco.aftabe" + "/databases/" + "aftabe.db-journal";
         String backupDBPath = "Android/b.mk";
         File currentDB = new File(data, currentDBPath);
         File backupDB = new File(sd, backupDBPath);
+
+
         Log.e("cc", currentDB.getPath());
         Log.e("dd", backupDB.getPath());
         try {
+
+            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+
             backupDB.deleteOnExit();
             backupDB.createNewFile();
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            Log.e("db", "backup");
-        } catch(IOException e) {
+            FileOutputStream fos = new FileOutputStream(backupDB);
+            FileInputStream fis = new FileInputStream(currentDB);
+
+            CipherOutputStream cos = new CipherOutputStream(fos, cipher);
+
+            byte[] block = new byte[8];
+            int i;
+            while ((i = fis.read(block)) != -1) {
+                cos.write(block, 0, i);
+            }
+            cos.close();
+            fis.close();
+            fos.close();
+
+            Log.e("db", "backup blocks "+ i);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         }
     }
@@ -482,6 +586,41 @@ public class Tools {
                     }
                 }
         );
+    }
+
+    public static String getAESKey() {
+
+        String str = Prefs.getString(ENCRYPT_KEY, null);
+        if (str == null)
+            return "1234567812345678"; // for users without deviceID
+        byte[] key = new byte[16];
+        byte[] strBytes = str.getBytes();
+        int i = 0;
+        while (i < 16 && i < strBytes.length)
+            key[i] = strBytes[i++];
+        while (i < 16)
+            key[i++] = 100;
+        return new String(key);
+    }
+
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static String enrcypt(String text) {
+        return Encryption.encryptAES(text, getAESKey());
+    }
+
+    public static String decrypt(String text) {
+        return Encryption.decryptAES(text, getAESKey());
+    }
+
+    public static Integer decryptToInt(String text) {
+        return Integer.valueOf(decrypt(text));
     }
 
 
