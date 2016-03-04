@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ir.tapsell.tapselldevelopersdk.FirstPage;
+import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -105,8 +106,9 @@ public class StoreFragment extends Fragment {
         tapsell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FirstPage.class);
-                getActivity().startActivity(intent);
+                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY , null , getActivity());
+                Intent intent = new Intent(getActivity(), ir.tapsell.tapselldevelopersdk.DirectAdMiddleActivity.class);
+                getActivity().startActivityForResult(intent, DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE);
             }
         });
 
@@ -123,7 +125,7 @@ public class StoreFragment extends Fragment {
     }
 
     private void setupItemsList() {
-        int[] revenues = new int[]{500, 1000, 2000, 15000, 300, 300};
+        int[] revenues = new int[]{500, 1000, 2000, 15000, 300, 20};
         int[] prices = new int[]{450, 800, 1500, 5000, -1, -1};
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);

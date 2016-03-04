@@ -17,6 +17,7 @@
       "oauth_client": [
         {
           "client_id": "294812968005-bseo26d77a39kj3mbjmgmqkaacnk4clm.apps.googleusercontent.com",
+
           "client_type": 1,
           "android_info": {
             "package_name": "ir.treeco.aftabe",

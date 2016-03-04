@@ -3,6 +3,7 @@ package ir.treeco.aftabe.View.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,9 +29,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.squareup.picasso.Picasso;
 
+import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -119,6 +123,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .requestEmail()
                 .requestIdToken(getString(R.string.server_client_id))
                 .build();
+
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
@@ -310,10 +315,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+        onActivityResultOfTapsell(requestCode, resultCode, data);
 
 
         if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void onActivityResultOfTapsell(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE) {
+            if (data == null
+                    || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
+                    || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
+                    || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE)) {
+                // User didn’t open ad
+                return;
+            }
+
+            boolean connected = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
+            boolean available = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
+            int award = data.getIntExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
+            if (!connected) {
+                // Couldn't connect to server
+            } else if (!available) {
+                // No such Ad was avaialbe
+            } else {
+                // user got {award} tomans. pay him!!!!
+                coinAdapter.earnCoins(20);
+            }
+        }
     }
 
     @Override
@@ -389,17 +420,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d("MainAcivity", "handleSignInResult:" + result.isSuccess());
+        String TAG = "GoogleSignInResult";
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            Log.d("MainActivity", acct.getEmail() + " " + acct.getIdToken() + " " + acct.getId());
+
+            Log.d(TAG, "getEmail: " + acct.getEmail());
+            Log.d(TAG, "getIdToken: " + acct.getIdToken());
+            Log.d(TAG, "getDisplayName: " + acct.getDisplayName());
+            Log.d(TAG, "getId: " + acct.getId());
+            Log.d(TAG, "getPhotoUrl: " + acct.getPhotoUrl());
+            Log.d(TAG, "getServerAuthCode: " + acct.getServerAuthCode());
+            String tmp = "";
+            for (Scope scope : acct.getGrantedScopes()) {
+                tmp += scope.toString() + " ";
+            }
+            Log.d("MainActivity", tmp);
 
 
         } else {
         }
     }
-
 
 
 }
