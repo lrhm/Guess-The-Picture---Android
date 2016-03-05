@@ -41,6 +41,10 @@ public class MainApplication extends Application {
 
         tools = new Tools(this);
 
+        if (Prefs.getBoolean("firstAppRun", true)) {
+            Tools.checkKey();
+        }
+
         tools.checkDB();
         db = DBAdapter.getInstance(this);
 
@@ -54,7 +58,6 @@ public class MainApplication extends Application {
         }
 
         tools.downloadHead();
-
 
 
     }
@@ -74,12 +77,13 @@ public class MainApplication extends Application {
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
+
     public User getSelfUser() {
         return null;
 
     }
 
-    public void updateUser(){
+    public void updateUser() {
 
     }
 

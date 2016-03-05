@@ -3,7 +3,6 @@ package ir.treeco.aftabe.View.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,15 +28,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.google.gson.Gson;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
 import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
+import ir.treeco.aftabe.API.AftabeLoginAdapter;
+import ir.treeco.aftabe.API.UserLoginListener;
+import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -52,7 +56,8 @@ import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
-        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener, GoogleApiClient.OnConnectionFailedListener {
+        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
+        GoogleApiClient.OnConnectionFailedListener, UserLoginListener {
     private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
@@ -73,6 +78,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private GoogleSignInOptions mGoogleSignInOptions;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
+    private static final String TAG = "MainActivity";
 
 
     @Override
@@ -132,6 +138,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
         TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
+
+        AftabeLoginAdapter.tryToLogin(this);
     }
 
 
@@ -392,6 +400,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Toast.makeText(this, "failed to connect to google", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onGetUser(User user) {
+        Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
+    }
+
+    @Override
+    public void onGetError() {
+        Log.d(TAG, "didnet get the user");
+
+    }
+
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
     }
@@ -426,17 +445,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
-            Log.d(TAG, "getEmail: " + acct.getEmail());
-            Log.d(TAG, "getIdToken: " + acct.getIdToken());
-            Log.d(TAG, "getDisplayName: " + acct.getDisplayName());
-            Log.d(TAG, "getId: " + acct.getId());
-            Log.d(TAG, "getPhotoUrl: " + acct.getPhotoUrl());
-            Log.d(TAG, "getServerAuthCode: " + acct.getServerAuthCode());
-            String tmp = "";
-            for (Scope scope : acct.getGrantedScopes()) {
-                tmp += scope.toString() + " ";
-            }
-            Log.d("MainActivity", tmp);
+            GoogleToken googleToken = new GoogleToken(acct.getIdToken(), "random");
+            AftabeLoginAdapter.getMyUserByGoogle(googleToken, this);
 
 
         } else {

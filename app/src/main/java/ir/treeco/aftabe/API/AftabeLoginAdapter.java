@@ -2,6 +2,8 @@ package ir.treeco.aftabe.API;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.Random;
@@ -11,8 +13,10 @@ import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
+import ir.treeco.aftabe.Util.Tools;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -45,7 +49,7 @@ public class AftabeLoginAdapter {
 
     }
 
-    public static void createGuestUser(final APIUserListener apiUserListener) {
+    public static void createGuestUser(final UserLoginListener userLoginListener) {
 
         init();
 
@@ -62,7 +66,13 @@ public class AftabeLoginAdapter {
         if (rand.compareTo("") == 0)
             rand = random.nextLong() + "";
 
-        GuestCreateToken guestCreateToken = new GuestCreateToken(rand);
+        final GuestCreateToken guestCreateToken = new GuestCreateToken(rand);
+
+        getGuestUser(guestCreateToken, userLoginListener);
+
+    }
+
+    public static void getGuestUser(final GuestCreateToken guestCreateToken, final UserLoginListener userLoginListener) {
 
         Call<LoginInfo> call = aftabeService.getGuestUserLogin(guestCreateToken);
         call.enqueue(new Callback<LoginInfo>() {
@@ -75,25 +85,26 @@ public class AftabeLoginAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
                         response.body().setLoginInfo(loginInfo);
-                        apiUserListener.onGetUser(response.body());
+                        if (userLoginListener != null) userLoginListener.onGetUser(response.body());
+                        Tools.updateSharedPrefsToken(response.body(), new TokenHolder(guestCreateToken));
+
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        apiUserListener.onGetError();
+                        if (userLoginListener != null) userLoginListener.onGetError();
                     }
                 });
             }
 
             @Override
             public void onFailure(Throwable t) {
-                apiUserListener.onGetError();
+                if (userLoginListener != null) userLoginListener.onGetError();
             }
         });
-
     }
 
-    public static void getUser(User myUser, String otherUserId, final APIUserListener apiUserListener) {
+    public static void getUser(User myUser, String otherUserId, final UserLoginListener userLoginListener) {
 
         init();
 
@@ -101,21 +112,18 @@ public class AftabeLoginAdapter {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
-                apiUserListener.onGetUser(response.body());
+                if (userLoginListener != null) userLoginListener.onGetUser(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
-                apiUserListener.onGetError();
+                if (userLoginListener != null) userLoginListener.onGetError();
 
             }
         });
     }
 
-    public static void submitSMSActivation(SMSToken smsToken, String imei,
-                                           String name, String validationCode, final APIUserListener apiUserListener) {
-        init();
-        smsToken.update(imei, name, validationCode);
+    public static void getSMSActivatedUser(final SMSToken smsToken, final UserLoginListener userLoginListener) {
         Call<LoginInfo> call = aftabeService.getSMSUserLogin(smsToken);
         call.enqueue(new Callback<LoginInfo>() {
             @Override
@@ -127,22 +135,31 @@ public class AftabeLoginAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
                         response.body().setLoginInfo(loginInfo);
-                        apiUserListener.onGetUser(response.body());
+                        if (userLoginListener != null) userLoginListener.onGetUser(response.body());
+                        Tools.updateSharedPrefsToken(response.body(), new TokenHolder(smsToken));
+
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
 
-                        apiUserListener.onGetError();
+                        if (userLoginListener != null) userLoginListener.onGetError();
                     }
                 });
             }
 
             @Override
             public void onFailure(Throwable t) {
-                apiUserListener.onGetError();
+                if (userLoginListener != null) userLoginListener.onGetError();
             }
         });
+    }
+
+    public static void submitSMSActivation(final SMSToken smsToken, String imei,
+                                           String name, String validationCode, final UserLoginListener userLoginListener) {
+        init();
+        smsToken.update(imei, name, validationCode);
+        getSMSActivatedUser(smsToken, userLoginListener);
     }
 
     public static void requestSMSActivation(SMSRequestToken smsRequestToken, final SMSValidationListener smsValidationListener) {
@@ -168,7 +185,7 @@ public class AftabeLoginAdapter {
         });
     }
 
-    public static void getMyUserByGoogle(GoogleToken googleToken, final APIUserListener apiUserListener) {
+    public static void getMyUserByGoogle(final GoogleToken googleToken, final UserLoginListener userLoginListener) {
 
         init();
 
@@ -185,13 +202,13 @@ public class AftabeLoginAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
                         response.body().setLoginInfo(loginInfo);
-                        apiUserListener.onGetUser(response.body());
-
+                        if (userLoginListener != null) userLoginListener.onGetUser(response.body());
+                        Tools.updateSharedPrefsToken(response.body(), new TokenHolder(googleToken));
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        apiUserListener.onGetError();
+                        if (userLoginListener != null) userLoginListener.onGetError();
                     }
                 });
 
@@ -199,10 +216,35 @@ public class AftabeLoginAdapter {
 
             @Override
             public void onFailure(Throwable t) {
-                apiUserListener.onGetError();
+                if (userLoginListener != null) userLoginListener.onGetError();
                 Log.d("TAG", "Fail");
             }
         });
     }
+
+    public static void tryToLogin(UserLoginListener userLoginListener) {
+        Log.d("AftabeLoginAdapter", "try to login");
+        if (!Prefs.contains(Tools.ENCRYPT_KEY) || !Prefs.contains(Tools.SHARED_PREFS_TOKEN))
+            return;
+        try {
+            Gson gson = new Gson();
+            TokenHolder tokenHolder = gson.fromJson(Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""), TokenHolder.class);
+            if (tokenHolder.getType() == TokenHolder.TOKEN_TYPE_GOOGLE) {
+                GoogleToken googleToken = tokenHolder.getGoogleToken();
+                getMyUserByGoogle(googleToken, userLoginListener);
+
+            } else if (tokenHolder.getType() == TokenHolder.TOKEN_TYPE_GUEST) {
+                GuestCreateToken guestCreateToken = tokenHolder.getGuestCreateToken();
+                getGuestUser(guestCreateToken, userLoginListener);
+            } else if (tokenHolder.getType() == TokenHolder.TOKEN_TYPE_SMS) {
+                SMSToken smsToken = tokenHolder.getSMSToken();
+                getSMSActivatedUser(smsToken, userLoginListener);
+            }
+        } catch (Exception e) {
+            Log.d("AftabeLoginAdapter", "exception accoured in try to login ");
+            e.printStackTrace();
+        }
+    }
+
 
 }

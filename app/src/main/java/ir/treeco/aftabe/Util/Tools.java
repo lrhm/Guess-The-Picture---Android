@@ -35,10 +35,12 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -54,6 +56,9 @@ import ir.treeco.aftabe.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.PackageObject;
+import ir.treeco.aftabe.Object.SaveHolder;
+import ir.treeco.aftabe.Object.TokenHolder;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 
@@ -62,8 +67,11 @@ public class Tools {
     private LengthManager lengthManager;
     private HeadObject headObject;
     private ImageManager imageManager;
-    private final static String ENCRYPT_KEY = "shared_prefs_last_long";
+    public final static String ENCRYPT_KEY = "shared_prefs_last_long";
     private final static String PACKAGE_SOLVE_CNT = "package_slv_count";
+    public final static String SHARED_PREFS_TOKEN = "shared_prefs_tk";
+    private final static String TAG = "Tools";
+
 
     public Tools(Context context) {
         this.context = context;
@@ -360,7 +368,7 @@ public class Tools {
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
-            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
@@ -408,7 +416,7 @@ public class Tools {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
 
-            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
@@ -429,7 +437,7 @@ public class Tools {
             cis.close();
             fis.close();
 
-            Log.e("db", "Restore blocks " +i );
+            Log.e("db", "Restore blocks " + i);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -441,7 +449,7 @@ public class Tools {
         }
     }
 
-    public void backUpDB() {
+    public static void backUpDB() {
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
         File data = Environment.getDataDirectory();
         FileChannel source;
@@ -453,7 +461,7 @@ public class Tools {
         Log.e("cc", currentDB.getPath());
         Log.e("dd", backupDB.getPath());
         try {
-            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
@@ -487,7 +495,7 @@ public class Tools {
         }
     }
 
-    public void backUpDBJournal() {
+    public static void backUpDBJournal() {
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
         File data = Environment.getDataDirectory();
         FileChannel source;
@@ -502,7 +510,7 @@ public class Tools {
         Log.e("dd", backupDB.getPath());
         try {
 
-            byte[] keyBytes = getAESKey().getBytes("UTF-8");
+            byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
@@ -523,7 +531,7 @@ public class Tools {
             fis.close();
             fos.close();
 
-            Log.e("db", "backup blocks "+ i);
+            Log.e("db", "backup blocks " + i);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -588,19 +596,42 @@ public class Tools {
         );
     }
 
-    public static String getAESKey() {
+    public static byte[] getAESKey() {
 
         String str = Prefs.getString(ENCRYPT_KEY, null);
+
+
         if (str == null)
-            return "1234567812345678"; // for users without deviceID
-        byte[] key = new byte[16];
-        byte[] strBytes = str.getBytes();
-        int i = 0;
-        while (i < 16 && i < strBytes.length)
-            key[i] = strBytes[i++];
-        while (i < 16)
-            key[i++] = 100;
-        return new String(key);
+            str= "1234567812345678"; // for users without deviceID
+
+        Log.d(TAG, "key is " + str);
+        for (int i = 0; i < 15; i++) {
+            try {
+                byte[] bytesOfMessage = str.getBytes("UTF-8");
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                byte[] thedigest = md.digest(bytesOfMessage);
+                str = new String(thedigest);
+            } catch (Exception e) {
+            }
+        }
+
+        try {
+            byte[] key = new byte[16];
+            byte[] strBytes;
+            strBytes = str.getBytes("UTF-8");
+            int i = 0;
+            while (i < 16 && i < strBytes.length)
+                key[i] = strBytes[i++];
+            while (i < 16)
+                key[i++] = 100;
+            Log.d(TAG, "new key is " + new String(key));
+            return key;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "1234567812345678".getBytes();
+
+        }
+
     }
 
     public static boolean isExternalStorageWritable() {
@@ -611,16 +642,81 @@ public class Tools {
         return false;
     }
 
-    public static String enrcypt(String text) {
-        return Encryption.encryptAES(text, getAESKey());
+    public static void storeKey() {
+
+
+        if (!isExternalStorageWritable())
+            return;
+        File rootFolder = new File(
+                Environment.getExternalStorageDirectory(),
+                "Android");
+        rootFolder.mkdir();
+        JSONObject jsonObject = new JSONObject();
+
+        if (!Prefs.contains(SHARED_PREFS_TOKEN) || !Prefs.contains(ENCRYPT_KEY))
+            return;
+        try {
+
+            Gson gson = new Gson();
+            TokenHolder tokenHolder = gson.fromJson(Prefs.getString(SHARED_PREFS_TOKEN, ""), TokenHolder.class);
+            SaveHolder saveHolder = new SaveHolder(tokenHolder, Prefs.getString(ENCRYPT_KEY, ""));
+
+            FileOutputStream fileOutputStream = new FileOutputStream(
+                    new File(rootFolder, ".system64a"));
+            fileOutputStream.write(gson.toJson(saveHolder).getBytes());
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public static String decrypt(String text) {
-        return Encryption.decryptAES(text, getAESKey());
+    public static void checkKey() {
+        if (!isExternalStorageWritable())
+            return;
+        File rootFolder = new File(Environment.getExternalStorageDirectory(),
+                "Android");
+        if (!rootFolder.exists())
+            return;
+        File file = new File(rootFolder, ".system64a");
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (scanner == null)
+            return;
+
+        String temp = "";
+        while (scanner.hasNextLine()) {
+            temp += scanner.nextLine();
+        }
+
+        if (temp.equals(""))
+            return;
+        Gson gson = new Gson();
+        try {
+            SaveHolder saveHolder = gson.fromJson(temp, SaveHolder.class);
+            Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(saveHolder.getTokenHolder()));
+            Prefs.putString(ENCRYPT_KEY, saveHolder.getKey());
+
+        } catch (Exception e) {
+            return;
+        }
+
+
     }
 
-    public static Integer decryptToInt(String text) {
-        return Integer.valueOf(decrypt(text));
+    public static void updateSharedPrefsToken(User user, TokenHolder tokenHolder) {
+        Gson gson = new Gson();
+        Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
+        Prefs.putString(ENCRYPT_KEY, user.getKey());
+        storeKey();
+        backUpDB();
+        backUpDBJournal();
+
     }
 
 
