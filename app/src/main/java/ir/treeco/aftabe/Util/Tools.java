@@ -719,5 +719,14 @@ public class Tools {
 
     }
 
+    public static boolean isUserRegistered() {
+
+        String tkJson = Prefs.getString(SHARED_PREFS_TOKEN, "");
+        if(tkJson.compareTo("")==0) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

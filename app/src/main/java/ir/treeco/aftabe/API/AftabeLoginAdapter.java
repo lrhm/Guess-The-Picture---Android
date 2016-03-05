@@ -85,6 +85,7 @@ public class AftabeLoginAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
                         response.body().setLoginInfo(loginInfo);
+                        response.body().setOwnerMe();
                         if (userLoginListener != null) userLoginListener.onGetUser(response.body());
                         Tools.updateSharedPrefsToken(response.body(), new TokenHolder(guestCreateToken));
 
@@ -135,6 +136,7 @@ public class AftabeLoginAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
                         response.body().setLoginInfo(loginInfo);
+                        response.body().setOwnerMe();
                         if (userLoginListener != null) userLoginListener.onGetUser(response.body());
                         Tools.updateSharedPrefsToken(response.body(), new TokenHolder(smsToken));
 
@@ -202,6 +204,7 @@ public class AftabeLoginAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
                         response.body().setLoginInfo(loginInfo);
+                        response.body().setOwnerMe();
                         if (userLoginListener != null) userLoginListener.onGetUser(response.body());
                         Tools.updateSharedPrefsToken(response.body(), new TokenHolder(googleToken));
                     }

@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.View.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -10,17 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,11 +40,12 @@ import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener, MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener {
+public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
+        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener {
 
 
     ImageManager imageManager;
-    RecyclerView mFriendsRecylerView;
+    RecyclerView mFriendsRecyclerView;
     FriendsAdapter mFriendsAdapter;
     MyAutoCompleteTextView mAutoCompleteTextView;
     View clearButton;
@@ -74,7 +70,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
         mainLayout = view.findViewById(R.id.friend_list_main_layout);
-        mFriendsRecylerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
+        mFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
 
 
         clearButton = view.findViewById(R.id.clear_button);
@@ -144,8 +140,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     }
 
     public void setUpRecylerViews() {
-        mFriendsRecylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mFriendsRecylerView.setAdapter(mFriendsAdapter);
+        mFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mFriendsRecyclerView.setAdapter(mFriendsAdapter);
 
 
     }

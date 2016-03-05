@@ -1,10 +1,13 @@
 package ir.treeco.aftabe.Object;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Map;
 
 import ir.treeco.aftabe.API.Utils.LoginInfo;
+import ir.treeco.aftabe.Util.Tools;
 
 /**
  * Created by al on 3/4/16.
@@ -53,6 +56,9 @@ public class User {
 
     @Expose
     private String code;
+
+
+    private boolean isMe = false;
 
     public User() {
         guest = false;
@@ -185,7 +191,14 @@ public class User {
     }
 
     public int getMark() {
-        return score % 8 ;
+        return score % 8;
     }
 
+    public boolean isMe() {
+        return isMe;
+    }
+
+    public void setOwnerMe() {
+        this.isMe = true;
+    }
 }

@@ -79,6 +79,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "MainActivity";
+    private User myUser = null;
 
 
     @Override
@@ -403,6 +404,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGetUser(User user) {
         Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
+        if(user.isMe())
+            myUser = user;
+
     }
 
     @Override
@@ -451,6 +455,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         } else {
         }
+    }
+    public User getMyUser() {
+        return myUser;
     }
 
 
