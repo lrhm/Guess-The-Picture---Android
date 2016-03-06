@@ -4,6 +4,7 @@ import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.API.Utils.UsernameCheck;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
 import retrofit.Call;
@@ -35,5 +36,11 @@ public interface AftabeService {
 
     @GET("/api/users/{user_id}")
     Call<User> getUser(@Query("user_atk") String accessToken, @Path("user_id") String userId);
+
+    @GET("/api/users/count?access_token={user_atk}&where[name]={name}")
+    Call<UsernameCheck> checkUserName(@Path("user_atk") String accessToken, @Path("name") String username);
+
+//    @GET("/api/users/?access_token={user_atk}&filter[where][name][like]={username}")
+//    Call<>
 
 }

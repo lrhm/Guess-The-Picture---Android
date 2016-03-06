@@ -602,7 +602,7 @@ public class Tools {
 
 
         if (str == null)
-            str= "1234567812345678"; // for users without deviceID
+            str = "1234567812345678"; // for users without deviceID
 
         Log.d(TAG, "key is " + str);
         for (int i = 0; i < 15; i++) {
@@ -719,10 +719,23 @@ public class Tools {
 
     }
 
+    public static TokenHolder getTokenHolder() {
+        String tkJson = Prefs.getString(SHARED_PREFS_TOKEN, "");
+        if (tkJson.compareTo("") == 0) {
+            return null;
+        }
+        try {
+            Gson gson = new Gson();
+            return gson.fromJson(tkJson, TokenHolder.class);
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
     public static boolean isUserRegistered() {
 
         String tkJson = Prefs.getString(SHARED_PREFS_TOKEN, "");
-        if(tkJson.compareTo("")==0) {
+        if (tkJson.compareTo("") == 0) {
             return false;
         }
         return true;

@@ -13,6 +13,7 @@ import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.API.Utils.UsernameCheck;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
@@ -80,22 +81,8 @@ public class AftabeLoginAdapter {
             public void onResponse(Response<LoginInfo> response) {
                 final LoginInfo loginInfo = response.body();
 
-                Call<User> c = aftabeService.getMyUser(loginInfo.getAccessToken());
-                c.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Response<User> response) {
-                        response.body().setLoginInfo(loginInfo);
-                        response.body().setOwnerMe();
-                        if (userLoginListener != null) userLoginListener.onGetUser(response.body());
-                        Tools.updateSharedPrefsToken(response.body(), new TokenHolder(guestCreateToken));
+                getMyUserByAccessToken(loginInfo, userLoginListener);
 
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        if (userLoginListener != null) userLoginListener.onGetError();
-                    }
-                });
             }
 
             @Override
@@ -131,23 +118,8 @@ public class AftabeLoginAdapter {
             public void onResponse(Response<LoginInfo> response) {
 
                 final LoginInfo loginInfo = response.body();
-                Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
-                c.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Response<User> response) {
-                        response.body().setLoginInfo(loginInfo);
-                        response.body().setOwnerMe();
-                        if (userLoginListener != null) userLoginListener.onGetUser(response.body());
-                        Tools.updateSharedPrefsToken(response.body(), new TokenHolder(smsToken));
+                getMyUserByAccessToken(loginInfo, userLoginListener);
 
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-
-                        if (userLoginListener != null) userLoginListener.onGetError();
-                    }
-                });
             }
 
             @Override
@@ -187,6 +159,25 @@ public class AftabeLoginAdapter {
         });
     }
 
+    private static void getMyUserByAccessToken(final LoginInfo loginInfo,
+                                               final UserLoginListener userLoginListener) {
+        Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
+        c.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Response<User> response) {
+                response.body().setLoginInfo(loginInfo);
+                response.body().setOwnerMe();
+                if (userLoginListener != null) userLoginListener.onGetUser(response.body());
+                Tools.updateSharedPrefsToken(response.body(), new TokenHolder(response.body()));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (userLoginListener != null) userLoginListener.onGetError();
+            }
+        });
+    }
+
     public static void getMyUserByGoogle(final GoogleToken googleToken, final UserLoginListener userLoginListener) {
 
         init();
@@ -198,23 +189,7 @@ public class AftabeLoginAdapter {
                 Log.d("TAG", response.toString());
                 Log.d("TAG", response.body().accessToken + " " + response.body().created);
                 final LoginInfo loginInfo = response.body();
-
-                Call<User> c = aftabeService.getMyUser(response.body().accessToken);
-                c.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Response<User> response) {
-                        response.body().setLoginInfo(loginInfo);
-                        response.body().setOwnerMe();
-                        if (userLoginListener != null) userLoginListener.onGetUser(response.body());
-                        Tools.updateSharedPrefsToken(response.body(), new TokenHolder(googleToken));
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        if (userLoginListener != null) userLoginListener.onGetError();
-                    }
-                });
-
+                getMyUserByAccessToken(loginInfo, userLoginListener);
             }
 
             @Override
@@ -225,24 +200,38 @@ public class AftabeLoginAdapter {
         });
     }
 
-    public static void tryToLogin(UserLoginListener userLoginListener) {
+    public static void checkUsername(User myUser, String username, final UsernameCheckListener usernameCheckListener) {
+
+        init();
+        Call<UsernameCheck> checkCall = aftabeService.checkUserName(myUser.getLoginInfo().getAccessToken(), username);
+        checkCall.enqueue(new Callback<UsernameCheck>() {
+            @Override
+            public void onResponse(Response<UsernameCheck> response) {
+                if (response.body().isUsernameAccessible())
+                    usernameCheckListener.onCheckedUsername(true);
+                else
+                    usernameCheckListener.onCheckedUsername(false);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                usernameCheckListener.onCheckedUsername(false);
+            }
+        });
+    }
+
+    public static void tryToLogin(final UserLoginListener userLoginListener) {
         Log.d("AftabeLoginAdapter", "try to login");
         if (!Prefs.contains(Tools.ENCRYPT_KEY) || !Prefs.contains(Tools.SHARED_PREFS_TOKEN))
             return;
         try {
             Gson gson = new Gson();
             TokenHolder tokenHolder = gson.fromJson(Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""), TokenHolder.class);
-            if (tokenHolder.getType() == TokenHolder.TOKEN_TYPE_GOOGLE) {
-                GoogleToken googleToken = tokenHolder.getGoogleToken();
-                getMyUserByGoogle(googleToken, userLoginListener);
+            if (tokenHolder.getLoginInfo() == null)
+                return;
 
-            } else if (tokenHolder.getType() == TokenHolder.TOKEN_TYPE_GUEST) {
-                GuestCreateToken guestCreateToken = tokenHolder.getGuestCreateToken();
-                getGuestUser(guestCreateToken, userLoginListener);
-            } else if (tokenHolder.getType() == TokenHolder.TOKEN_TYPE_SMS) {
-                SMSToken smsToken = tokenHolder.getSMSToken();
-                getSMSActivatedUser(smsToken, userLoginListener);
-            }
+            getMyUserByAccessToken(tokenHolder.getLoginInfo(), userLoginListener);
+
         } catch (Exception e) {
             Log.d("AftabeLoginAdapter", "exception accoured in try to login ");
             e.printStackTrace();

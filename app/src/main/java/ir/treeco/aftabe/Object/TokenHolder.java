@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
+import ir.treeco.aftabe.API.Utils.LoginInfo;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 
 /**
@@ -17,68 +18,39 @@ import ir.treeco.aftabe.API.Utils.SMSToken;
 public class TokenHolder {
 
     private static final String TAG = "TokenHolder";
-    public static final int TOKEN_TYPE_GUEST = 1;
-    public static final int TOKEN_TYPE_SMS = 2;
-    public static final int TOKEN_TYPE_GOOGLE = 4;
+
 
     @Expose
     @SerializedName("tk")
-    String gsonToken;
+    String loginInfo;
 
     @Expose
     @SerializedName("t")
-    int tokenType;
+    boolean isGuest;
 
-    private void init(String gsonToken, int tokenType) {
-        this.tokenType = tokenType;
-        this.gsonToken = gsonToken;
-    }
 
-    public TokenHolder(SMSToken smsToken) {
+    public  TokenHolder(User myUser) {
+
+        this.isGuest = myUser.isGuest();
+
         Gson gson = new Gson();
-        String gsonString = gson.toJson(smsToken);
-        Log.d(TAG, gsonString + " type 2");
-        init(gsonString, TOKEN_TYPE_SMS);
+        this.loginInfo = gson.toJson(myUser.getLoginInfo());
     }
 
-    public TokenHolder(GoogleToken googleToken) {
+    public boolean isGuest() {
+        return isGuest;
+    }
+
+    public LoginInfo getLoginInfo() {
+
         Gson gson = new Gson();
-        String gsonString = gson.toJson(googleToken);
-        Log.d(TAG, gsonString + " type 4");
-        init(gsonString, TOKEN_TYPE_GOOGLE);
-    }
+        try {
+            return gson.fromJson(loginInfo, LoginInfo.class);
 
-    public TokenHolder(GuestCreateToken guestCreateToken) {
-        Gson gson = new Gson();
-        String gsonString = gson.toJson(guestCreateToken);
-        Log.d(TAG, gsonString + " type 1");
-        init(gsonString, TOKEN_TYPE_GUEST);
-    }
+        } catch (Exception e) {
 
-    public int getType() {
-        return tokenType;
-    }
-
-    public SMSToken getSMSToken() {
-        if (tokenType != TOKEN_TYPE_SMS)
-            throw new IllegalStateException();
-        Gson gson = new Gson();
-        return gson.fromJson(gsonToken, SMSToken.class);
-    }
-
-
-    public GoogleToken getGoogleToken() {
-        if (tokenType != TOKEN_TYPE_GOOGLE)
-            throw new IllegalStateException();
-        Gson gson = new Gson();
-        return gson.fromJson(gsonToken, GoogleToken.class);
-    }
-
-    public GuestCreateToken getGuestCreateToken() {
-        if (tokenType != TOKEN_TYPE_GUEST)
-            throw new IllegalStateException();
-        Gson gson = new Gson();
-        return gson.fromJson(gsonToken, GuestCreateToken.class);
+            return null;
+        }
     }
 
 

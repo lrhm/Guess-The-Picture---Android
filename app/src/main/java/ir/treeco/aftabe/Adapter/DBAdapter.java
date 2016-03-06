@@ -8,10 +8,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.squareup.okhttp.internal.Util;
+
 import java.util.ArrayList;
 
+import ir.treeco.aftabe.API.AftabeLoginAdapter;
+import ir.treeco.aftabe.API.UserLoginListener;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
+import ir.treeco.aftabe.Object.User;
+import ir.treeco.aftabe.Util.Tools;
 
 public class DBAdapter {
     private static DBAdapter ourInstance;
@@ -34,7 +41,7 @@ public class DBAdapter {
     private static final String SEMICOLON = ";";
     private static final String NOT_NULL = " NOT NULL";
     private static final String UNIQUE = " UNIQUE";
-    private static final String DROP_TABLE_IF_EXISTS  = "DROP TABLE IF EXISTS ";
+    private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
     private static final String PACKAGES = "PACKAGES";
     private static final String PACKAGE_SQL_ID = "PACKAGE_SQL_ID";
@@ -80,6 +87,17 @@ public class DBAdapter {
             COINS_COUNT + INTEGER_TYPE + COMMA_SEP +
             COINS_REVIEWED + BLOB_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
+    private static final String FRIENDS = "FRIENDS";
+    private static final String FRIEND_ID = "FRIEND_ID";
+    private static final String FRIENDS_SQL_ID = "FRIEND_SQL_ID";
+    private static final String FRIEND_USER_GSON = "FRIEND_USER_GSON";
+
+    private static final String SQL_CREATE_FRIENDS = CREATE_TABLE + FRIENDS + BRACKET_OPEN_SEP +
+//            FRIENDS_SQL_ID + INTEGER_TYPE +  + AUTOINCREMENT + COMMA_SEP +
+            FRIEND_ID + TEXT_TYPE + PRIMARY_KEY + COMMA_SEP +
+            FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
+
+
     public static DBAdapter getInstance(Context context) {
         if (ourInstance == null) {
             ourInstance = new DBAdapter(context);
@@ -93,27 +111,31 @@ public class DBAdapter {
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
-        DatabaseHelper(Context context){
+        DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         @Override
-        public void onCreate(SQLiteDatabase db){
+        public void onCreate(SQLiteDatabase db) {
             try {
                 db.execSQL(SQL_CREATE_PACKAGES);
                 db.execSQL(SQL_CREATE_LEVELS);
                 db.execSQL(SQL_CREATE_COINS);
-            } catch ( SQLException e) {
+                db.execSQL(SQL_CREATE_FRIENDS);
+
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version" + oldVersion + "to" + newVersion + ", which will destroy all old data");
             db.execSQL(DROP_TABLE_IF_EXISTS + PACKAGES);
             db.execSQL(DROP_TABLE_IF_EXISTS + LEVELS);
             db.execSQL(DROP_TABLE_IF_EXISTS + COINS);
+            db.execSQL(DROP_TABLE_IF_EXISTS + FRIENDS);
+
             onCreate(db);
         }
     }
@@ -123,8 +145,96 @@ public class DBAdapter {
         return this;
     }
 
-    public void close(){
+    public void close() {
         DBHelper.close();
+    }
+
+    public void addFriend(User otherUser) {
+
+        if (otherUser.isMe())
+            return;
+        if (isFriend(otherUser))
+            return;
+
+        Gson gson = new Gson();
+        String friendGsonString = gson.toJson(otherUser);
+
+        open();
+        ContentValues values = new ContentValues();
+        values.put(FRIEND_ID, otherUser.getId());
+        values.put(FRIEND_USER_GSON, friendGsonString);
+        db.insert(FRIENDS, null, values);
+        close();
+    }
+
+    public ArrayList<User> getMyFriends() {
+
+        ArrayList<User> list = new ArrayList<>();
+        open();
+
+        Cursor cursor = db.query(FRIENDS,
+                new String[]{FRIEND_USER_GSON},
+                null,
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Gson gson = new Gson();
+            while (cursor.moveToNext()) {
+                list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)), User.class));
+            }
+        }
+        close();
+        return list;
+    }
+
+    public void updateFriend(User friendUser) {
+        if (!isFriend(friendUser))
+            return;
+
+        open();
+        ContentValues values = new ContentValues();
+        Gson gson = new Gson();
+        values.put(FRIEND_USER_GSON, gson.toJson(friendUser));
+        db.update(FRIENDS, values, FRIEND_ID + " = " + friendUser.getId(), null);
+        close();
+
+    }
+
+    public void updateFriends(User myUser) {
+
+        ArrayList<User> myFriends = getMyFriends();
+
+        for (User myFriend : myFriends) {
+            AftabeLoginAdapter.getUser(myUser, myFriend.getId(), new UserLoginListener() {
+                @Override
+                public void onGetUser(User user) {
+                    updateFriend(user);
+                }
+
+                @Override
+                public void onGetError() {
+
+                }
+            });
+
+        }
+
+    }
+
+    public boolean isFriend(User otherUser) {
+        open();
+
+        Cursor cursor = db.query(FRIENDS,
+                new String[]{FRIEND_USER_GSON},
+                FRIEND_ID + " = " + otherUser.getId(),
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            close();
+            return true;
+        }
+        close();
+        return false;
     }
 
     public void insertPackage(PackageObject packageObject) {
@@ -160,7 +270,7 @@ public class DBAdapter {
     public Level getLevel(int packageID, int levelID) {
         open();
         Cursor cursor = db.query(LEVELS,
-                new String[] {LEVEL_ID, LEVEL_SOLUTION, LEVEL_RESOLVE,
+                new String[]{LEVEL_ID, LEVEL_SOLUTION, LEVEL_RESOLVE,
                         LEVEL_RESOURCES, LEVEL_THUMBNAIL, LEVEL_TYPE},
                 LEVEL_PACKAGE_ID + " = " + packageID + " AND " + LEVEL_ID + " = " + levelID,
                 null, null, null, null);
@@ -183,7 +293,7 @@ public class DBAdapter {
     public Level[] getLevels(int packageID) {
         open();
         Cursor cursor = db.query(LEVELS,
-                new String[] {LEVEL_ID, LEVEL_SOLUTION, LEVEL_RESOLVE,
+                new String[]{LEVEL_ID, LEVEL_SOLUTION, LEVEL_RESOLVE,
                         LEVEL_RESOURCES, LEVEL_THUMBNAIL, LEVEL_TYPE},
                 LEVEL_PACKAGE_ID + " = " + packageID,
                 null, null, null, null);
@@ -210,12 +320,12 @@ public class DBAdapter {
     public PackageObject[] getPackages() {
         open();
         Cursor cursor = db.query(PACKAGES,
-                new String[] {PACKAGE_ID, PACKAGE_NAME, PACKAGE_URL, PACKAGE_DOWNLOADED},
+                new String[]{PACKAGE_ID, PACKAGE_NAME, PACKAGE_URL, PACKAGE_DOWNLOADED},
                 null, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             PackageObject[] packages = new PackageObject[cursor.getCount()];
-            for (int i = 0; i < cursor.getCount(); i++ , cursor.moveToNext()) {
+            for (int i = 0; i < cursor.getCount(); i++, cursor.moveToNext()) {
                 PackageObject packageObject = new PackageObject();
                 packageObject.setId(cursor.getInt(cursor.getColumnIndex(PACKAGE_ID)));
                 packageObject.setName(cursor.getString(cursor.getColumnIndex(PACKAGE_NAME)));
@@ -232,12 +342,12 @@ public class DBAdapter {
     public int getCoins() {
         open();
         Cursor cursor = db.query(COINS,
-                new String[] {COINS_COUNT},
+                new String[]{COINS_COUNT},
                 COINS_SQL_ID + " = 1",
                 null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int count =  cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
+            int count = cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
             close();
             return count;
         }
@@ -248,7 +358,7 @@ public class DBAdapter {
     public boolean getCoinsReviewed() {
         open();
         Cursor cursor = db.query(COINS,
-                new String[] {COINS_REVIEWED},
+                new String[]{COINS_REVIEWED},
                 COINS_SQL_ID + " = 1",
                 null, null, null, null);
 
@@ -289,10 +399,10 @@ public class DBAdapter {
     public void resolveLevel(int packageID, int levelID) {
         open();
 
-            ContentValues values = new ContentValues();
-            values.put(LEVEL_RESOLVE, true);
-            db.update(LEVELS, values,
-                    LEVEL_PACKAGE_ID + " = " + packageID + " AND " + LEVEL_ID + " = " + levelID, null);
+        ContentValues values = new ContentValues();
+        values.put(LEVEL_RESOLVE, true);
+        db.update(LEVELS, values,
+                LEVEL_PACKAGE_ID + " = " + packageID + " AND " + LEVEL_ID + " = " + levelID, null);
 
         close();
     }
