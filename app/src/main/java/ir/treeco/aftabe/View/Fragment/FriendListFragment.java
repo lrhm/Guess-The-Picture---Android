@@ -19,9 +19,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -30,6 +33,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 
 /**
@@ -41,7 +45,7 @@ import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
  * create an instance of this fragment.
  */
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
-        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener {
+        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener {
 
 
     ImageManager imageManager;
@@ -77,7 +81,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         clearButton.setOnClickListener(this);
         clearButton.setVisibility(View.GONE);
 
-        ((ImageView)clearButton).setImageBitmap(imageManager.loadImageFromResource(R.drawable.clear_button,
+        ((ImageView) clearButton).setImageBitmap(imageManager.loadImageFromResource(R.drawable.clear_button,
                 (int) (SizeManager.getScreenWidth() * 0.15), (int) (SizeManager.getScreenWidth() * 0.15)));
 
         setUpAdapters();
@@ -173,13 +177,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        User tmp = new User();
-        tmp.setScore(32);
-        tmp.setName("no name");
-        if (s.length() > 0 && clearButton.getVisibility() != View.VISIBLE)
-            clearButton.setVisibility(View.VISIBLE);
-        if (s.length() > 1)
-            mFriendsAdapter.addUser(tmp, FriendsAdapter.TYPE_SEARCHED);
+
     }
 
     @Override
@@ -197,7 +195,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         boolean handled = false;
         if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                 actionId == EditorInfo.IME_ACTION_DONE
-                ){
+                ) {
             submitSearch();
             handled = true;
         }
@@ -207,11 +205,31 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void submitSearch() {
         hideKeyboard();
+
+        User myUser = ((MainActivity) getActivity()).getMyUser();
+
+        if (myUser == null)
+            return;
+
+        AftabeAPIAdapter.searchForUser(myUser, mAutoCompleteTextView.getText().toString(), this);
+
         Log.d("TAG", "TODO submit search");
 
     }
-    public  void hideKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity() .getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+    public void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onGetUser(User user) {
+        mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_SEARCHED);
+
+    }
+
+    @Override
+    public void onGetError() {
+        Toast.makeText(getContext() , "user not found" , Toast.LENGTH_SHORT).show();
     }
 }

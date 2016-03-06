@@ -150,13 +150,13 @@ public class UserLevelMarkView extends LinearLayout {
 //        TODO remove the line above
     }
 
-    public void setDefualtListener(){
+    public void setDefualtListener() {
         if (!isClickable()) {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!isUser) {
-                        new UserViewDialog(getContext()).show();
+                        new UserViewDialog(getContext(), mUser).show();
                     } else {
                         new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
                     }
@@ -243,7 +243,7 @@ public class UserLevelMarkView extends LinearLayout {
 
     public void setUser(User user) {
         this.mUser = user;
-        setmUserMark(user.getScore() );
+        setmUserMark(user.getScore());
         setUserExp(user.getRank());
         setUserName(user.getName());
     }
@@ -261,7 +261,7 @@ public class UserLevelMarkView extends LinearLayout {
 
     }
 
-    public void setUserGuest(){
+    public void setUserGuest() {
         mUserNameTextView.setText("عضویت/ورود");
     }
 

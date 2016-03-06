@@ -29,15 +29,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.gson.Gson;
-import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
-import ir.treeco.aftabe.API.AftabeLoginAdapter;
-import ir.treeco.aftabe.API.UserLoginListener;
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -57,7 +57,8 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserLoginListener {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener {
+
     private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
@@ -80,6 +81,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "MainActivity";
     private User myUser = null;
+    private ArrayList<UserFoundListener> mUserFoundListeners;
 
 
     @Override
@@ -87,6 +89,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        mUserFoundListeners = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
 
@@ -140,7 +144,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
         TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
 
-        AftabeLoginAdapter.tryToLogin(this);
+        AftabeAPIAdapter.tryToLogin(this);
     }
 
 
@@ -404,8 +408,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGetUser(User user) {
         Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
-        if(user.isMe())
+        if (user.isMe())
             myUser = user;
+        for(UserFoundListener userFoundListener : mUserFoundListeners)
+            userFoundListener.onGetUser(user);
 
     }
 
@@ -413,6 +419,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGetError() {
         Log.d(TAG, "didnet get the user");
 
+        for(UserFoundListener userFoundListener: mUserFoundListeners)
+            userFoundListener.onGetError();
     }
 
     public interface OnPackagePurchasedListener {
@@ -450,14 +458,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             GoogleSignInAccount acct = result.getSignInAccount();
 
             GoogleToken googleToken = new GoogleToken(acct.getIdToken(), "random");
-            AftabeLoginAdapter.getMyUserByGoogle(googleToken, this);
+            AftabeAPIAdapter.getMyUserByGoogle(googleToken, this);
 
 
         } else {
         }
     }
+
     public User getMyUser() {
         return myUser;
+    }
+
+    public void addUserFoundListener(UserFoundListener userFoundListener) {
+        mUserFoundListeners.add(userFoundListener);
     }
 
 

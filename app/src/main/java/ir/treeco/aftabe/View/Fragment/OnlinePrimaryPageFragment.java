@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -22,7 +23,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 /**
  * Created by al on 12/25/15.
  */
-public class OnlinePrimaryPageFragment extends Fragment {
+public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener {
 
     private ImageManager imageManager;
     private LengthManager lengthManager;
@@ -39,12 +40,9 @@ public class OnlinePrimaryPageFragment extends Fragment {
         startOnlineView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.randomplaybutton
                 , (int) (randplayconverter.mWidth), (int) (randplayconverter.mHeight), ImageManager.ScalingLogic.FIT));
         mUserLevelMarkView = (UserLevelMarkView) view.findViewById(R.id.user_view_in_menu);
-        User myUser = ((MainActivity) getActivity()).getMyUser();
+        ((MainActivity) getActivity()).addUserFoundListener(this);
 
-        if (Tools.isUserRegistered()) {
-            if (myUser != null)
-                mUserLevelMarkView.setUser(myUser);
-        } else {
+        if (!Tools.isUserRegistered()) {
             mUserLevelMarkView.setUserGuest();
             mUserLevelMarkView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -58,4 +56,14 @@ public class OnlinePrimaryPageFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onGetUser(User user) {
+        if (user.isMe())
+            mUserLevelMarkView.setUser(user);
+    }
+
+    @Override
+    public void onGetError() {
+
+    }
 }

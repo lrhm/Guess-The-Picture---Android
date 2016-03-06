@@ -37,10 +37,16 @@ public interface AftabeService {
     @GET("/api/users/{user_id}")
     Call<User> getUser(@Query("user_atk") String accessToken, @Path("user_id") String userId);
 
-    @GET("/api/users/count?access_token={user_atk}&where[name]={name}")
-    Call<UsernameCheck> checkUserName(@Path("user_atk") String accessToken, @Path("name") String username);
+    @GET("/api/users/count")
+    Call<UsernameCheck> checkUserName(@Query("access_token") String accessToken, @Query("where[name]") String username);
 
-//    @GET("/api/users/?access_token={user_atk}&filter[where][name][like]={username}")
-//    Call<>
+    @GET("/api/users/")
+    Call<User[]> searchByUsername(@Query("access_token") String accessToken, @Query("filter[where][name][like]") String username);
+
+    @GET("/api/users/")
+    Call<User[]> searchByEmail(@Query("access_token") String accessToken, @Query("filter[where][email]") String mail);
+
+    @GET("/api/users/")
+    Call<User[]> searchByPhoneNumber(@Query("access_token") String accessToken, @Query("filter[where][phone]") String phoneNumber);
 
 }

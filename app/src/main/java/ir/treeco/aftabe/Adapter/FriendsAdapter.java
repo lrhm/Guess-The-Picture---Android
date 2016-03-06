@@ -144,6 +144,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             return;
         }
 
+        User user = getUser(type, realPosition);
+
         holder.mChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,6 +176,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 transaction.commit();
             }
         });
+
+        holder.mUserLevelMarkView.setUser(user);
 
     }
 
@@ -255,5 +259,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     }
 
+    private User getUser(int type, int pos) {
+        return arrayLists.get(type).get(pos);
+    }
 
 }

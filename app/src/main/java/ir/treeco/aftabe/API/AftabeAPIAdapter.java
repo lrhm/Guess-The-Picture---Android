@@ -27,7 +27,7 @@ import retrofit.Retrofit;
 /**
  * Created by al on 3/4/16.
  */
-public class AftabeLoginAdapter {
+public class AftabeAPIAdapter {
 
     private static Retrofit retrofit;
     private static AftabeService aftabeService;
@@ -50,30 +50,29 @@ public class AftabeLoginAdapter {
 
     }
 
-    public static void createGuestUser(final UserLoginListener userLoginListener) {
+    public static void createGuestUser(final UserFoundListener userFoundListener) {
 
         init();
 
-//        TODO check if random is saved in sd
         Random random = new Random(System.currentTimeMillis());
 
         String rand = "";
 
         for (int i = random.nextInt(79); i < random.nextInt(85); i++) {
-            rand = random.nextLong() + "";
+            rand = random.nextInt(10000000) + "";
             if (i % 5 == 0)
                 break;
         }
         if (rand.compareTo("") == 0)
-            rand = random.nextLong() + "";
+            rand = random.nextInt(10000000) + "";
 
-        final GuestCreateToken guestCreateToken = new GuestCreateToken(rand);
+        final GuestCreateToken guestCreateToken = new GuestCreateToken(rand.substring(rand.length() - 8));
 
-        getGuestUser(guestCreateToken, userLoginListener);
+        getGuestUser(guestCreateToken, userFoundListener);
 
     }
 
-    public static void getGuestUser(final GuestCreateToken guestCreateToken, final UserLoginListener userLoginListener) {
+    public static void getGuestUser(final GuestCreateToken guestCreateToken, final UserFoundListener userFoundListener) {
 
         Call<LoginInfo> call = aftabeService.getGuestUserLogin(guestCreateToken);
         call.enqueue(new Callback<LoginInfo>() {
@@ -81,18 +80,18 @@ public class AftabeLoginAdapter {
             public void onResponse(Response<LoginInfo> response) {
                 final LoginInfo loginInfo = response.body();
 
-                getMyUserByAccessToken(loginInfo, userLoginListener);
+                getMyUserByAccessToken(loginInfo, userFoundListener);
 
             }
 
             @Override
             public void onFailure(Throwable t) {
-                if (userLoginListener != null) userLoginListener.onGetError();
+                if (userFoundListener != null) userFoundListener.onGetError();
             }
         });
     }
 
-    public static void getUser(User myUser, String otherUserId, final UserLoginListener userLoginListener) {
+    public static void getUser(User myUser, String otherUserId, final UserFoundListener userFoundListener) {
 
         init();
 
@@ -100,40 +99,40 @@ public class AftabeLoginAdapter {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
-                if (userLoginListener != null) userLoginListener.onGetUser(response.body());
+                if (userFoundListener != null) userFoundListener.onGetUser(response.body());
             }
 
             @Override
             public void onFailure(Throwable t) {
-                if (userLoginListener != null) userLoginListener.onGetError();
+                if (userFoundListener != null) userFoundListener.onGetError();
 
             }
         });
     }
 
-    public static void getSMSActivatedUser(final SMSToken smsToken, final UserLoginListener userLoginListener) {
+    public static void getSMSActivatedUser(final SMSToken smsToken, final UserFoundListener userFoundListener) {
         Call<LoginInfo> call = aftabeService.getSMSUserLogin(smsToken);
         call.enqueue(new Callback<LoginInfo>() {
             @Override
             public void onResponse(Response<LoginInfo> response) {
 
                 final LoginInfo loginInfo = response.body();
-                getMyUserByAccessToken(loginInfo, userLoginListener);
+                getMyUserByAccessToken(loginInfo, userFoundListener);
 
             }
 
             @Override
             public void onFailure(Throwable t) {
-                if (userLoginListener != null) userLoginListener.onGetError();
+                if (userFoundListener != null) userFoundListener.onGetError();
             }
         });
     }
 
     public static void submitSMSActivation(final SMSToken smsToken, String imei,
-                                           String name, String validationCode, final UserLoginListener userLoginListener) {
+                                           String name, String validationCode, final UserFoundListener userFoundListener) {
         init();
         smsToken.update(imei, name, validationCode);
-        getSMSActivatedUser(smsToken, userLoginListener);
+        getSMSActivatedUser(smsToken, userFoundListener);
     }
 
     public static void requestSMSActivation(SMSRequestToken smsRequestToken, final SMSValidationListener smsValidationListener) {
@@ -160,25 +159,25 @@ public class AftabeLoginAdapter {
     }
 
     private static void getMyUserByAccessToken(final LoginInfo loginInfo,
-                                               final UserLoginListener userLoginListener) {
+                                               final UserFoundListener userFoundListener) {
         Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
         c.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
                 response.body().setLoginInfo(loginInfo);
                 response.body().setOwnerMe();
-                if (userLoginListener != null) userLoginListener.onGetUser(response.body());
+                if (userFoundListener != null) userFoundListener.onGetUser(response.body());
                 Tools.updateSharedPrefsToken(response.body(), new TokenHolder(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                if (userLoginListener != null) userLoginListener.onGetError();
+                if (userFoundListener != null) userFoundListener.onGetError();
             }
         });
     }
 
-    public static void getMyUserByGoogle(final GoogleToken googleToken, final UserLoginListener userLoginListener) {
+    public static void getMyUserByGoogle(final GoogleToken googleToken, final UserFoundListener userFoundListener) {
 
         init();
 
@@ -189,12 +188,12 @@ public class AftabeLoginAdapter {
                 Log.d("TAG", response.toString());
                 Log.d("TAG", response.body().accessToken + " " + response.body().created);
                 final LoginInfo loginInfo = response.body();
-                getMyUserByAccessToken(loginInfo, userLoginListener);
+                getMyUserByAccessToken(loginInfo, userFoundListener);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                if (userLoginListener != null) userLoginListener.onGetError();
+                if (userFoundListener != null) userFoundListener.onGetError();
                 Log.d("TAG", "Fail");
             }
         });
@@ -220,10 +219,10 @@ public class AftabeLoginAdapter {
         });
     }
 
-    public static void tryToLogin(final UserLoginListener userLoginListener) {
+    public static void tryToLogin(final UserFoundListener userFoundListener) {
 
         init();
-        Log.d("AftabeLoginAdapter", "try to login");
+        Log.d("AftabeAPIAdapter", "try to login");
         if (!Prefs.contains(Tools.ENCRYPT_KEY) || !Prefs.contains(Tools.SHARED_PREFS_TOKEN))
             return;
         try {
@@ -232,12 +231,93 @@ public class AftabeLoginAdapter {
             if (tokenHolder.getLoginInfo() == null)
                 return;
 
-            getMyUserByAccessToken(tokenHolder.getLoginInfo(), userLoginListener);
+            getMyUserByAccessToken(tokenHolder.getLoginInfo(), userFoundListener);
 
         } catch (Exception e) {
-            Log.d("AftabeLoginAdapter", "exception accoured in try to login ");
+            Log.d("AftabeAPIAdapter", "exception accoured in try to login ");
             e.printStackTrace();
         }
+    }
+
+    public static void searchForUser(User myUser, String search, UserFoundListener userFoundListener) {
+        if (Tools.isAPhoneNumber(search))
+            searchUserByNumber(myUser, (search.length() == 10) ? search : search.substring(1),
+                    userFoundListener);
+        else if (Tools.isAEmail(search))
+            searchUserByMail(myUser, search, userFoundListener);
+        else
+            searchUserByName(myUser, search, userFoundListener);
+
+
+    }
+
+    public static void searchUserByNumber(User myUser, String search, final UserFoundListener userFoundListener) {
+
+        Call<User[]> call =
+                aftabeService.searchByPhoneNumber(myUser.getLoginInfo().getAccessToken(), search);
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+
+
+                if (response.body().length == 0)
+                    userFoundListener.onGetError();
+
+                for (User user : response.body())
+                    userFoundListener.onGetUser(user);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                userFoundListener.onGetError();
+
+            }
+        });
+    }
+
+    public static void searchUserByMail(User myUser, String search, final UserFoundListener userFoundListener) {
+
+        Call<User[]> call =
+                aftabeService.searchByEmail(myUser.getLoginInfo().getAccessToken(), search);
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+
+
+                if (response.body().length == 0)
+                    userFoundListener.onGetError();
+
+                for (User user : response.body())
+                    userFoundListener.onGetUser(user);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                userFoundListener.onGetError();
+            }
+        });
+    }
+
+    public static void searchUserByName(User myUser, String search, final UserFoundListener userFoundListener) {
+
+        Call<User[]> call =
+                aftabeService.searchByUsername(myUser.getLoginInfo().getAccessToken(), search);
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+
+                if (response.body().length == 0)
+                    userFoundListener.onGetError();
+
+                for (User user : response.body())
+                    userFoundListener.onGetUser(user);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                userFoundListener.onGetError();
+            }
+        });
     }
 
 

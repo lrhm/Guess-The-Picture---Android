@@ -9,16 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.internal.Util;
 
 import java.util.ArrayList;
 
-import ir.treeco.aftabe.API.AftabeLoginAdapter;
-import ir.treeco.aftabe.API.UserLoginListener;
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Object.User;
-import ir.treeco.aftabe.Util.Tools;
 
 public class DBAdapter {
     private static DBAdapter ourInstance;
@@ -205,7 +203,7 @@ public class DBAdapter {
         ArrayList<User> myFriends = getMyFriends();
 
         for (User myFriend : myFriends) {
-            AftabeLoginAdapter.getUser(myUser, myFriend.getId(), new UserLoginListener() {
+            AftabeAPIAdapter.getUser(myUser, myFriend.getId(), new UserFoundListener() {
                 @Override
                 public void onGetUser(User user) {
                     updateFriend(user);

@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -727,7 +729,7 @@ public class Tools {
         try {
             Gson gson = new Gson();
             return gson.fromJson(tkJson, TokenHolder.class);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -739,6 +741,22 @@ public class Tools {
             return false;
         }
         return true;
+    }
+
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    public static final Pattern VALID_PHONE =
+            Pattern.compile("^[0-9]{10,11}$");
+
+    public static boolean isAEmail(String emailStr) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+        return matcher.find();
+    }
+
+    public static boolean isAPhoneNumber(String number) {
+        Matcher matcher = VALID_PHONE.matcher(number);
+        return matcher.find();
     }
 
 
