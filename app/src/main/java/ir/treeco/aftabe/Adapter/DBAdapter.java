@@ -177,7 +177,7 @@ public class DBAdapter {
                 null,
                 null, null, null, null);
 
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor != null ) {
             Gson gson = new Gson();
             while (cursor.moveToNext()) {
                 list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)), User.class));
@@ -224,17 +224,22 @@ public class DBAdapter {
     public boolean isFriend(User otherUser) {
         open();
 
-        Cursor cursor = db.query(FRIENDS,
-                new String[]{FRIEND_USER_GSON},
-                FRIEND_ID + " = " + otherUser.getId(),
-                null, null, null, null);
+        try {
+            Cursor cursor = db.query(FRIENDS,
+                    new String[]{FRIEND_USER_GSON, FRIEND_ID},
+                    FRIEND_ID + " =  \"" + otherUser.getId() + "\"",
+                    null, null, null, null);
 
-        if (cursor != null && cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
+                close();
+                return true;
+            }
             close();
-            return true;
+            return false;
+        }catch (Exception e) {
+            close();
+            return false;
         }
-        close();
-        return false;
     }
 
     public void insertPackage(PackageObject packageObject) {

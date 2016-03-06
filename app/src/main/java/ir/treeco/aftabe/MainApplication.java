@@ -1,7 +1,9 @@
 package ir.treeco.aftabe;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.io.IOError;
@@ -21,8 +23,7 @@ public class MainApplication extends Application {
     private HeadObject headObject;
     private DBAdapter db;
     private Tools tools;
-    private final String USER_ID_KEY = "USER_KEY_TAG";
-    private final String IS_USER_REGISTRATED = "isUserRegistratedKey";
+    private final static String TAG = "MainApplication";
 
     @Override
     public void onCreate() {

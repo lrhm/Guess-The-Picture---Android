@@ -221,6 +221,8 @@ public class AftabeLoginAdapter {
     }
 
     public static void tryToLogin(final UserLoginListener userLoginListener) {
+
+        init();
         Log.d("AftabeLoginAdapter", "try to login");
         if (!Prefs.contains(Tools.ENCRYPT_KEY) || !Prefs.contains(Tools.SHARED_PREFS_TOKEN))
             return;
