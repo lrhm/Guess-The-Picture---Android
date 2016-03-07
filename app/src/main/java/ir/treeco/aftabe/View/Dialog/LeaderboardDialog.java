@@ -27,6 +27,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
@@ -49,6 +50,8 @@ public class LeaderboardDialog extends DialogFragment {
         dialog.getWindow().setLayout((int) (0.8 * SizeManager.getScreenWidth()), (int) (0.7 * SizeManager.getScreenHeight()));
         return dialog;
     }
+
+
 
     @Nullable
     @Override
@@ -73,7 +76,6 @@ public class LeaderboardDialog extends DialogFragment {
         LinearLayout mDataContainer = (LinearLayout) view.findViewById(R.id.leaderboard_dialog_container);
         LinearLayout.LayoutParams layoutParams = new
                 LinearLayout.LayoutParams((int) (0.8 * SizeManager.getScreenWidth()), (int) (0.7 * SizeManager.getScreenHeight()));
-//        layoutParams.topMargin = (int) (SizeManager.getScreenWidth() * 0.09);
         mDataContainer.setLayoutParams(layoutParams);
         view.setLayoutParams(layoutParams);
         viewPager.setLayoutParams(layoutParams);

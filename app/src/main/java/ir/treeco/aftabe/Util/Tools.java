@@ -282,53 +282,46 @@ public class Tools {
             Zip zip = new Zip();
             zip.unpackZip(path, id, context);
             saveToDownloadsJson(id);
-//            makeFirstHSV(id);
+            makeFirstHSV(id);
         }
     }
 
-//    public void makeFirstHSV(int id) {
-//        float[] thumbnailHSV = {130, 0, 0};  //todo load for json
-//        Bitmap levelLocked = updateHSV(
-//                imageManager.loadImageFromResource(
-//                        R.drawable.level_locked,
-//                        lengthManager.getLevelFrameWidth(),
-//                        lengthManager.getLevelFrameHeight()),
-//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-//
-//        saveBitmap(levelLocked, id + "_levelLocked.png");
-//
-//        Bitmap levelUnlocked = updateHSV(
-//                imageManager.loadImageFromResource(
-//                        R.drawable.level_unlocked,
-//                        lengthManager.getLevelFrameWidth(),
-//                        lengthManager.getLevelFrameHeight()),
-//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-//
-//        saveBitmap(levelUnlocked, id + "_levelUnlocked.png");
-//
-//
-//        float[] cheatButtonHSV = {130, 0, 0};//mLevel.getWrapperPackage().meta.getCheatButtonHSV();
-//
-//        Bitmap cheatBitmap = updateHSV(
-//                imageManager.loadImageFromResource(
-//                        R.drawable.cheat_button,
-//                        lengthManager.getCheatButtonSize(),
-//                        lengthManager.getCheatButtonSize()),
-//                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
-//
-//        saveBitmap(cheatBitmap, id + "_cheatBitmap.png");
-//
-//
-//        Bitmap backBitmap = updateHSV(
-//                imageManager.loadImageFromResource(
-//                        R.drawable.back_button,
-//                        lengthManager.getCheatButtonSize(),
-//                        lengthManager.getCheatButtonSize()),
-//                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
-//
-//        saveBitmap(backBitmap, id + "_backBitmap.png");
-//
-//    }
+    public void makeFirstHSV(int id) {
+        Bitmap levelLocked =
+                imageManager.loadImageFromResource(
+                        R.drawable.level_locked,
+                        lengthManager.getLevelFrameWidth(),
+                        lengthManager.getLevelFrameHeight());
+
+        saveBitmap(levelLocked, id + "_levelLocked.png");
+
+        Bitmap levelUnlocked =
+                imageManager.loadImageFromResource(
+                        R.drawable.level_unlocked,
+                        lengthManager.getLevelFrameWidth(),
+                        lengthManager.getLevelFrameHeight());
+
+        saveBitmap(levelUnlocked, id + "_levelUnlocked.png");
+
+
+        Bitmap cheatBitmap =
+                imageManager.loadImageFromResource(
+                        R.drawable.cheat_button,
+                        lengthManager.getCheatButtonSize(),
+                        lengthManager.getCheatButtonSize());
+
+        saveBitmap(cheatBitmap, id + "_cheatBitmap.png");
+
+
+        Bitmap backBitmap =
+                imageManager.loadImageFromResource(
+                        R.drawable.back_button,
+                        lengthManager.getCheatButtonSize(),
+                        lengthManager.getCheatButtonSize());
+
+        saveBitmap(backBitmap, id + "_backBitmap.png");
+
+    }
 
     public void saveBitmap(Bitmap bitmap, String name) {
 
@@ -593,7 +586,7 @@ public class Tools {
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, context);
                         saveToDownloadsJson(id);
-//                        makeFirstHSV(id);
+                        makeFirstHSV(id);
                     }
                 }
         );
@@ -762,6 +755,14 @@ public class Tools {
         return matcher.find() || VALID_PHONE_2.matcher(number).find();
     }
 
+    public static User getCachedUser() {
+        if (Prefs.contains(Tools.USER_SAVED_DATA)) {
+            String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
+            Gson gson = new Gson();
+            return gson.fromJson(jsonString, User.class);
+        }
+        return null;
+    }
 
 
 }

@@ -125,14 +125,13 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+    <ir.treeco.aftabe.View.Custom.UserLevelView
         android:id="@+id/dialog_user_view_mark_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:clickable="true"
         app:customDimension="0.2"
-        app:isUser="false"
         app:textAlign="below"
 
 

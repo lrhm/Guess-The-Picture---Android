@@ -3,23 +3,13 @@ package ir.treeco.aftabe.View.Custom;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
-import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.MainApplication;
@@ -29,14 +19,13 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
 import ir.treeco.aftabe.View.Dialog.UserViewDialog;
 
 /**
  * TODO: document your custom view class.
  */
-public class UserLevelMarkView extends LinearLayout {
+public class UserLevelView extends LinearLayout {
     private int mUserMark;
     private int mUserExp;
     private float mDimension;
@@ -48,7 +37,6 @@ public class UserLevelMarkView extends LinearLayout {
 
     private User mUser;
     private int mTextAlign;
-    private boolean isUser;
     private final int maxMarkCount = 8;
     private ImageView expView;
     private ImageView baseView;
@@ -58,14 +46,14 @@ public class UserLevelMarkView extends LinearLayout {
     private ImageManager imageManager;
 
 
-    public UserLevelMarkView(Context context) {
+    public UserLevelView(Context context) {
 
         super(context);
         init(context, null, 0);
         mUserLevelMarkView(context);
     }
 
-    public UserLevelMarkView(Context context, AttributeSet attrs) {
+    public UserLevelView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
         mUserLevelMarkView(context);
@@ -138,32 +126,29 @@ public class UserLevelMarkView extends LinearLayout {
         }
 
         FontsHolder.setFont(mUserNameTextView, FontsHolder.SANS_REGULAR);
-
-        if (!isUser)
-            setUserExp(10);
-        else
-            setUserExp(3);
-
-
         setDefualtListener();
 
-//        TODO remove the line above
     }
 
     public void setDefualtListener() {
-        if (!isClickable()) {
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isUser) {
-                        new UserViewDialog(getContext(), mUser).show();
-                    } else {
-                        new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
-                    }
-                }
-            });
-
+        if (isClickable()) {
+            return;
         }
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUser == null)
+                    return;
+                if (!mUser.isMe()) {
+                    new UserViewDialog(getContext(), mUser).show();
+                } else {
+                    new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
+                }
+            }
+        });
+
+
     }
 
     private MainActivity getActivity() {
@@ -179,23 +164,14 @@ public class UserLevelMarkView extends LinearLayout {
         return null;
     }
 
-    public boolean isUser() {
-        return isUser;
-    }
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
-        // Load attributes
 
         final TypedArray a = context.obtainStyledAttributes(
-                attrs, R.styleable.UserLevelMarkView, defStyle, 0);
+                attrs, R.styleable.UserLevelView, defStyle, 0);
         mDimension = a.getFloat(0, 0.5f);
         if (a.hasValue(1)) {
-            isUser = a.getBoolean(1, true);
-        } else
-            isUser = true;
-
-        if (a.hasValue(2)) {
-            mTextAlign = a.getInt(2, 1);
+            mTextAlign = a.getInt(1, 1);
         } else
             mTextAlign = 1;
 

@@ -6,14 +6,13 @@
     android:layout_marginTop="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<ir.treeco.aftabe.View.Custom.UserLevelMarkView
+<ir.treeco.aftabe.View.Custom.UserLevelView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/avatar_chat_other"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     app:customDimension="0.15"
-    app:isUser="false"
     app:textAlign="center"
 
     />

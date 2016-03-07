@@ -2,13 +2,11 @@ package ir.treeco.aftabe.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 import ir.treeco.aftabe.Object.ChatObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.SizeManager;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 /**
  * Created by al on 12/28/15.
@@ -35,7 +33,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mChatContent;
-        UserLevelMarkView mUserLevelMarkView;
+        UserLevelView mUserLevelView;
 
         public ViewHolder(View v, final int type) {
 
@@ -57,7 +55,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             }
 
             mChatContent = (TextView) itemView.findViewById(chatID);
-            mUserLevelMarkView = (UserLevelMarkView) itemView.findViewById(avatarID);
+            mUserLevelView = (UserLevelView) itemView.findViewById(avatarID);
 
 
         }
@@ -107,11 +105,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         if (mList.size() > 1 && position != 1) {
             if (mList.get(1).getType() == chatObject.getType()) {
                 Log.d("ChatAdapter", "Types are Equal , Setting Visibility Gone");
-                holder.mUserLevelMarkView.setVisibility(View.GONE);
+                holder.mUserLevelView.setVisibility(View.GONE);
             } else
-                holder.mUserLevelMarkView.setVisibility(View.VISIBLE);
+                holder.mUserLevelView.setVisibility(View.VISIBLE);
         } else
-            holder.mUserLevelMarkView.setVisibility(View.VISIBLE);
+            holder.mUserLevelView.setVisibility(View.VISIBLE);
     }
 
     public void addChatItem(ChatObject chatObject) {

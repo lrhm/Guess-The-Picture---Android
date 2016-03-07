@@ -63,23 +63,21 @@
                 android:id="@+id/timer_online"
                 />
 
-            <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+            <ir.treeco.aftabe.View.Custom.UserLevelView
                 android:id="@+id/player1_online_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:customDimension="0.13"
-                app:isUser="false"
                 app:textAlign="below"
                 android:visibility="gone"
                 />
 
 
-            <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+            <ir.treeco.aftabe.View.Custom.UserLevelView
                 android:id="@+id/player2_online_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:customDimension="0.13"
-                app:isUser="false"
                 app:textAlign="below"
                 android:visibility="gone"
 

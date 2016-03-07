@@ -20,7 +20,7 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 
 /**
@@ -30,7 +30,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     private ImageManager imageManager;
     private LengthManager lengthManager;
-    private UserLevelMarkView mUserLevelMarkView;
+    private UserLevelView mUserLevelView;
 
     @Nullable
     @Override
@@ -42,20 +42,20 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         SizeConverter randplayconverter = SizeConverter.SizeConvertorFromWidth(lengthManager.getScreenWidth() * 0.85f, 1809, 492);
         startOnlineView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.randomplaybutton
                 , (int) (randplayconverter.mWidth), (int) (randplayconverter.mHeight), ImageManager.ScalingLogic.FIT));
-        mUserLevelMarkView = (UserLevelMarkView) view.findViewById(R.id.user_view_in_menu);
+        mUserLevelView = (UserLevelView) view.findViewById(R.id.user_view_in_menu);
         ((MainActivity) getActivity()).addUserFoundListener(this);
 
         if(Prefs.contains(Tools.USER_SAVED_DATA)) {
             String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
             Gson gson = new Gson();
             User myUser = gson.fromJson(jsonString, User.class);
-            mUserLevelMarkView.setUser(myUser);
+            mUserLevelView.setUser(myUser);
 
         }
 
         if (!Tools.isUserRegistered()) {
-            mUserLevelMarkView.setUserGuest();
-            mUserLevelMarkView.setOnClickListener(new View.OnClickListener() {
+            mUserLevelView.setUserGuest();
+            mUserLevelView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new RegistrationDialog(getActivity()).show();
@@ -70,7 +70,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     @Override
     public void onGetUser(User user) {
         if (user.isMe())
-            mUserLevelMarkView.setUser(user);
+            mUserLevelView.setUser(user);
     }
 
     @Override

@@ -11,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 /**
  * Created by al on 1/22/16.
@@ -28,7 +31,7 @@ public class UserInfoFragment extends Fragment {
     ImageView mChatButton;
 
 
-    public UserInfoFragment(){
+    public UserInfoFragment() {
 
     }
 
@@ -36,15 +39,20 @@ public class UserInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Log.d("UserInfoFragment", " inflating");
 
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
+        User user = Tools.getCachedUser();
 
-
-
-        int size = (int) (SizeManager.getScreenWidth() * 0.1);
-
-        ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
+//        TODO add listener to main activities
+        if (user != null) {
+            UserLevelView userLevelView = (UserLevelView) view.findViewById(R.id.fragment_user_info_user_view);
+            userLevelView.setUser(user);
+        }
+//
+//
+//        int size = (int) (SizeManager.getScreenWidth() * 0.1);
+//
+//        ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
 
         return view;

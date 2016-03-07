@@ -51,7 +51,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
@@ -73,8 +73,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private boolean store = false;
-    private UserLevelMarkView playerOne;
-    private UserLevelMarkView playerTwo;
+    private UserLevelView playerOne;
+    private UserLevelView playerTwo;
     public MainFragment mainFragment;
     public TextView timerTextView;
     private ImageView coinBox;
@@ -104,8 +104,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits = (TextView) findViewById(R.id.digits);
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
-        playerOne = (UserLevelMarkView) findViewById(R.id.player1_online_game);
-        playerTwo = (UserLevelMarkView) findViewById(R.id.player2_online_game);
+        playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
+        playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
         timerTextView = (TextView) findViewById(R.id.timer_online);
 
         setUpPlayers();
@@ -148,7 +148,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         AftabeAPIAdapter.tryToLogin(this);
 
-        new UsernameChooseDialog(this, new GoogleToken("dsa")).show();
 
     }
 

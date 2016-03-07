@@ -4,17 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import com.squareup.picasso.Picasso;
-
-import java.math.BigInteger;
-import java.util.Arrays;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -23,7 +16,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 public class UserViewDialog extends Dialog  {
     Context context;
@@ -31,7 +24,7 @@ public class UserViewDialog extends Dialog  {
     Tools tools;
     ImageView mMatchButton;
     ImageView mChatButton;
-    UserLevelMarkView mUserLevelMarkView;
+    UserLevelView mUserLevelView;
     User mUser;
 
     public UserViewDialog(Context context, User user) {
@@ -51,8 +44,8 @@ public class UserViewDialog extends Dialog  {
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setContentView(R.layout.dialog_user_view);
 
-        mUserLevelMarkView = (UserLevelMarkView) findViewById(R.id.dialog_user_view_mark_view);
-        mUserLevelMarkView.setUser(mUser);
+        mUserLevelView = (UserLevelView) findViewById(R.id.dialog_user_view_mark_view);
+        mUserLevelView.setUser(mUser);
 
         mDataContainer = (RelativeLayout) findViewById(R.id.user_data_container);
         RelativeLayout.LayoutParams layoutParams = new

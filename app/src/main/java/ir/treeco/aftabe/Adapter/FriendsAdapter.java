@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import org.joda.time.IllegalFieldValueException;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -23,9 +21,8 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
-import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 /**
@@ -70,7 +67,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mHeaderTextView;
-        UserLevelMarkView mUserLevelMarkView;
+        UserLevelView mUserLevelView;
         ImageView mMatchButton;
         ImageView mChatButton;
 
@@ -105,7 +102,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.challengebutton, size, size));
             mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, size, size));
 
-            mUserLevelMarkView = (UserLevelMarkView) itemView.findViewById(R.id.friend_list_mark_view);
+            mUserLevelView = (UserLevelView) itemView.findViewById(R.id.friend_list_mark_view);
 
         }
 
@@ -177,7 +174,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             }
         });
 
-        holder.mUserLevelMarkView.setUser(user);
+        holder.mUserLevelView.setUser(user);
 
     }
 

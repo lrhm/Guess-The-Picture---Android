@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 /**
  * Created by al on 1/22/16.
@@ -53,14 +53,14 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
-        UserLevelMarkView mUserLevelMarkView;
+        UserLevelView mUserLevelView;
 
         public ViewHolder(View v) {
 
             super(v);
 
             mTextView = (TextView) itemView.findViewById(R.id.rank_leaderboard_item);
-            mUserLevelMarkView = (UserLevelMarkView) itemView.findViewById(R.id.leaderboard_mark_view);
+            mUserLevelView = (UserLevelView) itemView.findViewById(R.id.leaderboard_mark_view);
         }
 
     }

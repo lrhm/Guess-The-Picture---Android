@@ -40,18 +40,28 @@ public class PackagesFragment extends Fragment {
         PackageObject[] downloadedPackage = db.getPackages();
         PackageObject[] saller = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
 
+        int size = 0;
+        if (news != null)
+            size += news.length;
+        if (downloadedPackage != null)
+            size += downloadedPackage.length;
+        if (saller != null)
+            size += saller.length;
 
-        packageObjects = new PackageObject[news.length + downloadedPackage.length + saller.length];
+        packageObjects = new PackageObject[size];
 
         int i = 0;
-        for (PackageObject packageObject : news)
-            packageObjects[i++] = packageObject;
+        if (news != null)
+            for (PackageObject packageObject : news)
+                packageObjects[i++] = packageObject;
 
-        for (PackageObject packageObject : downloadedPackage)
-            packageObjects[i++] = packageObject;
+        if (downloadedPackage != null)
+            for (PackageObject packageObject : downloadedPackage)
+                packageObjects[i++] = packageObject;
 
-        for (PackageObject packageObject : saller)
-            packageObjects[i++] = packageObject;
+        if (saller != null)
+            for (PackageObject packageObject : saller)
+                packageObjects[i++] = packageObject;
 
         ArrayList<PackageObject> packages = new ArrayList<PackageObject>();
         for (PackageObject packageObject : packageObjects) {
