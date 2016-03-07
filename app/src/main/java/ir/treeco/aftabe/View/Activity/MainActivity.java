@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +42,9 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
+import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
@@ -59,8 +62,11 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, Runnable {
 
+
+    private HeadObject headObject;
+    private DBAdapter db;
     private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
@@ -84,6 +90,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String TAG = "MainActivity";
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
+    private View mLoadingViewContainer;
 
 
     @Override
@@ -91,10 +98,50 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        mUserFoundListeners = new ArrayList<>();
-
         setContentView(R.layout.activity_main);
+
+        mLoadingViewContainer = findViewById(R.id.loading_container);
+        new Handler().postDelayed(this, 400);
+
+
+    }
+
+
+    @Override
+    public void run() {
+        initUtils();
+        initActivity();
+        mLoadingViewContainer.setVisibility(View.GONE);
+    }
+
+
+    private void initUtils(){
+
+
+        tools = new Tools(this);
+
+        if (Prefs.getBoolean("firstAppRun", true)) {
+            Tools.checkKey();
+        }
+
+        tools.checkDB();
+        db = DBAdapter.getInstance(this);
+
+        tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
+
+        if (Prefs.getBoolean("firstAppRun", true)) {
+
+            db.insertCoins(399);
+            tools.copyLocalpackages();
+            Prefs.putBoolean("firstAppRun", false);
+        }
+
+        tools.downloadHead();
+
+    }
+
+    private void initActivity(){
+        mUserFoundListeners = new ArrayList<>();
 
         tools = new Tools(getApplication());
         coinAdapter = new CoinAdapter(getApplicationContext());
@@ -147,8 +194,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
 
         AftabeAPIAdapter.tryToLogin(this);
-
-
     }
 
 

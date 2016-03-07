@@ -19,17 +19,17 @@ import ir.treeco.aftabe.Util.Tools;
 
 public class MainApplication extends Application {
 
+
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private HeadObject headObject;
-    private DBAdapter db;
-    private Tools tools;
+
     private final static String TAG = "MainApplication";
 
     @Override
     public void onCreate() {
-        super.onCreate();
 
+        super.onCreate();
         new Prefs.Builder()
                 .setContext(this)
                 .setMode(MODE_PRIVATE)
@@ -40,27 +40,6 @@ public class MainApplication extends Application {
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
         imageManager = new ImageManager(this);
-
-        tools = new Tools(this);
-
-        if (Prefs.getBoolean("firstAppRun", true)) {
-            Tools.checkKey();
-        }
-
-        tools.checkDB();
-        db = DBAdapter.getInstance(this);
-
-        tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
-
-        if (Prefs.getBoolean("firstAppRun", true)) {
-
-            db.insertCoins(399);
-            tools.copyLocalpackages();
-            Prefs.putBoolean("firstAppRun", false);
-        }
-
-        tools.downloadHead();
-
 
     }
 
@@ -80,6 +59,12 @@ public class MainApplication extends Application {
         this.headObject = headObject;
     }
 
+    public void setLengthManager(LengthManager lengthManager) {
+        this.lengthManager = lengthManager;
+    }
 
+    public void setImageManager(ImageManager imageManager) {
+        this.imageManager = imageManager;
+    }
 
 }
