@@ -18,6 +18,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
 import ir.treeco.aftabe.View.Dialog.UserViewDialog;
@@ -26,7 +27,7 @@ import ir.treeco.aftabe.View.Dialog.UserViewDialog;
  * TODO: document your custom view class.
  */
 public class UserLevelView extends LinearLayout {
-    private int mUserMark;
+    private int mUserLevel;
     private int mUserExp;
     private float mDimension;
 
@@ -37,11 +38,11 @@ public class UserLevelView extends LinearLayout {
 
     private User mUser;
     private int mTextAlign;
-    private final int maxMarkCount = 8;
     private ImageView expView;
     private ImageView baseView;
     private ImageView coverView;
     private TextView mUserNameTextView;
+    private TextView mLevelTextView;
     private LengthManager lengthManager;
     private ImageManager imageManager;
 
@@ -84,6 +85,18 @@ public class UserLevelView extends LinearLayout {
 
         LayoutParams textLP = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         textLP.gravity = Gravity.CENTER;
+
+
+        mLevelTextView = new TextView(context);
+        mLevelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 120);
+        mLevelTextView.setTypeface(FontsHolder.getSansRegular(context));
+        mLevelTextView.setGravity(Gravity.CENTER);
+        FrameLayout.LayoutParams levelTextViewLP = new FrameLayout.LayoutParams((int) (lengthManager.getScreenWidth() * (mDimension)),
+                (int) (lengthManager.getScreenWidth() * (mDimension)));
+        levelTextViewLP.gravity = Gravity.CENTER;
+
+        mLevelTextView.setLayoutParams(levelTextViewLP);
+
         imagesContainer.setLayoutParams(textLP);
 
         expView = new ImageView(context);
@@ -92,6 +105,7 @@ public class UserLevelView extends LinearLayout {
         imagesContainer.addView(baseView);
         imagesContainer.addView(expView);
         imagesContainer.addView(coverView);
+        imagesContainer.addView(mLevelTextView );
 
         int orientation = VERTICAL;
         if (mTextAlign == TEXT_ALIGN_LEFT)
@@ -187,11 +201,13 @@ public class UserLevelView extends LinearLayout {
 
     }
 
-    public void setmUserMark(int userMark) {
-        mUserMark = userMark;
+    public void setUserLevel(int userMark) {
+        mUserLevel = userMark;
+        mLevelTextView.setText(Tools.numeralStringToPersianDigits(userMark+""));
     }
 
     private int getExpID(int expLevel) {
+        expLevel++;
         switch (expLevel) {
             case 1:
                 return R.drawable.exp1;
@@ -209,8 +225,6 @@ public class UserLevelView extends LinearLayout {
                 return R.drawable.exp7;
             case 8:
                 return R.drawable.exp8;
-            case 10:
-                return R.drawable.avatarcover;
 
 
         }
@@ -219,8 +233,8 @@ public class UserLevelView extends LinearLayout {
 
     public void setUser(User user) {
         this.mUser = user;
-        setmUserMark(user.getScore());
-        setUserExp(user.getRank());
+        setUserLevel(user.getLevel());
+        setUserExp(user.getExp());
         setUserName(user.getName());
     }
 

@@ -171,7 +171,7 @@ public class Tools {
             linearLayout.addView(views[i]);
     }
 
-    public String numeralStringToPersianDigits(String s) {
+    public static String numeralStringToPersianDigits(String s) {
         String persianDigits = "۰۱۲۳۴۵۶۷۸۹";
         char[] result = new char[s.length()];
         for (int i = 0; i < s.length(); i++)

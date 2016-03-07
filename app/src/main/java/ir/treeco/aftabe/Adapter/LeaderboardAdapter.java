@@ -37,7 +37,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = mList.get(position);
-        holder.mTextView.setText("#" + user.getRank() +"");
+        holder.mTextView.setText("#" + user.getLevel() +"");
     }
 
     @Override

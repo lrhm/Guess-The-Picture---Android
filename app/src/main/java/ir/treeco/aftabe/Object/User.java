@@ -7,6 +7,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.util.Map;
 
 import ir.treeco.aftabe.API.Utils.LoginInfo;
+import ir.treeco.aftabe.Util.LevelCalculator;
 import ir.treeco.aftabe.Util.Tools;
 
 /**
@@ -53,6 +54,8 @@ public class User {
 
     @Expose
     private String code;
+
+    LevelCalculator levelCalculator;
 
 
     private boolean isMe = false;
@@ -175,12 +178,15 @@ public class User {
 
     private LoginInfo loginInfo;
 
-    public int getRank() {
-        return score / 8 + 1;
+    public int getLevel() {
+
+        levelCalculator = new LevelCalculator(score);
+        return levelCalculator.getLevel();
     }
 
-    public int getMark() {
-        return score % 8;
+    public int getExp(){
+        levelCalculator = new LevelCalculator(score);
+        return levelCalculator.getExp();
     }
 
     public boolean isMe() {

@@ -207,6 +207,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    public void setHeaderVisiblity(boolean visible) {
+        int headerViewsVisibility = (!visible ? View.GONE : View.VISIBLE);
+        logo.setVisibility(headerViewsVisibility);
+        coinBox.setVisibility(headerViewsVisibility);
+        digits.setVisibility(headerViewsVisibility);
+
+
+    }
+
     private void setUpCoinBox() {
         coinBox = (ImageView) findViewById(R.id.coin_box);
 
