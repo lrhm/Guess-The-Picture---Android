@@ -11,7 +11,7 @@ public class GuestCreateToken {
     boolean guest = true;
 
     @Expose
-    String imei = "randomnumber";
+    String imei ;
 
     public GuestCreateToken(String imei) {
         this.imei = imei;

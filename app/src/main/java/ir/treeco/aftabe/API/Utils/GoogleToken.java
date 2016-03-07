@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import ir.treeco.aftabe.Object.TokenHolder;
+import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
 
 /**
@@ -26,9 +27,9 @@ public class GoogleToken {
     @Expose
     public String guestID;
 
-    public GoogleToken(String gToken, String imei) {
+    public GoogleToken(String gToken) {
         this.gToken = gToken;
-        this.imei = imei;
+        this.imei = RandomString.nextString();
     }
 
     public void setUsername(String username) {

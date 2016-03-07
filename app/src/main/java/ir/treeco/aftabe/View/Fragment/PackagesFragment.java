@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.PackageAdapter;
@@ -34,27 +36,65 @@ public class PackagesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        switch (type) {
-            case 0:
-                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getNews();
-                break;
+        PackageObject[] news = ((MainApplication) getActivity().getApplication()).getHeadObject().getNews();
+        PackageObject[] downloadedPackage = db.getPackages();
+        PackageObject[] saller = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
 
-            case 1:
-                PackageObject[] downloadedPackage = db.getPackages();
-                PackageObject[] temp = new PackageObject[10];
-                for(int i = 0 ; i < 10 ; i++){
-                    temp[i] = downloadedPackage[0];
-//                    temp[i].setId(i);
-                }
-                if (downloadedPackage != null) {
-                    packageObjects = downloadedPackage;
-                    packageObjects = temp;
-                }
-                break;
 
-            case 2:
-                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
-                break;
+        packageObjects = new PackageObject[news.length + downloadedPackage.length + saller.length];
+
+        int i = 0;
+        for (PackageObject packageObject : news)
+            packageObjects[i++] = packageObject;
+
+        for (PackageObject packageObject : downloadedPackage)
+            packageObjects[i++] = packageObject;
+
+        for (PackageObject packageObject : saller)
+            packageObjects[i++] = packageObject;
+
+        ArrayList<PackageObject> packages = new ArrayList<PackageObject>();
+        for (PackageObject packageObject : packageObjects) {
+            boolean added = false;
+            for (PackageObject mPackage : packages) {
+                if (mPackage.getId() == packageObject.getId()) {
+                    added = true;
+                    break;
+                }
+
+            }
+            if (!added) {
+                packages.add(packageObject);
+            }
+        }
+//        switch (type) {
+//            case 0:
+//                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getNews();
+//                break;
+//
+//            case 1:
+//                PackageObject[] downloadedPackage = db.getPackages();
+//                PackageObject[] temp = new PackageObject[10];
+//                for (int i = 0; i < 10; i++) {
+//                    temp[i] = downloadedPackage[0];
+////                    temp[i].setId(i);
+//                }
+//                if (downloadedPackage != null) {
+//                    packageObjects = downloadedPackage;
+//                    packageObjects = temp;
+//                }
+//                break;
+//
+//            case 2:
+//                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
+//                break;
+//        }
+
+        packageObjects = new PackageObject[packages.size()];
+        i = 0;
+        for (PackageObject packageObject : packages) {
+
+            packageObjects[i++] = packageObject;
         }
 
         adapter = new PackageAdapter(getActivity(), packageObjects);

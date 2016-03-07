@@ -39,6 +39,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
@@ -70,7 +71,7 @@ public class Tools {
     private HeadObject headObject;
     private ImageManager imageManager;
     public final static String ENCRYPT_KEY = "shared_prefs_last_long";
-    private final static String PACKAGE_SOLVE_CNT = "package_slv_count";
+    public final static String USER_SAVED_DATA = "shared_prefs_user";
     public final static String SHARED_PREFS_TOKEN = "shared_prefs_tk";
     private final static String TAG = "Tools";
 
@@ -101,57 +102,57 @@ public class Tools {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / (metrics.densityDpi / 160f);
     }
-
-    public Bitmap updateHSV(Bitmap src, float settingHue, float settingSat, float settingVal) {
-        int w = src.getWidth();
-        int h = src.getHeight();
-        int[] mapSrcColor = new int[w * h];
-        int[] mapDestColor = new int[w * h];
-
-        float[] pixelHSV = new float[3];
-
-        src.getPixels(mapSrcColor, 0, w, 0, 0, w, h);
-
-        int index = 0;
-        for (int y = 0; y < h; ++y) {
-            for (int x = 0; x < w; ++x) {
-
-                // Convert from Color to HSV
-                Color.colorToHSV(mapSrcColor[index], pixelHSV);
-                int alpha = Color.alpha(mapSrcColor[index]);
-
-                // Adjust HSV
-                pixelHSV[0] = pixelHSV[0] + settingHue;
-                if (pixelHSV[0] < 0.0f) {
-                    pixelHSV[0] += 360;
-                } else if (pixelHSV[0] > 360.0f) {
-                    pixelHSV[0] -= 360.0f;
-                }
-
-                pixelHSV[1] = pixelHSV[1] + settingSat;
-                if (pixelHSV[1] < 0.0f) {
-                    pixelHSV[1] = 0.0f;
-                } else if (pixelHSV[1] > 1.0f) {
-                    pixelHSV[1] = 1.0f;
-                }
-
-                pixelHSV[2] = pixelHSV[2] + settingVal;
-                if (pixelHSV[2] < 0.0f) {
-                    pixelHSV[2] = 0.0f;
-                } else if (pixelHSV[2] > 1.0f) {
-                    pixelHSV[2] = 1.0f;
-                }
-
-                // Convert back from HSV to Color
-                mapDestColor[index] = Color.HSVToColor(alpha, pixelHSV);
-
-                index++;
-            }
-        }
-
-        return Bitmap.createBitmap(mapDestColor, w, h, Bitmap.Config.ARGB_8888);
-
-    }
+//
+//    public Bitmap updateHSV(Bitmap src, float settingHue, float settingSat, float settingVal) {
+//        int w = src.getWidth();
+//        int h = src.getHeight();
+//        int[] mapSrcColor = new int[w * h];
+//        int[] mapDestColor = new int[w * h];
+//
+//        float[] pixelHSV = new float[3];
+//
+//        src.getPixels(mapSrcColor, 0, w, 0, 0, w, h);
+//
+//        int index = 0;
+//        for (int y = 0; y < h; ++y) {
+//            for (int x = 0; x < w; ++x) {
+//
+//                // Convert from Color to HSV
+//                Color.colorToHSV(mapSrcColor[index], pixelHSV);
+//                int alpha = Color.alpha(mapSrcColor[index]);
+//
+//                // Adjust HSV
+//                pixelHSV[0] = pixelHSV[0] + settingHue;
+//                if (pixelHSV[0] < 0.0f) {
+//                    pixelHSV[0] += 360;
+//                } else if (pixelHSV[0] > 360.0f) {
+//                    pixelHSV[0] -= 360.0f;
+//                }
+//
+//                pixelHSV[1] = pixelHSV[1] + settingSat;
+//                if (pixelHSV[1] < 0.0f) {
+//                    pixelHSV[1] = 0.0f;
+//                } else if (pixelHSV[1] > 1.0f) {
+//                    pixelHSV[1] = 1.0f;
+//                }
+//
+//                pixelHSV[2] = pixelHSV[2] + settingVal;
+//                if (pixelHSV[2] < 0.0f) {
+//                    pixelHSV[2] = 0.0f;
+//                } else if (pixelHSV[2] > 1.0f) {
+//                    pixelHSV[2] = 1.0f;
+//                }
+//
+//                // Convert back from HSV to Color
+//                mapDestColor[index] = Color.HSVToColor(alpha, pixelHSV);
+//
+//                index++;
+//            }
+//        }
+//
+//        return Bitmap.createBitmap(mapDestColor, w, h, Bitmap.Config.ARGB_8888);
+//
+//    }
 
     public void resizeView(View view, int width, int height) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -281,53 +282,53 @@ public class Tools {
             Zip zip = new Zip();
             zip.unpackZip(path, id, context);
             saveToDownloadsJson(id);
-            makeFirstHSV(id);
+//            makeFirstHSV(id);
         }
     }
 
-    public void makeFirstHSV(int id) {
-        float[] thumbnailHSV = {130, 0, 0};  //todo load for json
-        Bitmap levelLocked = updateHSV(
-                imageManager.loadImageFromResource(
-                        R.drawable.level_locked,
-                        lengthManager.getLevelFrameWidth(),
-                        lengthManager.getLevelFrameHeight()),
-                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-
-        saveBitmap(levelLocked, id + "_levelLocked.png");
-
-        Bitmap levelUnlocked = updateHSV(
-                imageManager.loadImageFromResource(
-                        R.drawable.level_unlocked,
-                        lengthManager.getLevelFrameWidth(),
-                        lengthManager.getLevelFrameHeight()),
-                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
-
-        saveBitmap(levelUnlocked, id + "_levelUnlocked.png");
-
-
-        float[] cheatButtonHSV = {130, 0, 0};//mLevel.getWrapperPackage().meta.getCheatButtonHSV();
-
-        Bitmap cheatBitmap = updateHSV(
-                imageManager.loadImageFromResource(
-                        R.drawable.cheat_button,
-                        lengthManager.getCheatButtonSize(),
-                        lengthManager.getCheatButtonSize()),
-                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
-
-        saveBitmap(cheatBitmap, id + "_cheatBitmap.png");
-
-
-        Bitmap backBitmap = updateHSV(
-                imageManager.loadImageFromResource(
-                        R.drawable.back_button,
-                        lengthManager.getCheatButtonSize(),
-                        lengthManager.getCheatButtonSize()),
-                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
-
-        saveBitmap(backBitmap, id + "_backBitmap.png");
-
-    }
+//    public void makeFirstHSV(int id) {
+//        float[] thumbnailHSV = {130, 0, 0};  //todo load for json
+//        Bitmap levelLocked = updateHSV(
+//                imageManager.loadImageFromResource(
+//                        R.drawable.level_locked,
+//                        lengthManager.getLevelFrameWidth(),
+//                        lengthManager.getLevelFrameHeight()),
+//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+//
+//        saveBitmap(levelLocked, id + "_levelLocked.png");
+//
+//        Bitmap levelUnlocked = updateHSV(
+//                imageManager.loadImageFromResource(
+//                        R.drawable.level_unlocked,
+//                        lengthManager.getLevelFrameWidth(),
+//                        lengthManager.getLevelFrameHeight()),
+//                thumbnailHSV[0], thumbnailHSV[1], thumbnailHSV[2]);
+//
+//        saveBitmap(levelUnlocked, id + "_levelUnlocked.png");
+//
+//
+//        float[] cheatButtonHSV = {130, 0, 0};//mLevel.getWrapperPackage().meta.getCheatButtonHSV();
+//
+//        Bitmap cheatBitmap = updateHSV(
+//                imageManager.loadImageFromResource(
+//                        R.drawable.cheat_button,
+//                        lengthManager.getCheatButtonSize(),
+//                        lengthManager.getCheatButtonSize()),
+//                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+//
+//        saveBitmap(cheatBitmap, id + "_cheatBitmap.png");
+//
+//
+//        Bitmap backBitmap = updateHSV(
+//                imageManager.loadImageFromResource(
+//                        R.drawable.back_button,
+//                        lengthManager.getCheatButtonSize(),
+//                        lengthManager.getCheatButtonSize()),
+//                cheatButtonHSV[0], cheatButtonHSV[1], cheatButtonHSV[2]);
+//
+//        saveBitmap(backBitmap, id + "_backBitmap.png");
+//
+//    }
 
     public void saveBitmap(Bitmap bitmap, String name) {
 
@@ -592,7 +593,7 @@ public class Tools {
                         Zip zip = new Zip();
                         zip.unpackZip(file.getPath(), id, context);
                         saveToDownloadsJson(id);
-                        makeFirstHSV(id);
+//                        makeFirstHSV(id);
                     }
                 }
         );
@@ -747,7 +748,9 @@ public class Tools {
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     public static final Pattern VALID_PHONE =
-            Pattern.compile("^[0-9]{10,11}$");
+            Pattern.compile("^09[0-9]{9}$");
+    public static final Pattern VALID_PHONE_2 =
+            Pattern.compile("^9[0-9]{9}$");
 
     public static boolean isAEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
@@ -756,8 +759,9 @@ public class Tools {
 
     public static boolean isAPhoneNumber(String number) {
         Matcher matcher = VALID_PHONE.matcher(number);
-        return matcher.find();
+        return matcher.find() || VALID_PHONE_2.matcher(number).find();
     }
+
 
 
 }

@@ -18,6 +18,7 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 
 public class MainApplication extends Application {
+
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private HeadObject headObject;
@@ -79,13 +80,6 @@ public class MainApplication extends Application {
         this.headObject = headObject;
     }
 
-    public User getSelfUser() {
-        return null;
 
-    }
-
-    public void updateUser() {
-
-    }
 
 }

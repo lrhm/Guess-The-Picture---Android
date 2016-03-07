@@ -16,9 +16,6 @@ public class User {
 
 
     @Expose
-    Map error;
-
-    @Expose
     private String name;
 
     @Expose
@@ -62,14 +59,6 @@ public class User {
 
     public User() {
         guest = false;
-    }
-
-    public Map getError() {
-        return error;
-    }
-
-    public void setError(Map error) {
-        this.error = error;
     }
 
     public String getName() {

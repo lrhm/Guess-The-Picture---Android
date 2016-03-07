@@ -38,7 +38,7 @@ public interface AftabeService {
     Call<User> getUser(@Query("user_atk") String accessToken, @Path("user_id") String userId);
 
     @GET("/api/users/count")
-    Call<UsernameCheck> checkUserName(@Query("access_token") String accessToken, @Query("where[name]") String username);
+    Call<UsernameCheck> checkUserName(@Query("where[name]") String username);
 
     @GET("/api/users/")
     Call<User[]> searchByUsername(@Query("access_token") String accessToken, @Query("filter[where][name][like]") String username);

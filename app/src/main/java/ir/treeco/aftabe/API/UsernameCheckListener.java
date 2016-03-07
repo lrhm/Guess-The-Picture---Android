@@ -5,5 +5,5 @@ package ir.treeco.aftabe.API;
  */
 public interface UsernameCheckListener {
 
-    void onCheckedUsername(boolean status);
+    void onCheckedUsername(boolean status, String name);
 }

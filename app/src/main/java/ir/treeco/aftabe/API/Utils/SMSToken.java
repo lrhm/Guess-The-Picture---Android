@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import ir.treeco.aftabe.Object.TokenHolder;
+import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
 
 /**
@@ -34,12 +35,16 @@ public class SMSToken {
     @Expose
     public String guestID;
 
-    public void update(String imei, String name, String code) {
-        this.imei = imei;
-        this.name = name;
+    public void update(String code) {
+        this.imei = RandomString.nextString();
         this.smsTokenId = id;
         this.code = code;
         setGuestID();
+    }
+
+    public void setName(String name){
+        this.name = name;
+
     }
 
     private void setGuestID() {

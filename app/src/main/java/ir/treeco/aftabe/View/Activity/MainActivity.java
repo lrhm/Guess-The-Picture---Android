@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
@@ -145,6 +147,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
 
         AftabeAPIAdapter.tryToLogin(this);
+
+        new UsernameChooseDialog(this, new GoogleToken("dsa")).show();
+
     }
 
 
@@ -408,9 +413,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGetUser(User user) {
         Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
-        if (user.isMe())
+        if (user.isMe()) {
             myUser = user;
-        for(UserFoundListener userFoundListener : mUserFoundListeners)
+            Gson gson = new Gson();
+            Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
+        }
+        for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetUser(user);
 
     }
@@ -419,7 +427,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGetError() {
         Log.d(TAG, "didnet get the user");
 
-        for(UserFoundListener userFoundListener: mUserFoundListeners)
+        for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetError();
     }
 
@@ -456,9 +464,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            GoogleToken googleToken = new GoogleToken(acct.getIdToken());
 
-            GoogleToken googleToken = new GoogleToken(acct.getIdToken(), "random");
-            AftabeAPIAdapter.getMyUserByGoogle(googleToken, this);
+            new UsernameChooseDialog(this, googleToken).show();
 
 
         } else {

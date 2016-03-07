@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+import com.pixplicity.easyprefs.library.Prefs;
+
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -41,6 +44,14 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
                 , (int) (randplayconverter.mWidth), (int) (randplayconverter.mHeight), ImageManager.ScalingLogic.FIT));
         mUserLevelMarkView = (UserLevelMarkView) view.findViewById(R.id.user_view_in_menu);
         ((MainActivity) getActivity()).addUserFoundListener(this);
+
+        if(Prefs.contains(Tools.USER_SAVED_DATA)) {
+            String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
+            Gson gson = new Gson();
+            User myUser = gson.fromJson(jsonString, User.class);
+            mUserLevelMarkView.setUser(myUser);
+
+        }
 
         if (!Tools.isUserRegistered()) {
             mUserLevelMarkView.setUserGuest();
