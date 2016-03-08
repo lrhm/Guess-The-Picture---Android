@@ -392,6 +392,10 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                if (getActivity() == null)
+                    return;
+
+
                 ((MainActivity) getActivity()).disableCheatButton(true);
             }
 
@@ -431,6 +435,10 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 }
 
                 blackWidow.setVisibility(View.GONE);
+                if (getActivity() == null)
+                    return;
+
+
                 ((MainActivity) getActivity()).disableCheatButton(true);
             }
 
@@ -446,6 +454,13 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         });
 
         animatorSet.setDuration(600).start();
+    }
+
+    @Override
+    public void onDetach() {
+        ((MainActivity) getActivity()).disableCheatButton(true);
+
+        super.onDetach();
     }
 
     private boolean cheakSolotion() {
