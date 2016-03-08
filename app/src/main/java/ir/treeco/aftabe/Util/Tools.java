@@ -596,11 +596,9 @@ public class Tools {
 
         String str = Prefs.getString(ENCRYPT_KEY, null);
 
-
         if (str == null)
             str = "1234567812345678"; // for users without deviceID
 
-        Log.d(TAG, "key is " + str);
         for (int i = 0; i < 15; i++) {
             try {
                 byte[] bytesOfMessage = str.getBytes("UTF-8");
@@ -620,7 +618,6 @@ public class Tools {
                 key[i] = strBytes[i++];
             while (i < 16)
                 key[i++] = 100;
-            Log.d(TAG, "new key is " + new String(key));
             return key;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -647,7 +644,6 @@ public class Tools {
                 Environment.getExternalStorageDirectory(),
                 "Android");
         rootFolder.mkdir();
-        JSONObject jsonObject = new JSONObject();
 
         if (!Prefs.contains(SHARED_PREFS_TOKEN) || !Prefs.contains(ENCRYPT_KEY))
             return;

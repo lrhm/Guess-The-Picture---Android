@@ -70,7 +70,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<LoginInfo> response) {
 
 
-                if(!response.isSuccess()){
+                if (!response.isSuccess()) {
                     userFoundListener.onGetError();
                     return;
                 }
@@ -98,7 +98,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User> response) {
 
 
-                if(!response.isSuccess()){
+                if (!response.isSuccess()) {
                     userFoundListener.onGetError();
                     return;
                 }
@@ -121,7 +121,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<LoginInfo> response) {
 
 
-                if(!response.isSuccess()){
+                if (!response.isSuccess()) {
                     userFoundListener.onGetError();
                     return;
                 }
@@ -176,7 +176,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<User> response) {
 
-                if(!response.isSuccess()){
+                if (!response.isSuccess()) {
                     userFoundListener.onGetError();
                     return;
                 }
@@ -228,8 +228,8 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<UsernameCheck> response) {
 
-                if(!response.isSuccess()){
-                    usernameCheckListener.onCheckedUsername(false , username);
+                if (!response.isSuccess()) {
+                    usernameCheckListener.onCheckedUsername(false, username);
                     return;
                 }
 
@@ -257,7 +257,7 @@ public class AftabeAPIAdapter {
             TokenHolder tokenHolder = gson.fromJson(Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""), TokenHolder.class);
             if (tokenHolder.getLoginInfo() == null)
                 return;
-            Log.d(TAG, Prefs.getString(Tools.SHARED_PREFS_TOKEN,""));
+            Log.d(TAG, Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""));
 
             getMyUserByAccessToken(tokenHolder.getLoginInfo(), userFoundListener);
 
