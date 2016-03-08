@@ -3,6 +3,7 @@ package ir.treeco.aftabe.View.Custom;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
@@ -42,7 +44,7 @@ public class UserLevelView extends LinearLayout {
     private ImageView baseView;
     private ImageView coverView;
     private TextView mUserNameTextView;
-    private TextView mLevelTextView;
+    private MagicTextView mLevelTextView;
     private LengthManager lengthManager;
     private ImageManager imageManager;
 
@@ -87,13 +89,19 @@ public class UserLevelView extends LinearLayout {
         textLP.gravity = Gravity.CENTER;
 
 
-        mLevelTextView = new TextView(context);
-        mLevelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 120);
+        mLevelTextView = new MagicTextView(context);
+        mLevelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 150);
         mLevelTextView.setTypeface(FontsHolder.getSansRegular(context));
+        mLevelTextView.setTextColor(Color.WHITE);
         mLevelTextView.setGravity(Gravity.CENTER);
+
+        int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 100);
+        mLevelTextView.setStroke(strokeSize, Color.BLACK);
+
         FrameLayout.LayoutParams levelTextViewLP = new FrameLayout.LayoutParams((int) (lengthManager.getScreenWidth() * (mDimension)),
                 (int) (lengthManager.getScreenWidth() * (mDimension)));
         levelTextViewLP.gravity = Gravity.CENTER;
+        levelTextViewLP.topMargin = (int) (SizeManager.getScreenHeight() * mDimension * 0.05);
 
         mLevelTextView.setLayoutParams(levelTextViewLP);
 
@@ -105,7 +113,7 @@ public class UserLevelView extends LinearLayout {
         imagesContainer.addView(baseView);
         imagesContainer.addView(expView);
         imagesContainer.addView(coverView);
-        imagesContainer.addView(mLevelTextView );
+        imagesContainer.addView(mLevelTextView);
 
         int orientation = VERTICAL;
         if (mTextAlign == TEXT_ALIGN_LEFT)
@@ -140,11 +148,11 @@ public class UserLevelView extends LinearLayout {
         }
 
         FontsHolder.setFont(mUserNameTextView, FontsHolder.SANS_REGULAR);
-        setDefualtListener();
+        setDefaultListener();
 
     }
 
-    public void setDefualtListener() {
+    public void setDefaultListener() {
         if (isClickable()) {
             return;
         }
@@ -183,8 +191,10 @@ public class UserLevelView extends LinearLayout {
 
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.UserLevelView, defStyle, 0);
-        mDimension = a.getFloat(0, 0.5f);
-        if (a.hasValue(1)) {
+
+        if (a.hasValue(R.styleable.UserLevelView_customDimension))
+            mDimension = a.getFloat(0, 0.5f);
+        if (a.hasValue(R.styleable.UserLevelView_textAlign)) {
             mTextAlign = a.getInt(1, 1);
         } else
             mTextAlign = 1;
@@ -203,7 +213,7 @@ public class UserLevelView extends LinearLayout {
 
     public void setUserLevel(int userMark) {
         mUserLevel = userMark;
-        mLevelTextView.setText(Tools.numeralStringToPersianDigits(userMark+""));
+        mLevelTextView.setText(Tools.numeralStringToPersianDigits(userMark + ""));
     }
 
     private int getExpID(int expLevel) {
@@ -243,8 +253,7 @@ public class UserLevelView extends LinearLayout {
         if (mTextAlign != TEXT_ALIGN_CENTER) {
             mUserNameTextView.setText(userName);
 
-        } else { //Text Align Center
-
+        } else {
             mUserNameTextView.setText(userName.subSequence(0, 2));
 
         }

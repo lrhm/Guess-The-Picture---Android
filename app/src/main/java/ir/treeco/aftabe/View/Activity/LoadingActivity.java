@@ -14,7 +14,7 @@ import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.Tools;
 
-public class LoadingActivity extends FragmentActivity implements  Runnable {
+public class LoadingActivity extends FragmentActivity implements Runnable {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,18 @@ public class LoadingActivity extends FragmentActivity implements  Runnable {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_loading);
 
+        long startTime = System.currentTimeMillis();
+
         initUtils();
+
+        long endTime = System.currentTimeMillis();
+
+        if (startTime - endTime > 500) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         new Handler().postDelayed(this, 400);
 
@@ -41,7 +52,7 @@ public class LoadingActivity extends FragmentActivity implements  Runnable {
     }
 
 
-    private void initUtils(){
+    private void initUtils() {
 
 
         Tools tools = new Tools(this);
