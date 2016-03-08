@@ -91,22 +91,6 @@
             android:layout_height="fill_parent"></FrameLayout>
 
     </LinearLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/loading_container"
-        android:background="@android:color/black"
-        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Loading This Shit bitchez"
-            android:textColor="@android:color/white"
-            android:textSize="50sp"
-            />
-
-    </FrameLayout>
 
 </FrameLayout>

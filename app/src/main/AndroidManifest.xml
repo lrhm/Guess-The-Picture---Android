@@ -33,13 +33,7 @@
             android:theme="@style/noAnimTheme"
             android:windowSoftInputMode="adjustResize">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
         <activity
             android:name="ir.tapsell.tapselldevelopersdk.FirstPage"
             android:screenOrientation="portrait"
@@ -70,6 +64,13 @@
 
         <service android:name="ir.tapsell.tapselldevelopersdk.services.asynchservices.core.HttpService" />
 
+        <activity android:name=".View.Activity.LoadingActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

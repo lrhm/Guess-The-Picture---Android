@@ -62,7 +62,7 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, Runnable {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener {
 
 
     private HeadObject headObject;
@@ -90,7 +90,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String TAG = "MainActivity";
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
-    private View mLoadingViewContainer;
 
 
     @Override
@@ -100,45 +99,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        mLoadingViewContainer = findViewById(R.id.loading_container);
-        new Handler().postDelayed(this, 400);
-
-
-    }
-
-
-    @Override
-    public void run() {
-        initUtils();
         initActivity();
-        mLoadingViewContainer.setVisibility(View.GONE);
-    }
 
 
-    private void initUtils(){
-
-
-        tools = new Tools(this);
-
-        if (Prefs.getBoolean("firstAppRun", true)) {
-            Tools.checkKey();
-        }
-
-        tools.checkDB();
-        db = DBAdapter.getInstance(this);
-
-        tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
-
-        if (Prefs.getBoolean("firstAppRun", true)) {
-
-            db.insertCoins(399);
-            tools.copyLocalpackages();
-            Prefs.putBoolean("firstAppRun", false);
-        }
-
-        tools.downloadHead();
 
     }
+
 
     private void initActivity(){
         mUserFoundListeners = new ArrayList<>();
