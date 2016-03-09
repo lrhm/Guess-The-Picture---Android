@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Random;
+
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -33,6 +35,9 @@ public class UserLevelView extends LinearLayout {
     private int mUserExp;
     private float mDimension;
 
+    public static final int STATE_WIN = 0;
+    public static final int STATE_LOSE = 1;
+    public static final int STATE_UNKNOWN = 2;
 
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
@@ -41,6 +46,7 @@ public class UserLevelView extends LinearLayout {
     private User mUser;
     private int mTextAlign;
     private ImageView expView;
+    private ImageView stateView;
     private ImageView baseView;
     private ImageView coverView;
     private TextView mUserNameTextView;
@@ -109,9 +115,11 @@ public class UserLevelView extends LinearLayout {
 
         expView = new ImageView(context);
 
+        stateView = new ImageView(context);
 
         imagesContainer.addView(baseView);
         imagesContainer.addView(expView);
+        imagesContainer.addView(stateView);
         imagesContainer.addView(coverView);
         imagesContainer.addView(mLevelTextView);
 
@@ -246,6 +254,8 @@ public class UserLevelView extends LinearLayout {
         setUserLevel(user.getLevel());
         setUserExp(user.getExp());
         setUserName(user.getName());
+
+
     }
 
     private void setUserName(String userName) {
@@ -262,6 +272,42 @@ public class UserLevelView extends LinearLayout {
 
     public void setUserGuest() {
         mUserNameTextView.setText("عضویت/ورود");
+    }
+
+    public void setOnlineState(int firstState, int secondState) {
+        int width = (int) (SizeManager.getScreenWidth() * mDimension);
+        if (firstState == STATE_UNKNOWN) {
+            expView.setVisibility(View.GONE);
+        } else {
+            expView.setVisibility(View.VISIBLE);
+            expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(firstState), width, width));
+
+        }
+
+        if (secondState == STATE_UNKNOWN) {
+            stateView.setVisibility(View.GONE);
+        } else {
+            stateView.setVisibility(View.VISIBLE);
+            stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(secondState), width, width));
+
+        }
+
+    }
+
+    private int getDrawableIdForLeft(int state) {
+        if (state == STATE_LOSE)
+            return R.drawable.wrong1;
+        if (state == STATE_WIN)
+            return R.drawable.correct1;
+        return 0;
+    }
+
+    private int getDrawableIdForRight(int state) {
+        if (state == STATE_LOSE)
+            return R.drawable.wrong2;
+        if (state == STATE_WIN)
+            return R.drawable.correct2;
+        return 0;
     }
 
 }
