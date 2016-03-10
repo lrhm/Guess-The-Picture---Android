@@ -170,12 +170,12 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     public void setShadowLayer() {
         float shadowSize = (mDimension * 6 / (0.7f));
         Log.d("LevelUserVIew", shadowSize + " is the shadow size");
-        mLevelTextView.addOuterShadow(shadowSize, shadowSize, -shadowSize, Color.BLACK);
-        mLevelTextView.addInnerShadow(shadowSize, shadowSize, shadowSize, Color.parseColor("#3b3b3b"));
+        mLevelTextView.addOuterShadow(1, 4, 4, Color.BLACK);
+        mLevelTextView.addInnerShadow(1, 4, 4, Color.BLACK);
 
-        int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 100);
+        int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 120);
 
-//        mLevelTextView.setStroke(strokeSize , Color.BLACK);
+        mLevelTextView.setStroke(strokeSize , Color.parseColor("#909090"));
 
     }
 
