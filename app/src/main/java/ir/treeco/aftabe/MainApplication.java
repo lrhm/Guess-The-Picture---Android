@@ -1,26 +1,35 @@
 package ir.treeco.aftabe;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.io.IOError;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Object.HeadObject;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 
 public class MainApplication extends Application {
+
+
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private HeadObject headObject;
-    private DBAdapter db;
-    private Tools tools;
+
+    private final static String TAG = "MainApplication";
 
     @Override
     public void onCreate() {
-        super.onCreate();
 
+        super.onCreate();
         new Prefs.Builder()
                 .setContext(this)
                 .setMode(MODE_PRIVATE)
@@ -32,20 +41,6 @@ public class MainApplication extends Application {
         lengthManager = new LengthManager(this);
         imageManager = new ImageManager(this);
 
-        tools = new Tools(this);
-
-        tools.checkDB();
-        db = DBAdapter.getInstance(this);
-
-        tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
-
-        if (Prefs.getBoolean("firstAppRun", true)) {
-            db.insertCoins(399);
-            tools.copyLocalpackages();
-            Prefs.putBoolean("firstAppRun", false);
-        }
-
-        tools.downloadHead();
     }
 
     public LengthManager getLengthManager() {
@@ -63,4 +58,13 @@ public class MainApplication extends Application {
     public void setHeadObject(HeadObject headObject) {
         this.headObject = headObject;
     }
+
+    public void setLengthManager(LengthManager lengthManager) {
+        this.lengthManager = lengthManager;
+    }
+
+    public void setImageManager(ImageManager imageManager) {
+        this.imageManager = imageManager;
+    }
+
 }

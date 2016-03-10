@@ -16,5 +16,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="server_client_id">294812968005-linmhc2bh29ckjv0o40c4ndl7h5l8tnq.apps.googleusercontent.com</string>
 
 </resources>

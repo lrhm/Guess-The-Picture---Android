@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/fragment_result_shape_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eclipse_shape"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+
+            <ir.treeco.aftabe.View.Custom.UserLevelView
+                android:id="@+id/fragment_result_my_user_level_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                app:customDimension="0.20"
+                app:textAlign="below"
+
+                />
+
+            <TextView
+                android:id="@+id/fragment_result_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_toLeftOf="@id/fragment_result_my_user_level_view"
+
+                />
+
+
+            <TextView
+                android:id="@+id/fragment_result_coin_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@id/fragment_result_my_user_level_view"
+
+                />
+
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/fragment_result_win_or_lose_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:paddingBottom="35dp"
+        android:paddingTop="15dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/fragment_result_shape_container_below"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/eclipse_shape"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+
+
+            <View
+                android:id="@+id/fragment_result_shape_container_below_tmp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"  android:gravity="center_horizontal"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_result_add_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/fragment_result_shape_container_below_tmp"
+
+                />
+
+            <ir.treeco.aftabe.View.Custom.UserLevelView
+                android:id="@+id/fragment_result_op_user_level_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                app:customDimension="0.20"
+                app:textAlign="below"
+
+                />
+
+            <ImageView
+                android:id="@+id/fragment_result_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/fragment_result_shape_container_below_tmp"
+
+                />
+
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.View.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -10,23 +9,22 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -35,6 +33,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 
 /**
@@ -45,11 +44,12 @@ import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
  * Use the {@link FriendListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener, MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener {
+public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
+        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener {
 
 
     ImageManager imageManager;
-    RecyclerView mFriendsRecylerView;
+    RecyclerView mFriendsRecyclerView;
     FriendsAdapter mFriendsAdapter;
     MyAutoCompleteTextView mAutoCompleteTextView;
     View clearButton;
@@ -74,14 +74,14 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
         mainLayout = view.findViewById(R.id.friend_list_main_layout);
-        mFriendsRecylerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
+        mFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
 
 
         clearButton = view.findViewById(R.id.clear_button);
         clearButton.setOnClickListener(this);
         clearButton.setVisibility(View.GONE);
 
-        ((ImageView)clearButton).setImageBitmap(imageManager.loadImageFromResource(R.drawable.clear_button,
+        ((ImageView) clearButton).setImageBitmap(imageManager.loadImageFromResource(R.drawable.clear_button,
                 (int) (SizeManager.getScreenWidth() * 0.15), (int) (SizeManager.getScreenWidth() * 0.15)));
 
         setUpAdapters();
@@ -132,7 +132,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         ArrayList<User> users = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            users.add(new User("asghar", 3));
+            User tmp = new User();
+            tmp.setScore(5);
+            tmp.setName("asghar");
+            users.add(tmp);
         }
         mFriendsAdapter = new FriendsAdapter(users, null, null, null);
 
@@ -140,8 +143,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     }
 
     public void setUpRecylerViews() {
-        mFriendsRecylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mFriendsRecylerView.setAdapter(mFriendsAdapter);
+        mFriendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mFriendsRecyclerView.setAdapter(mFriendsAdapter);
 
 
     }
@@ -173,10 +176,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        if (s.length() > 0 && clearButton.getVisibility() != View.VISIBLE)
-            clearButton.setVisibility(View.VISIBLE);
-        if (s.length() > 1)
-            mFriendsAdapter.addUser(new User("ta", 23), FriendsAdapter.TYPE_SEARCHED);
+
     }
 
     @Override
@@ -194,7 +194,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         boolean handled = false;
         if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                 actionId == EditorInfo.IME_ACTION_DONE
-                ){
+                ) {
             submitSearch();
             handled = true;
         }
@@ -204,11 +204,31 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void submitSearch() {
         hideKeyboard();
+
+        User myUser = ((MainActivity) getActivity()).getMyUser();
+
+        if (myUser == null)
+            return;
+
+        AftabeAPIAdapter.searchForUser(myUser, mAutoCompleteTextView.getText().toString(), this);
+
         Log.d("TAG", "TODO submit search");
 
     }
-    public  void hideKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity() .getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+    public void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onGetUser(User user) {
+        mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_SEARCHED);
+
+    }
+
+    @Override
+    public void onGetError() {
+        Toast.makeText(getContext() , "user not found" , Toast.LENGTH_SHORT).show();
     }
 }

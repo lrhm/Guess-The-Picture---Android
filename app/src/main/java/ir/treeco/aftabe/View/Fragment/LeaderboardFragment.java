@@ -26,9 +26,13 @@ public class LeaderboardFragment extends Fragment {
         RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        User tmp = new User();
+        tmp.setScore(32);
+        tmp.setName("no name");
+
         ArrayList<User> list = new ArrayList<>();
         for (int i = 0 ; i < 200 ; i++) {
-            list.add(new User("asghari", 5, i));
+            list.add(tmp);
         }
 
         LeaderboardAdapter adapter = new LeaderboardAdapter(list);

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -23,10 +24,31 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
+import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.HeadObject;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -35,13 +57,19 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
-        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener {
+        BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener {
+
+
+    private HeadObject headObject;
+    private DBAdapter db;
     private Tools tools;
     private ImageView cheatButton;
     private ImageView logo;
@@ -54,12 +82,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private boolean store = false;
-    private UserLevelMarkView playerOne;
-    private UserLevelMarkView playerTwo;
+    private UserLevelView playerOne;
+    private UserLevelView playerTwo;
     public MainFragment mainFragment;
     public TextView timerTextView;
     private ImageView coinBox;
-
+    private GoogleSignInOptions mGoogleSignInOptions;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 9001;
+    private static final String TAG = "MainActivity";
+    private User myUser = null;
+    private ArrayList<UserFoundListener> mUserFoundListeners;
+    private Socket mScoket;
 
 
     @Override
@@ -67,8 +101,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_main);
+
+        initActivity();
+
+
+    }
+
+
+    private void initActivity() {
+        mUserFoundListeners = new ArrayList<>();
 
         tools = new Tools(getApplication());
         coinAdapter = new CoinAdapter(getApplicationContext());
@@ -78,8 +120,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits = (TextView) findViewById(R.id.digits);
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
-        playerOne = (UserLevelMarkView) findViewById(R.id.player1_online_game);
-        playerTwo = (UserLevelMarkView) findViewById(R.id.player2_online_game);
+        playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
+        playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
         timerTextView = (TextView) findViewById(R.id.timer_online);
 
         setUpPlayers();
@@ -105,6 +147,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setOriginalBackgroundColor();
         initSizes();
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
+
+        mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
+                .build();
+
+        String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
+        DeveloperInterface.getInstance(this).init(tapsellKey, this);
+
+        AftabeAPIAdapter.tryToLogin(this);
     }
 
 
@@ -141,7 +199,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void setUpPlayers() {
-        RelativeLayout.LayoutParams lp =(RelativeLayout.LayoutParams) playerOne.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
         lp.topMargin = (int) (lengthManager.getScreenWidth() / 15f);
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
@@ -160,6 +218,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         playerOne.setVisibility(onlineViewsVisibility);
         playerTwo.setVisibility(onlineViewsVisibility);
         timerTextView.setVisibility(onlineViewsVisibility);
+
+    }
+
+    public void setHeaderVisiblity(boolean visible) {
+        int headerViewsVisibility = (!visible ? View.GONE : View.VISIBLE);
+        logo.setVisibility(headerViewsVisibility);
+        coinBox.setVisibility(headerViewsVisibility);
+        digits.setVisibility(headerViewsVisibility);
+
 
     }
 
@@ -195,7 +262,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ));
 
         logo.setImageBitmap(imageManager.loadImageFromResource(
-                R.drawable.header,  lengthManager.getScreenWidth(),
+                R.drawable.header, lengthManager.getScreenWidth(),
                 lengthManager.getScreenWidth() / 4
         ));
     }
@@ -283,16 +350,57 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+        onActivityResultOfTapsell(requestCode, resultCode, data);
+
+
         if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);
     }
 
+    protected void onActivityResultOfTapsell(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode != DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE)
+            return;
+
+
+        if (data == null
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
+            // User didn’t open ad
+            return;
+
+
+        boolean connected = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
+        boolean available = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
+        int award = data.getIntExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
+        if(award == 0)
+            return;
+        if (!connected) {
+            // Couldn't connect to server
+        } else if (!available) {
+            // No such Ad was avaialbe
+        } else {
+            // user got {award} tomans. pay him!!!!
+            coinAdapter.earnCoins(20);
+        }
+    }
+
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
-        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_SMALL_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
-        else if (productId.equals(StoreFragment.SKU_BIG_COIN)) coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
+        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_SMALL_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
+        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
+        else if (productId.equals(StoreFragment.SKU_BIG_COIN))
+            coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
         else if (mOnPackagePurchasedListener != null) {
             mOnPackagePurchasedListener.packagePurchased(productId);
             mOnPackagePurchasedListener = null;
@@ -323,8 +431,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits.setText(tools.numeralStringToPersianDigits("" + newAmount));
     }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(this, "failed to connect to google", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGetUser(User user) {
+        Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
+        if (user.isMe()) {
+            myUser = user;
+            Gson gson = new Gson();
+            Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
+            initSocket();
+        }
+        for (UserFoundListener userFoundListener : mUserFoundListeners)
+            userFoundListener.onGetUser(user);
+
+    }
+
+    @Override
+    public void onGetError() {
+        Log.d(TAG, "didnet get the user");
+
+        for (UserFoundListener userFoundListener : mUserFoundListeners)
+            userFoundListener.onGetError();
+    }
+
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
+
     }
 
 
@@ -343,4 +479,62 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         super.onDestroy();
     }
+
+    public void signInWithGoogle() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        String TAG = "GoogleSignInResult";
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            GoogleToken googleToken = new GoogleToken(acct.getIdToken());
+
+            new UsernameChooseDialog(this, googleToken, this).show();
+
+
+        } else {
+        }
+    }
+
+    public User getMyUser() {
+        return myUser;
+    }
+
+    public void addUserFoundListener(UserFoundListener userFoundListener) {
+        mUserFoundListeners.add(userFoundListener);
+    }
+
+    private void initSocket() {
+
+        if(mScoket != null)
+            return;
+
+        String url = "https://aftabe2.com";
+
+        IO.Options opts = new IO.Options();
+        opts.forceNew = true;
+        opts.query = "auth_token=" + myUser.getLoginInfo().getAccessToken();
+
+        try {
+            mScoket = IO.socket(url, opts);
+            mScoket.on(Socket.EVENT_PING, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "event ping");
+                }
+            });
+            mScoket.connect();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }

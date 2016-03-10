@@ -1429,17 +1429,13 @@ public class VerticalViewPager extends ViewGroup {
                     continue;
 
 
-                Log.d("TAG", "geting lp");
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
-                Log.d("TAG", child.getParent().toString() + "");
-                Log.d("TAG", child.toString());
-                Log.d("TAG", "after geting lp");
                 if (lp == null || !lp.isDecor) {
                     final int heightSpec = MeasureSpec.makeMeasureSpec(
                             (int) (childHeightSize * lp.heightFactor), MeasureSpec.EXACTLY);
                     child.measure(mChildWidthMeasureSpec, heightSpec);
-                }   Log.d("TAG", "after measuer");
+                }
             }
         }
     }
@@ -1808,7 +1804,6 @@ public class VerticalViewPager extends ViewGroup {
 
         final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
-        Log.d(TAG, action + " is the action");
         // Always take care of the touch gesture being complete.
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             // Release the drag.

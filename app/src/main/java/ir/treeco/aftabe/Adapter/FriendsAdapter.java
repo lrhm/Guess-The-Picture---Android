@@ -1,11 +1,11 @@
 package ir.treeco.aftabe.Adapter;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import org.joda.time.IllegalFieldValueException;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -23,9 +22,8 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Custom.UserLevelMarkView;
+import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
-import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 /**
@@ -56,7 +54,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         mRequests = requests == null ? new ArrayList<User>() : requests;
         mContacts = contacts == null ? new ArrayList<User>() : contacts;
         mSearched = searched == null ? new ArrayList<User>() : searched;
-        mContacts.add(new User("asd", 23));
+        User tmp = new User();
+        tmp.setScore(23);
+        tmp.setName("ali");
+
+        mContacts.add(tmp);
         arrayLists = new ArrayList<>();
         arrayLists.add(mSearched);
         arrayLists.add(mRequests);
@@ -66,7 +68,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView mHeaderTextView;
-        UserLevelMarkView mUserLevelMarkView;
+        UserLevelView mUserLevelView;
         ImageView mMatchButton;
         ImageView mChatButton;
 
@@ -78,7 +80,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             switch (type) {
                 case TYPE_HEADER:
                     mHeaderTextView = (TextView) itemView.findViewById(R.id.header_item);
-                    FontsHolder.setFont(mHeaderTextView , FontsHolder.SANS_REGULAR);
+                    FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_REGULAR);
                     return;
                 case TYPE_CONTACT:
                     break;
@@ -101,7 +103,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.challengebutton, size, size));
             mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, size, size));
 
-            mUserLevelMarkView = (UserLevelMarkView) itemView.findViewById(R.id.friend_list_mark_view);
+            mUserLevelView = (UserLevelView) itemView.findViewById(R.id.friend_list_mark_view);
 
         }
 
@@ -140,6 +142,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             return;
         }
 
+        User user = getUser(type, realPosition);
+
         holder.mChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +174,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 transaction.commit();
             }
         });
+
+        holder.mUserLevelView.setUser(user);
+
+
 
     }
 
@@ -251,5 +259,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     }
 
+    private User getUser(int type, int pos) {
+        return arrayLists.get(type).get(pos);
+    }
 
 }

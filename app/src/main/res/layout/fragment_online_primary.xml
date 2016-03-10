@@ -14,13 +14,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         />
-    <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+    <ir.treeco.aftabe.View.Custom.UserLevelView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:id="@+id/user_view_in_menu"
         app:customDimension="0.4"
-        app:isUser="true"
-        ></ir.treeco.aftabe.View.Custom.UserLevelMarkView>
+        ></ir.treeco.aftabe.View.Custom.UserLevelView>
 
     <View
         android:layout_width="match_parent"
@@ -53,25 +53,22 @@
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
         >
-        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+        <ir.treeco.aftabe.View.Custom.UserLevelView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:customDimension="0.2"
-            app:isUser="false"
            />
 
-        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+        <ir.treeco.aftabe.View.Custom.UserLevelView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:customDimension="0.2"
-            app:isUser="false"
             />
 
-        <ir.treeco.aftabe.View.Custom.UserLevelMarkView
+        <ir.treeco.aftabe.View.Custom.UserLevelView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:customDimension="0.2"
-            app:isUser="false"
 
             />
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/dialog_username_choose_first_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white" />
+
+
+    <EditText
+        android:id="@+id/dialog_username_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:background="@drawable/username_input"
+        android:inputType="text"
+        android:gravity="center" />
+
+    <ProgressBar
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/dialog_username_choose_progress_bar"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/dialog_username_choose_image_view"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/dialog_username_choose_upper_second_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#e10808" />
+    <TextView
+        android:id="@+id/dialog_username_choose_second_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/dialog_username_choose_upper_second_text"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/dialog_username_choose_accept_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_username_choose_second_text"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/username_accept"
+        android:gravity="center" />
+
+</RelativeLayout>

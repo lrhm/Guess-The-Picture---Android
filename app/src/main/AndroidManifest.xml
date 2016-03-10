@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -29,8 +30,13 @@
             android:name=".View.Activity.MainActivity"
             android:label="Aftabe"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/noAnimTheme">
+            android:theme="@style/noAnimTheme"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
+
+        <activity android:name=".View.Activity.LoadingActivity">
+            android:theme="@style/noAnimTheme"
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +45,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="ir.tapsell.tapsellvideosdk.VideoPage" android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+        <activity android:name="ir.tapsell.tapsellvideosdk.DirectAdMiddleActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:screenOrientation="landscape"></activity>
+        <service android:name="ir.tapsell.tapsellvideosdk.services.asynchservices.core.HttpService"></service>
     </application>
 
 </manifest>
