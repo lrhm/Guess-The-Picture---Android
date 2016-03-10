@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ir.tapsell.tapselldevelopersdk.FirstPage;
-import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
+
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -106,9 +106,9 @@ public class StoreFragment extends Fragment {
         tapsell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY , null , getActivity());
-                Intent intent = new Intent(getActivity(), ir.tapsell.tapselldevelopersdk.DirectAdMiddleActivity.class);
-                getActivity().startActivityForResult(intent, DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE);
+
+                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
+                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE, null, DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
             }
         });
 

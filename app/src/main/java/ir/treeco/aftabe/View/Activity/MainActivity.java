@@ -36,8 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
-import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
@@ -156,7 +155,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
 
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
-        TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
+        DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
         AftabeAPIAdapter.tryToLogin(this);
     }
@@ -359,27 +358,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     protected void onActivityResultOfTapsell(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE) {
-            if (data == null
-                    || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
-                    || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
-                    || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE)) {
-                // User didn’t open ad
-                return;
-            }
 
-            boolean connected = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
-            boolean available = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
-            int award = data.getIntExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
-            if (!connected) {
-                // Couldn't connect to server
-            } else if (!available) {
-                // No such Ad was avaialbe
-            } else {
-                // user got {award} tomans. pay him!!!!
-                coinAdapter.earnCoins(20);
-            }
+        if (requestCode != DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE)
+            return;
+
+
+        if (data == null
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
+            // User didn’t open ad
+            return;
+
+
+        boolean connected = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
+        boolean available = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
+        int award = data.getIntExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
+        if(award == 0)
+            return;
+        if (!connected) {
+            // Couldn't connect to server
+        } else if (!available) {
+            // No such Ad was avaialbe
+        } else {
+            // user got {award} tomans. pay him!!!!
+            coinAdapter.earnCoins(20);
         }
     }
 
@@ -451,6 +454,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
+
     }
 
 

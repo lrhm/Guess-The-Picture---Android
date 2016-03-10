@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.View.Activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -14,7 +15,7 @@ import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.Tools;
 
-public class LoadingActivity extends FragmentActivity implements Runnable {
+public class LoadingActivity extends Activity implements Runnable {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
