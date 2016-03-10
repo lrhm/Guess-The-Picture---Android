@@ -16,15 +16,7 @@ public class SMSToken {
     public String phone;
 
     @Expose
-    public String created;
-
-    @Expose
-    public String code;
-
-    @Expose
     public String smsTokenId;
-
-    public String id;
 
     @Expose
     public String imei;
@@ -35,16 +27,12 @@ public class SMSToken {
     @Expose
     public String guestID;
 
-    public void update(String code) {
+    public void update(SMSValidateToken smsValidateToken , String checkedUsername) {
         this.imei = RandomString.nextString();
-        this.smsTokenId = id;
-        this.code = code;
+        this.smsTokenId = smsValidateToken.getId();
+        this.name = checkedUsername;
+        this.phone = smsValidateToken.getPhone();
         setGuestID();
-    }
-
-    public void setName(String name){
-        this.name = name;
-
     }
 
     private void setGuestID() {

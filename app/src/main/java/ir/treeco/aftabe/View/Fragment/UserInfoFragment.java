@@ -47,6 +47,7 @@ public class UserInfoFragment extends Fragment {
         if (user != null) {
             UserLevelView userLevelView = (UserLevelView) view.findViewById(R.id.fragment_user_info_user_view);
             userLevelView.setUser(user);
+            userLevelView.setClick(false);
         }
 //
 //

@@ -11,8 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
+import ir.treeco.aftabe.API.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
@@ -138,11 +140,32 @@ public class AftabeAPIAdapter {
         });
     }
 
-    public static void submitSMSActivation(final SMSToken smsToken,
-                                           String validationCode, final UserFoundListener userFoundListener) {
-        init();
-        smsToken.update(validationCode);
+    public static void submitSMSActivationCode(SMSValidateToken smsValidateToken, String userName,
+                                               final UserFoundListener userFoundListener) {
+
+        SMSToken smsToken = new SMSToken();
+        smsToken.update(smsValidateToken, userName);
         getSMSActivatedUser(smsToken, userFoundListener);
+    }
+
+    public static void checkSMSActivationCode(SMSValidateToken smsToken, SMSCodeHolder codeHolder, final SMSValidationListener smsValidationListener) {
+
+        init();
+
+        Call<SMSValidateToken> call = aftabeService.checkSMSCodeReq(codeHolder, smsToken.getId());
+        call.enqueue(new Callback<SMSValidateToken>() {
+            @Override
+            public void onResponse(Response<SMSValidateToken> response) {
+
+                smsValidationListener.onValidatedCode(response.body());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+                smsValidationListener.onSMSValidationCodeFail();
+            }
+        });
     }
 
     public static void requestSMSActivation(SMSRequestToken smsRequestToken, final SMSValidationListener smsValidationListener) {
@@ -150,19 +173,20 @@ public class AftabeAPIAdapter {
 
         init();
 
-        Call<SMSToken> smsTokenCall = aftabeService.getSMSToken(smsRequestToken);
-        smsTokenCall.enqueue(new Callback<SMSToken>() {
+        Log.d(TAG, "request sms activation");
+        Call<SMSValidateToken> smsTokenCall = aftabeService.getSMSToken(smsRequestToken);
+        smsTokenCall.enqueue(new Callback<SMSValidateToken>() {
             @Override
-            public void onResponse(Response<SMSToken> response) {
+            public void onResponse(Response<SMSValidateToken> response) {
 
-                Log.d("TAG", "got first response");
                 smsValidationListener.onSMSValidateSent(response.body());
+
+                Log.d(TAG, "request sms activation on response " + response.isSuccess());
             }
 
             @Override
             public void onFailure(Throwable t) {
                 smsValidationListener.onSMSValidationFail();
-                Log.d("TAG", "got first failure");
 
             }
         });
@@ -171,6 +195,7 @@ public class AftabeAPIAdapter {
     private static void getMyUserByAccessToken(final LoginInfo loginInfo,
                                                final UserFoundListener userFoundListener) {
 
+        Log.d(TAG, "get user by access token");
         Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
         c.enqueue(new Callback<User>() {
             @Override
@@ -178,8 +203,13 @@ public class AftabeAPIAdapter {
 
                 if (!response.isSuccess()) {
                     userFoundListener.onGetError();
+
+                    Log.d(TAG, " is not sucess");
                     return;
                 }
+
+                Log.d(TAG, " is  sucess");
+                Log.d(TAG, (userFoundListener == null) + " is null ?");
 
                 response.body().setLoginInfo(loginInfo);
                 response.body().setOwnerMe();
@@ -206,8 +236,8 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<LoginInfo>() {
             @Override
             public void onResponse(Response<LoginInfo> response) {
-                Log.d("TAG", response.toString());
-                Log.d("TAG", response.body().accessToken + " " + response.body().created);
+                Log.d(TAG, response.toString());
+                Log.d(TAG, response.body().accessToken + " " + response.body().created);
                 final LoginInfo loginInfo = response.body();
                 getMyUserByAccessToken(loginInfo, userFoundListener);
             }

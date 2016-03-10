@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -25,12 +26,13 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
+import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.UserViewDialog;
 
 /**
  * TODO: document your custom view class.
  */
-public class UserLevelView extends LinearLayout {
+public class UserLevelView extends LinearLayout implements View.OnClickListener {
     private int mUserLevel;
     private int mUserExp;
     private float mDimension;
@@ -42,6 +44,8 @@ public class UserLevelView extends LinearLayout {
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
     private static final int TEXT_ALIGN_CENTER = 2;
+
+    private boolean mClick = true;
 
     private User mUser;
     private int mTextAlign;
@@ -97,19 +101,20 @@ public class UserLevelView extends LinearLayout {
 
         mLevelTextView = new MagicTextView(context);
         mLevelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 150);
-        mLevelTextView.setTypeface(FontsHolder.getSansRegular(context));
+        mLevelTextView.setTypeface(FontsHolder.getHoma(context));
         mLevelTextView.setTextColor(Color.WHITE);
         mLevelTextView.setGravity(Gravity.CENTER);
 
-        int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 100);
-        mLevelTextView.setStroke(strokeSize, Color.BLACK);
+//        mLevelTextView.setStroke(strokeSize, Color.BLACK);
 
         FrameLayout.LayoutParams levelTextViewLP = new FrameLayout.LayoutParams((int) (lengthManager.getScreenWidth() * (mDimension)),
                 (int) (lengthManager.getScreenWidth() * (mDimension)));
-        levelTextViewLP.gravity = Gravity.CENTER;
-        levelTextViewLP.topMargin = (int) (SizeManager.getScreenHeight() * mDimension * 0.05);
+//        levelTextViewLP.gravity = Gravity.CENTER_VERTICAL;
+//        levelTextViewLP.topMargin = -(int) (SizeManager.getScreenHeight() * mDimension * 0.005);
 
         mLevelTextView.setLayoutParams(levelTextViewLP);
+        setShadowLayer();
+
 
         imagesContainer.setLayoutParams(textLP);
 
@@ -156,30 +161,24 @@ public class UserLevelView extends LinearLayout {
         }
 
         FontsHolder.setFont(mUserNameTextView, FontsHolder.SANS_REGULAR);
-        setDefaultListener();
 
-    }
-
-    public void setDefaultListener() {
-        if (isClickable()) {
-            return;
-        }
-
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mUser == null)
-                    return;
-                if (!mUser.isMe()) {
-                    new UserViewDialog(getContext(), mUser).show();
-                } else {
-                    new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
-                }
-            }
-        });
+        setOnClickListener(this);
 
 
     }
+
+    public void setShadowLayer() {
+        float shadowSize = (mDimension * 6 / (0.7f));
+        Log.d("LevelUserVIew", shadowSize + " is the shadow size");
+        mLevelTextView.addOuterShadow(shadowSize, shadowSize, -shadowSize, Color.BLACK);
+        mLevelTextView.addInnerShadow(shadowSize, shadowSize, shadowSize, Color.parseColor("#3b3b3b"));
+
+        int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 100);
+
+//        mLevelTextView.setStroke(strokeSize , Color.BLACK);
+
+    }
+
 
     private MainActivity getActivity() {
 
@@ -308,6 +307,41 @@ public class UserLevelView extends LinearLayout {
         if (state == STATE_WIN)
             return R.drawable.correct2;
         return 0;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Log.d(this.getClass().getSimpleName(), "on click");
+
+        if (!mClick)
+            return;
+
+        if (Tools.isUserRegistered()) {
+
+
+            if (mUser == null)
+                return;
+            if (!mUser.isMe()) {
+                new UserViewDialog(getContext(), mUser).show();
+            } else {
+                new LeaderboardDialog().show(getActivity().getSupportFragmentManager(), "leaderboard");
+            }
+
+            return;
+        }
+
+        new RegistrationDialog(getContext()).show();
+
+
+    }
+
+    public boolean isClick() {
+        return mClick;
+    }
+
+    public void setClick(boolean mClick) {
+        this.mClick = mClick;
     }
 
 }

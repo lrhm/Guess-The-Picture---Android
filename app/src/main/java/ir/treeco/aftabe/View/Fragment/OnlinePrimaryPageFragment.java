@@ -55,12 +55,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (!Tools.isUserRegistered()) {
             mUserLevelView.setUserGuest();
-            mUserLevelView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new RegistrationDialog(getActivity()).show();
-                }
-            });
+
         }
 
 

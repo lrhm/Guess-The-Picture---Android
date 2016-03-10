@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.UsernameCheckListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.SizeManager;
@@ -34,22 +36,26 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
     private final static long CHECK_USER_THRESH_HOLD = 500;
     private long lastTimeChecked = 0;
     GoogleToken googleToken = null;
-    SMSToken smsToken = null;
+    SMSValidateToken smsToken = null;
     EditText mEditText;
     Button mAcceptButton;
     ImageView mStatusImageView;
     ProgressBar mProgressBar;
+    MainActivity mActivity;
 
-    public UsernameChooseDialog(Context context, GoogleToken googleToken) {
+    public UsernameChooseDialog(Context context, GoogleToken googleToken, MainActivity mainActivity) {
         super(context);
         this.context = context;
         this.googleToken = googleToken;
+        mActivity = mainActivity;
     }
 
-    public UsernameChooseDialog(Context context, SMSToken smsToken) {
+    public UsernameChooseDialog(Context context, SMSValidateToken smsToken, MainActivity mainActivity) {
         super(context);
         this.context = context;
         this.smsToken = smsToken;
+        mActivity = mainActivity;
+
     }
 
 
@@ -175,10 +181,12 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
                     if (status) {
                         if (googleToken != null) {
                             googleToken.setUsername(name);
-                            AftabeAPIAdapter.getMyUserByGoogle(googleToken, (MainActivity) getOwnerActivity());
+
+                            AftabeAPIAdapter.getMyUserByGoogle(googleToken, mActivity);
                         } else if (smsToken != null) {
-                            smsToken.setName(name);
-                            AftabeAPIAdapter.getSMSActivatedUser(smsToken, (MainActivity) getOwnerActivity());
+
+                            Log.d("TAG", "subimt sms activation code in dialog calling ");
+                            AftabeAPIAdapter.submitSMSActivationCode(smsToken, name, mActivity);
                         }
                         dismiss();
                     }

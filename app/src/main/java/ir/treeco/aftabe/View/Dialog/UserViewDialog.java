@@ -27,6 +27,7 @@ public class UserViewDialog extends Dialog  {
     UserLevelView mUserLevelView;
     User mUser;
 
+
     public UserViewDialog(Context context, User user) {
         super(context);
         this.context = context;
@@ -46,6 +47,7 @@ public class UserViewDialog extends Dialog  {
 
         mUserLevelView = (UserLevelView) findViewById(R.id.dialog_user_view_mark_view);
         mUserLevelView.setUser(mUser);
+        mUserLevelView.setClick(false);
 
         mDataContainer = (RelativeLayout) findViewById(R.id.user_data_container);
         RelativeLayout.LayoutParams layoutParams = new

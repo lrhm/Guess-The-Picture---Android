@@ -102,11 +102,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initActivity();
 
 
-
     }
 
 
-    private void initActivity(){
+    private void initActivity() {
         mUserFoundListeners = new ArrayList<>();
 
         tools = new Tools(getApplication());
@@ -485,7 +484,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             GoogleSignInAccount acct = result.getSignInAccount();
             GoogleToken googleToken = new GoogleToken(acct.getIdToken());
 
-            new UsernameChooseDialog(this, googleToken).show();
+            new UsernameChooseDialog(this, googleToken, this).show();
 
 
         } else {

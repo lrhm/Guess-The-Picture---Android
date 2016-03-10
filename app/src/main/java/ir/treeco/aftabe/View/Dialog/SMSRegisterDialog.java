@@ -10,6 +10,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -21,8 +23,10 @@ import ir.treeco.aftabe.API.SMSValidationListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.UsernameCheckListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
+import ir.treeco.aftabe.API.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
@@ -30,7 +34,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 
-public class SMSRegisterDialog extends Dialog implements SMSValidationListener, View.OnClickListener, UserFoundListener {
+public class SMSRegisterDialog extends Dialog implements SMSValidationListener, View.OnClickListener {
 
     Context context;
     Tools tools;
@@ -44,25 +48,31 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
     TextView upperSecondTextView;
 
     boolean isInPhoneReqState = true;
+    boolean isSMSValidationCodeChecked = false;
+    boolean isSMSValidated = false;
 
     EditText mEditText;
     Button mAcceptButton;
     SMSRequestToken mSmsRequestToken = null;
     SMSToken mSMSmsToken = null;
+    SMSValidateToken mSmsValidateToken = null;
 
     String[] phoneReq = {"شماره تلفن", "کد فعال سازی به شما ارسال خواهد شد"};
     String[] codeReq = {"کد فعال سازی", "ممکن است مدتی طول بکشد"};
 
+    MainActivity mActivity;
 
-    public SMSRegisterDialog(Context context) {
+    public SMSRegisterDialog(Context context, MainActivity mainActivity) {
         super(context);
         this.context = context;
+        mActivity = mainActivity;
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
 
@@ -92,19 +102,24 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         mAcceptButton.setTypeface(FontsHolder.getSansRegular(context));
         mAcceptButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
         mAcceptButton.setOnClickListener(this);
-        mAcceptButton.setEnabled(false);
 
         RelativeLayout.LayoutParams lpAcceptButton = (RelativeLayout.LayoutParams) mAcceptButton.getLayoutParams();
         lpAcceptButton.width = (int) (SizeManager.getScreenWidth() * 0.8);
         lpAcceptButton.height = (int) (SizeManager.getScreenHeight() * 0.1);
-        lpAcceptButton.leftMargin = (int) (SizeManager.getScreenWidth() * 0.05);
+        lpAcceptButton.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
 
         RelativeLayout.LayoutParams lpTextInput = (RelativeLayout.LayoutParams) mEditText.getLayoutParams();
         lpTextInput.width = (int) (SizeManager.getScreenWidth() * 0.8);
         lpTextInput.height = (int) (SizeManager.getScreenHeight() * 0.1);
         lpTextInput.topMargin = (int) (SizeManager.getScreenHeight() * 0.35);
-        lpTextInput.leftMargin = (int) (SizeManager.getScreenWidth() * 0.05);
+        lpTextInput.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
 
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getWindow().setAttributes(lp);
 
     }
 
@@ -129,9 +144,16 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
         if (v.getId() == R.id.dialog_username_choose_accept_btn) {
 
+            Log.d("TAG", "on click accept");
             if (isInPhoneReqState) {
+
+                Log.d("TAG", "is in phone req stsat");
+
                 if (!Tools.isAPhoneNumber(mEditText.getText().toString()))
                     return;
+
+                Log.d("TAG", "valid numbser");
+
                 String search = mEditText.getText().toString();
                 String phoneNumber = (search.length() == 10) ? search : search.substring(1);
                 Log.d("SMSRegisterDialog", phoneNumber + " is requested number to register");
@@ -148,42 +170,62 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
             String text = mEditText.getText().toString();
 
-            if (text.length() != 4) {
+            if (text.length() < 4) {
                 return;
             }
-            if (mSMSmsToken == null)
+            if (mSmsValidateToken == null)
                 return;
 
-//            if(!text.equals(mSMSmsToken.code)) {
-//                Toast.makeText(context, "code is wrong ", Toast.LENGTH_SHORT);
-//                return;
-//            }
+            if (isSMSValidationCodeChecked)
+                return;
 
-//            AftabeAPIAdapter.submitSMSActivation(mSMSmsToken, text, this);
+            SMSCodeHolder smsCodeHolder = new SMSCodeHolder();
+            smsCodeHolder.setCode(text);
+            AftabeAPIAdapter.checkSMSActivationCode(mSmsValidateToken, smsCodeHolder, this);
+            isSMSValidationCodeChecked = true;
 
         }
     }
 
+
     @Override
-    public void onSMSValidateSent(SMSToken smsToken) {
-        this.mSMSmsToken = smsToken;
+    public void onSMSValidateSent(SMSValidateToken smsToken) {
+        Log.d("TAG", "valid sent");
+
+
         isInPhoneReqState = false;
+        mSmsValidateToken = smsToken;
     }
 
     @Override
     public void onSMSValidationFail() {
+        Log.d("TAG", "valid fail");
 
     }
 
     @Override
-    public void onGetUser(User user) {
-        ((MainActivity)getOwnerActivity()).onGetUser(user);
+    public void onSMSValidationCodeFail() {
+        Log.d("TAG", "valid code fail");
 
+        isSMSValidationCodeChecked = false;
+        isInPhoneReqState = true;
+
+        firstTextView.setText(phoneReq[0]);
+        secondTextView.setText(phoneReq[1]);
+        upperSecondTextView.setText("توجه");
+        mEditText.setText("");
     }
 
     @Override
-    public void onGetError() {
+    public void onValidatedCode(SMSValidateToken smsValidateToken) {
+        Log.d("TAG", "valid code");
+
+        isSMSValidated = true;
+        dismiss();
+        new UsernameChooseDialog(getContext(), smsValidateToken, mActivity).show();
+
 
     }
+
 }
 

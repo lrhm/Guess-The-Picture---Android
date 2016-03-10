@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.Adapter;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -79,7 +80,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             switch (type) {
                 case TYPE_HEADER:
                     mHeaderTextView = (TextView) itemView.findViewById(R.id.header_item);
-                    FontsHolder.setFont(mHeaderTextView , FontsHolder.SANS_REGULAR);
+                    FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_REGULAR);
                     return;
                 case TYPE_CONTACT:
                     break;
@@ -175,6 +176,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         });
 
         holder.mUserLevelView.setUser(user);
+
+
 
     }
 

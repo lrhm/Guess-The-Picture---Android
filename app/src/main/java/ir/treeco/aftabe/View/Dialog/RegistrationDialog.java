@@ -24,7 +24,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 
-public class RegistrationDialog extends Dialog  {
+public class RegistrationDialog extends Dialog {
     Context context;
     Tools tools;
     ImageManager imageManager;
@@ -38,9 +38,8 @@ public class RegistrationDialog extends Dialog  {
     }
 
 
-
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -54,15 +53,24 @@ public class RegistrationDialog extends Dialog  {
         ImageView phoneImageView = (ImageView) findViewById(R.id.phone_registration_image_view);
 
 
-        gmailImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.login_gmail , sizeConverter.mWidth , sizeConverter.mHeight));
-        phoneImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.login_phone , sizeConverter.mWidth , sizeConverter.mHeight));
+        gmailImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.login_gmail, sizeConverter.mWidth, sizeConverter.mHeight));
+        phoneImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.login_phone, sizeConverter.mWidth, sizeConverter.mHeight));
 
 
         gmailImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)context).signInWithGoogle();
+                ((MainActivity) context).signInWithGoogle();
                 dismiss();
+            }
+        });
+
+        phoneImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SMSRegisterDialog(context, ((MainActivity) context)).show();
+                dismiss();
+
             }
         });
 
