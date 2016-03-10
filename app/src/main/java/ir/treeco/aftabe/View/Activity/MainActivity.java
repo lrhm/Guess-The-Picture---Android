@@ -34,8 +34,12 @@ import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.UserFoundListener;
@@ -89,6 +93,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String TAG = "MainActivity";
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
+    private Socket mScoket;
 
 
     @Override
@@ -438,6 +443,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             myUser = user;
             Gson gson = new Gson();
             Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
+            initSocket();
         }
         for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetUser(user);
@@ -501,6 +507,33 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void addUserFoundListener(UserFoundListener userFoundListener) {
         mUserFoundListeners.add(userFoundListener);
+    }
+
+    private void initSocket() {
+
+        if(mScoket != null)
+            return;
+
+        String url = "https://aftabe2.com";
+
+        IO.Options opts = new IO.Options();
+        opts.forceNew = true;
+        opts.query = "auth_token=" + myUser.getLoginInfo().getAccessToken();
+
+        try {
+            mScoket = IO.socket(url, opts);
+            mScoket.on(Socket.EVENT_PING, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "event ping");
+                }
+            });
+            mScoket.connect();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
