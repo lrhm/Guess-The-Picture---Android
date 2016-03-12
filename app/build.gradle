@@ -27,6 +27,7 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
+
     compile 'io.reactivex:rxjava:1.0.12'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
@@ -43,6 +44,5 @@ dependencies {
     compile 'com.pixplicity.easyprefs:library:1.7'
     compile 'joda-time:joda-time:2.8.2'
     compile 'com.android.support:design:23.1.1'
-
 }
 apply plugin: 'com.google.gms.google-services'

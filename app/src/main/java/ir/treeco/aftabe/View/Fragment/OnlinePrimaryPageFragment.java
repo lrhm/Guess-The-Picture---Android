@@ -26,7 +26,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 /**
  * Created by al on 12/25/15.
  */
-public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener {
+public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener {
 
     private ImageManager imageManager;
     private LengthManager lengthManager;
@@ -42,6 +42,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         SizeConverter randplayconverter = SizeConverter.SizeConvertorFromWidth(lengthManager.getScreenWidth() * 0.85f, 1809, 492);
         startOnlineView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.randomplaybutton
                 , (int) (randplayconverter.mWidth), (int) (randplayconverter.mHeight), ImageManager.ScalingLogic.FIT));
+
+        startOnlineView.setOnClickListener(this);
         mUserLevelView = (UserLevelView) view.findViewById(R.id.user_view_in_menu);
         ((MainActivity) getActivity()).addUserFoundListener(this);
 
@@ -71,5 +73,12 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     @Override
     public void onGetError() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.multiplay_image_button){
+            ((MainActivity)getActivity()).startLoading();
+        }
     }
 }

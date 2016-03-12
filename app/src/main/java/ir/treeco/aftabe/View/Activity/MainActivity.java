@@ -53,6 +53,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
@@ -65,7 +66,7 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, Runnable {
 
 
     private HeadObject headObject;
@@ -94,6 +95,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
     private Socket mScoket;
+    private int mLoadingStep = 0;
+    private ImageView mLoadingImageView;
+    private int[] mImageLoadingIds;
+    private int mLoadingImageWidth;
+    private int mLoadingImageHeight;
+    private View mLoadingViewContainer;
 
 
     @Override
@@ -139,6 +146,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         mainFragment = new MainFragment();
+
         fragmentTransaction.replace(R.id.fragment_container, mainFragment);
         fragmentTransaction.commit();
 
@@ -146,6 +154,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpHeader();
         setOriginalBackgroundColor();
         initSizes();
+        initImageLoading();
+
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
 
         mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -163,6 +173,45 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
         AftabeAPIAdapter.tryToLogin(this);
+    }
+
+    private void initImageLoading(){
+
+        mLoadingImageView = (ImageView) findViewById(R.id.activity_main_loading_image_view);
+
+        mLoadingViewContainer = findViewById(R.id.activity_main_loading_container);
+
+        SizeConverter converter = SizeConverter.SizeConverterFromLessOffset(SizeManager.getScreenWidth(), SizeManager.getScreenHeight(),
+                1200, 2000);
+        mLoadingImageHeight = converter.mHeight;
+        mLoadingImageWidth = converter.mWidth;
+
+        int[] idt = {R.drawable.search_sc_1,
+                R.drawable.search_sc_2,
+                R.drawable.search_sc_3,
+                R.drawable.search_sc_4,
+                R.drawable.search_sc_5,
+                R.drawable.search_sc_6,
+                R.drawable.search_sc_7,
+                R.drawable.search_sc_8,
+                R.drawable.search_sc_9,
+                R.drawable.search_sc_10,
+                R.drawable.search_sc_11,
+                R.drawable.search_sc_12,
+                R.drawable.search_sc_13,
+                R.drawable.search_sc_14,
+                R.drawable.search_sc_15,
+                R.drawable.search_sc_16,
+                R.drawable.search_sc_17,
+                R.drawable.search_sc_18,
+                R.drawable.search_sc_19,
+                R.drawable.search_sc_20,
+                R.drawable.search_sc_21,
+                R.drawable.search_sc_22};
+
+        mImageLoadingIds = idt;
+
+
     }
 
 
@@ -458,6 +507,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             userFoundListener.onGetError();
     }
 
+
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
 
@@ -533,6 +583,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void startLoading() {
+
+        mLoadingViewContainer.setVisibility(View.VISIBLE);
+        mLoadingStep = 0;
+        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(mImageLoadingIds[0],
+                mLoadingImageWidth, mLoadingImageHeight));
+        new Handler().postDelayed(this, 1000);
+
+    }
+
+
+    @Override
+    public void run() {
+//        Only for loading , not for anything else
+
+        mLoadingStep++;
+
+        if (mLoadingStep == mImageLoadingIds.length) { // the last image
+            mLoadingViewContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(mImageLoadingIds[mLoadingStep],
+                mLoadingImageWidth, mLoadingImageHeight));
+
+
+        new Handler().postDelayed(this, 1000);
 
     }
 

@@ -231,8 +231,12 @@ public class Tools {
             InputStream inputStream = new FileInputStream(path);
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             Gson gson = new GsonBuilder().create();
-            ((MainApplication) context.getApplicationContext()).setHeadObject(gson.fromJson(reader, HeadObject.class));
+            try {
+                ((MainApplication) context.getApplicationContext()).setHeadObject(gson.fromJson(reader, HeadObject.class));
+            }
+            catch (Exception e){
 
+            }
             headObject = ((MainApplication) context.getApplicationContext()).getHeadObject(); // TODO: 9/24/15 check for Reference
             // TODO Armin: Here we should save the number of ads in DB or SP
 

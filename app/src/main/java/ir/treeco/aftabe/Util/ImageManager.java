@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v4.util.LruCache;
 
 import java.io.InputStream;
@@ -26,7 +27,12 @@ public class ImageManager {
     static LruCache<ImageKey, Bitmap> cache = new LruCache<ImageKey, Bitmap>(1) {
         @Override
         protected int sizeOf(ImageKey key, Bitmap value) {
-            return 0;
+            if (Build.VERSION.SDK_INT >= 12) {
+                return value.getByteCount();
+            } else {
+
+                return value.getRowBytes() * value.getHeight();
+            }
         }
     };
 

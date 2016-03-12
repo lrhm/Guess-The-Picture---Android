@@ -54,32 +54,30 @@
                 android:visibility="invisible" />
 
             <TextView
+                android:id="@+id/timer_online"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:layout_centerInParent="true"
-                android:visibility="gone"
                 android:text="4:20"
-                android:id="@+id/timer_online"
-                />
+                android:textSize="20sp"
+                android:visibility="gone" />
 
             <ir.treeco.aftabe.View.Custom.UserLevelView
                 android:id="@+id/player1_online_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:customDimension="0.13"
-                app:textAlign="below"
                 android:visibility="gone"
-                />
+                app:customDimension="0.13"
+                app:textAlign="below" />
 
 
             <ir.treeco.aftabe.View.Custom.UserLevelView
                 android:id="@+id/player2_online_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:customDimension="0.13"
                 app:textAlign="below"
-                android:visibility="gone"
 
                 />
 
@@ -91,6 +89,20 @@
             android:layout_height="fill_parent"></FrameLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#252525"
+        android:visibility="gone"
+        android:id="@+id/activity_main_loading_container">
+
+        <ImageView
+            android:id="@+id/activity_main_loading_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </FrameLayout>
 
 
 </FrameLayout>
