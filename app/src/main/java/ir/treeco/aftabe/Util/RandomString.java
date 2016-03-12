@@ -25,6 +25,11 @@ public class RandomString {
         for (int idx = 0; idx < buf.length; ++idx) {
             Random random = new Random(System.currentTimeMillis());
             buf[idx] = symbols[random.nextInt(symbols.length)];
+            try {
+                Thread.sleep(random.nextInt(85));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return new String(buf);
     }
