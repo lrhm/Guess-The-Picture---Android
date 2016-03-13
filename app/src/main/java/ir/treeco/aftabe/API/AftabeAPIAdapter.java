@@ -6,11 +6,14 @@ import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
+import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
 import ir.treeco.aftabe.API.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
@@ -379,5 +382,24 @@ public class AftabeAPIAdapter {
         });
     }
 
+    public static void getLoaderboard(User myUser, final LeaderboardUserListener leaderboardUserListener) {
+        init();
+        Call<LeaderboardContainer> call = aftabeService.getLeaderboard(myUser.getLoginInfo().getAccessToken(), "score");
+        call.enqueue(new Callback<LeaderboardContainer>() {
+            @Override
+            public void onResponse(Response<LeaderboardContainer> response) {
+
+                if (!response.isSuccess())
+                    leaderboardUserListener.onGotError();
+                leaderboardUserListener.onGotLeaderboard(response.body().getBoard());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+                leaderboardUserListener.onGotError();
+            }
+        });
+    }
 
 }

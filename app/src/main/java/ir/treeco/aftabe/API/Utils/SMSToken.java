@@ -27,11 +27,15 @@ public class SMSToken {
     @Expose
     public String guestID;
 
+    @Expose
+    public double seed;
+
     public void update(SMSValidateToken smsValidateToken , String checkedUsername) {
         this.imei = RandomString.nextString();
         this.smsTokenId = smsValidateToken.getId();
         this.name = checkedUsername;
         this.phone = smsValidateToken.getPhone();
+        seed = Tools.getSeed();
         setGuestID();
     }
 

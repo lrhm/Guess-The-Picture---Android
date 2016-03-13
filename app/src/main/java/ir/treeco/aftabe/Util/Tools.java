@@ -73,6 +73,7 @@ public class Tools {
     public final static String ENCRYPT_KEY = "shared_prefs_last_long";
     public final static String USER_SAVED_DATA = "shared_prefs_user";
     public final static String SHARED_PREFS_TOKEN = "shared_prefs_tk";
+    public final static String SHARED_PREFS_SEED = "shared_prefs_seed_key";
     private final static String TAG = "Tools";
 
 
@@ -762,6 +763,19 @@ public class Tools {
             return gson.fromJson(jsonString, User.class);
         }
         return null;
+    }
+
+
+    public static double getSeed(){
+
+        if(Prefs.contains(SHARED_PREFS_SEED)) {
+            return Prefs.getDouble(SHARED_PREFS_SEED, 0.85);
+        }
+
+        Random random = new Random(System.currentTimeMillis());
+        double seed = random.nextDouble();
+        Prefs.putDouble(SHARED_PREFS_SEED, seed);
+        return seed;
     }
 
 

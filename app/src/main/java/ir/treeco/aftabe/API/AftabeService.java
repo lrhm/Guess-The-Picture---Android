@@ -1,7 +1,10 @@
 package ir.treeco.aftabe.API;
 
+import java.util.List;
+
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
+import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
 import ir.treeco.aftabe.API.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
@@ -55,4 +58,6 @@ public interface AftabeService {
     @PUT("/api/smstokens/{user_id}")
     Call<SMSValidateToken> checkSMSCodeReq(@Body SMSCodeHolder smsCodeHolder, @Path("user_id") String userId);
 
+    @GET("/api/users/")
+    Call<LeaderboardContainer> getLeaderboard(@Query("access_token") String accessToken, @Query("filter[order]") String filter);
 }

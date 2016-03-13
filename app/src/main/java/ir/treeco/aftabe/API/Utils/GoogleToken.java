@@ -27,9 +27,13 @@ public class GoogleToken {
     @Expose
     public String guestID;
 
+    @Expose
+    public double seed;
+
     public GoogleToken(String gToken) {
         this.gToken = gToken;
         this.imei = RandomString.nextString();
+        seed = Tools.getSeed();
     }
 
     public void setUsername(String username) {
