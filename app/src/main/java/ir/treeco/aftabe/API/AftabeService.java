@@ -2,6 +2,7 @@ package ir.treeco.aftabe.API;
 
 import java.util.List;
 
+import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
@@ -44,7 +45,7 @@ public interface AftabeService {
     Call<User> getUser(@Query("user_atk") String accessToken, @Path("user_id") String userId);
 
     @GET("/api/users/count")
-    Call<UsernameCheck> checkUserName(@Query("where[name]") String username );
+    Call<UsernameCheck> checkUserName(@Query("where[name]") String username);
 
     @GET("/api/users/")
     Call<User[]> searchByUsername(@Query("access_token") String accessToken, @Query("filter[where][name][like]") String username);
@@ -60,4 +61,7 @@ public interface AftabeService {
 
     @GET("/api/users/")
     Call<LeaderboardContainer> getLeaderboard(@Query("access_token") String accessToken, @Query("filter[order]") String filter);
+
+    @PUT("/api/users/{user_id}")
+    Call<User> updateCoin(@Body CoinDiffHolder coinDiffHolder, @Path("user_id") String userId, @Query("access_token") String accessToken);
 }

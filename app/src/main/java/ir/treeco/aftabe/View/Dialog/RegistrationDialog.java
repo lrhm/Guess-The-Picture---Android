@@ -2,6 +2,7 @@ package ir.treeco.aftabe.View.Dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ public class RegistrationDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#77000000")));
         setContentView(R.layout.dialog_registration);
 
 

@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
@@ -19,6 +20,7 @@ import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
@@ -39,6 +41,10 @@ public class AftabeAPIAdapter {
     private static AftabeService aftabeService;
     private final static String baseUrl = "https://aftabe2.com:2020";
     private static final String TAG = "AftabeAPIAdapter";
+
+    public static boolean isNull(){
+        return retrofit == null;
+    }
 
     private static void init() {
         if (retrofit == null) {
@@ -398,6 +404,28 @@ public class AftabeAPIAdapter {
             public void onFailure(Throwable t) {
 
                 leaderboardUserListener.onGotError();
+            }
+        });
+    }
+
+    public static void updateCoin(User myUser) {
+        init();
+        int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+        CoinDiffHolder coinDiffHolder = new CoinDiffHolder(diff);
+        Call<User> call = aftabeService.updateCoin(coinDiffHolder, myUser.getId(), myUser.getLoginInfo().getAccessToken());
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Response<User> response) {
+                if (response.isSuccess())
+                    return;
+                Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+
             }
         });
     }

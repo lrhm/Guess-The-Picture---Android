@@ -74,9 +74,9 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         mProgressBar = (ProgressBar) findViewById(R.id.dialog_username_choose_progress_bar);
         mStatusImageView = (ImageView) findViewById(R.id.dialog_username_choose_image_view);
 
-        customizeTextView(firstTextView, "یه اسم انتخواب کن", 25, FontsHolder.SANS_MEDIUM);
-        customizeTextView(secondTextView, "دیگر قابل تغیر نیست" + "\n" + "حد اقل ۶ حرف", 20, FontsHolder.SANS_REGULAR);
-        customizeTextView(upperSecondTextView, "توجه", 20, FontsHolder.SANS_REGULAR);
+        customizeTextView(firstTextView, "یه اسم انتخواب کن", 23, FontsHolder.SANS_MEDIUM);
+        customizeTextView(secondTextView, "دیگر قابل تغیر نیست" + "\n" + "حد اقل ۶ حرف", 18, FontsHolder.SANS_REGULAR);
+        customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_REGULAR);
 
         RelativeLayout.LayoutParams firstTextLp = (RelativeLayout.LayoutParams) firstTextView.getLayoutParams();
         firstTextLp.topMargin = (int) (SizeManager.getScreenHeight() * 0.1);
@@ -86,13 +86,13 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         secondTextLp.topMargin = (int) (SizeManager.getScreenHeight() * 0.55);
 
         mEditText = (EditText) findViewById(R.id.dialog_username_input);
-        mEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+        mEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 23);
         mEditText.addTextChangedListener(this);
 
         mAcceptButton = (Button) findViewById(R.id.dialog_username_choose_accept_btn);
         mAcceptButton.setText("تایید");
         mAcceptButton.setTypeface(FontsHolder.getSansRegular(context));
-        mAcceptButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+        mAcceptButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 23);
         mAcceptButton.setOnClickListener(this);
         mAcceptButton.setEnabled(false);
         mAcceptButton.setTextColor(Color.BLACK);

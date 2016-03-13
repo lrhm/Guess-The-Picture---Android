@@ -59,6 +59,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
@@ -111,6 +112,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
 
         initActivity();
+
+        new RegistrationDialog(this).show();
 
 
     }
@@ -175,7 +178,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         AftabeAPIAdapter.tryToLogin(this);
     }
 
-    private void initImageLoading(){
+    private void initImageLoading() {
 
         mLoadingImageView = (ImageView) findViewById(R.id.activity_main_loading_image_view);
 
@@ -428,7 +431,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         boolean connected = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
         boolean available = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
         int award = data.getIntExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
-        if(award == 0)
+        if (award == 0)
             return;
         if (!connected) {
             // Couldn't connect to server
@@ -478,6 +481,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void changed(int newAmount) {
         digits.setText(tools.numeralStringToPersianDigits("" + newAmount));
+
+
+        if (myUser != null) AftabeAPIAdapter.updateCoin(myUser);
     }
 
     @Override
@@ -494,6 +500,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
             Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
             initSocket();
+
         }
         for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetUser(user);
@@ -562,7 +569,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void initSocket() {
 
-        if(mScoket != null)
+        if (mScoket != null)
             return;
 
         String url = "https://aftabe2.com";

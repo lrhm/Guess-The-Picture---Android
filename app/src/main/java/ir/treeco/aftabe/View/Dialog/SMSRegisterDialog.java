@@ -82,9 +82,9 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         secondTextView = (TextView) findViewById(R.id.dialog_username_choose_second_text);
         upperSecondTextView = (TextView) findViewById(R.id.dialog_username_choose_upper_second_text);
 
-        customizeTextView(firstTextView, phoneReq[0], 25, FontsHolder.SANS_MEDIUM);
-        customizeTextView(secondTextView, phoneReq[1], 20, FontsHolder.SANS_REGULAR);
-        customizeTextView(upperSecondTextView, "توجه", 20, FontsHolder.SANS_REGULAR);
+        customizeTextView(firstTextView, phoneReq[0], 23, FontsHolder.SANS_MEDIUM);
+        customizeTextView(secondTextView, phoneReq[1], 18, FontsHolder.SANS_REGULAR);
+        customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_REGULAR);
 
         RelativeLayout.LayoutParams firstTextLp = (RelativeLayout.LayoutParams) firstTextView.getLayoutParams();
         firstTextLp.topMargin = (int) (SizeManager.getScreenHeight() * 0.1);
