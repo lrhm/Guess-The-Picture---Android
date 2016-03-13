@@ -37,9 +37,12 @@ public class MainApplication extends Application {
                 .setUseDefaultSharedPreference(true)
                 .build();
 
+        ImageManager.initCache(getApplicationContext());
         headObject = new HeadObject();
         lengthManager = new LengthManager(this);
         imageManager = new ImageManager(this);
+
+
 
     }
 

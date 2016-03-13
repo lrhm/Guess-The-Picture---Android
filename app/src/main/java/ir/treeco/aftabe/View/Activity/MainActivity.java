@@ -590,8 +590,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         mLoadingViewContainer.setVisibility(View.VISIBLE);
         mLoadingStep = 0;
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(mImageLoadingIds[0],
-                mLoadingImageWidth, mLoadingImageHeight));
+        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
 
     }
@@ -608,8 +608,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(mImageLoadingIds[mLoadingStep],
-                mLoadingImageWidth, mLoadingImageHeight));
+        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
 
 
         new Handler().postDelayed(this, 1000);

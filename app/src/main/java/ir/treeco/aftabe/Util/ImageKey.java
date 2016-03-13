@@ -1,5 +1,8 @@
 package ir.treeco.aftabe.Util;
 
+import android.app.ActivityManager;
+import android.content.Context;
+
 public class ImageKey {
     String data;
 
@@ -10,6 +13,7 @@ public class ImageKey {
     ImageKey(String relativePath, int width, int height) {
         data = "@" + relativePath + "," + width + "," + height;
     }
+
 
     @Override
     public boolean equals(Object o) {

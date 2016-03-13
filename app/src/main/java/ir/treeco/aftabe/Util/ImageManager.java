@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.Util;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -24,17 +25,29 @@ public class ImageManager {
 
     }
 
-    static LruCache<ImageKey, Bitmap> cache = new LruCache<ImageKey, Bitmap>(1) {
-        @Override
-        protected int sizeOf(ImageKey key, Bitmap value) {
-            if (Build.VERSION.SDK_INT >= 12) {
-                return value.getByteCount();
-            } else {
+    public static void initCache(Context context) {
 
-                return value.getRowBytes() * value.getHeight();
+        ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        int memoryClass = am.getMemoryClass();
+
+        int  max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.85
+                : (0.70))); // more than 50%
+        cache =  new LruCache<ImageKey, Bitmap>(max) {
+            @Override
+            protected int sizeOf(ImageKey key, Bitmap value) {
+                if (Build.VERSION.SDK_INT >= 12) {
+                    return value.getByteCount();
+                } else {
+
+                    return value.getRowBytes() * value.getHeight();
+                }
             }
-        }
-    };
+        };
+
+    }
+
+    static LruCache<ImageKey, Bitmap> cache ;
 
     public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
         if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
@@ -59,6 +72,26 @@ public class ImageManager {
         cache.put(key, scaledBitmap);
         return scaledBitmap;
     }
+
+
+    public Bitmap loadImageFromResourceNoCache(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
+        if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
+        if (outHeight == -1)
+            outHeight = lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
+
+
+        System.gc();
+
+        Bitmap scaledBitmap;
+        Bitmap unscaledBitmap;
+
+        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, context.getResources());
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+
+        return scaledBitmap;
+    }
+
 
     public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight) {
         return loadImageFromResource(resourceId, outWidth, outHeight, ScalingLogic.CROP);
