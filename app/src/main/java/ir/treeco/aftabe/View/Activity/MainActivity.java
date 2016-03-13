@@ -492,6 +492,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             myUser = user;
             Gson gson = new Gson();
             Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
+            Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
             initSocket();
         }
         for (UserFoundListener userFoundListener : mUserFoundListeners)
