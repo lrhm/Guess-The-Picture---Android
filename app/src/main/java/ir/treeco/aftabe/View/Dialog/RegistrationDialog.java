@@ -43,7 +43,7 @@ public class RegistrationDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#77000000")));
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#90000000")));
         setContentView(R.layout.dialog_registration);
 
 

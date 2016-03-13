@@ -62,7 +62,7 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#90000000")));
 
 
         setContentView(R.layout.dialog_name_choose);

@@ -2,6 +2,7 @@ package ir.treeco.aftabe.View.Dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -73,7 +74,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#90000000")));
 
 
         setContentView(R.layout.dialog_name_choose);
