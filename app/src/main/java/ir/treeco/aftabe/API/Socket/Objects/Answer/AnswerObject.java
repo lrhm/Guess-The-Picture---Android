@@ -1,0 +1,48 @@
+package ir.treeco.aftabe.API.Socket.Objects.Answer;
+
+import com.google.gson.annotations.Expose;
+
+/**
+ * Created by al on 3/15/16.
+ */
+public class AnswerObject {
+
+    @Expose
+    String id;
+
+    @Expose
+    boolean correct = false;
+
+    @Expose
+    long delay;
+
+    @Expose
+    boolean skip;
+
+    private long firstTime;
+
+    public AnswerObject(String id) {
+        this.id = id;
+    }
+
+    public void setFirstTime() {
+        firstTime = System.currentTimeMillis();
+    }
+
+    public void setCorrect() {
+        correct = true;
+        computeDelay();
+    }
+
+    private void computeDelay() {
+        long diff = System.currentTimeMillis() - firstTime;
+        delay = diff;
+    }
+
+    public void skip() {
+        skip = true;
+        computeDelay();
+    }
+
+
+}

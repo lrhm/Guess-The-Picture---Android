@@ -42,6 +42,11 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
+import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
@@ -65,9 +70,10 @@ import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
+
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, Runnable {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, Runnable, SocketListener {
 
 
     private HeadObject headObject;
@@ -95,13 +101,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String TAG = "MainActivity";
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
-    private Socket mScoket;
     private int mLoadingStep = 0;
     private ImageView mLoadingImageView;
     private int[] mImageLoadingIds;
     private int mLoadingImageWidth;
     private int mLoadingImageHeight;
     private View mLoadingViewContainer;
+    private boolean mStopLoading;
 
 
     @Override
@@ -111,9 +117,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        SocketAdapter.setContext(this);
+        SocketAdapter.addSocketListener(this);
         initActivity();
-
-        new RegistrationDialog(this).show();
 
 
     }
@@ -499,7 +505,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Gson gson = new Gson();
             Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
             Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
-            initSocket();
 
         }
         for (UserFoundListener userFoundListener : mUserFoundListeners)
@@ -567,30 +572,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mUserFoundListeners.add(userFoundListener);
     }
 
-    private void initSocket() {
+    @Override
+    public void onGotGame(GameResultHolder gameHolder) {
+        mLoadingStep = mImageLoadingIds.length;
 
-        if (mScoket != null)
-            return;
 
-        String url = "https://aftabe2.com";
+    }
 
-        IO.Options opts = new IO.Options();
-        opts.forceNew = true;
-        opts.query = "auth_token=" + myUser.getLoginInfo().getAccessToken();
+    @Override
+    public void onGotUserAction(UserActionHolder actionHolder) {
 
-        try {
-            mScoket = IO.socket(url, opts);
-            mScoket.on(Socket.EVENT_PING, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.d(TAG, "event ping");
-                }
-            });
-            mScoket.connect();
+    }
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void onFinishGame(ResultHolder resultHolder) {
+
+    }
+
+
+    public void requestRandomGame() {
+
+        startLoading();
+        SocketAdapter.requestGame();
+        startLoading();
 
     }
 
@@ -598,6 +602,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         mLoadingViewContainer.setVisibility(View.VISIBLE);
         mLoadingStep = 0;
+        mStopLoading = false;
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
@@ -611,7 +616,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         mLoadingStep++;
 
-        if (mLoadingStep == mImageLoadingIds.length) { // the last image
+        if (mStopLoading)
+            return;
+
+        if (mLoadingStep <= mImageLoadingIds.length) { // the last image
             mLoadingViewContainer.setVisibility(View.GONE);
             return;
         }
