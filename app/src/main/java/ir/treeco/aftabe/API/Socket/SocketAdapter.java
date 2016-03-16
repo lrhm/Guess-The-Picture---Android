@@ -50,12 +50,13 @@ public class SocketAdapter {
 
         if (mSocket != null)
             return;
-        Log.d(TAG, "initilizing socket");
+        Log.d(TAG, "initilizing socketa");
 
-        String url = "https://aftabe2.com";
+        String url = "https://aftabe2.com:2020";
 
         IO.Options opts = new IO.Options();
         opts.forceNew = true;
+        opts.reconnection = true;
         opts.query = "auth_token=" + Tools.getCachedUser().getLoginInfo().getAccessToken();
 
         try {
@@ -91,8 +92,27 @@ public class SocketAdapter {
                     callGameResult(resultHolder);
 
                 }
+            }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+
+                    Log.d(TAG, "connected " + ((args.length != 0 ) ? args[0].toString() : "" ));
+
+                }
+            }).on(Socket.EVENT_PING, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "ping " + ((args.length != 0 ) ? args[0].toString() : "" ));
+
+                }
+            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "disconnected");
+                }
             });
             mSocket.connect();
+
 
             Log.d(TAG, "try to connect");
 

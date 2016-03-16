@@ -64,6 +64,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
@@ -73,7 +74,7 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, Runnable, SocketListener {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener {
 
 
     private HeadObject headObject;
@@ -102,12 +103,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
     private int mLoadingStep = 0;
-    private ImageView mLoadingImageView;
-    private int[] mImageLoadingIds;
-    private int mLoadingImageWidth;
-    private int mLoadingImageHeight;
-    private View mLoadingViewContainer;
-    private boolean mStopLoading;
+    private LoadingDialog mLoadingDialog;
 
 
     @Override
@@ -163,7 +159,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpHeader();
         setOriginalBackgroundColor();
         initSizes();
-        initImageLoading();
 
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
 
@@ -182,45 +177,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
         AftabeAPIAdapter.tryToLogin(this);
-    }
-
-    private void initImageLoading() {
-
-        mLoadingImageView = (ImageView) findViewById(R.id.activity_main_loading_image_view);
-
-        mLoadingViewContainer = findViewById(R.id.activity_main_loading_container);
-
-        SizeConverter converter = SizeConverter.SizeConverterFromLessOffset(SizeManager.getScreenWidth(), SizeManager.getScreenHeight(),
-                1200, 2000);
-        mLoadingImageHeight = converter.mHeight;
-        mLoadingImageWidth = converter.mWidth;
-
-        int[] idt = {R.drawable.search_sc_1,
-                R.drawable.search_sc_2,
-                R.drawable.search_sc_3,
-                R.drawable.search_sc_4,
-                R.drawable.search_sc_5,
-                R.drawable.search_sc_6,
-                R.drawable.search_sc_7,
-                R.drawable.search_sc_8,
-                R.drawable.search_sc_9,
-                R.drawable.search_sc_10,
-                R.drawable.search_sc_11,
-                R.drawable.search_sc_12,
-                R.drawable.search_sc_13,
-                R.drawable.search_sc_14,
-                R.drawable.search_sc_15,
-                R.drawable.search_sc_16,
-                R.drawable.search_sc_17,
-                R.drawable.search_sc_18,
-                R.drawable.search_sc_19,
-                R.drawable.search_sc_20,
-                R.drawable.search_sc_21,
-                R.drawable.search_sc_22};
-
-        mImageLoadingIds = idt;
-
-
     }
 
 
@@ -574,9 +530,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onGotGame(GameResultHolder gameHolder) {
-        mLoadingStep = mImageLoadingIds.length;
 
-
+        mLoadingDialog.dismiss();
     }
 
     @Override
@@ -592,43 +547,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void requestRandomGame() {
 
+        if (myUser == null) {
+            Toast.makeText(this, "not connected , try again ", Toast.LENGTH_SHORT).show();
+            AftabeAPIAdapter.tryToLogin(this);
+            return;
+        }
         startLoading();
         SocketAdapter.requestGame();
-        startLoading();
 
     }
 
     public void startLoading() {
+        mLoadingDialog = new LoadingDialog(this);
 
-        mLoadingViewContainer.setVisibility(View.VISIBLE);
-        mLoadingStep = 0;
-        mStopLoading = false;
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
-        new Handler().postDelayed(this, 1000);
-
-    }
-
-
-    @Override
-    public void run() {
-//        Only for loading , not for anything else
-
-        mLoadingStep++;
-
-        if (mStopLoading)
-            return;
-
-        if (mLoadingStep <= mImageLoadingIds.length) { // the last image
-            mLoadingViewContainer.setVisibility(View.GONE);
-            return;
-        }
-
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
-
-
-        new Handler().postDelayed(this, 1000);
+        mLoadingDialog.show();
 
     }
 
