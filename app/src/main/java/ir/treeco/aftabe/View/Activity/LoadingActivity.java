@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -17,6 +18,8 @@ import ir.treeco.aftabe.Util.Tools;
 
 public class LoadingActivity extends Activity implements Runnable {
 
+    long startTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -27,26 +30,32 @@ public class LoadingActivity extends Activity implements Runnable {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_loading);
 
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
-        initUtils();
 
-        long endTime = System.currentTimeMillis();
-
-        if (startTime - endTime > 500) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
-        new Handler().postDelayed(this, 400);
+        new Handler().postDelayed(this, 200);
 
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.d(this.getClass().getName(), "on destory");
+        super.onDestroy();
+    }
 
     @Override
     public void run() {
+
+        initUtils();
+        long diff = System.currentTimeMillis() - startTime;
+
+        if (diff < 1000)
+            try {
+                Thread.sleep(1000 - diff);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Dialog.FreeCoinOfferDialog;
 
 public class CoinAdapter {
     public static final int LEVEL_COMPELETED_PRIZE = 30;
@@ -19,11 +21,13 @@ public class CoinAdapter {
     private DBAdapter db;
     private Context context;
     private Tools tools;
+    private Activity mActivity;
 
-    public CoinAdapter(Context context) {
+    public CoinAdapter(Context context, Activity activity) {
         this.context = context;
         db = DBAdapter.getInstance(context);
         tools = new Tools(context);
+        mActivity = activity;
     }
 
     public interface CoinsChangedListener {
@@ -33,7 +37,9 @@ public class CoinAdapter {
     public boolean spendCoins(int amount) {
         int nextAmount = getCoinsCount() - amount;
         if (nextAmount < 0) {
-            ToastMaker.show(context, context.getString(R.string.not_enought_coins), Toast.LENGTH_SHORT);
+//            ToastMaker.show(context, context.getString(R.string.not_enought_coins), Toast.LENGTH_SHORT);
+            new FreeCoinOfferDialog(context, mActivity).show();
+
             return false;
         }
         addCoinDiff(-amount);

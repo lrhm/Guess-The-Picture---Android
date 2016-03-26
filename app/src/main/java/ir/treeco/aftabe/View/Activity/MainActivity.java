@@ -102,7 +102,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String TAG = "MainActivity";
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
-    private int mLoadingStep = 0;
     private LoadingDialog mLoadingDialog;
 
 
@@ -125,7 +124,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mUserFoundListeners = new ArrayList<>();
 
         tools = new Tools(getApplication());
-        coinAdapter = new CoinAdapter(getApplicationContext());
+        coinAdapter = new CoinAdapter(getApplicationContext(), this);
         lengthManager = ((MainApplication) getApplicationContext()).getLengthManager();
         imageManager = ((MainApplication) getApplicationContext()).getImageManager();
 
@@ -264,7 +263,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         coinBox.setOnClickListener(this);
 
-        CoinAdapter coinAdapter = new CoinAdapter(getApplicationContext());
+        CoinAdapter coinAdapter = new CoinAdapter(getApplicationContext(), this);
         coinAdapter.setCoinsChangedListener(this);
     }
 
@@ -461,6 +460,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Gson gson = new Gson();
             Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
             Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
+            SocketAdapter.ping();
 
         }
         for (UserFoundListener userFoundListener : mUserFoundListeners)

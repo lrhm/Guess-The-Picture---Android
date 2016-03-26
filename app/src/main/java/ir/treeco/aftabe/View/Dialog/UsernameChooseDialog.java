@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -116,6 +117,13 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         lpImageView.topMargin = (int) (SizeManager.getScreenHeight() * 0.38);
         lpImageView.leftMargin = (int) (SizeManager.getScreenWidth() * 0.75);
 
+
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(getWindow().getAttributes());
+        lp.width = SizeManager.getScreenWidth();
+        lp.height = SizeManager.getScreenHeight();
+        getWindow().setAttributes(lp);
     }
 
     private void customizeTextView(TextView textView, String label, int sizeDP, int fontType) {

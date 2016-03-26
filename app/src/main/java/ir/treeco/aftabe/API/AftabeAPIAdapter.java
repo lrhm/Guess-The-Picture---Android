@@ -246,6 +246,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<LoginInfo> response) {
                 Log.d(TAG, response.toString());
+                Log.d(TAG, response.body().toString());
                 Log.d(TAG, response.body().accessToken + " " + response.body().created);
                 final LoginInfo loginInfo = response.body();
                 getMyUserByAccessToken(loginInfo, userFoundListener);

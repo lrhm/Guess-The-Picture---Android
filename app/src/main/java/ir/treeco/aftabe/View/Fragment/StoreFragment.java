@@ -91,8 +91,8 @@ public class StoreFragment extends Fragment {
                 public void onClick(View view) {
                     db.updateReviewed(true);
 
-                    CoinAdapter coinAdapter = new CoinAdapter(getActivity());
-                    coinAdapter.earnCoins(30000);
+                    CoinAdapter coinAdapter = new CoinAdapter(getActivity(),getActivity());
+                    coinAdapter.earnCoins(300);
 
                     Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
                     startActivity(browserIntent);

@@ -121,4 +121,9 @@ public class LoadingDialog extends Dialog implements Runnable {
         new Handler().postDelayed(this, 1000);
 
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+    }
 }

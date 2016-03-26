@@ -118,8 +118,8 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.width = SizeManager.getScreenWidth();
+        lp.height = SizeManager.getScreenHeight();
         getWindow().setAttributes(lp);
 
     }

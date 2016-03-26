@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.SizeManager;
 
 public class ImageFullScreenDialog extends Dialog implements View.OnClickListener {
     Context context;
@@ -35,8 +36,8 @@ public class ImageFullScreenDialog extends Dialog implements View.OnClickListene
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.width = SizeManager.getScreenWidth();
+        lp.height = SizeManager.getScreenHeight();
         getWindow().setAttributes(lp);
 
         imageView.setOnClickListener(this);

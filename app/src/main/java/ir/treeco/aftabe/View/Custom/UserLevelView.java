@@ -53,7 +53,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private ImageView stateView;
     private ImageView baseView;
     private ImageView coverView;
-    private TextView mUserNameTextView;
+    private MagicTextView mUserNameTextView;
     private MagicTextView mLevelTextView;
     private LengthManager lengthManager;
     private ImageManager imageManager;
@@ -91,9 +91,13 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
                 (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
 
 
-        mUserNameTextView = new TextView(context);
+        mUserNameTextView = new MagicTextView(context);
         mUserNameTextView.setText("اسمته");
         mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 80);
+        mUserNameTextView.setTypeface(FontsHolder.getRiffic(getContext()));
+        mUserNameTextView.setTextColor(Color.WHITE);
+
+        setShadowLayer(mUserNameTextView);
 
         LayoutParams textLP = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         textLP.gravity = Gravity.CENTER;
@@ -113,7 +117,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 //        levelTextViewLP.topMargin = -(int) (SizeManager.getScreenHeight() * mDimension * 0.005);
 
         mLevelTextView.setLayoutParams(levelTextViewLP);
-        setShadowLayer();
+        setShadowLayer(mLevelTextView);
 
 
         imagesContainer.setLayoutParams(textLP);
@@ -167,15 +171,16 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     }
 
-    public void setShadowLayer() {
-        float shadowSize = (mDimension * 6 / (0.7f));
-        Log.d("LevelUserVIew", shadowSize + " is the shadow size");
-        mLevelTextView.addOuterShadow(1, 4, 4, Color.BLACK);
-        mLevelTextView.addInnerShadow(1, 4, 4, Color.BLACK);
+    public void setShadowLayer(MagicTextView mLevelTextView) {
+//        float shadowSize = (mDimension * 6 / (0.7f));
+//        Log.d("LevelUserVIew", shadowSize + " is the shadow size");
+        float shadowSize = (mDimension / 0.7f) * 4;
+        mLevelTextView.addOuterShadow(1, shadowSize, shadowSize, Color.BLACK);
+        mLevelTextView.addInnerShadow(1, shadowSize, shadowSize, Color.BLACK);
 
         int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 120);
 
-        mLevelTextView.setStroke(strokeSize , Color.parseColor("#909090"));
+        mLevelTextView.setStroke(strokeSize, Color.parseColor("#909090"));
 
     }
 

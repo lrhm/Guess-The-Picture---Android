@@ -65,7 +65,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         tools = new Tools(getContext());
         db = DBAdapter.getInstance(getActivity());
-        coinAdapter = new CoinAdapter(getActivity());
+        coinAdapter = new CoinAdapter(getActivity(), getActivity());
         lengthManager = ((MainApplication) getActivity().getApplication()).getLengthManager();
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
