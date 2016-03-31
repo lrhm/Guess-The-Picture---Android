@@ -16,7 +16,7 @@ public class FontsHolder {
     private static Typeface sansMedium = null;
     private static Typeface sansRegular = null;
     private static Typeface sansLight = null;
-    private static Typeface riffic = null;
+    private static Typeface lond = null;
 
 
     public static final int SANS_BOLD = 1;
@@ -24,7 +24,7 @@ public class FontsHolder {
     public static final int SANS_REGULAR = 4;
     public static final int SANS_LIGHT= 8;
     public static final int HOMA =16;
-    public static final int RIFFIC = 32;
+    public static final int LOND = 32;
 
     public static Typeface getFont(Context context , int type){
         switch (type){
@@ -38,17 +38,17 @@ public class FontsHolder {
                 return getSansRegular(context);
             case HOMA:
                 return getHoma(context);
-            case RIFFIC:
-                return getRiffic(context);
+            case LOND:
+                return getLond(context);
         }
 
         return null;
 
     }
 
-    public static Typeface getRiffic(Context context){
-        if(riffic == null) riffic = Typeface.createFromAsset(context.getAssets(), "riffic.ttf");
-        return riffic;
+    public static Typeface getLond(Context context){
+        if(lond == null) lond = Typeface.createFromAsset(context.getAssets(), "LondrinaSolid-Regular.ttf");
+        return lond;
 
     }
 

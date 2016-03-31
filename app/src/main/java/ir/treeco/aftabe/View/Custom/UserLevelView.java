@@ -12,9 +12,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.util.Random;
 
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -94,10 +91,11 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         mUserNameTextView = new MagicTextView(context);
         mUserNameTextView.setText("اسمته");
         mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 80);
-        mUserNameTextView.setTypeface(FontsHolder.getRiffic(getContext()));
         mUserNameTextView.setTextColor(Color.WHITE);
 
         setShadowLayer(mUserNameTextView);
+        mUserNameTextView.setTypeface(FontsHolder.getLond(getContext()));
+
 
         LayoutParams textLP = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         textLP.gravity = Gravity.CENTER;
@@ -164,7 +162,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             addView(imagesContainer);
         }
 
-        FontsHolder.setFont(mUserNameTextView, FontsHolder.SANS_REGULAR);
+        FontsHolder.setFont(mUserNameTextView, FontsHolder.LOND);
 
         setOnClickListener(this);
 
@@ -175,12 +173,13 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 //        float shadowSize = (mDimension * 6 / (0.7f));
 //        Log.d("LevelUserVIew", shadowSize + " is the shadow size");
         float shadowSize = (mDimension / 0.7f) * 4;
-        mLevelTextView.addOuterShadow(1, shadowSize, shadowSize, Color.BLACK);
-        mLevelTextView.addInnerShadow(1, shadowSize, shadowSize, Color.BLACK);
+        int dropShadowColor = Color.parseColor("#393939");
+        mLevelTextView.addOuterShadow(1, shadowSize, shadowSize, dropShadowColor);
+        mLevelTextView.addInnerShadow(1, shadowSize, shadowSize, dropShadowColor);
 
         int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 120);
 
-        mLevelTextView.setStroke(strokeSize, Color.parseColor("#909090"));
+        mLevelTextView.setStroke(strokeSize, Color.parseColor("#c9c9c9"));
 
     }
 
