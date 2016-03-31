@@ -10,15 +10,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
+import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 
+
 /**
  * Created by al on 3/16/16.
  */
-public class LoadingDialog extends Dialog implements Runnable {
+public class LoadingDialog extends Dialog implements Runnable, SocketListener {
 
     Context context;
     private boolean mDismissed = false;
@@ -50,9 +56,11 @@ public class LoadingDialog extends Dialog implements Runnable {
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
+        SocketAdapter.addSocketListener(this);
 
 
     }
+
 
 
     private void initImageLoading() {
@@ -125,5 +133,25 @@ public class LoadingDialog extends Dialog implements Runnable {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
+    }
+
+    @Override
+    public void onGotGame(GameResultHolder gameHolder) {
+        Log.d(this.getClass().getName(), gameHolder.toString());
+        SocketAdapter.removeSocketListener(this);
+
+
+    }
+
+    @Override
+    public void onGotUserAction(UserActionHolder actionHolder) {
+
+        Log.d(this.getClass().getName(), "should not happen");
+    }
+
+    @Override
+    public void onFinishGame(ResultHolder resultHolder) {
+        Log.d(this.getClass().getName(), "should not happen");
+
     }
 }

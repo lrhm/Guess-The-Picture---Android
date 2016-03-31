@@ -2,6 +2,7 @@ package ir.treeco.aftabe.API.Socket;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,7 +52,7 @@ public class SocketAdapter {
         listeners.add(socketListener);
     }
 
-    public void removeSocketListener(SocketListener socketListener) {
+    public static void removeSocketListener(SocketListener socketListener) {
         listeners.remove(socketListener);
     }
 
@@ -67,7 +68,9 @@ public class SocketAdapter {
         IO.Options opts = new IO.Options();
         opts.forceNew = true;
         opts.reconnection = true;
+//        opts.timeout = 30000;
         opts.query = "auth_token=" + Tools.getCachedUser().getLoginInfo().getAccessToken();
+
 
         try {
 
@@ -78,25 +81,19 @@ public class SocketAdapter {
             final Gson gson = new Gson();
             mSocket.on("gameResult", new Emitter.Listener() {
                 @Override
-                public void call(Object... args) {
-                    final String msg = (String) args[0];
+                public void call(final Object... args) {
 
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d(TAG, "got");
-                            Log.d(TAG, "gameResult is " + msg);
-//                    GameResultHolder gameResultHolder = gson.fromJson(msg, GameResultHolder.class);
-//                    callGameRequestResult(gameResultHolder);
-                        }
-                    });
+                    Log.d(TAG, "got");
+                    Log.d(TAG, "gameResult is " + args[0].toString());
+                    GameResultHolder gameResultHolder = gson.fromJson(args[0].toString(), GameResultHolder.class);
+                    callGameRequestResult(gameResultHolder);
 
 
                 }
             }).on("userActions", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    String msg = (String) args[0];
+                    String msg =  args[0].toString();
                     Log.d(TAG, "user action is " + msg);
                     UserActionHolder userActionHolder = gson.fromJson(msg, UserActionHolder.class);
                     userActionHolder.update();
@@ -106,7 +103,7 @@ public class SocketAdapter {
             }).on("result", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    String msg = (String) args[0];
+                    String msg = args[0].toString();
                     Log.d(TAG, "result is " + msg);
                     ResultHolder resultHolder = gson.fromJson(msg, ResultHolder.class);
                     resultHolder.update();
@@ -223,9 +220,11 @@ public class SocketAdapter {
             socketListener.onGotUserAction(userActionHolder);
     }
 
-    private static void setReadyStatus() {
+    public static void setReadyStatus() {
         if (mSocket == null)
             return;
+
+
 
         RequestHolder requestHolder = new RequestHolder();
         Gson gson = new Gson();
@@ -233,6 +232,7 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "emit:ready "+ msg);
                 mSocket.emit("ready", msg, new Ack() {
                     @Override
                     public void call(Object... args) {

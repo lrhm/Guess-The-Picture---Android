@@ -69,6 +69,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
+import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 
@@ -91,8 +92,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private boolean store = false;
-    private UserLevelView playerOne;
-    private UserLevelView playerTwo;
+    public UserLevelView playerOne;
+    public UserLevelView playerTwo;
     public MainFragment mainFragment;
     public TextView timerTextView;
     private ImageView coinBox;
@@ -224,6 +225,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void setOnlineGame(boolean isOnline) {
         int onlineViewsVisibility = (isOnline ? View.VISIBLE : View.GONE);
         int headerViewsVisibility = (isOnline ? View.GONE : View.VISIBLE);
+
+
         logo.setVisibility(headerViewsVisibility);
         coinBox.setVisibility(headerViewsVisibility);
         digits.setVisibility(headerViewsVisibility);
@@ -231,6 +234,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         playerOne.setVisibility(onlineViewsVisibility);
         playerTwo.setVisibility(onlineViewsVisibility);
         timerTextView.setVisibility(onlineViewsVisibility);
+
+    }
+
+    public void setOnlineGameUser(User op) {
+
+        playerOne.setUserName(myUser.getName());
+        playerOne.setUserLevel(myUser.getLevel());
+
+        playerTwo.setUserName(op.getName());
+        playerTwo.setUserLevel(op.getLevel());
 
     }
 
@@ -532,10 +545,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGotGame(GameResultHolder gameHolder) {
 
         mLoadingDialog.dismiss();
+        SocketAdapter.setReadyStatus();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("state", 0);
+
+        OnlineGameFragment gameFragment = new OnlineGameFragment();
+        gameFragment.setGameResultHolder(gameHolder);
+        gameFragment.setArguments(bundle);
+
+        FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, gameFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
     @Override
     public void onGotUserAction(UserActionHolder actionHolder) {
+
+        Log.d(TAG, "got user action");
+        if (!actionHolder.getUserId().equals(myUser.getId())) {
+            playerTwo.setOnlineState(actionHolder.getAction());
+
+        }
 
     }
 

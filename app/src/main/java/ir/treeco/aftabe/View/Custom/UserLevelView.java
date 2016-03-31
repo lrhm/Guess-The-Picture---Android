@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -34,16 +35,13 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private int mUserExp;
     private float mDimension;
 
-    public static final int STATE_WIN = 0;
-    public static final int STATE_LOSE = 1;
-    public static final int STATE_UNKNOWN = 2;
-
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
     private static final int TEXT_ALIGN_CENTER = 2;
 
     private boolean mClick = true;
 
+    private boolean mFirstState = true;
     private User mUser;
     private int mTextAlign;
     private ImageView expView;
@@ -261,7 +259,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     }
 
-    private void setUserName(String userName) {
+    public void setUserName(String userName) {
 
         if (mTextAlign != TEXT_ALIGN_CENTER) {
             mUserNameTextView.setText(userName);
@@ -277,40 +275,33 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         mUserNameTextView.setText("عضویت/ورود");
     }
 
-    public void setOnlineState(int firstState, int secondState) {
+    public void setOnlineState(GameActionResult gameActionResult) {
+
         int width = (int) (SizeManager.getScreenWidth() * mDimension);
-        if (firstState == STATE_UNKNOWN) {
-            expView.setVisibility(View.GONE);
-        } else {
+
+        if (mFirstState) {
             expView.setVisibility(View.VISIBLE);
-            expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(firstState), width, width));
-
+            expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(gameActionResult), width, width));
+            return;
         }
+        mFirstState = false;
+        stateView.setVisibility(View.VISIBLE);
+        stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(gameActionResult), width, width));
 
-        if (secondState == STATE_UNKNOWN) {
-            stateView.setVisibility(View.GONE);
-        } else {
-            stateView.setVisibility(View.VISIBLE);
-            stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(secondState), width, width));
-
-        }
 
     }
 
-    private int getDrawableIdForLeft(int state) {
-        if (state == STATE_LOSE)
+
+    private int getDrawableIdForLeft(GameActionResult gameActionResult) {
+        if (gameActionResult.isWrong() || gameActionResult.isSkiped())
             return R.drawable.wrong1;
-        if (state == STATE_WIN)
-            return R.drawable.correct1;
-        return 0;
+        return R.drawable.correct1;
     }
 
-    private int getDrawableIdForRight(int state) {
-        if (state == STATE_LOSE)
+    private int getDrawableIdForRight(GameActionResult gameActionResult) {
+        if (gameActionResult.isWrong() || gameActionResult.isSkiped())
             return R.drawable.wrong2;
-        if (state == STATE_WIN)
-            return R.drawable.correct2;
-        return 0;
+        return R.drawable.correct2;
     }
 
     @Override

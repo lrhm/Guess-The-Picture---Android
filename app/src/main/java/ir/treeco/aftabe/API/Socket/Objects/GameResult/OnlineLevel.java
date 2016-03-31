@@ -1,6 +1,9 @@
 package ir.treeco.aftabe.API.Socket.Objects.GameResult;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import org.json.JSONException;
@@ -18,15 +21,22 @@ public class OnlineLevel {
     String answer;
 
     @Expose
-    String image;
+    ImageObject image;
+
+    public String getAnswer() {
+        return answer;
+    }
 
     public String getUrl() {
         try {
-            JSONObject jsonObject = new JSONObject(image);
-            return jsonObject.getString("url");
-        } catch (JSONException e) {
+            return image.name;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String getId() {
+        return id;
     }
 }
