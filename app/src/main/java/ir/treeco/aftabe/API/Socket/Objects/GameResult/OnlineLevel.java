@@ -29,7 +29,7 @@ public class OnlineLevel {
 
     public String getUrl() {
         try {
-            return image.name;
+            return image.url;
         } catch (Exception e) {
             e.printStackTrace();
         }

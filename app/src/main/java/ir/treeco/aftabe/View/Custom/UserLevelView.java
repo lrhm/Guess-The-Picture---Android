@@ -42,7 +42,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private boolean mClick = true;
 
     private boolean mFirstState = true;
-    private User mUser;
+    public User mUser;
     private int mTextAlign;
     private ImageView expView;
     private ImageView stateView;

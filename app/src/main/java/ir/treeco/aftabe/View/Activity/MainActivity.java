@@ -241,9 +241,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         playerOne.setUserName(myUser.getName());
         playerOne.setUserLevel(myUser.getLevel());
+        playerOne.mUser = myUser;
 
         playerTwo.setUserName(op.getName());
         playerTwo.setUserLevel(op.getLevel());
+        playerTwo.mUser = op;
 
     }
 

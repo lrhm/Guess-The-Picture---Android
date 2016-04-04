@@ -105,6 +105,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         imageView.setOnClickListener(this);
 
         imagePath = baseUrl + level.getUrl();
+        Log.d(TAG, imagePath);
 
         Picasso.with(getActivity()).load(imagePath).into(imageView);
         return view;

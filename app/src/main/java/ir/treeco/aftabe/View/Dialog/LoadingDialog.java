@@ -137,7 +137,6 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
 
     @Override
     public void onGotGame(GameResultHolder gameHolder) {
-        Log.d(this.getClass().getName(), gameHolder.toString());
         SocketAdapter.removeSocketListener(this);
 
 
