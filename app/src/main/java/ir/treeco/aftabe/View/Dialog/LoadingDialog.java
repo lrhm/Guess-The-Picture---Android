@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import io.socket.client.Socket;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
@@ -132,7 +133,11 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
+
+        SocketAdapter.removeSocketListener(this);
+        SocketAdapter.cancelRequest();
+        
+        super.onBackPressed();
     }
 
     @Override

@@ -140,6 +140,11 @@ public class SocketAdapter {
                     Log.d(TAG, "pong " + ((args.length != 0) ? args[0].toString() : ""));
 
                 }
+            }).on("cancelResult", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d(TAG, "cancel result " + args[0].toString());
+                }
             });
             mSocket.connect();
 
@@ -263,6 +268,21 @@ public class SocketAdapter {
             }
         }).run();
 
+
+    }
+
+    public static void cancelRequest(){
+        if(mSocket == null)
+            return;
+        RequestHolder requestHolder = new RequestHolder();
+        Gson gson = new Gson();
+        final String msg = gson.toJson(requestHolder);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mSocket.emit("cancelRequest", msg);
+            }
+        }).run();
 
     }
 
