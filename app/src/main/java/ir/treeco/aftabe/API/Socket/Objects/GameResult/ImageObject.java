@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 public class ImageObject {
 
     @Expose
-    String url;
+    String name;
+
 
 }

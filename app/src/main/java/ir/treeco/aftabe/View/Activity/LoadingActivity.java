@@ -33,7 +33,7 @@ public class LoadingActivity extends Activity implements Runnable {
         startTime = System.currentTimeMillis();
 
 
-        new Handler().postDelayed(this, 200);
+        new Handler().postDelayed(this, 300);
 
     }
 

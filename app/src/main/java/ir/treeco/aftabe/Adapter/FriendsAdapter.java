@@ -160,18 +160,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                int levelID = 0;
-                bundle.putInt("LevelId", levelID);
-                bundle.putInt("id", 0);
-
-                OnlineGameFragment gameFragment = new OnlineGameFragment();
-                gameFragment.setArguments(bundle);
-
-                FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, gameFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+//                Bundle bundle = new Bundle();
+//                int levelID = 0;
+//                bundle.putInt("LevelId", levelID);
+//                bundle.putInt("id", 0);
+//
+//                OnlineGameFragment gameFragment = new OnlineGameFragment();
+//                gameFragment.setArguments(bundle);
+//
+//                FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_container, gameFragment);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
             }
         });
 

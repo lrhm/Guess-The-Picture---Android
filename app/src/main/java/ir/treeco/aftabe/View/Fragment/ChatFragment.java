@@ -93,10 +93,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
         ArrayList<ChatObject> list = new ArrayList<>();
 
-        ChatObject o1 = new ChatObject(ChatObject.TYPE_ME, "salam salam bache ha");
-        ChatObject o2 = new ChatObject(ChatObject.TYPE_OTHER, "kho kire khare khafe sho");
+        ChatObject o1 = new ChatObject(ChatObject.TYPE_ME, "saalam");
+        ChatObject o2 = new ChatObject(ChatObject.TYPE_OTHER, "salam");
 
-        Log.d("TAG", "this is spartaa");
 
         mChatAdapter = new ChatAdapter(list);
         mChatView.setAdapter(mChatAdapter);
