@@ -17,7 +17,7 @@ public class AnswerObject {
     long delay;
 
     @Expose
-    boolean skip;
+    boolean skip = false;
 
     private long firstTime;
 
@@ -39,7 +39,7 @@ public class AnswerObject {
         delay = diff;
     }
 
-    public void skip() {
+    public void setSkip() {
         skip = true;
         computeDelay();
     }

@@ -42,7 +42,7 @@ public class AftabeAPIAdapter {
     private final static String baseUrl = "https://aftabe2.com:2020";
     private static final String TAG = "AftabeAPIAdapter";
 
-    public static boolean isNull(){
+    public static boolean isNull() {
         return retrofit == null;
     }
 
@@ -396,9 +396,11 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<LeaderboardContainer> response) {
 
+
                 if (!response.isSuccess())
                     leaderboardUserListener.onGotError();
-                leaderboardUserListener.onGotLeaderboard(response.body().getBoard());
+                else
+                    leaderboardUserListener.onGotLeaderboard(response.body().getBoard());
             }
 
             @Override

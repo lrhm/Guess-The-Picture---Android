@@ -43,6 +43,7 @@ import io.socket.emitter.Emitter;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
@@ -235,6 +236,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         playerTwo.setVisibility(onlineViewsVisibility);
         timerTextView.setVisibility(onlineViewsVisibility);
 
+    }
+
+    public void setTimer(int time){
+        timerTextView.setText(time+"");
     }
 
     public void setOnlineGameUser(User op) {
@@ -547,7 +552,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGotGame(GameResultHolder gameHolder) {
 
         mLoadingDialog.dismiss();
-        SocketAdapter.setReadyStatus();
+      //  SocketAdapter.setReadyStatus();
 
         Bundle bundle = new Bundle();
         bundle.putInt("state", 0);
@@ -564,11 +569,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onGotUserAction(UserActionHolder actionHolder) {
+    public void onGameStart(GameStartObject gameStartObject) {
+
+    }
+
+    @Override
+    public void onGotUserAction(final UserActionHolder actionHolder) {
 
         Log.d(TAG, "got user action");
         if (!actionHolder.getUserId().equals(myUser.getId())) {
-            playerTwo.setOnlineState(actionHolder.getAction());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    playerTwo.setOnlineState(actionHolder.getAction());
+
+                }
+            });
 
         }
 
@@ -576,6 +592,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
+
+//        if(resultHolder.getStatus().)
 
     }
 
@@ -587,6 +605,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             AftabeAPIAdapter.tryToLogin(this);
             return;
         }
+
+        playerOne.setOnlineStateClear();
+        playerTwo.setOnlineStateClear();
         startLoading();
         SocketAdapter.requestGame();
 

@@ -13,6 +13,9 @@ public class ScoreResult {
     @Expose
     int score;
 
+    @Expose
+    boolean winner;
+
 
     public int getScore() {
         return score;

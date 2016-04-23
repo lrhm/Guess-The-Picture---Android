@@ -275,6 +275,12 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         mUserNameTextView.setText("عضویت/ورود");
     }
 
+    public void setOnlineStateClear() {
+        expView.setVisibility(View.GONE);
+        stateView.setVisibility(View.GONE);
+        mFirstState = true;
+    }
+
     public void setOnlineState(GameActionResult gameActionResult) {
 
         int width = (int) (SizeManager.getScreenWidth() * mDimension);

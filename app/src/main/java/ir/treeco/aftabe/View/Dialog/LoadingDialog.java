@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import io.socket.client.Socket;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
@@ -144,6 +145,11 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
     public void onGotGame(GameResultHolder gameHolder) {
         SocketAdapter.removeSocketListener(this);
 
+
+    }
+
+    @Override
+    public void onGameStart(GameStartObject gameStartObject) {
 
     }
 

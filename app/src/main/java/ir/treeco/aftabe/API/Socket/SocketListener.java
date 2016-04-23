@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.API.Socket;
 
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ScoreResult;
@@ -15,6 +16,8 @@ public interface SocketListener {
 
 
     void onGotGame(GameResultHolder gameHolder);
+
+    void onGameStart(GameStartObject gameStartObject);
 
     void onGotUserAction(UserActionHolder actionHolder);
 

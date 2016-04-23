@@ -27,6 +27,7 @@ import io.socket.engineio.client.Transport;
 import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
 import ir.treeco.aftabe.API.Socket.Objects.GameRequest.RequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.Util.Tools;
@@ -93,7 +94,7 @@ public class SocketAdapter {
             }).on("userActions", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    String msg =  args[0].toString();
+                    String msg = args[0].toString();
                     Log.d(TAG, "user action is " + msg);
                     UserActionHolder userActionHolder = gson.fromJson(msg, UserActionHolder.class);
                     userActionHolder.update();
@@ -109,6 +110,14 @@ public class SocketAdapter {
                     resultHolder.update();
                     callGameResult(resultHolder);
 
+                }
+            }).on("gameStart", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    String msg = args[0].toString();
+                    Log.d(TAG, "gameStart is " + msg);
+                    GameStartObject gameStartObject = gson.fromJson(msg, GameStartObject.class);
+                    callGameStart(gameStartObject);
                 }
             }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
@@ -210,6 +219,12 @@ public class SocketAdapter {
 
     }
 
+    private static void callGameStart(GameStartObject gameStartObject) {
+        for (SocketListener socketListener : listeners)
+            socketListener.onGameStart(gameStartObject);
+
+    }
+
     private static void callGameRequestResult(GameResultHolder gameResultHolder) {
         for (SocketListener socketListener : listeners)
             socketListener.onGotGame(gameResultHolder);
@@ -230,14 +245,13 @@ public class SocketAdapter {
             return;
 
 
-
         RequestHolder requestHolder = new RequestHolder();
         Gson gson = new Gson();
         final String msg = gson.toJson(requestHolder);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "emit:ready "+ msg);
+                Log.d(TAG, "emit:ready " + msg);
                 mSocket.emit("ready", msg, new Ack() {
                     @Override
                     public void call(Object... args) {
@@ -259,6 +273,7 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "answerLevel : "+ msg);
                 mSocket.emit("answerLevel", msg, new Ack() {
                     @Override
                     public void call(Object... args) {
@@ -271,8 +286,8 @@ public class SocketAdapter {
 
     }
 
-    public static void cancelRequest(){
-        if(mSocket == null)
+    public static void cancelRequest() {
+        if (mSocket == null)
             return;
         RequestHolder requestHolder = new RequestHolder();
         Gson gson = new Gson();
