@@ -25,5 +25,9 @@ public class ScoreResult {
         return id;
     }
 
+    public boolean isWinner() {
+        return winner;
+    }
+
 
 }

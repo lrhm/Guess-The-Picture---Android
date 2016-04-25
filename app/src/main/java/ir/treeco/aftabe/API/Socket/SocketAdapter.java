@@ -114,7 +114,6 @@ public class SocketAdapter {
                     String msg = args[0].toString();
                     Log.d(TAG, "result is " + msg);
                     ResultHolder resultHolder = gson.fromJson(msg, ResultHolder.class);
-                    resultHolder.update();
                     callGameResult(resultHolder);
 
                 }
@@ -269,13 +268,9 @@ public class SocketAdapter {
             @Override
             public void run() {
                 Log.d(TAG, "emit:ready " + msg);
-                mSocket.emit("ready", msg, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        Log.d(TAG, "got ready ack");
-                    }
-                });
+                mSocket.emit("ready", msg);
             }
+
         }).run();
 
 

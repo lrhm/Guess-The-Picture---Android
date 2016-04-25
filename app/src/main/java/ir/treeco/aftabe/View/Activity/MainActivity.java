@@ -63,6 +63,7 @@ import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
+import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
@@ -266,6 +267,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         logo.setVisibility(headerViewsVisibility);
         coinBox.setVisibility(headerViewsVisibility);
         digits.setVisibility(headerViewsVisibility);
+
+        playerOne.setVisibility(headerViewsVisibility);
+        playerTwo.setVisibility(headerViewsVisibility);
+        mTimerContainer.setVisibility(headerViewsVisibility);
 
 
     }

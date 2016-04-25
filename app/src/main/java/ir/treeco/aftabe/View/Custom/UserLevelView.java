@@ -276,6 +276,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     }
 
     public void setOnlineStateClear() {
+
         expView.setVisibility(View.GONE);
         stateView.setVisibility(View.GONE);
         mFirstState = true;
@@ -291,9 +292,9 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         if (mFirstState) {
             expView.setVisibility(View.VISIBLE);
             expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(gameActionResult), width, width));
+            mFirstState = false;
             return;
         }
-        mFirstState = false;
         stateView.setVisibility(View.VISIBLE);
         stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(gameActionResult), width, width));
 

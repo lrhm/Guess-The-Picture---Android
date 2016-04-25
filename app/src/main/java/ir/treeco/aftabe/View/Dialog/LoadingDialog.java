@@ -17,6 +17,7 @@ import cn.aigestudio.downloader.bizs.DLManager;
 import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import cn.aigestudio.downloader.interfaces.IDListener;
 import io.socket.client.Socket;
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
@@ -243,7 +244,7 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
             Log.d("TAG", "downloaded");
             mDownloadCount++;
             if (mDownloadCount == 2) {
-                doGameStart(mGameResultHolder);
+                SocketAdapter.setReadyStatus();
             }
         }
     }

@@ -12,35 +12,23 @@ public class ResultHolder {
     @Expose
     String status;
 
-    ScoreStatus scoreStatus;
-
     @Expose
-    ScoreResult[] scoreResult;
-
-    public void update() {
-        scoreStatus = new ScoreStatus();
-        scoreStatus.status = status;
-        scoreStatus.update();
-    }
+    ScoreResult[] scores;
 
 
-    public ScoreResult[] getScoreResult() {
-        return scoreResult;
-    }
-
-    public ScoreStatus getStatus() {
-        return scoreStatus;
+    public ScoreResult[] getScores() {
+        return scores;
     }
 
     public int getMyScoreResult(User myUser){
-        if(myUser.getId().equals(scoreResult[0].getUserId()))
-            return scoreResult[0].getScore();
-        return scoreResult[1].getScore();
+        if(myUser.getId().equals(scores[0].getUserId()))
+            return scores[0].getScore();
+        return scores[1].getScore();
     }
 
     public int getOpponentScoreResult(User myUser){
-        if(myUser.getId().equals(scoreResult[1].getUserId()))
-            return scoreResult[0].getScore();
-        return scoreResult[1].getScore();
+        if(myUser.getId().equals(scores[1].getUserId()))
+            return scores[0].getScore();
+        return scores[1].getScore();
     }
 }

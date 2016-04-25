@@ -126,7 +126,7 @@ public class GameResultFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((MainActivity) getActivity()).setHeaderVisiblity(false);
+        ((MainActivity) getActivity()).setHeaderVisiblity(true);
 
     }
 }

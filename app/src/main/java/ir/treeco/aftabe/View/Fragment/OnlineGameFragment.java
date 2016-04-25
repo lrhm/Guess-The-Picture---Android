@@ -58,6 +58,7 @@ import ir.treeco.aftabe.View.Custom.CheatDrawable;
 import ir.treeco.aftabe.View.Custom.KeyboardView;
 import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
+import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 
 
 public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
@@ -78,6 +79,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     private GameResultHolder mGameResultHolder;
     private int state = 0;
     private ImageView skipButton;
+
+    private ResultHolder mGameResult;
+    private Object lock = new Object();
 
     AnswerObject answerObject;
     MainActivity mainActivity;
@@ -203,8 +207,30 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         }
     }
 
+
     @Override
     public void onDestroy() {
+        if (state == 1) {
+            synchronized (lock) {
+                if (mGameResult == null)
+                    new LoadingForGameResultDialog(getActivity()).show();
+                else {
+                    boolean win = false;
+                    if (mGameResult.getScores()[0].getUserId() == Tools.getCachedUser().getId())
+                        win = mGameResult.getScores()[0].isWinner();
+
+                    if (mGameResult.getScores()[1].getUserId() == Tools.getCachedUser().getId())
+                        win = mGameResult.getScores()[1].isWinner();
+
+                    GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
+                    FragmentTransaction transaction = ( getActivity()).getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, gameResultFragment);
+                    transaction.commit();
+                }
+
+            }
+        }
+
         super.onDestroy();
         ((MainActivity) getActivity()).setOnlineGame(false);
 
@@ -238,7 +264,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             if (state == 1) {
 
+
                 getActivity().getSupportFragmentManager().popBackStack();
+
 
                 return;
             }
@@ -309,9 +337,11 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
                     if (state == 1) {
 
+
                         Log.d(TAG, "return mikonim dg ");
                         getActivity().getSupportFragmentManager().popBackStack();
                         getActivity().getSupportFragmentManager().popBackStack();
+
 
                         return;
                     } else {
@@ -338,7 +368,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(getActivity() == null)
+                if (getActivity() == null)
                     return;
                 ((MainActivity) getActivity()).setTimer(mRemainingTime);
 
@@ -376,6 +406,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
+
+        synchronized (lock) {
+            mGameResult = resultHolder;
+        }
 
     }
 }
