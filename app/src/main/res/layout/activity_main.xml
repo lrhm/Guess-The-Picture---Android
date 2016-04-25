@@ -53,13 +53,11 @@
                 android:contentDescription="@string/nothing"
                 android:visibility="invisible" />
 
-            <TextView
+            <FrameLayout
                 android:id="@+id/timer_online"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="4:20"
-                android:textSize="20sp"
                 android:visibility="gone" />
 
             <ir.treeco.aftabe.View.Custom.UserLevelView

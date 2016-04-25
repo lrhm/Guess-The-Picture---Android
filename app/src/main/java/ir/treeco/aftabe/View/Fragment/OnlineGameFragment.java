@@ -148,7 +148,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         imageView = (ImageView) view.findViewById(R.id.image_game);
         imageView.setOnClickListener(this);
 
-        imagePath = baseUrl + level.getUrl();
+        imagePath = "file://" + getContext().getFilesDir().getPath() + "/online_game/" + level.getUrl();
         Log.d(TAG, imagePath);
 
         Picasso.with(getActivity()).load(imagePath).fit().centerCrop().into(imageView, new Callback() {
@@ -156,24 +156,17 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             public void onSuccess() {
                 Log.d(TAG, "success on image load");
 
-                if (state == 0) {
-                    SocketAdapter.setReadyStatus();
-                    imageView.setVisibility(View.INVISIBLE);
+                mTimer = new Timer();
+                mTimer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (Looper.myLooper() == null)
+                            Looper.prepare();
+                        OnlineGameFragment.this.run();
+                    }
+                }, 1000, 1000);
 
-                }
-                if (state == 1) {
-                    imageView.setVisibility(View.VISIBLE);
-                    answerObject = new AnswerObject(level.getId());
-                    mTimer = new Timer();
-                    mTimer.scheduleAtFixedRate(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (Looper.myLooper() == null)
-                                Looper.prepare();
-                            OnlineGameFragment.this.run();
-                        }
-                    }, 1000, 1000);
-                }
+                answerObject = new AnswerObject(level.getId());
 
 
             }
@@ -345,6 +338,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(getActivity() == null)
+                    return;
                 ((MainActivity) getActivity()).setTimer(mRemainingTime);
 
             }
@@ -369,24 +364,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onGameStart(GameStartObject gameStartObject) {
-        if (Looper.myLooper() == null)
-            Looper.prepare();
-        mainActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                imageView.setVisibility(View.VISIBLE);
-            }
-        });
-        answerObject = new AnswerObject(level.getId());
-        mTimer = new Timer();
-        mTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (Looper.myLooper() == null)
-                    Looper.prepare();
-                OnlineGameFragment.this.run();
-            }
-        }, 1000, 1000);
+
+
     }
 
     @Override

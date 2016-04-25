@@ -2,6 +2,7 @@ package ir.treeco.aftabe.View.Custom;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -19,6 +20,7 @@ import java.util.Random;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 
@@ -36,6 +38,10 @@ public class KeyboardView extends RelativeLayout {
     ImageManager imageManager;
     SizeConverter buttonConvertor;
     String solution;
+
+    double mReaminingLenght;
+    int mMargin;
+
 
     public KeyboardView(Context context, String solution) {
         super(context);
@@ -77,6 +83,7 @@ public class KeyboardView extends RelativeLayout {
         answerConverter = SizeConverter.SizeConvertorFromWidth(baseWidth
                 * (6.f / 100), 77, 77);
 
+
         swipeView = new SwipeView(context);
 
         heightSwipe = (int) (yaroConvertor.mHeight * (0.18));
@@ -85,7 +92,21 @@ public class KeyboardView extends RelativeLayout {
         swipeParams.topMargin = (int) (yaroConvertor.mHeight * (0));
         addView(swipeView, swipeParams);
 
+        LengthManager lengthManager = new LengthManager(getContext());
+
+        mReaminingLenght = SizeManager.getScreenHeight() -lengthManager.getHeaderHeight() - lengthManager.getLevelImageFrameHeight() ;
+
+        Log.d("TAG", "whole" + SizeManager.getScreenHeight());
+        Log.d("TAG", "reamaning " + mReaminingLenght);
+        Log.d("TAG", "header " + lengthManager.getHeaderHeight());
+        Log.d("TAG", "frame " + lengthManager.getLevelImageFrameHeight());
+
+        double wholeButtonsLength = 3.2 * (buttonConvertor.getHeight());
+        mMargin = (int) ((mReaminingLenght - (wholeButtonsLength + (answerConverter.getHeight()))) / 3.);
+
         if (solution.contains("/")) {
+            mMargin = (int) ((mReaminingLenght - (wholeButtonsLength +
+                    (answerConverter.getHeight() * 2.1d))) / 3.);
             getAnswersInALine(solution.split("/")[0], context, true, 1, 0);
             getAnswersInALine(solution.split("/")[1], context, true, 2,
                     solution.split("/")[0].length());
@@ -102,7 +123,11 @@ public class KeyboardView extends RelativeLayout {
         LayoutParams buttonContainerParams = new LayoutParams(getLayoutParams());
 
         int middle, top, offSet;
-        buttonContainerParams.topMargin = (int) (SizeManager.getScreenHeight() * (0.15));
+
+        if (solution.contains("/"))
+            buttonContainerParams.topMargin = (int) (2 * mMargin + 2.1 * (answerConverter.getHeight()));
+        else
+            buttonContainerParams.topMargin = 2 * mMargin + answerConverter.getHeight();
         top = buttonContainerParams.topMargin;
         int j = 0;
         int k = 0;
@@ -172,13 +197,13 @@ public class KeyboardView extends RelativeLayout {
         paramsLamp.topMargin = buttonConvertor.getHeight()
                 + buttonConvertor.getHeight() / 10;
         KeyView lamp = new KeyView(context, KeyView.TYPE_CENTER,
-                KeyView.MODE_BUTTON , availableGuesses.get(k++));
+                KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
         paramsLamp.leftMargin = mmiddle - moffSet;
-        lamp.setXY(paramsLamp.leftMargin , paramsLamp.topMargin + buttonContainerParams.topMargin );
+        lamp.setXY(paramsLamp.leftMargin, paramsLamp.topMargin + buttonContainerParams.topMargin);
         buttonContainer.addView(lamp, paramsLamp);
         buttons[j++] = lamp;
-        buttons[j-1].index = j-1;
+        buttons[j - 1].index = j - 1;
 
 
         for (int i = 0; i < 3; i++) {
@@ -233,15 +258,13 @@ public class KeyboardView extends RelativeLayout {
         int topMargin = 0;
         if (isTwoLine) {
             if (lineNumber == 1) {
-                topMargin = (int) (SizeManager.getScreenHeight() * (0.05)
-                        - answerConverter.mHeight / 2 - 1);
+                topMargin = mMargin;
             }
             if (lineNumber == 2) {
-                topMargin = (int) (SizeManager.getScreenHeight() * (0.05)
-                        + answerConverter.mHeight / 2 + 1);
+                topMargin = (int) (mMargin + answerCointainer.getHeight() * 1.1d);
             }
         } else {
-            topMargin = (int) (SizeManager.getScreenHeight() * (0.15)/2 - answerConverter.mHeight/2 );
+            topMargin = mMargin;
         }
         int indexer = (lineNumber == 1) ? 0 : otherAnswerCount;
         answerParams.topMargin = topMargin;
@@ -855,8 +878,8 @@ public class KeyboardView extends RelativeLayout {
                         height = answerConverter.mHeight;
                         width = answerConverter.mWidth;
                     }
-                    if(mode == MODE_BUTTON){
-                        drawAble =R.drawable.keyboardcenterbutton;
+                    if (mode == MODE_BUTTON) {
+                        drawAble = R.drawable.keyboardcenterbutton;
                         height = buttonConvertor.mHeight;
                         width = buttonConvertor.mWidth;
                     }

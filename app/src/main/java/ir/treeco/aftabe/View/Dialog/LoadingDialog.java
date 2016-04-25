@@ -5,11 +5,17 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import java.io.File;
+
+import cn.aigestudio.downloader.bizs.DLManager;
+import cn.aigestudio.downloader.interfaces.DLTaskListener;
+import cn.aigestudio.downloader.interfaces.IDListener;
 import io.socket.client.Socket;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
@@ -18,15 +24,18 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 
 /**
  * Created by al on 3/16/16.
  */
-public class LoadingDialog extends Dialog implements Runnable, SocketListener {
+public class LoadingDialog extends Dialog implements Runnable, SocketListener, DownloadTask.DownloadTaskListener {
 
     Context context;
     private boolean mDismissed = false;
@@ -35,12 +44,19 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
     private static int mLoadingImageWidth = 0, mLoadingImageHeight = 0;
     private ImageManager imageManager;
     private static int[] mImageLoadingIds;
+    private GameResultHolder mGameResultHolder;
+    private static final Object lock = new Object();
+    private int mDownloadCount = 0;
+
+    String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
+
 
     public LoadingDialog(Context context) {
         super(context);
         this.context = context;
         imageManager = new ImageManager(context);
         initImageLoading();
+
 
     }
 
@@ -62,7 +78,6 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
 
 
     }
-
 
 
     private void initImageLoading() {
@@ -137,19 +152,76 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
 
         SocketAdapter.removeSocketListener(this);
         SocketAdapter.cancelRequest();
-        
+
         super.onBackPressed();
+    }
+
+    public void clearFiles() {
+        final String path = context.getFilesDir().getPath() + "/online_game";
+        Log.d("TAG", path);
+
+        File parent = new File(path);
+        if (!parent.exists()) {
+            return;
+        }
+
+        for (File f : parent.listFiles())
+            f.delete();
+
+    }
+
+    public void downloadURL(String url) {
+        final String path = context.getFilesDir().getPath() + "/online_game";
+        Log.d("TAG", path);
+
+        File parent = new File(path);
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+
+        new DownloadTask(context, this).execute(url, path);
     }
 
     @Override
     public void onGotGame(GameResultHolder gameHolder) {
-        SocketAdapter.removeSocketListener(this);
 
+
+        mGameResultHolder = gameHolder;
+        clearFiles();
+        String imagePath = baseUrl + gameHolder.getLevels()[0].getUrl();
+        downloadURL(imagePath);
+
+        imagePath = baseUrl + gameHolder.getLevels()[1].getUrl();
+
+        downloadURL(imagePath);
+
+
+    }
+
+    public void doGameStart(GameResultHolder gameHolder) {
+
+
+        SocketAdapter.removeSocketListener(this);
+        dismiss();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("state", 0);
+
+        OnlineGameFragment gameFragment = new OnlineGameFragment();
+        gameFragment.setGameResultHolder(gameHolder);
+        gameFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, gameFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 
     @Override
     public void onGameStart(GameStartObject gameStartObject) {
+
+        doGameStart(mGameResultHolder);
 
     }
 
@@ -162,6 +234,23 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener {
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
         Log.d(this.getClass().getName(), "should not happen");
+
+    }
+
+    @Override
+    public void onDownloadSuccess() {
+        synchronized (lock) {
+            Log.d("TAG", "downloaded");
+            mDownloadCount++;
+            if (mDownloadCount == 2) {
+                doGameStart(mGameResultHolder);
+            }
+        }
+    }
+
+    @Override
+    public void onDownloadError(String error) {
+        Log.d("TAG", "dodwnload error " + error);
 
     }
 }

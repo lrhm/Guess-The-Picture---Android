@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,17 +30,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
@@ -61,18 +56,16 @@ import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
-import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
+import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
-import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
-import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 
@@ -98,7 +91,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public UserLevelView playerOne;
     public UserLevelView playerTwo;
     public MainFragment mainFragment;
-    public TextView timerTextView;
+    public TimerView mTimerView;
+    public FrameLayout mTimerContainer;
     private ImageView coinBox;
     private GoogleSignInOptions mGoogleSignInOptions;
     private GoogleApiClient mGoogleApiClient;
@@ -125,6 +119,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     private void initActivity() {
+
+        initSizes();
+
         mUserFoundListeners = new ArrayList<>();
 
         tools = new Tools(getApplication());
@@ -137,7 +134,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         logo = (ImageView) findViewById(R.id.logo);
         playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
         playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
-        timerTextView = (TextView) findViewById(R.id.timer_online);
+        mTimerView = new TimerView(this);
+        mTimerContainer = ((FrameLayout) findViewById(R.id.timer_online));
+        mTimerContainer.addView(mTimerView);
 
         setUpPlayers();
 
@@ -161,7 +160,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpCoinBox();
         setUpHeader();
         setOriginalBackgroundColor();
-        initSizes();
 
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
 
@@ -243,12 +241,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         playerOne.setVisibility(onlineViewsVisibility);
         playerTwo.setVisibility(onlineViewsVisibility);
-        timerTextView.setVisibility(onlineViewsVisibility);
+        mTimerContainer.setVisibility(onlineViewsVisibility);
 
     }
 
     public void setTimer(int time) {
-        timerTextView.setText(time + "");
+        mTimerView.setTimer(time);
     }
 
     public void setOnlineGameUser(User op) {
@@ -563,20 +561,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGotGame(GameResultHolder gameHolder) {
 
-        mLoadingDialog.dismiss();
-        //  SocketAdapter.setReadyStatus();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("state", 0);
-
-        OnlineGameFragment gameFragment = new OnlineGameFragment();
-        gameFragment.setGameResultHolder(gameHolder);
-        gameFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, gameFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
 
     }
 
