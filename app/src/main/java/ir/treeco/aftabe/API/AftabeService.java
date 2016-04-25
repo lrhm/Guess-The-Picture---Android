@@ -1,8 +1,10 @@
 package ir.treeco.aftabe.API;
 
-import java.util.List;
+import java.util.HashMap;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
+import ir.treeco.aftabe.API.Utils.FriendRequestSent;
+import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
@@ -15,6 +17,7 @@ import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
 import retrofit.Call;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -64,4 +67,29 @@ public interface AftabeService {
 
     @PUT("/api/users/{user_id}")
     Call<User> updateCoin(@Body CoinDiffHolder coinDiffHolder, @Path("user_id") String userId, @Query("access_token") String accessToken);
+
+    @PUT("/api/users/{user_id}/requests/rel/{friend_id}")
+    Call<FriendRequestSent> requestFriend(@Path("user_id") String userId, @Path("friend_id") String friendId,
+                                          @Query("access_token") String accessToken);
+
+    @GET("/api/users/{user_id}/requests")
+    Call<User[]> getListOfSentFriendRequests(@Path("user_id") String userId, @Query("access_token") String accessToken);
+
+    @DELETE("/api/users/{user_id}/requests/rel/{friend_id}")
+    Call<HashMap<String, Object>> setCancelFriendRequest(@Path("user_id") String userId, @Path("friend_id") String friendId,
+                                                      @Query("access_token") String accessToken);
+
+    @GET("/api/users/myrequests")
+    Call<User[]> getListOfFriendRequestsToMe(@Query("access_token") String accessToken);
+
+    @GET("/api/users/{user_id}/friends/")
+    Call<User[]> getListOfMyFriends(@Path("user_id") String userId, @Query("access_token") String accessToken);
+
+    @DELETE("/api/users/{user_id}/friends/rel/{friend_id}")
+    Call<HashMap<String, Object>> setRemoveFriend(@Path("user_id") String userId, @Path("friend_id") String friendId,
+                                               @Query("access_token") String accessToken);
+
+    @PUT("/api/users/{user_id}")
+    Call<User> updateGCMToken(@Path("user_id") String userId, @Query("access_token") String accessToken,
+                              @Body GCMTokenHolder gcmTokenHolder);
 }

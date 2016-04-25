@@ -2,16 +2,17 @@ package ir.treeco.aftabe.API;
 
 import android.util.Log;
 
+import com.google.android.gms.common.api.Batch;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.okhttp.OkHttpClient;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
+import ir.treeco.aftabe.API.Utils.FriendRequestSent;
+import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
@@ -24,6 +25,7 @@ import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
+import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
 import retrofit.Call;
@@ -389,7 +391,7 @@ public class AftabeAPIAdapter {
         });
     }
 
-    public static void getLoaderboard(User myUser, final LeaderboardUserListener leaderboardUserListener) {
+    public static void getLoaderboard(User myUser, final BatchUserFoundListener leaderboardUserListener) {
         init();
         Call<LeaderboardContainer> call = aftabeService.getLeaderboard(myUser.getLoginInfo().getAccessToken(), "score");
         call.enqueue(new Callback<LeaderboardContainer>() {
@@ -400,7 +402,7 @@ public class AftabeAPIAdapter {
                 if (!response.isSuccess())
                     leaderboardUserListener.onGotError();
                 else
-                    leaderboardUserListener.onGotLeaderboard(response.body().getBoard());
+                    leaderboardUserListener.onGotUserList(response.body().getBoard());
             }
 
             @Override
@@ -429,6 +431,197 @@ public class AftabeAPIAdapter {
             public void onFailure(Throwable t) {
                 Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
 
+            }
+        });
+    }
+
+    public static void updateGCMToken(String gcmToken) {
+
+        User myUser = Tools.getCachedUser();
+        if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
+            return;
+
+        init();
+
+        GCMTokenHolder gcmTokenHolder = new GCMTokenHolder(gcmToken);
+
+        Call<User> call = aftabeService.updateGCMToken(myUser.getId(), myUser.getLoginInfo().getAccessToken(), gcmTokenHolder);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Response<User> response) {
+                if (response.isSuccess())
+                    if (response.body() != null) {
+                        Prefs.putBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, true);
+                        return;
+                    }
+                Prefs.putBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Prefs.putBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
+
+            }
+        });
+
+    }
+
+    public static void requestFriend(User myUser, String friendId, final OnFriendRequest onFriendRequest) {
+
+        init();
+
+        Call<FriendRequestSent> call = aftabeService.requestFriend(myUser.getId(), friendId, myUser.getLoginInfo().getAccessToken());
+        call.enqueue(new Callback<FriendRequestSent>() {
+            @Override
+            public void onResponse(Response<FriendRequestSent> response) {
+
+                if (response.isSuccess())
+                    if (response.body() != null) {
+                        onFriendRequest.onFriendRequestSent();
+
+                        return;
+                    }
+                onFriendRequest.onFriendRequestFailedToSend();
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+                onFriendRequest.onFriendRequestFailedToSend();
+            }
+        });
+
+    }
+
+    public static void getListOfSentFriendRequests(User myUser, final BatchUserFoundListener listener) {
+        init();
+
+        Call<User[]> call = aftabeService.getListOfSentFriendRequests(myUser.getId(), myUser.getLoginInfo().getAccessToken());
+
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+                if (response.isSuccess()) {
+                    if (response.body() != null && response.body().length != 0) {
+                        listener.onGotUserList(response.body());
+                        return;
+                    }
+                    return;
+                }
+                listener.onGotError();
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+                listener.onGotError();
+
+            }
+        });
+
+    }
+
+    public static void cancelFriendRequest(User myUser, String friendId, final OnCancelFriendReqListener listener) {
+
+        init();
+
+        Call<HashMap<String, Object>> call = aftabeService.setCancelFriendRequest(myUser.getId(), friendId, myUser.getLoginInfo().getAccessToken());
+        call.enqueue(new Callback<HashMap<String, Object>>() {
+            @Override
+            public void onResponse(Response<HashMap<String, Object>> response) {
+                if (response.isSuccess()) {
+                    listener.onSuccess();
+                    //TODO maybe change this
+                    return;
+                }
+                listener.onFail();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onFail();
+            }
+        });
+    }
+
+    public static void getListOfFriendRequestsToMe(User myUser, final BatchUserFoundListener listener) {
+
+        init();
+
+        Call<User[]> call = aftabeService.getListOfFriendRequestsToMe(myUser.getLoginInfo().getAccessToken());
+
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+                if (response.isSuccess()) {
+                    if (response.body().length != 0) {
+                        listener.onGotUserList(response.body());
+                        return;
+                    }
+                    return;
+                }
+                listener.onGotError();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onGotError();
+            }
+        });
+    }
+
+    public static void getListOfMyFriends(User myUser, final BatchUserFoundListener listener) {
+
+        init();
+
+        Call<User[]> call = aftabeService.getListOfMyFriends(myUser.getId(), myUser.getLoginInfo().getAccessToken());
+
+        call.enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+                if (response.isSuccess()) {
+                    if (response.body().length != 0) {
+                        listener.onGotUserList(response.body());
+                        return;
+                    }
+
+                    return;
+                }
+                listener.onGotError();
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onGotError();
+            }
+        });
+    }
+
+
+    public static void removeFriend(User myUser, String friendId, final OnCancelFriendReqListener listener) {
+        init();
+
+        Call<HashMap<String, Object>> call = aftabeService.setRemoveFriend(myUser.getId(), friendId, myUser.getLoginInfo().getAccessToken());
+
+        call.enqueue(new Callback<HashMap<String, Object>>() {
+            @Override
+            public void onResponse(Response<HashMap<String, Object>> response) {
+
+                if (response.isSuccess()) {
+                    listener.onSuccess();
+                    return;
+                }
+                listener.onFail();
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onFail();
             }
         });
     }

@@ -759,6 +759,7 @@ public class Tools {
     public static User getCachedUser() {
         if (Prefs.contains(Tools.USER_SAVED_DATA)) {
             String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
+            Log.d(TAG, "get cached user " + jsonString);
             Gson gson = new Gson();
             return gson.fromJson(jsonString, User.class);
         }

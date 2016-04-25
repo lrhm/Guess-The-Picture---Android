@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.Object;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -184,13 +186,15 @@ public class User {
         return levelCalculator.getLevel();
     }
 
-    public int getExp(){
+    public int getExp() {
         levelCalculator = new LevelCalculator(score);
         return levelCalculator.getExp();
     }
 
     public boolean isMe() {
-        return isMe;
+
+        return (getId() == null || Tools.getCachedUser() == null || Tools.getCachedUser().getId() == null) ?
+                isMe : Tools.getCachedUser().getId().equals(getId());
     }
 
     public void setOwnerMe() {

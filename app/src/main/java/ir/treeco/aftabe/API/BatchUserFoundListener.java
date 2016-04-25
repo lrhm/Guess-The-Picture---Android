@@ -5,9 +5,9 @@ import ir.treeco.aftabe.Object.User;
 /**
  * Created by al on 3/13/16.
  */
-public interface LeaderboardUserListener {
+public interface BatchUserFoundListener {
 
-    void onGotLeaderboard(User[] users);
+    void onGotUserList(User[] users);
 
     void onGotError();
 

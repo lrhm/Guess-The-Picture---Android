@@ -22,6 +22,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.io.IOException;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.R;
 
 /**
@@ -65,10 +66,8 @@ public class RegistrationIntentService extends IntentService {
     }
 
     private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed. TODO
 
-        Prefs.putBoolean(SENT_TOKEN_TO_SERVER, true);
-
+        AftabeAPIAdapter.updateGCMToken(token);
     }
 
 }

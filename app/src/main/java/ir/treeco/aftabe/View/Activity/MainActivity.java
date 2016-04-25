@@ -486,6 +486,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGetUser(User user) {
         Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
         if (user.isMe()) {
+            Log.d(TAG, user.getLoginInfo().getAccessToken());
+
             myUser = user;
             Gson gson = new Gson();
             Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));

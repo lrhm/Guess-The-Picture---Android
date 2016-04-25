@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.LeaderboardUserListener;
+import ir.treeco.aftabe.API.BatchUserFoundListener;
 import ir.treeco.aftabe.Adapter.LeaderboardAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.Util.Tools;
@@ -22,7 +22,7 @@ import ir.treeco.aftabe.Util.Tools;
 /**
  * Created by al on 1/22/16.
  */
-public class LeaderboardFragment extends Fragment implements LeaderboardUserListener {
+public class LeaderboardFragment extends Fragment implements BatchUserFoundListener {
 
 
     LeaderboardAdapter mAdapter;
@@ -43,11 +43,12 @@ public class LeaderboardFragment extends Fragment implements LeaderboardUserList
     }
 
     @Override
-    public void onGotLeaderboard(User[] users) {
+    public void onGotUserList(User[] users) {
 
-        Log.d("TAG", "on got leaderboad");
+        Log.d("TAG", "on got leaderboad size of " + users.length);
         for (int i = 0; i < users.length; i++) {
             mAdapter.addUser(users[i]);
+            Log.d(this.getClass().getSimpleName(), new Gson().toJson(users[i]));
         }
     }
 
