@@ -54,11 +54,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         mRequests = requests == null ? new ArrayList<User>() : requests;
         mContacts = contacts == null ? new ArrayList<User>() : contacts;
         mSearched = searched == null ? new ArrayList<User>() : searched;
-        User tmp = new User();
-        tmp.setScore(23);
-        tmp.setName("ali");
 
-        mContacts.add(tmp);
         arrayLists = new ArrayList<>();
         arrayLists.add(mSearched);
         arrayLists.add(mRequests);

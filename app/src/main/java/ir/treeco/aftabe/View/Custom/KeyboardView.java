@@ -241,7 +241,7 @@ public class KeyboardView extends RelativeLayout {
                         + answerConverter.mHeight / 2 + 1);
             }
         } else {
-            topMargin = (int) (SizeManager.getScreenHeight() * (0.05));
+            topMargin = (int) (SizeManager.getScreenHeight() * (0.15)/2 - answerConverter.mHeight/2 );
         }
         int indexer = (lineNumber == 1) ? 0 : otherAnswerCount;
         answerParams.topMargin = topMargin;

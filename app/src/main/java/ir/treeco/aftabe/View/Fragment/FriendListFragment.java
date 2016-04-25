@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.BatchUserFoundListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -47,7 +48,7 @@ import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
         MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener {
 
-
+    ArrayAdapter<String> searchBarAdapter;
     ImageManager imageManager;
     RecyclerView mFriendsRecyclerView;
     FriendsAdapter mFriendsAdapter;
@@ -69,6 +70,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
@@ -87,15 +90,13 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         setUpAdapters();
         setUpRecylerViews();
 
-        String[] objct = new String[6];
-        objct[0] = "asghar";
-        objct[1] = "ahmad";
-        objct[5] = "ahmagh";
-        objct[2] = "sahar";
-        objct[3] = "golpar";
-        objct[4] = "saghi";
-
-
+//        String[] objct = new String[6];
+//        objct[0] = "asghar";
+//        objct[1] = "ahmad";
+//        objct[5] = "ahmagh";
+//        objct[2] = "sahar";
+//        objct[3] = "golpar";
+//        objct[4] = "saghi";
 
 
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.search_text_input_layout);
@@ -107,11 +108,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         mAutoCompleteTextView = (MyAutoCompleteTextView) view.findViewById(R.id.search_text_view);
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, objct);
+        searchBarAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line);
 
 
-        mAutoCompleteTextView.setAdapter(adapter);
+        mAutoCompleteTextView.setAdapter(searchBarAdapter);
         mAutoCompleteTextView.setOnKeyboardDismiss(this);
         mAutoCompleteTextView.addTextChangedListener(this);
         mAutoCompleteTextView.setOnEditorActionListener(this);
@@ -130,14 +131,51 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void setUpAdapters() {
 
-        ArrayList<User> users = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            User tmp = new User();
-            tmp.setScore(5);
-            tmp.setName("asghar");
-            users.add(tmp);
-        }
-        mFriendsAdapter = new FriendsAdapter(users, null, null, null);
+
+        User myUser = ((MainActivity) getActivity()).getMyUser();
+
+
+
+        mFriendsAdapter = new FriendsAdapter(null, null, null, null);
+
+        if(myUser == null) //TODO check geting user
+            return;
+
+        AftabeAPIAdapter.getListOfMyFriends(myUser, new BatchUserFoundListener() {
+            @Override
+            public void onGotUserList(final User[] users) {
+                FriendListFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (User user : users)
+                            mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+                    }
+                });
+            }
+
+            @Override
+            public void onGotError() {
+
+            }
+        });
+
+        AftabeAPIAdapter.getListOfFriendRequestsToMe(myUser, new BatchUserFoundListener() {
+            @Override
+            public void onGotUserList(final User[] users) {
+                FriendListFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (User user : users)
+                            mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_REQUEST);
+                    }
+                });
+            }
+
+            @Override
+            public void onGotError() {
+
+            }
+        });
 
 
     }
@@ -229,6 +267,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     @Override
     public void onGetError() {
-        Toast.makeText(getContext() , "user not found" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "user not found", Toast.LENGTH_SHORT).show();
     }
 }
