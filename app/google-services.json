@@ -11,13 +11,21 @@
         "client_id": "android:ir.treeco.aftabe",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "ir.treeco.aftabe"
+          "package_name": "ir.treeco.aftabe",
+          "certificate_hash": []
         }
       },
       "oauth_client": [
         {
+          "client_id": "294812968005-irbh1e40730r3imved61ebpg5ut6bf4m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ir.treeco.aftabe",
+            "certificate_hash": "BFE6BC2BE0E8A271A095CCAF14A6A73D29C06403"
+          }
+        },
+        {
           "client_id": "294812968005-bseo26d77a39kj3mbjmgmqkaacnk4clm.apps.googleusercontent.com",
-
           "client_type": 1,
           "android_info": {
             "package_name": "ir.treeco.aftabe",
@@ -35,7 +43,7 @@
           "status": 1
         },
         "cloud_messaging_service": {
-          "status": 1,
+          "status": 2,
           "apns_config": []
         },
         "appinvite_service": {

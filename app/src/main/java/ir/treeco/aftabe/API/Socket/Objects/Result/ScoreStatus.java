@@ -11,8 +11,7 @@ public class ScoreStatus {
         TimeOut, Finish
     }
 
-    @Expose
-    String status;
+    public String status;
 
     State state;
 

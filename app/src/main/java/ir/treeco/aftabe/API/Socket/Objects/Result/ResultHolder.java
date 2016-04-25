@@ -10,13 +10,17 @@ import ir.treeco.aftabe.Object.User;
 public class ResultHolder {
 
     @Expose
-    ScoreStatus status;
+    String status;
+
+    ScoreStatus scoreStatus;
 
     @Expose
     ScoreResult[] scoreResult;
 
     public void update() {
-        status.update();
+        scoreStatus = new ScoreStatus();
+        scoreStatus.status = status;
+        scoreStatus.update();
     }
 
 
@@ -25,7 +29,7 @@ public class ResultHolder {
     }
 
     public ScoreStatus getStatus() {
-        return status;
+        return scoreStatus;
     }
 
     public int getMyScoreResult(User myUser){

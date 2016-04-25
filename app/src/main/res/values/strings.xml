@@ -13,6 +13,8 @@
     <string name="empty_list">بسته‌ای وجود ندارد</string>
     <string name="updated_time_shared_preference">updatedTime</string>
     <string name="domain_url_head_json">http://rsdn.ir/files/aftabe/head.json</string>
+    <string name="gcm_permission">ir.treeco.aftabeplus.GCM.PERMISSION</string>
+    <string name="gcm_default_SenderId">294812968005</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

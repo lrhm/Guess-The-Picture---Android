@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -126,13 +127,14 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         skipButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.skipbutton, skipbuttonConverter.mWidth,
                 skipbuttonConverter.mHeight));
-        FrameLayout.LayoutParams skipButtonLP = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        RelativeLayout.LayoutParams skipButtonLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         skipButtonLP.leftMargin = leftMargin;
+        skipButtonLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.362);
 
 
         if (state == 0)
-            frameLayout.addView(skipButton, skipButtonLP);
+            ((RelativeLayout) view).addView(skipButton, skipButtonLP);
 
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override

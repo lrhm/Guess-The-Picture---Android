@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
@@ -56,6 +57,7 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
@@ -174,10 +176,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
                 .build();
 
+
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
         DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
         AftabeAPIAdapter.tryToLogin(this);
+
+
+        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
 
@@ -238,8 +247,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    public void setTimer(int time){
-        timerTextView.setText(time+"");
+    public void setTimer(int time) {
+        timerTextView.setText(time + "");
     }
 
     public void setOnlineGameUser(User op) {
@@ -470,6 +479,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(this, "failed to connect to google", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -552,7 +562,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGotGame(GameResultHolder gameHolder) {
 
         mLoadingDialog.dismiss();
-      //  SocketAdapter.setReadyStatus();
+        //  SocketAdapter.setReadyStatus();
 
         Bundle bundle = new Bundle();
         bundle.putInt("state", 0);
@@ -561,7 +571,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         gameFragment.setGameResultHolder(gameHolder);
         gameFragment.setArguments(bundle);
 
-        FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, gameFragment);
         transaction.addToBackStack(null);
         transaction.commit();

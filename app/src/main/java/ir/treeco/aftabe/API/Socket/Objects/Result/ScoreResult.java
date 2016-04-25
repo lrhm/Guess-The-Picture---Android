@@ -8,7 +8,7 @@ import com.google.gson.annotations.Expose;
 public class ScoreResult {
 
     @Expose
-    String userId;
+    String id;
 
     @Expose
     int score;
@@ -22,7 +22,7 @@ public class ScoreResult {
     }
 
     public String getUserId() {
-        return userId;
+        return id;
     }
 
 

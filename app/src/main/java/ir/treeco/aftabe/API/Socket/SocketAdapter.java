@@ -39,6 +39,9 @@ public class SocketAdapter {
 
     private static ArrayList<SocketListener> listeners = new ArrayList<>();
 
+    private static final Object lock = new Object();
+
+
     private static Socket mSocket;
     private static Context mContext;
 
@@ -50,11 +53,15 @@ public class SocketAdapter {
     }
 
     public static void addSocketListener(SocketListener socketListener) {
-        listeners.add(socketListener);
+        synchronized (lock) {
+            listeners.add(socketListener);
+        }
     }
 
     public static void removeSocketListener(SocketListener socketListener) {
-        listeners.remove(socketListener);
+        synchronized (lock) {
+            listeners.remove(socketListener);
+        }
     }
 
     private static void initSocket() {
@@ -220,24 +227,34 @@ public class SocketAdapter {
     }
 
     private static void callGameStart(GameStartObject gameStartObject) {
-        for (SocketListener socketListener : listeners)
-            socketListener.onGameStart(gameStartObject);
+
+        synchronized (lock) {
+            for (SocketListener socketListener : listeners)
+                socketListener.onGameStart(gameStartObject);
+        }
 
     }
 
     private static void callGameRequestResult(GameResultHolder gameResultHolder) {
-        for (SocketListener socketListener : listeners)
-            socketListener.onGotGame(gameResultHolder);
+        synchronized (lock) {
+
+            for (SocketListener socketListener : listeners)
+                socketListener.onGotGame(gameResultHolder);
+        }
     }
 
     private static void callGameResult(ResultHolder resultHolder) {
-        for (SocketListener socketListener : listeners)
-            socketListener.onFinishGame(resultHolder);
+        synchronized (lock) {
+            for (SocketListener socketListener : listeners)
+                socketListener.onFinishGame(resultHolder);
+        }
     }
 
     private static void callGameActions(UserActionHolder userActionHolder) {
-        for (SocketListener socketListener : listeners)
-            socketListener.onGotUserAction(userActionHolder);
+        synchronized (lock) {
+            for (SocketListener socketListener : listeners)
+                socketListener.onGotUserAction(userActionHolder);
+        }
     }
 
     public static void setReadyStatus() {
@@ -273,7 +290,7 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "answerLevel : "+ msg);
+                Log.d(TAG, "answerLevel : " + msg);
                 mSocket.emit("answerLevel", msg, new Ack() {
                     @Override
                     public void call(Object... args) {

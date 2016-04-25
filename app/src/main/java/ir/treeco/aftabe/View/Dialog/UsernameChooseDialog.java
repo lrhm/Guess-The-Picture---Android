@@ -101,13 +101,13 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         RelativeLayout.LayoutParams lpAcceptButton = (RelativeLayout.LayoutParams) mAcceptButton.getLayoutParams();
         lpAcceptButton.width = (int) (SizeManager.getScreenWidth() * 0.8);
         lpAcceptButton.height = (int) (SizeManager.getScreenHeight() * 0.1);
-        lpAcceptButton.leftMargin = (int) (SizeManager.getScreenWidth() * 0.05);
+        lpAcceptButton.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
 
         RelativeLayout.LayoutParams lpTextInput = (RelativeLayout.LayoutParams) mEditText.getLayoutParams();
         lpTextInput.width = (int) (SizeManager.getScreenWidth() * 0.8);
         lpTextInput.height = (int) (SizeManager.getScreenHeight() * 0.1);
         lpTextInput.topMargin = (int) (SizeManager.getScreenHeight() * 0.35);
-        lpTextInput.leftMargin = (int) (SizeManager.getScreenWidth() * 0.05);
+        lpTextInput.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
 
         RelativeLayout.LayoutParams lpProgressBar = (RelativeLayout.LayoutParams) mProgressBar.getLayoutParams();
         lpProgressBar.topMargin = (int) (SizeManager.getScreenHeight() * 0.38);

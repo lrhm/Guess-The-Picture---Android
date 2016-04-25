@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
+    <permission android:name="ir.treeco.aftabe.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="ir.treeco.aftabe.permission.C2D_MESSAGE" />
+
     <application
         android:name=".MainApplication"
         android:icon="@drawable/aftabe_icon"
@@ -56,6 +60,45 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
 
         <service android:name="ir.tapsell.tapsellvideosdk.services.asynchservices.core.HttpService"></service>
+
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="ir.treeco.aftabe" />
+
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="ir.treeco.aftabe" />
+
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="ir.treeco.aftabe.Service.RegistrationIntentService"
+            android:exported="false">
+        </service>
+
+        <service
+            android:name="ir.treeco.aftabe.Service.GcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="ir.treeco.aftabe.Service.InstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

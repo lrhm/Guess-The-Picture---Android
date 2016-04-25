@@ -283,6 +283,9 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     public void setOnlineState(GameActionResult gameActionResult) {
 
+        Log.d(this.getClass().getSimpleName(), "got user action " + mFirstState);
+        Log.d(this.getClass().getSimpleName(), "got user action " + gameActionResult.getResult().toString());
+
         int width = (int) (SizeManager.getScreenWidth() * mDimension);
 
         if (mFirstState) {
