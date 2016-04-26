@@ -60,6 +60,15 @@
                 android:layout_centerInParent="true"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:id="@+id/star_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                />
+
             <ir.treeco.aftabe.View.Custom.UserLevelView
                 android:id="@+id/player1_online_game"
                 android:layout_width="wrap_content"
@@ -87,8 +96,6 @@
             android:layout_height="fill_parent"></FrameLayout>
 
     </LinearLayout>
-
-
 
 
 </FrameLayout>

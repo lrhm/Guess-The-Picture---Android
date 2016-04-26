@@ -56,6 +56,8 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
         super(context);
         this.context = context;
         imageManager = new ImageManager(context);
+
+
         initImageLoading();
 
 
@@ -151,7 +153,6 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
     @Override
     public void onBackPressed() {
 
-        SocketAdapter.removeSocketListener(this);
         SocketAdapter.cancelRequest();
 
         super.onBackPressed();
@@ -199,10 +200,18 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
 
     }
 
-    public void doGameStart(GameResultHolder gameHolder) {
+    @Override
+    public void onDetachedFromWindow() {
 
 
         SocketAdapter.removeSocketListener(this);
+
+        super.onDetachedFromWindow();
+    }
+
+    public void doGameStart(GameResultHolder gameHolder) {
+
+
         dismiss();
 
         Bundle bundle = new Bundle();

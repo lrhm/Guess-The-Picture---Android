@@ -50,6 +50,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         super(context);
         this.context = context;
         imageManager = new ImageManager(context);
+        ((MainActivity) context).setLoadingForGameResultDialog(this);
         initImageLoading();
 
 
@@ -160,14 +161,6 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     }
 
     @Override
-    public void onBackPressed() {
-
-        SocketAdapter.removeSocketListener(this);
-
-        super.onBackPressed();
-    }
-
-    @Override
     public void onGotGame(GameResultHolder gameHolder) {
 
 
@@ -196,10 +189,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         dismiss();
 
         boolean win = false;
-        if(resultHolder.getScores()[0].getUserId() == Tools.getCachedUser().getId() )
+        if (resultHolder.getScores()[0].getUserId().equals(Tools.getCachedUser().getId()))
             win = resultHolder.getScores()[0].isWinner();
 
-        if(resultHolder.getScores()[1].getUserId() == Tools.getCachedUser().getId() )
+        if (resultHolder.getScores()[1].getUserId().equals(Tools.getCachedUser().getId()))
             win = resultHolder.getScores()[1].isWinner();
 
         GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
@@ -209,4 +202,11 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         transaction.commit();
     }
 
+
+    @Override
+    public void onDetachedFromWindow() {
+        SocketAdapter.removeSocketListener(this);
+        ((MainActivity) context).setLoadingForGameResultDialog(null);
+        super.onDetachedFromWindow();
+    }
 }

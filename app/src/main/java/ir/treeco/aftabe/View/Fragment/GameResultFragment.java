@@ -3,6 +3,7 @@ package ir.treeco.aftabe.View.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,9 @@ public class GameResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ((MainActivity) getActivity()).setHeaderVisiblity(false);
+
+        Log.d("TAG", "win is " + mWin);
+        ((MainActivity) getActivity()).setGameResult(true);
 
         View view = inflater.inflate(R.layout.fragment_game_result, container, false);
         User myUser = Tools.getCachedUser();
@@ -79,7 +82,6 @@ public class GameResultFragment extends Fragment {
         initShapeLP(firstShapeContainer.getLayoutParams());
         initShapeLP(secondShapeContainer.getLayoutParams());
         initShapeLP(secShapeContainerTmp.getLayoutParams());
-
 
 
         myUserLevelView.setUser(myUser);
@@ -106,6 +108,7 @@ public class GameResultFragment extends Fragment {
     }
 
     private void initResultImageView(ImageView resultImageView) {
+
         int imgId = (mWin) ? R.drawable.aftabewin : R.drawable.aftabelose;
         int width = (int) (SizeManager.getScreenWidth() * 0.7);
 
@@ -126,7 +129,7 @@ public class GameResultFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((MainActivity) getActivity()).setHeaderVisiblity(true);
+        ((MainActivity) getActivity()).setGameResult(false);
 
     }
 }

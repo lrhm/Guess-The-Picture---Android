@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -59,6 +60,7 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
+import ir.treeco.aftabe.View.Custom.StarView;
 import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
@@ -102,7 +104,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private User myUser = null;
     private ArrayList<UserFoundListener> mUserFoundListeners;
     private LoadingDialog mLoadingDialog;
-
+    private LinearLayout starContainer;
+    private StarView[] starViews;
+    LoadingForGameResultDialog mLoadingForGameResultDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +142,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTimerView = new TimerView(this);
         mTimerContainer = ((FrameLayout) findViewById(R.id.timer_online));
         mTimerContainer.addView(mTimerView);
+
+        starContainer = (LinearLayout) findViewById(R.id.star_container);
+        initStars();
 
         setUpPlayers();
 
@@ -188,6 +195,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+
+    public void initStars() {
+        starViews = new StarView[3];
+        for (int i = 0; i < 3; i++) {
+            starViews[i] = new StarView(this);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.topMargin = i == 1 ? 0 : (int) (SizeManager.getScreenHeight() * 0.015);
+            lp.bottomMargin = (int) (SizeManager.getScreenHeight() * 0.01);
+
+            starContainer.addView(starViews[i], lp);
+
+        }
+        starViews[0].rotate(-30);
+        starViews[2].rotate(30);
+        starViews[1].setDeActivate();
+
+    }
 
     public void initSizes() {
         int screenWidth = 0;
@@ -262,7 +287,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    public void setHeaderVisiblity(boolean visible) {
+    private void setHeaderVisiblity(boolean visible) {
         int headerViewsVisibility = (!visible ? View.GONE : View.VISIBLE);
         logo.setVisibility(headerViewsVisibility);
         coinBox.setVisibility(headerViewsVisibility);
@@ -270,7 +295,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     }
-    public  void setOnlineGameVisibilityGone() {
+
+    public void setOnlineGameVisibilityGone() {
 
         int headerViewsVisibility = View.GONE;
         playerOne.setVisibility(headerViewsVisibility);
@@ -624,5 +650,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    public void setGameResult(boolean doSet) {
 
+        int visibily = (doSet) ? View.VISIBLE : View.GONE;
+
+        setHeaderVisiblity(!doSet);
+        starContainer.setVisibility(visibily);
+    }
+
+    public void setLoadingForGameResultDialog(LoadingForGameResultDialog loadingForGameResultDialog) {
+        mLoadingForGameResultDialog = loadingForGameResultDialog;
+    }
+
+
+    @Override
+    protected void onPause() {
+        if (mLoadingForGameResultDialog != null)
+            mLoadingForGameResultDialog.dismiss();
+
+        if (mLoadingDialog != null)
+            mLoadingDialog.onBackPressed();
+
+        super.onPause();
+    }
 }
