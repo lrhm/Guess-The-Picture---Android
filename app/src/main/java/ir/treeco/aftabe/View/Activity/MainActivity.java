@@ -268,11 +268,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         coinBox.setVisibility(headerViewsVisibility);
         digits.setVisibility(headerViewsVisibility);
 
+
+    }
+    public  void setOnlineGameVisibilityGone() {
+
+        int headerViewsVisibility = View.GONE;
         playerOne.setVisibility(headerViewsVisibility);
         playerTwo.setVisibility(headerViewsVisibility);
         mTimerContainer.setVisibility(headerViewsVisibility);
-
-
     }
 
     private void setUpCoinBox() {

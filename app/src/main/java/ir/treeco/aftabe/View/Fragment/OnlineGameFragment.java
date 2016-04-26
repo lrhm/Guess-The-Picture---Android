@@ -210,29 +210,39 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onDestroy() {
-        if (state == 1) {
+
+        ((MainActivity) getActivity()).setOnlineGame(false);
+
+        if (state == 1 || state == 0 && mRemainingTime == 0) {
             synchronized (lock) {
-                if (mGameResult == null)
+                if (mGameResult == null) {
+                    super.onDestroy();
                     new LoadingForGameResultDialog(getActivity()).show();
-                else {
+                } else {
                     boolean win = false;
-                    if (mGameResult.getScores()[0].getUserId() == Tools.getCachedUser().getId())
+                    if (mGameResult.getScores()[0].getUserId().equals(Tools.getCachedUser().getId()))
                         win = mGameResult.getScores()[0].isWinner();
 
-                    if (mGameResult.getScores()[1].getUserId() == Tools.getCachedUser().getId())
+                    if (mGameResult.getScores()[1].getUserId().equals(Tools.getCachedUser().getId()))
                         win = mGameResult.getScores()[1].isWinner();
 
+
+                    super.onDestroy();
+                    ((MainActivity) getActivity()).setOnlineGame(false);
+
+//                    mainActivity.setOnlineGameVisibilityGone();
                     GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
-                    FragmentTransaction transaction = ( getActivity()).getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = (getActivity()).getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, gameResultFragment);
+                    transaction.addToBackStack(null);
                     transaction.commit();
                 }
 
             }
-        }
+        } else {
 
-        super.onDestroy();
-        ((MainActivity) getActivity()).setOnlineGame(false);
+            super.onDestroy();
+        }
 
 
     }
@@ -252,6 +262,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 "")).replace("آ", "ا"))) {
 
 
+            getActivity().getSupportFragmentManager().popBackStack();
+
+
             mTimer.cancel();
 
             Toast.makeText(getContext(), "answer is right", Toast.LENGTH_LONG);
@@ -263,7 +276,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             SocketAdapter.setAnswerLevel(answerObject);
 
             if (state == 1) {
-
 
                 getActivity().getSupportFragmentManager().popBackStack();
 
@@ -335,14 +347,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     answerObject.setSkip();
                     SocketAdapter.setAnswerLevel(answerObject);
 
+                    getActivity().getSupportFragmentManager().popBackStack();
+
                     if (state == 1) {
-
-
                         Log.d(TAG, "return mikonim dg ");
-                        getActivity().getSupportFragmentManager().popBackStack();
-                        getActivity().getSupportFragmentManager().popBackStack();
-
-
                         return;
                     } else {
 
@@ -351,7 +359,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
                         SocketAdapter.setAnswerLevel(answerObject1);
 
-                        getActivity().getSupportFragmentManager().popBackStack();
 
                         return;
 

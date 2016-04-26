@@ -23,6 +23,7 @@ public class AnswerObject {
 
     public AnswerObject(String id) {
         this.id = id;
+        setFirstTime();
     }
 
     public void setFirstTime() {
