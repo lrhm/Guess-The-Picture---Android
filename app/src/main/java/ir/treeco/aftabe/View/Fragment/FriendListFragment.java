@@ -2,6 +2,7 @@ package ir.treeco.aftabe.View.Fragment;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 
@@ -293,6 +296,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
 
     public void getContacts() {
+
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && !Prefs.getBoolean(MainActivity.CONTACTS_PERMISSION, false)) {
+            return;
+            // failed to get
+        }
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
         if (myUser == null) {

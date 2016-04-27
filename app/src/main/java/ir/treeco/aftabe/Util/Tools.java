@@ -103,6 +103,12 @@ public class Tools {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return px / (metrics.densityDpi / 160f);
     }
+
+    public static int convertDPtoPixel(int dp , Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
 //
 //    public Bitmap updateHSV(Bitmap src, float settingHue, float settingSat, float settingVal) {
 //        int w = src.getWidth();
@@ -782,6 +788,7 @@ public class Tools {
         Prefs.putDouble(SHARED_PREFS_SEED, seed);
         return seed;
     }
+
 
 
 }

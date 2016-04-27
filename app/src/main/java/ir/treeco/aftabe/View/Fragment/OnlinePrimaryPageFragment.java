@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -18,9 +19,12 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.NotificationCountView;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Custom.VerticalViewPager;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 
 /**
@@ -31,6 +35,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     private ImageManager imageManager;
     private LengthManager lengthManager;
     private UserLevelView mUserLevelView;
+    private NotificationCountView msgCountView;
+    private NotificationCountView frndReqCountView;
 
     @Nullable
     @Override
@@ -45,9 +51,41 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         startOnlineView.setOnClickListener(this);
         mUserLevelView = (UserLevelView) view.findViewById(R.id.user_view_in_menu);
+
+        int topMargin = (int) (SizeManager.getScreenHeight() * 0.05);
+
+        ((LinearLayout.LayoutParams) mUserLevelView.getLayoutParams()).topMargin = topMargin;
+        ((LinearLayout.LayoutParams) startOnlineView.getLayoutParams()).topMargin = topMargin;
+
+
         ((MainActivity) getActivity()).addUserFoundListener(this);
 
-        if(Prefs.contains(Tools.USER_SAVED_DATA)) {
+        LinearLayout notifContainer = (LinearLayout) view.findViewById(R.id.notification_count_container);
+        msgCountView = new NotificationCountView(getContext(), R.drawable.notifmsg);
+        frndReqCountView = new NotificationCountView(getContext(), R.drawable.notifreq);
+
+        LengthManager lengthManager = new LengthManager(getContext());
+
+        topMargin = (int) (SizeManager.getScreenHeight() - Tools.convertDPtoPixel(100, getContext()) - lengthManager.getHeaderHeight()
+                - 2 * topMargin - randplayconverter.mHeight
+                - 0.4 * SizeManager.getScreenWidth() - (int) (SizeManager.getScreenWidth() * 0.14)) / 2;
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.01), 5);
+        View view1 = new View(getContext());
+
+        ((LinearLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = topMargin;
+
+
+        notifContainer.addView(msgCountView);
+        notifContainer.addView(view1, lp);
+        notifContainer.addView(frndReqCountView);
+
+
+        msgCountView.setCount(3);
+        frndReqCountView.setCount(5);
+
+
+        if (Prefs.contains(Tools.USER_SAVED_DATA)) {
             String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
             Gson gson = new Gson();
             User myUser = gson.fromJson(jsonString, User.class);
@@ -82,8 +120,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.multiplay_image_button){
-            ((MainActivity)getActivity()).requestRandomGame();
+        if (v.getId() == R.id.multiplay_image_button) {
+            ((MainActivity) getActivity()).requestRandomGame();
         }
     }
 }
