@@ -1,7 +1,9 @@
 package ir.treeco.aftabe.View.Fragment;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +36,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 
@@ -56,7 +59,12 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     View clearButton;
     View mainLayout;
 
+    Boolean mAdaptersSet = false;
+
+
     public FriendListFragment() {
+
+
     }
 
 
@@ -70,6 +78,25 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+        ((MainActivity) getActivity()).addUserFoundListener(new UserFoundListener() {
+            @Override
+            public void onGetUser(User user) {
+
+            }
+
+            @Override
+            public void onGetError() {
+
+            }
+
+            @Override
+            public void onGetMyUser(User myUser) {
+
+                setUpAdapters();
+
+            }
+        });
 
 
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
@@ -131,15 +158,25 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void setUpAdapters() {
 
+        if (mFriendsAdapter == null) mFriendsAdapter = new FriendsAdapter(null, null, null, null);
+
+        if (getActivity() == null)
+            return;
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
 
-
-
-        mFriendsAdapter = new FriendsAdapter(null, null, null, null);
-
-        if(myUser == null) //TODO check geting user
+        if (mAdaptersSet)
             return;
+
+        if (myUser == null) {
+            mAdaptersSet = false;
+            return;
+
+        }
+        mAdaptersSet = true;
+
+        getContacts();
+
 
         AftabeAPIAdapter.getListOfMyFriends(myUser, new BatchUserFoundListener() {
             @Override
@@ -254,6 +291,48 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     }
 
+
+    public void getContacts() {
+
+        User myUser = ((MainActivity) getActivity()).getMyUser();
+        if (myUser == null) {
+            Log.d("TAG", "user is null");
+            return;
+
+        }
+
+        Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        while (phones.moveToNext()) {
+
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            phoneNumber = phoneNumber.replace(" ", "");
+
+            phoneNumber = phoneNumber.replace("+", "00");
+            Log.d("TAG", "phone number " + phoneNumber + " " + Tools.isAPhoneNumber(phoneNumber));
+
+
+            AftabeAPIAdapter.searchForUser(myUser, phoneNumber, new UserFoundListener() {
+                @Override
+                public void onGetUser(User user) {
+                    mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_CONTACT);
+                }
+
+                @Override
+                public void onGetError() {
+
+                }
+
+                @Override
+                public void onGetMyUser(User myUser) {
+
+                }
+            });
+
+        }
+        phones.close();
+    }
+
     public void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
@@ -261,6 +340,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     @Override
     public void onGetUser(User user) {
+
         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_SEARCHED);
 
     }
@@ -268,5 +348,13 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onGetError() {
         Toast.makeText(getContext(), "user not found", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGetMyUser(User myUser) {
+        Log.d("TAG", "on get my user friendlist");
+        setUpAdapters();
+
+
     }
 }

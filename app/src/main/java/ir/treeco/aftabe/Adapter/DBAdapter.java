@@ -213,6 +213,11 @@ public class DBAdapter {
                 public void onGetError() {
 
                 }
+
+                @Override
+                public void onGetMyUser(User myUser) {
+
+                }
             });
 
         }

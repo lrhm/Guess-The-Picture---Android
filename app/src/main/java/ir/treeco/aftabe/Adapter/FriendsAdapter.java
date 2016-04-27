@@ -107,6 +107,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     public void addUser(User user, int type) {
         ArrayList<User> mList = arrayLists.get(type);
+
+        for (User u : mList)
+            if (u.getId().equals(user.getId()))
+                return;
+
         mList.add(user);
         notifyDataSetChanged();
 
@@ -172,7 +177,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         });
 
         holder.mUserLevelView.setUser(user);
-
 
 
     }

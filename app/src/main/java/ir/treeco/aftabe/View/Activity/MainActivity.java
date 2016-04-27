@@ -540,6 +540,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             userFoundListener.onGetError();
     }
 
+    @Override
+    public void onGetMyUser(User myUser) {
+
+        Log.d("TAG", "on get my user main");
+
+        for (UserFoundListener userFoundListener : mUserFoundListeners)
+            userFoundListener.onGetMyUser(myUser);
+
+    }
+
 
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);

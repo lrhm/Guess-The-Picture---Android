@@ -76,6 +76,11 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     }
 
     @Override
+    public void onGetMyUser(User myUser) {
+
+    }
+
+    @Override
     public void onClick(View v) {
         if(v.getId() == R.id.multiplay_image_button){
             ((MainActivity)getActivity()).requestRandomGame();

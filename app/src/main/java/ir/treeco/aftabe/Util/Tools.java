@@ -234,8 +234,7 @@ public class Tools {
             Gson gson = new GsonBuilder().create();
             try {
                 ((MainApplication) context.getApplicationContext()).setHeadObject(gson.fromJson(reader, HeadObject.class));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
 
             }
             headObject = ((MainApplication) context.getApplicationContext()).getHeadObject(); // TODO: 9/24/15 check for Reference
@@ -745,6 +744,10 @@ public class Tools {
             Pattern.compile("^09[0-9]{9}$");
     public static final Pattern VALID_PHONE_2 =
             Pattern.compile("^9[0-9]{9}$");
+    public static final Pattern VALID_PHONE_3 =
+            Pattern.compile("^989[0-9]{9}$");
+    public static final Pattern VALID_PHONE_4 =
+            Pattern.compile("^00989[0-9]{9}$");
 
     public static boolean isAEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
@@ -753,7 +756,8 @@ public class Tools {
 
     public static boolean isAPhoneNumber(String number) {
         Matcher matcher = VALID_PHONE.matcher(number);
-        return matcher.find() || VALID_PHONE_2.matcher(number).find();
+        return matcher.find() || VALID_PHONE_2.matcher(number).find() || VALID_PHONE_3.matcher(number).find()
+                || VALID_PHONE_3.matcher(number).find() || VALID_PHONE_4.matcher(number).find();
     }
 
     public static User getCachedUser() {
@@ -767,9 +771,9 @@ public class Tools {
     }
 
 
-    public static double getSeed(){
+    public static double getSeed() {
 
-        if(Prefs.contains(SHARED_PREFS_SEED)) {
+        if (Prefs.contains(SHARED_PREFS_SEED)) {
             return Prefs.getDouble(SHARED_PREFS_SEED, 0.85);
         }
 

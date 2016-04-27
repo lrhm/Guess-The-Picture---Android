@@ -92,6 +92,7 @@ public class AftabeAPIAdapter {
 
                 getMyUserByAccessToken(loginInfo, userFoundListener);
 
+
             }
 
             @Override
@@ -117,6 +118,8 @@ public class AftabeAPIAdapter {
                 }
 
                 if (userFoundListener != null) userFoundListener.onGetUser(response.body());
+
+
             }
 
             @Override
@@ -225,6 +228,7 @@ public class AftabeAPIAdapter {
                 response.body().setLoginInfo(loginInfo);
                 response.body().setOwnerMe();
                 if (userFoundListener != null) userFoundListener.onGetUser(response.body());
+                if (userFoundListener != null) userFoundListener.onGetMyUser(response.body());
                 Tools.updateSharedPrefsToken(response.body(), new TokenHolder(response.body()));
             }
 
@@ -311,10 +315,20 @@ public class AftabeAPIAdapter {
     }
 
     public static void searchForUser(User myUser, String search, UserFoundListener userFoundListener) {
-        if (Tools.isAPhoneNumber(search))
-            searchUserByNumber(myUser, (search.length() == 10) ? search : search.substring(1),
+        if (Tools.isAPhoneNumber(search)) {
+
+            if (search.length() == 11) search = search.substring(1);
+            else if (search.length() == 13) search = search.substring(3);
+            else if (search.length() == 14) search = search.substring(4);
+
+            Log.d(TAG, "clear number is " + search);
+
+
+            searchUserByNumber(myUser, search,
                     userFoundListener);
-        else if (Tools.isAEmail(search))
+
+
+        } else if (Tools.isAEmail(search))
             searchUserByMail(myUser, search, userFoundListener);
         else
             searchUserByName(myUser, search, userFoundListener);
@@ -376,6 +390,12 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<User[]>() {
             @Override
             public void onResponse(Response<User[]> response) {
+
+
+                if (response.body() == null) {
+                    userFoundListener.onGetError();
+                    return;
+                }
 
                 if (response.body().length == 0)
                     userFoundListener.onGetError();

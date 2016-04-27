@@ -12,4 +12,6 @@ public interface UserFoundListener {
 
     void onGetError();
 
+    void onGetMyUser(User myUser);
+
 }
