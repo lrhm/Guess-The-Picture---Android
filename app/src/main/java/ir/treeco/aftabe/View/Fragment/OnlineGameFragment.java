@@ -125,16 +125,26 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         frameLayout.addView(keyboardView);
         setUpImagePlace();
 
+        LengthManager lengthManager = new LengthManager(getContext());
 
-        SizeConverter skipbuttonConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.17f, 510, 200);
-        int leftMargin = (int) ((int) SizeManager.getScreenWidth() * 0.5f - skipbuttonConverter.getWidth() / 2);
+        int topMargin = lengthManager.getLevelImageHeight() +
+                (lengthManager.getLevelImageFrameHeight() - lengthManager.getLevelImageHeight())/2;
+
+
+        Log.d("TAG", lengthManager.getLevelThumbnailPadding()+"");
+        Log.d("TAG", lengthManager.getLevelImageFrameHeight() + "");
+        Log.d("TAG", lengthManager.getLevelFrameHeight() + "");
+        Log.d("TAG", lengthManager.getLevelImageHeight() + "");
+
+        SizeConverter skipbuttonConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.20f, 510, 200);
+        int leftMargin = (int) ((int) SizeManager.getScreenWidth() / 2 - skipbuttonConverter.getWidth() / 2);
 
         skipButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.skipbutton, skipbuttonConverter.mWidth,
                 skipbuttonConverter.mHeight));
         RelativeLayout.LayoutParams skipButtonLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         skipButtonLP.leftMargin = leftMargin;
-        skipButtonLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.362);
+        skipButtonLP.topMargin = topMargin;
 
 
         if (state == 0)
@@ -191,7 +201,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         tools.resizeView(box, lengthManager.getLevelImageWidth(), lengthManager.getLevelImageHeight());
 
         ImageView frame = (ImageView) view.findViewById(R.id.frame);
-        frame.setImageBitmap(imageManager.loadImageFromResource(R.drawable.frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight()));
+        frame.setImageBitmap(imageManager.loadImageFromResource(R.drawable.frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight(), ImageManager.ScalingLogic.FIT));
         tools.resizeView(frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight());
 
 

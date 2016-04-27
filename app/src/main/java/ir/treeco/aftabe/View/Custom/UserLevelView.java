@@ -275,6 +275,17 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         mUserNameTextView.setText("عضویت/ورود");
     }
 
+    public void setForOnlineGame() {
+
+        coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.coveronlinegame),
+                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
+
+    }
+
+    public int getRealWidth() {
+        return (int) (lengthManager.getScreenWidth() * mDimension);
+    }
+
     public void setOnlineStateClear() {
 
         expView.setVisibility(View.GONE);
@@ -340,6 +351,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
 
     }
+
 
     public boolean isClick() {
         return mClick;

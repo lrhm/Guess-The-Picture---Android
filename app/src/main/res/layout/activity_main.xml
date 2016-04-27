@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:customDimension="0.13"
+                app:customDimension="0.16"
                 app:textAlign="below" />
 
 
@@ -83,7 +83,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:customDimension="0.13"
+                app:customDimension="0.16"
+
                 app:textAlign="below"
 
                 />

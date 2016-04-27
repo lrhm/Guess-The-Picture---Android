@@ -149,6 +149,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         logo = (ImageView) findViewById(R.id.logo);
         playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
         playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
+
+        playerOne.setForOnlineGame();
+        playerTwo.setForOnlineGame();
+
         mTimerView = new TimerView(this);
         mTimerContainer = ((FrameLayout) findViewById(R.id.timer_online));
         mTimerContainer.addView(mTimerView);
@@ -258,11 +262,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void setUpPlayers() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
-        lp.topMargin = (int) (lengthManager.getScreenWidth() / 15f);
+        lp.topMargin = (lengthManager.getHeaderHeight() - playerOne.getRealWidth()) / 2;
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
-        lpTwo.topMargin = (int) (lengthManager.getScreenWidth() / 15f);
+        lpTwo.topMargin = (lengthManager.getHeaderHeight() - playerOne.getRealWidth()) / 2;
         lpTwo.leftMargin = (int) (0.8 * lengthManager.getScreenWidth());
     }
 
