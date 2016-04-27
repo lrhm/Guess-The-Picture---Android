@@ -51,7 +51,7 @@ public class CheatDrawable extends Drawable {
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setTextSize(lengthManager.getCheatButtonFontSize());
-        textPaint.setTypeface(FontsHolder.getHoma(this.context));
+        textPaint.setTypeface(FontsHolder.getSansBold(this.context));
         textPaint.setColor(Color.WHITE);
         textPaint.setShadowLayer(1, 1, 1, Color.BLACK);
 

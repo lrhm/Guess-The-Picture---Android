@@ -76,8 +76,8 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         mStatusImageView = (ImageView) findViewById(R.id.dialog_username_choose_image_view);
 
         customizeTextView(firstTextView, "یه اسم انتخواب کن", 23, FontsHolder.SANS_MEDIUM);
-        customizeTextView(secondTextView, "دیگر قابل تغیر نیست" + "\n" + "حد اقل ۶ حرف", 18, FontsHolder.SANS_REGULAR);
-        customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_REGULAR);
+        customizeTextView(secondTextView, "دیگر قابل تغیر نیست" + "\n" + "حد اقل ۶ حرف", 18, FontsHolder.SANS_MEDIUM);
+        customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_BOLD);
 
         RelativeLayout.LayoutParams firstTextLp = (RelativeLayout.LayoutParams) firstTextView.getLayoutParams();
         firstTextLp.topMargin = (int) (SizeManager.getScreenHeight() * 0.1);
@@ -92,7 +92,7 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
 
         mAcceptButton = (Button) findViewById(R.id.dialog_username_choose_accept_btn);
         mAcceptButton.setText("تایید");
-        mAcceptButton.setTypeface(FontsHolder.getSansRegular(context));
+        mAcceptButton.setTypeface(FontsHolder.getSansBold(context));
         mAcceptButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 23);
         mAcceptButton.setOnClickListener(this);
         mAcceptButton.setEnabled(false);

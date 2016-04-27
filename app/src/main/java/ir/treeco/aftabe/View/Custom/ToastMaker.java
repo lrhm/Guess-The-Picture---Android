@@ -20,7 +20,7 @@ public class ToastMaker {
         TextView textView = new TextView(context);
         tools.setViewBackground(textView, new ToastBackgroundDrawable(context));
         textView.setText(content);
-        textView.setTypeface(FontsHolder.getHoma(context));
+        textView.setTypeface(FontsHolder.getSansMedium(context));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getToastFontSize());
         textView.setShadowLayer(1, 1, 1, Color.BLACK);
         textView.setTextColor(Color.WHITE);

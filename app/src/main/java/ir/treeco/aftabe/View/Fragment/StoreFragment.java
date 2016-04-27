@@ -147,7 +147,7 @@ public class StoreFragment extends Fragment {
     private void customizeTextView(TextView textView, String label) {
         textView.setText(label);
 
-        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
+        textView.setTypeface(FontsHolder.getSansMedium(textView.getContext()));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getStoreItemFontSize());
         textView.setTextColor(Color.WHITE);
 

@@ -101,7 +101,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         mLevelTextView = new MagicTextView(context);
         mLevelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 150);
-        mLevelTextView.setTypeface(FontsHolder.getHoma(context));
+        mLevelTextView.setTypeface(FontsHolder.getNumeralSansBold(context));
         mLevelTextView.setTextColor(Color.WHITE);
         mLevelTextView.setGravity(Gravity.CENTER);
 

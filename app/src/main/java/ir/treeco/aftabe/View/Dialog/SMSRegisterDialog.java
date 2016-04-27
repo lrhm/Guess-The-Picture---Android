@@ -84,8 +84,8 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         upperSecondTextView = (TextView) findViewById(R.id.dialog_username_choose_upper_second_text);
 
         customizeTextView(firstTextView, phoneReq[0], 23, FontsHolder.SANS_MEDIUM);
-        customizeTextView(secondTextView, phoneReq[1], 18, FontsHolder.SANS_REGULAR);
-        customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_REGULAR);
+        customizeTextView(secondTextView, phoneReq[1], 18, FontsHolder.SANS_MEDIUM);
+        customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_BOLD);
 
         RelativeLayout.LayoutParams firstTextLp = (RelativeLayout.LayoutParams) firstTextView.getLayoutParams();
         firstTextLp.topMargin = (int) (SizeManager.getScreenHeight() * 0.1);
@@ -100,7 +100,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
         mAcceptButton = (Button) findViewById(R.id.dialog_username_choose_accept_btn);
         mAcceptButton.setText("تایید");
-        mAcceptButton.setTypeface(FontsHolder.getSansRegular(context));
+        mAcceptButton.setTypeface(FontsHolder.getSansBold(context));
         mAcceptButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
         mAcceptButton.setOnClickListener(this);
 

@@ -76,7 +76,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             switch (type) {
                 case TYPE_HEADER:
                     mHeaderTextView = (TextView) itemView.findViewById(R.id.header_item);
-                    FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_REGULAR);
+                    FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_BOLD);
                     return;
                 case TYPE_CONTACT:
                     break;

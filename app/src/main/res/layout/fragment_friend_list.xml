@@ -35,7 +35,6 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:cursorVisible="true"
-                android:hint="شماره تلفن یا نام کاربری "
                 android:inputType="text"
                 android:maxLines="1"
                 android:imeOptions="actionDone"

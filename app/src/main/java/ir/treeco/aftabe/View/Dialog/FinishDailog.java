@@ -126,6 +126,6 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getStoreItemFontSize());
         textView.setTextColor(Color.WHITE);
         textView.setShadowLayer(1, 2, 2, Color.BLACK);
-        textView.setTypeface(FontsHolder.getHoma(textView.getContext()));
+        textView.setTypeface(FontsHolder.getSansBold(textView.getContext()));
     }
 }

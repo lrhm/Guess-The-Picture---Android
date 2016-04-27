@@ -49,17 +49,18 @@ public class FreeCoinOfferDialog extends Dialog implements View.OnClickListener 
         TextView button = (TextView) findViewById(R.id.dialog_free_coin_offer_btn);
         String text = "سکه کافی ندارید" + "\n" + "میتوانید با دیدن تبلیغ ۲۰ سکه بدست اورید";
         textView.setGravity(Gravity.CENTER);
-        textView.setTypeface(FontsHolder.getSansRegular(context));
+        textView.setTypeface(FontsHolder.getSansMedium(context));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         textView.setText(text);
 
         button.setGravity(Gravity.CENTER);
         button.setText("برای دیدن تبلیغ اینجا کلیک کنید");
         button.setBackgroundColor(Color.TRANSPARENT);
-        button.setTypeface(FontsHolder.getSansRegular(context));
+        button.setTypeface(FontsHolder.getSansMedium(context));
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         button.setOnClickListener(this);
 
+//      TODO add button from fragment store
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -147,7 +148,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         mAutoCompleteTextView.addTextChangedListener(this);
         mAutoCompleteTextView.setOnEditorActionListener(this);
 
-        mAutoCompleteTextView.setTypeface(FontsHolder.getSansRegular(getContext()));
+        mAutoCompleteTextView.setTypeface(FontsHolder.getSansMedium(getContext()));
+
+        mAutoCompleteTextView.setHint("شماره تلفن یا نام کاربری      ");
+
+
 //
         ImageView searchFriendImageView = (ImageView) view.findViewById(R.id.search_friend_image);
         SizeConverter searchFriendConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.8f, 1373, 227);
