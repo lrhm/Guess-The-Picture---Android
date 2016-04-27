@@ -148,7 +148,8 @@ public class LengthManager {
     }
 
     public int getLevelFrameHeight() {
-        return getHeightWithFixedWidth(R.drawable.level_unlocked, getLevelFrameWidth());
+        return (int) (getScreenWidth() * 0.235);
+        //getHeightWithFixedWidth(R.drawable.level_unlocked, getLevelFrameWidth());
     }
 
     public int getLevelImageFrameWidth() {

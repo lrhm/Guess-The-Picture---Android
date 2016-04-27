@@ -64,7 +64,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <ImageView
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="42dp"
         android:id="@+id/shadeview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.R;
@@ -68,9 +69,11 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
     @Override
     public LevelsAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_levels, viewGroup, false);
-        v.setLayoutParams(new RecyclerView.LayoutParams(
-                lengthManager.getLevelFrameWidth(),
-                lengthManager.getLevelFrameHeight()));
+
+        int size = (int) (SizeManager.getScreenWidth() * 0.235);
+        v.setLayoutParams(new RecyclerView.LayoutParams(size, size));
+//                lengthManager.getLevelFrameWidth(),
+//                lengthManager.getLevelFrameHeight()));
         return new ViewHolder(v);
     }
 
@@ -88,7 +91,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
                     + packageId + "_levelUnlocked.png";
 
-            Picasso.with(context).load(imagePath).into(viewHolder.imageView);
+            Picasso.with(context).load(imagePath).fit().centerCrop().into(viewHolder.imageView);
             Picasso.with(context).load(frame).into(viewHolder.frame);
 
             viewHolder.imageView.setVisibility(View.VISIBLE);
