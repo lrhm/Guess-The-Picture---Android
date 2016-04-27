@@ -178,7 +178,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         }
         mAdaptersSet = true;
 
-        getContacts();
+//        getContacts();
 
 
         AftabeAPIAdapter.getListOfMyFriends(myUser, new BatchUserFoundListener() {

@@ -22,7 +22,8 @@
             <ir.treeco.aftabe.View.Custom.AutoScrollViewPager
                 android:id="@+id/ad_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:visibility="gone"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

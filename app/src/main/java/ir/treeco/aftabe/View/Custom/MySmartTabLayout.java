@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 ogaclejapan
  * Copyright (C) 2013 The Android Open Source Project
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ package com.ogaclejapan.smarttablayout;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
@@ -26,15 +27,20 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ir.treeco.aftabe.*;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.SizeManager;
 
@@ -42,22 +48,22 @@ import ir.treeco.aftabe.Util.SizeManager;
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as
  * to
  * the user's scroll progress.
- * <p>
+ * <p/>
  * To use the component, simply add it to your view hierarchy. Then in your
  * {@link android.app.Activity} or {@link android.app.Fragment}, {@link
  * android.support.v4.app.Fragment} call
  * {@link #setViewPager(android.support.v4.view.ViewPager)} providing it the ViewPager this layout
  * is being used for.
- * <p>
+ * <p/>
  * The colors can be customized in two ways. The first and simplest is to provide an array of
  * colors
  * via {@link #setSelectedIndicatorColors(int...)} and {@link #setDividerColors(int...)}. The
  * alternative is via the {@link TabColorizer} interface which provides you complete control over
  * which color is used for any individual position.
- * <p>
+ * <p/>
  * The views used as tabs can be customized by calling {@link #setCustomTabView(int, int)},
  * providing the layout ID of your custom layout.
- * <p>
+ * <p/>
  * Forked from Google Samples &gt; SlidingTabsBasic &gt;
  * <a href="https://developer.android.com/samples/SlidingTabsBasic/src/com.example.android.common/view/SlidingTabLayout.html">SlidingTabLayout</a>
  */
@@ -72,6 +78,7 @@ public class MySmartTabLayout extends HorizontalScrollView {
     private static final int TAB_VIEW_TEXT_MIN_WIDTH = 0;
     private static final boolean TAB_CLICKABLE = true;
 
+    private float mWidth;
     protected final SmartTabStrip tabStrip;
     private int titleOffset;
     private int tabViewBackgroundResId;
@@ -120,25 +127,26 @@ public class MySmartTabLayout extends HorizontalScrollView {
         TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.stl_SmartTabLayout, defStyle, 0);
         tabBackgroundResId = a.getResourceId(
-                R.styleable.stl_SmartTabLayout_stl_defaultTabBackground, tabBackgroundResId);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_defaultTabBackground, tabBackgroundResId);
         textAllCaps = a.getBoolean(
-                R.styleable.stl_SmartTabLayout_stl_defaultTabTextAllCaps, textAllCaps);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_defaultTabTextAllCaps, textAllCaps);
         textColors = a.getColorStateList(
-                R.styleable.stl_SmartTabLayout_stl_defaultTabTextColor);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_defaultTabTextColor);
         textSize = a.getDimension(
-                R.styleable.stl_SmartTabLayout_stl_defaultTabTextSize, textSize);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_defaultTabTextSize, textSize);
         textHorizontalPadding = a.getDimensionPixelSize(
-                R.styleable.stl_SmartTabLayout_stl_defaultTabTextHorizontalPadding, textHorizontalPadding);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_defaultTabTextHorizontalPadding, textHorizontalPadding);
         textMinWidth = a.getDimensionPixelSize(
-                R.styleable.stl_SmartTabLayout_stl_defaultTabTextMinWidth, textMinWidth);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_defaultTabTextMinWidth, textMinWidth);
         customTabLayoutId = a.getResourceId(
-                R.styleable.stl_SmartTabLayout_stl_customTabTextLayoutId, customTabLayoutId);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_customTabTextLayoutId, customTabLayoutId);
         customTabTextViewId = a.getResourceId(
-                R.styleable.stl_SmartTabLayout_stl_customTabTextViewId, customTabTextViewId);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_customTabTextViewId, customTabTextViewId);
         distributeEvenly = a.getBoolean(
-                R.styleable.stl_SmartTabLayout_stl_distributeEvenly, distributeEvenly);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_distributeEvenly, distributeEvenly);
         clickable = a.getBoolean(
-                R.styleable.stl_SmartTabLayout_stl_clickable, clickable);
+                ir.treeco.aftabe.R.styleable.stl_SmartTabLayout_stl_clickable, clickable);
+        mWidth = a.getFloat(R.styleable.stl_SmartTabLayout_stl_widthDimension, 1);
         a.recycle();
 
         this.titleOffset = (int) (TITLE_OFFSET_DIPS * density);
@@ -213,7 +221,7 @@ public class MySmartTabLayout extends HorizontalScrollView {
 
     /**
      * Set the custom {@link TabColorizer} to be used.
-     *
+     * <p/>
      * If you only require simple customisation then you can use
      * {@link #setSelectedIndicatorColors(int...)} and {@link #setDividerColors(int...)} to achieve
      * similar effects.
@@ -298,7 +306,7 @@ public class MySmartTabLayout extends HorizontalScrollView {
      * Set the custom layout to be inflated for the tab views.
      *
      * @param layoutResId Layout id to be inflated
-     * @param textViewId id of the {@link android.widget.TextView} in the inflated view
+     * @param textViewId  id of the {@link android.widget.TextView} in the inflated view
      */
     public void setCustomTabView(int layoutResId, int textViewId) {
         tabProvider = new SimpleTabProvider(getContext(), layoutResId, textViewId);
@@ -370,8 +378,8 @@ public class MySmartTabLayout extends HorizontalScrollView {
 
 
         textView.setPadding(
-                tabViewTextHorizontalPadding , 0,
-                tabViewTextHorizontalPadding , 0);
+                tabViewTextHorizontalPadding, 0,
+                tabViewTextHorizontalPadding, 0);
 
         if (tabViewTextMinWidth > 0) {
             textView.setMinWidth(tabViewTextMinWidth);
@@ -379,6 +387,21 @@ public class MySmartTabLayout extends HorizontalScrollView {
 
         return textView;
     }
+
+    public static int getTextViewWidth(TextView textView) {
+        WindowManager wm =
+                (WindowManager) textView.getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        int deviceWidth;
+
+
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(SizeManager.getScreenWidth(), View.MeasureSpec.AT_MOST);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        textView.measure(widthMeasureSpec, heightMeasureSpec);
+        return textView.getMeasuredWidth();
+    }
+
 
     private void populateTabStrip() {
         final PagerAdapter adapter = viewPager.getAdapter();
@@ -397,9 +420,10 @@ public class MySmartTabLayout extends HorizontalScrollView {
             if (distributeEvenly) {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabView.getLayoutParams();
 
-                lp.leftMargin = (i == 0) ? (int) (SizeManager.getScreenWidth() * 0.15) : 0;
 
-//                lp.gravity = Gravity.RIGHT;
+                lp.leftMargin = (i == 0) ? (int) ((SizeManager.getScreenWidth() * mWidth) / 2 - getTextViewWidth(((TextView) tabView))) : 0;
+//                lp.width = 0;
+//                lp.weight = 1;
             }
 
             if (internalTabClickListener != null) {
@@ -493,7 +517,7 @@ public class MySmartTabLayout extends HorizontalScrollView {
         /**
          * Called when the scroll position of a view changes.
          *
-         * @param scrollX Current horizontal scroll origin.
+         * @param scrollX    Current horizontal scroll origin.
          * @param oldScrollX Previous horizontal scroll origin.
          */
         void onScrollChanged(int scrollX, int oldScrollX);

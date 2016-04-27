@@ -52,7 +52,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         startOnlineView.setOnClickListener(this);
         mUserLevelView = (UserLevelView) view.findViewById(R.id.user_view_in_menu);
 
-        int topMargin = (int) (SizeManager.getScreenHeight() * 0.05);
+        int topMargin = (int) (SizeManager.getScreenHeight() * 0.0375 * (SizeManager.getScreenHeight() / (double) (SizeManager.getScreenWidth())));
 
         ((LinearLayout.LayoutParams) mUserLevelView.getLayoutParams()).topMargin = topMargin;
         ((LinearLayout.LayoutParams) startOnlineView.getLayoutParams()).topMargin = topMargin;
