@@ -170,7 +170,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     public void setShadowLayer(MagicTextView mLevelTextView) {
 //        float shadowSize = (mDimension * 6 / (0.7f));
 //        Log.d("LevelUserVIew", shadowSize + " is the shadow size");
-        float shadowSize = (mDimension / 0.7f) * 4;
+        float shadowSize = (mDimension / 0.7f) * 6;
         int dropShadowColor = Color.parseColor("#393939");
         mLevelTextView.addOuterShadow(1, shadowSize, shadowSize, dropShadowColor);
         mLevelTextView.addInnerShadow(1, shadowSize, shadowSize, dropShadowColor);

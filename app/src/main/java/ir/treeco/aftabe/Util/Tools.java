@@ -174,7 +174,7 @@ public class Tools {
         for (int i = 0; i < views.length; i++)
             views[i] = linearLayout.getChildAt(i);
         linearLayout.removeAllViews();
-        for (int i = views.length - 1; i >= 0; i--)
+        for (int i = views.length - 1; i > 0; i--)
             linearLayout.addView(views[i]);
     }
 

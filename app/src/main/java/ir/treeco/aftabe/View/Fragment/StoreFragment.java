@@ -148,7 +148,7 @@ public class StoreFragment extends Fragment {
         textView.setText(label);
 
         textView.setTypeface(FontsHolder.getSansMedium(textView.getContext()));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getStoreItemFontSize());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
         textView.setTextColor(Color.WHITE);
 
         textView.setShadowLayer(1, 2, 2, Color.BLACK);
@@ -168,10 +168,10 @@ public class StoreFragment extends Fragment {
         TextView revenue = (TextView) item.findViewById(R.id.price);
         customizeTextView(revenue, tools.numeralStringToPersianDigits("" + revenueAmount));
 
-        if (reversed) {
-            LinearLayout textViews = (LinearLayout) item.findViewById(R.id.text_views);
-            tools.reverseLinearLayout(textViews);
-        }
+//        if (reversed) {
+//            LinearLayout textViews = (LinearLayout) item.findViewById(R.id.text_views);
+//            tools.reverseLinearLayout(textViews);
+//        }
     }
 
     @Override

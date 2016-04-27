@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -331,7 +330,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digitsLayoutParams.leftMargin = lengthManager.getScreenWidth() * 577 / 3600;
         digitsLayoutParams.width = lengthManager.getScreenWidth() / 5;
 
-        digits.setTypeface(FontsHolder.getNumeralSansBold(this));
+        digits.setTypeface(FontsHolder.getNumeralSansMedium(this));
 
         coinBox.setOnClickListener(this);
 

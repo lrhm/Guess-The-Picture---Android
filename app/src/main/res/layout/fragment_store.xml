@@ -36,7 +36,7 @@
 
                 <include
                     android:id="@+id/small_coin"
-                    layout="@layout/item_store" />
+                    layout="@layout/item_store_reversed" />
 
                 <include
                     android:id="@+id/medium_coin"
@@ -44,7 +44,7 @@
 
                 <include
                     android:id="@+id/big_coin"
-                    layout="@layout/item_store" />
+                    layout="@layout/item_store_reversed" />
 
                 <include
                     android:id="@+id/review_cafebazaar"
@@ -52,7 +52,7 @@
 
                 <include
                     android:id="@+id/tapsell_free_coin"
-                    layout="@layout/item_store" />
+                    layout="@layout/item_store_reversed" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

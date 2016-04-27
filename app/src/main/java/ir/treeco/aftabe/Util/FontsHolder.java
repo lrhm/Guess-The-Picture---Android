@@ -11,7 +11,7 @@ public class FontsHolder {
     private static Typeface sansMedium = null;
     private static Typeface lond = null;
     private static Typeface sansBoldNumber = null;
-    private static Typeface sansMediumdNumber = null;
+    private static Typeface sansMediumNumber = null;
 
 
     public static final int SANS_BOLD = 1;
@@ -31,7 +31,7 @@ public class FontsHolder {
             case SANS_BOLD_NUM:
                 return getNumeralSansBold(context);
             case SANS_MEDIUM_NUM:
-                return getNumberalSansMedium(context);
+                return getNumeralSansMedium(context);
         }
 
         return null;
@@ -59,9 +59,9 @@ public class FontsHolder {
         return sansBoldNumber;
     }
 
-    public static Typeface getNumberalSansMedium(Context context) {
-        if (sansMediumdNumber == null ) sansMediumdNumber = Typeface.createFromAsset(context.getAssets(), "sans_medium_num.ttf");
-        return sansMediumdNumber;
+    public static Typeface getNumeralSansMedium(Context context) {
+        if (sansMediumNumber == null ) sansMediumNumber = Typeface.createFromAsset(context.getAssets(), "sans_medium_num.ttf");
+        return sansMediumNumber;
     }
 
 
