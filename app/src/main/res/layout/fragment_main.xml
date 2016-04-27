@@ -28,6 +28,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <com.ogaclejapan.smarttablayout.MySmartTabLayout
+            android:layout_marginTop="2dp"
             android:id="@+id/viewpagertab"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -35,7 +36,7 @@
             android:clipToPadding="false"
             app:stl_defaultTabTextAllCaps="true"
             app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
-            app:stl_defaultTabTextHorizontalPadding="25dp"
+            app:stl_defaultTabTextHorizontalPadding="15dp"
             app:stl_defaultTabTextMinWidth="0dp"
             app:stl_defaultTabTextSize="16sp"
             app:stl_distributeEvenly="true"

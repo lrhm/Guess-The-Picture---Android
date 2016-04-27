@@ -71,9 +71,9 @@ public class MySmartTabLayout extends HorizontalScrollView {
 
     private static final boolean DEFAULT_DISTRIBUTE_EVENLY = false;
     private static final int TITLE_OFFSET_DIPS = 24;
-    private static final int TAB_VIEW_PADDING_DIPS = 16;
+    private static final int TAB_VIEW_PADDING_DIPS = 14;
     private static final boolean TAB_VIEW_TEXT_ALL_CAPS = true;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
+    private static final int TAB_VIEW_TEXT_SIZE_SP = 10;
     private static final int TAB_VIEW_TEXT_COLOR = 0xFC000000;
     private static final int TAB_VIEW_TEXT_MIN_WIDTH = 0;
     private static final boolean TAB_CLICKABLE = true;
