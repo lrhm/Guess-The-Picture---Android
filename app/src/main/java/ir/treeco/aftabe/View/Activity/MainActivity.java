@@ -3,6 +3,7 @@ package ir.treeco.aftabe.View.Activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +47,7 @@ import java.util.ArrayList;
 
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Socket.FriendRequestListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -75,6 +78,7 @@ import ir.treeco.aftabe.View.Custom.StarView;
 import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
@@ -86,7 +90,8 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener, SocketFriendMatchListener {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener,
+        SocketFriendMatchListener, FriendRequestListener {
 
 
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
@@ -132,6 +137,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         SocketAdapter.setContext(this);
         SocketAdapter.addSocketListener(this);
+        SocketAdapter.addFriendRequestListener(this);
+        SocketAdapter.addFriendSocketListener(this);
+
         initActivity();
 
         askForContactPermission();
@@ -207,7 +215,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
         DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
-        SocketAdapter.addFriendSocketListener(this);
         AftabeAPIAdapter.tryToLogin(this);
 
 
@@ -591,6 +598,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    @Override
+    public void onFriendRequest(User user) {
+        new FriendRequestDialog(this, user).show();
+    }
+
+    @Override
+    public void onFriendRequestReject(User user) {
+
+    }
+
+    @Override
+    public void onFriendRequestAccept(User user) {
+        mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+    }
 
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);

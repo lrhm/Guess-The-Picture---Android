@@ -1,8 +1,6 @@
 package ir.treeco.aftabe.API.Socket;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,21 +8,14 @@ import com.google.gson.Gson;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
-import io.socket.client.Manager;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import io.socket.engineio.client.Transport;
 import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
@@ -43,9 +34,11 @@ public class SocketAdapter {
 
     private static ArrayList<SocketListener> listeners = new ArrayList<>();
     private static ArrayList<SocketFriendMatchListener> friendsListeners = new ArrayList<>();
+    private static ArrayList<FriendRequestListener> requestLiseners = new ArrayList<>();
 
     private static final Object lock = new Object();
     private static final Object friendsLock = new Object();
+    private static final Object requestLock = new Object();
 
 
     private static Socket mSocket;
@@ -70,6 +63,18 @@ public class SocketAdapter {
         }
     }
 
+    public static void addFriendRequestListener(FriendRequestListener listener) {
+        synchronized (requestLock) {
+            requestLiseners.add(listener);
+        }
+    }
+
+
+    public static void removeFriendRequestListener(FriendRequestListener listener) {
+        synchronized (requestLock) {
+            requestLiseners.remove(listener);
+        }
+    }
 
     public static void addSocketListener(SocketListener socketListener) {
         synchronized (lock) {
@@ -174,6 +179,16 @@ public class SocketAdapter {
                     callMatchResult(matchResultHolder);
 
                 }
+            }).on("friendSF", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+
+                    String msg = args[0].toString();
+                    Log.d(TAG, "friendSF is : " + msg);
+                    FriendRequestHolder friendRequestHolder = gson.fromJson(msg, FriendRequestHolder.class);
+                    callFriendRequestListeners(friendRequestHolder);
+
+                }
             }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
@@ -272,6 +287,18 @@ public class SocketAdapter {
         }).run();
 
 
+    }
+
+    private static void callFriendRequestListeners(FriendRequestHolder holder) {
+        synchronized (requestLock) {
+            for (FriendRequestListener listener : requestLiseners) {
+                if (holder.isRequest())
+                    listener.onFriendRequest(holder.getUser());
+                else if (holder.isDecline())
+                    listener.onFriendRequestReject(holder.getUser());
+                else listener.onFriendRequestAccept(holder.getUser());
+            }
+        }
     }
 
     private static void callMatchRequest(MatchRequestHolder responseHolder) {
@@ -415,5 +442,37 @@ public class SocketAdapter {
             }
         }).start();
     }
+
+    public static void requestOnlineFriendsStatus() {
+
+        initSocket();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                RequestHolder requestHolder = new RequestHolder();
+                Gson gson = new Gson();
+                mSocket.emit("onlineRequest", gson.toJson(requestHolder));
+
+            }
+        }).start();
+
+    }
+
+    public static void answerFriendRequest(final String userId, final boolean accept) {
+        initSocket();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                FriendRequestResultHolder holder = new FriendRequestResultHolder(userId, accept);
+                Gson gson = new Gson();
+                mSocket.emit("friendUS", gson.toJson(holder));
+
+            }
+        }).start();
+    }
+
 
 }

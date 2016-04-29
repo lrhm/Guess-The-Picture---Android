@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
@@ -22,7 +21,8 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
-public class UserViewDialog extends Dialog implements View.OnClickListener {
+
+public class FriendRequestDialog extends Dialog implements View.OnClickListener {
     Context context;
     RelativeLayout mDataContainer;
     Tools tools;
@@ -32,7 +32,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     User mUser;
 
 
-    public UserViewDialog(Context context, User user) {
+    public FriendRequestDialog(Context context, User user) {
         super(context);
         this.context = context;
         tools = new Tools(context);
@@ -46,7 +46,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        setContentView(R.layout.dialog_user_view);
+        setContentView(R.layout.dialog_match_request_view);
 
         mUserLevelView = (UserLevelView) findViewById(R.id.dialog_user_view_mark_view);
         mUserLevelView.setUser(mUser);
@@ -65,47 +65,31 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
-        mMatchButton.setImageBitmap(imageManager.loadImageFromResource(
-                !mUser.isFriend() ? R.drawable.ic_check_circle_black_24dp : R.drawable.challengebutton, size, size));
-        mChatButton.setImageBitmap(imageManager.loadImageFromResource(
-                !mUser.isFriend() ? R.drawable.ic_error_outline_black_24dp : R.drawable.chatbutton, size, size));
-
+        mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.ic_check_circle_black_24dp, size, size));
+        mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.ic_error_outline_black_24dp, size, size));
 
         mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);
-    }
 
+
+    }
 
     @Override
     public void onClick(View v) {
 
         if (v.getId() == R.id.uv_start_chat_button) {
-            if (mUser.isFriend())
-                acceptOrDeclineMatch(false);
+            SocketAdapter.answerFriendRequest(mUser.getId(), false);
         }
 
         if (v.getId() == R.id.uv_match_button) {
-            if (mUser.isFriend())
-                acceptOrDeclineMatch(true);
-            else {
-                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), null);
-                Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
-            }
+            SocketAdapter.answerFriendRequest(mUser.getId(), true);
         }
 
-        if (mUser.isFriend()) {
-            dismiss();
+        dismiss();
 
-            new LoadingDialog(v.getContext()).show();
-        }
 
     }
 
-    public void acceptOrDeclineMatch(boolean accepted) {
-
-        SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
-
-    }
 
 }
 

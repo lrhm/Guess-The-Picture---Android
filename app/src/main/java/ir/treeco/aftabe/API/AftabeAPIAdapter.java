@@ -498,18 +498,20 @@ public class AftabeAPIAdapter {
 
                 if (response.isSuccess())
                     if (response.body() != null) {
-                        onFriendRequest.onFriendRequestSent();
+                        if (onFriendRequest != null)
+                            onFriendRequest.onFriendRequestSent();
 
                         return;
                     }
-                onFriendRequest.onFriendRequestFailedToSend();
+                if (onFriendRequest != null)
+                    onFriendRequest.onFriendRequestFailedToSend();
 
             }
 
             @Override
             public void onFailure(Throwable t) {
-
-                onFriendRequest.onFriendRequestFailedToSend();
+                if (onFriendRequest != null)
+                    onFriendRequest.onFriendRequestFailedToSend();
             }
         });
 

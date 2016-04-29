@@ -61,8 +61,8 @@ public class LeaderboardDialog extends DialogFragment {
         // tab slider
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getContext())
-                .add("سلام", UserInfoFragment.class)
-                .add("لیست", LeaderboardFragment.class)
+                .add("پروفایل", UserInfoFragment.class)
+                .add("برترین ها", LeaderboardFragment.class)
                 .create()
         );
 

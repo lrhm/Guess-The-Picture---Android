@@ -50,7 +50,7 @@ public class UserInfoFragment extends Fragment {
             userLevelView.setClick(false);
         }
 //
-//
+//          TODO force sign out
 //        int size = (int) (SizeManager.getScreenWidth() * 0.1);
 //
 //        ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
