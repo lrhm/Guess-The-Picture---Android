@@ -57,6 +57,8 @@ public class User {
     @Expose
     private String code;
 
+    private boolean isFriend = false;
+
     LevelCalculator levelCalculator;
 
 
@@ -200,4 +202,14 @@ public class User {
     public void setOwnerMe() {
         this.isMe = true;
     }
+
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+
+    public void setIsFriend(boolean isFriend) {
+        this.isFriend = isFriend;
+    }
+
 }

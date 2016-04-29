@@ -31,6 +31,11 @@ import java.util.ArrayList;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.BatchUserFoundListener;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
+import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -53,8 +58,9 @@ import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
  * create an instance of this fragment.
  */
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
-        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener {
+        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener {
 
+    private static final String TAG = "FriendListFragmetn";
     ArrayAdapter<String> searchBarAdapter;
     ImageManager imageManager;
     RecyclerView mFriendsRecyclerView;
@@ -62,6 +68,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     MyAutoCompleteTextView mAutoCompleteTextView;
     View clearButton;
     View mainLayout;
+    User[] friends;
 
     Boolean mAdaptersSet = false;
 
@@ -82,6 +89,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        SocketAdapter.addFriendSocketListener(this);
 
         ((MainActivity) getActivity()).addUserFoundListener(new UserFoundListener() {
             @Override
@@ -168,8 +176,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         if (mFriendsAdapter == null) mFriendsAdapter = new FriendsAdapter(null, null, null, null);
 
+
         if (getActivity() == null)
             return;
+
+        ((MainActivity) getActivity()).setFriendsAdapter(mFriendsAdapter);
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
 
@@ -194,6 +205,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                     public void run() {
                         for (User user : users)
                             mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+                        friends = users;
                     }
                 });
             }
@@ -368,6 +380,52 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         Log.d("TAG", "on get my user friendlist");
         setUpAdapters();
 
+
+    }
+
+    @Override
+    public void onMatchRequest(MatchRequestHolder request) {
+
+    }
+
+    @Override
+    public void onOnlineFriendStatus(OnlineFriendStatusHolder status) {
+
+        if (friends == null) {
+            Log.d(TAG, "friends is null before friend statues !");
+            return;
+        }
+        if (status.isOnlineAndEmpty()) {
+            User u = null;
+            for (User user : friends) {
+                if (status.getFriendId().equals(user.getId())) {
+                    u = user;
+                    return;
+                }
+            }
+            if (u == null) {
+                Log.d(TAG, " friend not found in friend list !");
+                return;
+            }
+            mFriendsAdapter.addUser(u, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+        } else {
+            User u = null;
+            for (User user : friends) {
+                if (status.getFriendId().equals(user.getId())) {
+                    u = user;
+                    return;
+                }
+            }
+            if (u == null) {
+                Log.d(TAG, " friend not found in friend list !");
+                return;
+            }
+            mFriendsAdapter.removeUser(u, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+        }
+    }
+
+    @Override
+    public void onMatchResultToSender(MatchResultHolder result) {
 
     }
 }

@@ -23,4 +23,6 @@ public interface SocketListener {
 
     void onFinishGame(ResultHolder resultHolder);
 
+
+
 }

@@ -25,6 +25,10 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.Transport;
 import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameRequest.RequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
@@ -38,8 +42,10 @@ import ir.treeco.aftabe.Util.Tools;
 public class SocketAdapter {
 
     private static ArrayList<SocketListener> listeners = new ArrayList<>();
+    private static ArrayList<SocketFriendMatchListener> friendsListeners = new ArrayList<>();
 
     private static final Object lock = new Object();
+    private static final Object friendsLock = new Object();
 
 
     private static Socket mSocket;
@@ -51,6 +57,19 @@ public class SocketAdapter {
         if (mContext == null)
             mContext = context;
     }
+
+    public static void addFriendSocketListener(SocketFriendMatchListener socketListener) {
+        synchronized (friendsLock) {
+            friendsListeners.add(socketListener);
+        }
+    }
+
+    public static void removeFriendSocketListener(SocketFriendMatchListener socketListener) {
+        synchronized (friendsLock) {
+            friendsListeners.remove(socketListener);
+        }
+    }
+
 
     public static void addSocketListener(SocketListener socketListener) {
         synchronized (lock) {
@@ -124,6 +143,36 @@ public class SocketAdapter {
                     Log.d(TAG, "gameStart is " + msg);
                     GameStartObject gameStartObject = gson.fromJson(msg, GameStartObject.class);
                     callGameStart(gameStartObject);
+                }
+            }).on("online", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    String msg = args[0].toString();
+                    Log.d(TAG, "online is : " + msg);
+                    OnlineFriendStatusHolder statusHolder = gson.fromJson(msg, OnlineFriendStatusHolder.class);
+                    callFriendStatusChanged(statusHolder);
+
+                }
+            }).on("matchSF", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+
+                    String msg = args[0].toString();
+                    Log.d(TAG, "matchReqSF is : " + msg);
+                    MatchRequestHolder requestHolder = gson.fromJson(msg, MatchRequestHolder.class);
+                    callMatchRequest(requestHolder);
+
+                }
+            }).on("matchResult", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+
+
+                    String msg = args[0].toString();
+                    Log.d(TAG, "matchResult is : " + msg);
+                    MatchResultHolder matchResultHolder = gson.fromJson(msg, MatchResultHolder.class);
+                    callMatchResult(matchResultHolder);
+
                 }
             }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
@@ -225,6 +274,29 @@ public class SocketAdapter {
 
     }
 
+    private static void callMatchRequest(MatchRequestHolder responseHolder) {
+        synchronized (friendsLock) {
+            for (SocketFriendMatchListener socket : friendsListeners)
+                socket.onMatchRequest(responseHolder);
+        }
+    }
+
+
+    private static void callMatchResult(MatchResultHolder responseHolder) {
+        synchronized (friendsLock) {
+            for (SocketFriendMatchListener socket : friendsListeners)
+                socket.onMatchResultToSender(responseHolder);
+        }
+    }
+
+    private static void callFriendStatusChanged(OnlineFriendStatusHolder responseHolder) {
+        synchronized (friendsLock) {
+            for (SocketFriendMatchListener socket : friendsListeners)
+                socket.onOnlineFriendStatus(responseHolder);
+        }
+    }
+
+
     private static void callGameStart(GameStartObject gameStartObject) {
 
         synchronized (lock) {
@@ -313,5 +385,35 @@ public class SocketAdapter {
 
     }
 
+    public static void requestToAFriend(final String friendId) {
+        initSocket();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                MatchRequestHolder requestHolder = new MatchRequestHolder(friendId);
+                Gson gson = new Gson();
+                mSocket.emit("matchUS", gson.toJson(requestHolder));
+
+            }
+        }).start();
+    }
+
+    public static void responseToMatchRequest(final String friendId, final boolean accepted) {
+
+        initSocket();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                MatchResponseHolder responseHolder = new MatchResponseHolder(friendId, accepted);
+                Gson gson = new Gson();
+                mSocket.emit("matchResponse", gson.toJson(responseHolder));
+
+            }
+        }).start();
+    }
 
 }

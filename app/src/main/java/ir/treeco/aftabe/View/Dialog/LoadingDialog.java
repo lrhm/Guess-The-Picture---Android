@@ -18,11 +18,15 @@ import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import cn.aigestudio.downloader.interfaces.IDListener;
 import io.socket.client.Socket;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.DownloadTask;
@@ -36,7 +40,8 @@ import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 /**
  * Created by al on 3/16/16.
  */
-public class LoadingDialog extends Dialog implements Runnable, SocketListener, DownloadTask.DownloadTaskListener {
+public class LoadingDialog extends Dialog implements Runnable,
+        SocketListener, DownloadTask.DownloadTaskListener, SocketFriendMatchListener {
 
     Context context;
     private boolean mDismissed = false;
@@ -78,6 +83,7 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
         SocketAdapter.addSocketListener(this);
+        SocketAdapter.addFriendSocketListener(this);
 
 
     }
@@ -204,6 +210,7 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
     public void onDetachedFromWindow() {
 
 
+        SocketAdapter.removeFriendSocketListener(this);
         SocketAdapter.removeSocketListener(this);
 
         super.onDetachedFromWindow();
@@ -251,6 +258,10 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
     public void onDownloadSuccess() {
         synchronized (lock) {
             Log.d("TAG", "downloaded");
+
+            if (mDismissed)
+                return;
+
             mDownloadCount++;
             if (mDownloadCount == 2) {
                 SocketAdapter.setReadyStatus();
@@ -262,5 +273,23 @@ public class LoadingDialog extends Dialog implements Runnable, SocketListener, D
     public void onDownloadError(String error) {
         Log.d("TAG", "dodwnload error " + error);
 
+    }
+
+    @Override
+    public void onMatchRequest(MatchRequestHolder request) {
+
+    }
+
+    @Override
+    public void onOnlineFriendStatus(OnlineFriendStatusHolder status) {
+
+    }
+
+    @Override
+    public void onMatchResultToSender(MatchResultHolder result) {
+
+        if (!result.isAccept()) {
+            dismiss();
+        }
     }
 }

@@ -45,16 +45,21 @@ import java.util.ArrayList;
 
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.User;
@@ -72,6 +77,7 @@ import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
+import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
@@ -80,7 +86,7 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
-        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener {
+        GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener, SocketFriendMatchListener {
 
 
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
@@ -114,6 +120,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LoadingDialog mLoadingDialog;
     private LinearLayout starContainer;
     private StarView[] starViews;
+    private FriendsAdapter mFriendsAdapter;
     LoadingForGameResultDialog mLoadingForGameResultDialog = null;
 
     @Override
@@ -200,6 +207,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
         DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
+        SocketAdapter.addFriendSocketListener(this);
         AftabeAPIAdapter.tryToLogin(this);
 
 
@@ -564,6 +572,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    @Override
+    public void onMatchRequest(MatchRequestHolder request) {
+
+        User friend = getUserFromFriendsById(request.getFriendId());
+        if (friend == null)
+            return;
+        new MatchRequestDialog(this, friend);
+    }
+
+    @Override
+    public void onOnlineFriendStatus(OnlineFriendStatusHolder status) {
+
+    }
+
+    @Override
+    public void onMatchResultToSender(MatchResultHolder result) {
+
+    }
+
 
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
@@ -764,5 +791,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+
+    public void setFriendsAdapter(FriendsAdapter mFriendsAdapter) {
+        this.mFriendsAdapter = mFriendsAdapter;
+    }
+
+    public User getUserFromFriendsById(String id) {
+        if (mFriendsAdapter == null)
+            return null;
+
+        for (User user : mFriendsAdapter.getFriendList())
+            if (user.getId().equals(id)) {
+                return user;
+            }
+        return null;
     }
 }

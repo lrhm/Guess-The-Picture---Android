@@ -604,6 +604,8 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User[]> response) {
                 if (response.isSuccess()) {
                     if (response.body().length != 0) {
+                        for (User user : response.body())
+                            user.setIsFriend(true);
                         listener.onGotUserList(response.body());
                         return;
                     }

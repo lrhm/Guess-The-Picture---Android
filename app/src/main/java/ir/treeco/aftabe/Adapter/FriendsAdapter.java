@@ -15,14 +15,19 @@ import org.joda.time.IllegalFieldValueException;
 
 import java.util.ArrayList;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.OnFriendRequest;
+import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
@@ -33,19 +38,21 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
 
     public ArrayList<User> mFriends;
+    public ArrayList<User> mOnlineFriends;
     public ArrayList<User> mRequests;
     public ArrayList<User> mContacts;
     public ArrayList<User> mSearched;
 
     ArrayList<ArrayList<User>> arrayLists;
-    private final String[] HEADERS = {"یافت شده گان", "درخواست ها", "دوستان", "مخاطبان"};
+    private final String[] HEADERS = {"یافت شده گان", "درخواست ها", "دوستان", "مخاطبان", "دوستان انلاین"};
 
     public static final int TYPE_FRIEND = 2;
     public static final int TYPE_SEARCHED = 0;
     public static final int TYPE_CONTACT = 3;
     public static final int TYPE_REQUEST = 1;
+    public static final int TYPE_ONLINE_FRIENDS = 4;
 
-    public static final int TYPE_HEADER = 4;
+    public static final int TYPE_HEADER = 5;
 
 
     public FriendsAdapter(ArrayList<User> friends, ArrayList<User> requests, ArrayList<User> contacts, ArrayList<User> searched) {
@@ -54,12 +61,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         mRequests = requests == null ? new ArrayList<User>() : requests;
         mContacts = contacts == null ? new ArrayList<User>() : contacts;
         mSearched = searched == null ? new ArrayList<User>() : searched;
+        mOnlineFriends = new ArrayList<>();
 
         arrayLists = new ArrayList<>();
         arrayLists.add(mSearched);
         arrayLists.add(mRequests);
         arrayLists.add(mFriends);
         arrayLists.add(mContacts);
+        arrayLists.add(mOnlineFriends);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -120,7 +129,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public void removeUser(User user, int type) {
         ArrayList<User> mList = arrayLists.get(type);
         int position = mList.indexOf(user);
+        if (position == -1)
+            return;
         mList.remove(position);
+
         int size = 0;
         for (int i = 0; i < type; i++) {
             ArrayList<User> list = arrayLists.get(i);
@@ -133,7 +145,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         int type = getItemViewType(position);
         final int realPosition = getRealPosition(position, type);
@@ -143,7 +155,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             return;
         }
 
-        User user = getUser(type, realPosition);
+        final User user = getUser(type, realPosition);
 
         holder.mChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +185,25 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 //                transaction.replace(R.id.fragment_container, gameFragment);
 //                transaction.addToBackStack(null);
 //                transaction.commit();
+//               TODO
+
+                if (user.isFriend()) {
+                    SocketAdapter.requestToAFriend(user.getId());
+                    new LoadingDialog(v.getContext()).show();
+
+                    return;
+                }
+                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
+                    @Override
+                    public void onFriendRequestSent() {
+
+                    }
+
+                    @Override
+                    public void onFriendRequestFailedToSend() {
+
+                    }
+                });
             }
         });
 
@@ -261,6 +292,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     private User getUser(int type, int pos) {
         return arrayLists.get(type).get(pos);
+    }
+
+    public ArrayList<User> getFriendList() {
+        ArrayList<User> res = new ArrayList<>();
+        res.addAll(mFriends);
+        res.addAll(mOnlineFriends);
+        return res;
     }
 
 }
