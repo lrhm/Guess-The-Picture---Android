@@ -80,30 +80,24 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
 
         if (v.getId() == R.id.uv_start_chat_button) {
-            if (mUser.isFriend())
-                acceptOrDeclineMatch(false);
+//            if (mUser.isFriend())
         }
 
         if (v.getId() == R.id.uv_match_button) {
             if (mUser.isFriend())
-                acceptOrDeclineMatch(true);
+                requestMatch();
             else {
                 AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), null);
                 Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
             }
         }
 
-        if (mUser.isFriend()) {
-            dismiss();
-
-            new LoadingDialog(v.getContext()).show();
-        }
 
     }
 
-    public void acceptOrDeclineMatch(boolean accepted) {
+    public void requestMatch() {
 
-        SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
+        SocketAdapter.requestToAFriend(mUser.getId());
 
     }
 

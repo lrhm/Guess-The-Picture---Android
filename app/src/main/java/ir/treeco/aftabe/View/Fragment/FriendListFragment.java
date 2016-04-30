@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
@@ -48,6 +49,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -206,6 +208,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                         for (User user : users)
                             mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
                         friends = users;
+
+                        SocketAdapter.requestOnlineFriendsStatus();
                     }
                 });
             }
@@ -301,6 +305,13 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         hideKeyboard();
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
+
+        User cachedUser = Tools.getCachedUser();
+
+        if (cachedUser == null) {
+            ToastMaker.show(getContext(), "برای جست و جو لطفا عضو شوید", Toast.LENGTH_SHORT);
+            return;
+        }
 
         if (myUser == null)
             return;

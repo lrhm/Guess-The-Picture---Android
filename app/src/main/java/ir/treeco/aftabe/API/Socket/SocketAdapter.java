@@ -155,7 +155,8 @@ public class SocketAdapter {
                     String msg = args[0].toString();
                     Log.d(TAG, "online is : " + msg);
                     OnlineFriendStatusHolder statusHolder = gson.fromJson(msg, OnlineFriendStatusHolder.class);
-                    callFriendStatusChanged(statusHolder);
+                    if (statusHolder.getStatus() != null)
+                        callFriendStatusChanged(statusHolder);
 
                 }
             }).on("matchSF", new Emitter.Listener() {
@@ -199,7 +200,7 @@ public class SocketAdapter {
             }).on(Socket.EVENT_PING, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    Log.d(TAG, "ping " + ((args.length != 0) ? args[0].toString() : ""));
+//                    Log.d(TAG, "ping " + ((args.length != 0) ? args[0].toString() : ""));
 
                 }
             }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -216,7 +217,7 @@ public class SocketAdapter {
             }).on(Socket.EVENT_PONG, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    Log.d(TAG, "pong " + ((args.length != 0) ? args[0].toString() : ""));
+//                    Log.d(TAG, "pong " + ((args.length != 0) ? args[0].toString() : ""));
 
                 }
             }).on("cancelResult", new Emitter.Listener() {
@@ -421,6 +422,10 @@ public class SocketAdapter {
 
                 MatchRequestHolder requestHolder = new MatchRequestHolder(friendId);
                 Gson gson = new Gson();
+
+                Log.d(TAG, "emit matchUS : " + gson.toJson(requestHolder));
+
+
                 mSocket.emit("matchUS", gson.toJson(requestHolder));
 
             }
@@ -437,6 +442,7 @@ public class SocketAdapter {
 
                 MatchResponseHolder responseHolder = new MatchResponseHolder(friendId, accepted);
                 Gson gson = new Gson();
+                Log.d(TAG, "emit matchResponse : " + gson.toJson(responseHolder));
                 mSocket.emit("matchResponse", gson.toJson(responseHolder));
 
             }
@@ -452,6 +458,7 @@ public class SocketAdapter {
 
                 RequestHolder requestHolder = new RequestHolder();
                 Gson gson = new Gson();
+                Log.d(TAG, "emit onlineRequest : " + gson.toJson(requestHolder));
                 mSocket.emit("onlineRequest", gson.toJson(requestHolder));
 
             }
@@ -468,6 +475,7 @@ public class SocketAdapter {
 
                 FriendRequestResultHolder holder = new FriendRequestResultHolder(userId, accept);
                 Gson gson = new Gson();
+                Log.d(TAG, "emit friendUS : " + gson.toJson(holder));
                 mSocket.emit("friendUS", gson.toJson(holder));
 
             }

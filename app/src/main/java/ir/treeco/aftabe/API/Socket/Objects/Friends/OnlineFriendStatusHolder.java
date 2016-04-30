@@ -34,4 +34,8 @@ public class OnlineFriendStatusHolder {
     public boolean isOnlineAndEmpty() {
         return status.equals("online");
     }
+
+    public String getStatus() {
+        return status;
+    }
 }
