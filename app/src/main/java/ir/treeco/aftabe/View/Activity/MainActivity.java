@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.FriendRequestListener;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -85,15 +86,18 @@ import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
+import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
         GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener,
-        SocketFriendMatchListener, FriendRequestListener {
+        SocketFriendMatchListener, FriendRequestListener, OnlineGameFragment.OnGameEndListener {
 
 
+    private ArrayList<FriendRequestDialog> mCachedFriendRequestDialogs = new ArrayList<>();
+    private boolean isInOnlineGame = false;
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
     private static final int PERMISSION_REQUEST_CONTACT = 80;
     private HeadObject headObject;
@@ -286,6 +290,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void setOnlineGame(boolean isOnline) {
+
+        isInOnlineGame = isOnline;
+
         int onlineViewsVisibility = (isOnline ? View.VISIBLE : View.GONE);
         int headerViewsVisibility = (isOnline ? View.GONE : View.VISIBLE);
 
@@ -585,7 +592,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         User friend = getUserFromFriendsById(request.getFriendId());
         if (friend == null)
             return;
-        new MatchRequestDialog(this, friend);
+        if (!isInOnlineGame)
+
+            new MatchRequestDialog(this, friend);
     }
 
     @Override
@@ -600,7 +609,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onFriendRequest(User user) {
-        new FriendRequestDialog(this, user).show();
+        FriendRequestDialog dialog = new FriendRequestDialog(this, user);
+        if (!isInOnlineGame)
+            dialog.show();
+        else
+            mCachedFriendRequestDialogs.add(dialog);
+
     }
 
     @Override
@@ -616,6 +630,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         dbAdapter.addFriendToDB(user);
 
         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+    }
+
+    @Override
+    public void onGameEnded() {
+
+        for (FriendRequestDialog dialog : mCachedFriendRequestDialogs) {
+            dialog.show();
+        }
+        mCachedFriendRequestDialogs.clear();
+
     }
 
     public interface OnPackagePurchasedListener {
@@ -721,6 +745,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void startLoading() {
+
+
         mLoadingDialog = new LoadingDialog(this);
 
         mLoadingDialog.show();
@@ -822,6 +848,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void setFriendsAdapter(FriendsAdapter mFriendsAdapter) {
         this.mFriendsAdapter = mFriendsAdapter;
+    }
+
+    public void setIsInOnlineGame(boolean isInOnlineGame) {
+        this.isInOnlineGame = isInOnlineGame;
     }
 
     public User getUserFromFriendsById(String id) {

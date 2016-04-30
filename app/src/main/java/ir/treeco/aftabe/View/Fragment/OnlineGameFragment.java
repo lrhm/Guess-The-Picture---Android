@@ -63,6 +63,12 @@ import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 
 public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
 
+
+    public interface OnGameEndListener {
+        void onGameEnded();
+    }
+
+    private OnGameEndListener mOnGameEndListener = null;
     private static final String TAG = "OnlineGameFragment";
 
     private Timer mTimer;
@@ -105,6 +111,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
         mainActivity = (MainActivity) getActivity();
+        setOnGameEndListener(mainActivity);
 
         ((MainActivity) getActivity()).setOnlineGame(true);
         User opponent = new User();
@@ -128,10 +135,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         LengthManager lengthManager = new LengthManager(getContext());
 
         int topMargin = lengthManager.getLevelImageHeight() +
-                (lengthManager.getLevelImageFrameHeight() - lengthManager.getLevelImageHeight())/2;
+                (lengthManager.getLevelImageFrameHeight() - lengthManager.getLevelImageHeight()) / 2;
 
 
-        Log.d("TAG", lengthManager.getLevelThumbnailPadding()+"");
+        Log.d("TAG", lengthManager.getLevelThumbnailPadding() + "");
         Log.d("TAG", lengthManager.getLevelImageFrameHeight() + "");
         Log.d("TAG", lengthManager.getLevelFrameHeight() + "");
         Log.d("TAG", lengthManager.getLevelImageHeight() + "");
@@ -221,13 +228,14 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     @Override
     public void onDestroy() {
 
-        ((MainActivity) getActivity()).setOnlineGame(false);
 
         if (state == 1 || state == 0 && mRemainingTime == 0) {
+            ((MainActivity) getActivity()).setOnlineGame(false);
+
             synchronized (lock) {
                 if (mGameResult == null) {
                     super.onDestroy();
-                    new LoadingForGameResultDialog(getActivity()).show();
+                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener).show();
                 } else {
                     boolean win = false;
                     if (mGameResult.getScores()[0].getUserId().equals(Tools.getCachedUser().getId()))
@@ -239,6 +247,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
                     super.onDestroy();
                     ((MainActivity) getActivity()).setOnlineGame(false);
+                    mOnGameEndListener.onGameEnded();
 
 //                    mainActivity.setOnlineGameVisibilityGone();
                     GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
@@ -297,6 +306,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             OnlineGameFragment gameFragment = new OnlineGameFragment();
             gameFragment.mRemainingTime = mRemainingTime;
+            gameFragment.setOnGameEndListener(mOnGameEndListener);
             gameFragment.setGameResultHolder(mGameResultHolder);
             gameFragment.setArguments(bundle);
 
@@ -331,6 +341,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         OnlineGameFragment gameFragment = new OnlineGameFragment();
         gameFragment.mRemainingTime = mRemainingTime;
+        gameFragment.setOnGameEndListener(mOnGameEndListener);
         gameFragment.setGameResultHolder(mGameResultHolder);
         gameFragment.setArguments(bundle);
 
@@ -428,5 +439,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             mGameResult = resultHolder;
         }
 
+    }
+
+
+    public void setOnGameEndListener(OnGameEndListener onGameEndListener) {
+        this.mOnGameEndListener = onGameEndListener;
     }
 }

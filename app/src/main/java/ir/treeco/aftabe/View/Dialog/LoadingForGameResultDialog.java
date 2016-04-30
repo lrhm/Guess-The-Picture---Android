@@ -7,12 +7,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
-import java.io.File;
 
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
@@ -21,7 +18,6 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
@@ -29,7 +25,6 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
-import ir.treeco.aftabe.View.Fragment.StoreFragment;
 
 
 /**
@@ -43,12 +38,14 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     private static int mLoadingImageWidth = 0, mLoadingImageHeight = 0;
     private ImageManager imageManager;
     private static int[] mImageLoadingIds;
+    private OnlineGameFragment.OnGameEndListener mOnGameEndListener;
     int mLoadingStep = 0;
 
 
-    public LoadingForGameResultDialog(Context context) {
+    public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener) {
         super(context);
         this.context = context;
+        mOnGameEndListener = onGameEndListener;
         imageManager = new ImageManager(context);
         ((MainActivity) context).setLoadingForGameResultDialog(this);
         initImageLoading();
@@ -194,6 +191,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
         if (resultHolder.getScores()[1].getUserId().equals(Tools.getCachedUser().getId()))
             win = resultHolder.getScores()[1].isWinner();
+
+//        TODO here or in gameResult we should call onGameEnd
+        if (mOnGameEndListener != null)
+            mOnGameEndListener.onGameEnded();
 
         GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
