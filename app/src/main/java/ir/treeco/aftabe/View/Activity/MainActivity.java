@@ -610,6 +610,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onFriendRequestAccept(User user) {
+
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(this);
+        dbAdapter.addFriendToDB(user);
+
         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
     }
 

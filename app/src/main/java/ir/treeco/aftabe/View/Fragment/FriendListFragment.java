@@ -38,6 +38,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -176,7 +177,9 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void setUpAdapters() {
 
-        if (mFriendsAdapter == null) mFriendsAdapter = new FriendsAdapter(null, null, null, null);
+        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
+        if (mFriendsAdapter == null)
+            mFriendsAdapter = new FriendsAdapter(dbAdapter.getMyCachedFriends(), null, null, null);
 
 
         if (getActivity() == null)
@@ -208,6 +211,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                         for (User user : users)
                             mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
                         friends = users;
+                        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
+                        dbAdapter.updateFriendsFromAPI(users);
 
                         SocketAdapter.requestOnlineFriendsStatus();
                     }

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.BatchUserFoundListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
@@ -147,11 +148,12 @@ public class DBAdapter {
         DBHelper.close();
     }
 
-    public void addFriend(User otherUser) {
+    public void addFriendToDB(User otherUser) {
 
         if (otherUser.isMe())
             return;
-        if (isFriend(otherUser))
+
+        if (isFriendInDB(otherUser))
             return;
 
         Gson gson = new Gson();
@@ -165,7 +167,7 @@ public class DBAdapter {
         close();
     }
 
-    public ArrayList<User> getMyFriends() {
+    public ArrayList<User> getMyCachedFriends() {
 
         ArrayList<User> list = new ArrayList<>();
         open();
@@ -175,7 +177,7 @@ public class DBAdapter {
                 null,
                 null, null, null, null);
 
-        if (cursor != null ) {
+        if (cursor != null) {
             Gson gson = new Gson();
             while (cursor.moveToNext()) {
                 list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)), User.class));
@@ -185,9 +187,7 @@ public class DBAdapter {
         return list;
     }
 
-    public void updateFriend(User friendUser) {
-        if (!isFriend(friendUser))
-            return;
+    public void updateFriendInDB(User friendUser) {
 
         open();
         ContentValues values = new ContentValues();
@@ -198,33 +198,30 @@ public class DBAdapter {
 
     }
 
-    public void updateFriends(User myUser) {
+    public void updateFriendsFromAPI(User[] newList) {
 
-        ArrayList<User> myFriends = getMyFriends();
+        ArrayList<User> myFriends = getMyCachedFriends();
 
-        for (User myFriend : myFriends) {
-            AftabeAPIAdapter.getUser(myUser, myFriend.getId(), new UserFoundListener() {
-                @Override
-                public void onGetUser(User user) {
-                    updateFriend(user);
-                }
+        for (User updatedFriend : newList) {
+            for (User myFriend : myFriends) {
+                if (myFriend.getId().equals(updatedFriend.getId())) {
+                    Gson gson = new Gson();
 
-                @Override
-                public void onGetError() {
-
-                }
-
-                @Override
-                public void onGetMyUser(User myUser) {
+                    if (!gson.toJson(myFriend).equals(gson.toJson(updatedFriend)))
+                        updateFriendInDB(updatedFriend);
+                    break;
 
                 }
-            });
+            } //Didnt find this user in friend list , add
+
+            addFriendToDB(updatedFriend);
+
 
         }
 
     }
 
-    public boolean isFriend(User otherUser) {
+    public boolean isFriendInDB(User otherUser) {
         open();
 
         try {
@@ -239,7 +236,7 @@ public class DBAdapter {
             }
             close();
             return false;
-        }catch (Exception e) {
+        } catch (Exception e) {
             close();
             return false;
         }
