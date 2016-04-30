@@ -325,13 +325,17 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         return R.drawable.correct2;
     }
 
+    private long lastTimeClicked = 0;
+
     @Override
     public void onClick(View v) {
 
         Log.d(this.getClass().getSimpleName(), "on click");
 
-        if (!mClick)
+        if (!mClick || System.currentTimeMillis() - lastTimeClicked < 1000)
             return;
+
+        lastTimeClicked = System.currentTimeMillis();
 
         if (Tools.isUserRegistered()) {
 

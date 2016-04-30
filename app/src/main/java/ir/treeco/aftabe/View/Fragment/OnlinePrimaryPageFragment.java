@@ -118,8 +118,15 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     }
 
+    private long lastTimeClicked = 0;
+
     @Override
     public void onClick(View v) {
+
+        if (System.currentTimeMillis() - lastTimeClicked < 500)
+            return;
+        lastTimeClicked = System.currentTimeMillis();
+
         if (v.getId() == R.id.multiplay_image_button) {
             ((MainActivity) getActivity()).requestRandomGame();
         }
