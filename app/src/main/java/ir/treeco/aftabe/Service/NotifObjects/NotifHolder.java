@@ -2,13 +2,27 @@ package ir.treeco.aftabe.Service.NotifObjects;
 
 import com.google.gson.annotations.Expose;
 
+import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
+
 /**
  * Created by al on 4/28/16.
  */
 public class NotifHolder {
 
     @Expose
-    NotifData data;
+    OnlineFriendStatusHolder online;
+
+    @Expose
+    MatchRequestHolder matchSF;
+
+    @Expose
+    MatchResultHolder matchResult;
+
+    @Expose
+    FriendRequestHolder friendSF;
 
     @Expose
     String date;
@@ -31,8 +45,38 @@ public class NotifHolder {
         return date;
     }
 
-    public NotifData getData() {
-        return data;
+    public boolean isFriendRequest() {
+        return type.equals("friendSF");
     }
+
+    public boolean isMatchRequestResult() {
+        return type.equals("matchResult");
+    }
+
+    public boolean isMatchRequest() {
+        return type.equals("matchSF");
+    }
+
+    public boolean isOnlineStatus() {
+        return type.equals("online");
+    }
+
+
+    public OnlineFriendStatusHolder getOnline() {
+        return online;
+    }
+
+    public MatchRequestHolder getMatchSF() {
+        return matchSF;
+    }
+
+    public MatchResultHolder getMatchResult() {
+        return matchResult;
+    }
+
+    public FriendRequestHolder getFriendSF() {
+        return friendSF;
+    }
+
 
 }

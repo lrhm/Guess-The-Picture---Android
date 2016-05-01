@@ -10,15 +10,22 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
+import ir.treeco.aftabe.Service.ServiceConstants;
 import ir.treeco.aftabe.Util.Tools;
 
 public class LoadingActivity extends Activity implements Runnable {
 
     long startTime;
+    private boolean mIsThereFriendReq;
+    private boolean mIsThereMatchReq;
+    private NotifHolder mNotifHolder;
+    private Bundle bundle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class LoadingActivity extends Activity implements Runnable {
 
         startTime = System.currentTimeMillis();
 
+        bundle = savedInstanceState;
 
         new Handler().postDelayed(this, 300);
 
@@ -56,11 +64,24 @@ public class LoadingActivity extends Activity implements Runnable {
                 e.printStackTrace();
             }
 
+
         Intent intent = new Intent(this, MainActivity.class);
+        if (bundle != null)
+            intent.putExtras(bundle);
         startActivity(intent);
         finish();
     }
 
+    public void checkExtras(Bundle bundle) {
+
+        mIsThereFriendReq = bundle.getBoolean(ServiceConstants.IS_FRIEND_REQUEST_INTENT, false);
+        mIsThereMatchReq = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_INTENT, false);
+
+        String data = bundle.getString(ServiceConstants.NOTIF_DATA_INTENT);
+        if (data != null) {
+            mNotifHolder = new Gson().fromJson(data, NotifHolder.class);
+        }
+    }
 
     private void initUtils() {
 
