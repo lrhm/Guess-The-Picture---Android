@@ -68,7 +68,9 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Service.RegistrationIntentService;
+import ir.treeco.aftabe.Service.ServiceConstants;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
@@ -145,6 +147,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         SocketAdapter.addFriendSocketListener(this);
 
         initActivity();
+
+        checkExtras(getIntent().getExtras());
 
         askForContactPermission();
 
@@ -774,9 +778,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (mLoadingDialog != null)
             mLoadingDialog.onBackPressed();
 
+        SocketAdapter.disconnect();
+
         super.onPause();
     }
 
+    @Override
+    protected void onResume() {
+
+        SocketAdapter.reconnect();
+
+        super.onResume();
+    }
 
     public void askForContactPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -864,4 +877,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         return null;
     }
+
+    public void checkExtras(Bundle bundle) {
+
+        boolean isThereFriendReq = bundle.getBoolean(ServiceConstants.IS_FRIEND_REQUEST_INTENT, false);
+        boolean isThereMatchReq = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_INTENT, false);
+
+
+        String data = bundle.getString(ServiceConstants.NOTIF_DATA_INTENT);
+        if (data == null)
+            return;
+        NotifHolder notifHolder = new Gson().fromJson(data, NotifHolder.class);
+        if (isThereFriendReq) {
+//            TODO
+//            new FriendRequestDialog(getBaseContext(), notifHolder.getFriendSF()).show();
+        } else if (isThereMatchReq) {
+            boolean accepted = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_ACCEPT, false);
+            if (accepted) {
+                SocketAdapter.responseToMatchRequest(notifHolder.getMatchSF().getFriendId(), true);
+            } else {
+                new MatchRequestDialog(getBaseContext(), getUserFromFriendsById(notifHolder.getMatchSF().getFriendId())).show();
+            }
+        }
+
+    }
+
 }

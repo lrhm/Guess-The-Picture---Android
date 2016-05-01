@@ -25,7 +25,6 @@ public class LoadingActivity extends Activity implements Runnable {
     private boolean mIsThereFriendReq;
     private boolean mIsThereMatchReq;
     private NotifHolder mNotifHolder;
-    private Bundle bundle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class LoadingActivity extends Activity implements Runnable {
 
         startTime = System.currentTimeMillis();
 
-        bundle = savedInstanceState;
 
         new Handler().postDelayed(this, 300);
 
@@ -66,22 +64,12 @@ public class LoadingActivity extends Activity implements Runnable {
 
 
         Intent intent = new Intent(this, MainActivity.class);
-        if (bundle != null)
-            intent.putExtras(bundle);
+        if (getIntent() != null && getIntent().getExtras() != null)
+            intent.putExtras(getIntent().getExtras());
         startActivity(intent);
         finish();
     }
 
-    public void checkExtras(Bundle bundle) {
-
-        mIsThereFriendReq = bundle.getBoolean(ServiceConstants.IS_FRIEND_REQUEST_INTENT, false);
-        mIsThereMatchReq = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_INTENT, false);
-
-        String data = bundle.getString(ServiceConstants.NOTIF_DATA_INTENT);
-        if (data != null) {
-            mNotifHolder = new Gson().fromJson(data, NotifHolder.class);
-        }
-    }
 
     private void initUtils() {
 

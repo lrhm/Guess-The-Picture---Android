@@ -482,5 +482,19 @@ public class SocketAdapter {
         }).start();
     }
 
+    public static void disconnect() {
+        if (mSocket == null)
+            return;
+        mSocket.disconnect();
+    }
+
+    public static void reconnect() {
+        if (mSocket == null) {
+            initSocket();
+            return;
+        }
+
+        mSocket.connect();
+    }
 
 }
