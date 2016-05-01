@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.BatchUserFoundListener;
@@ -198,15 +199,27 @@ public class DBAdapter {
 
     }
 
+    public void deleteFriendInDB(User friendUser) {
+
+        open();
+        ContentValues values = new ContentValues();
+        Gson gson = new Gson();
+        db.delete(FRIENDS, FRIEND_ID + " = " + friendUser.getId(), null);
+        close();
+
+    }
+
+
     public void updateFriendsFromAPI(User[] newList) {
 
         ArrayList<User> myFriends = getMyCachedFriends();
+        HashMap<String, Boolean> found = new HashMap<>();
 
         for (User updatedFriend : newList) {
             for (User myFriend : myFriends) {
                 if (myFriend.getId().equals(updatedFriend.getId())) {
                     Gson gson = new Gson();
-
+                    found.put(myFriend.getId(), true);
                     if (!gson.toJson(myFriend).equals(gson.toJson(updatedFriend)))
                         updateFriendInDB(updatedFriend);
                     break;
@@ -218,6 +231,15 @@ public class DBAdapter {
 
 
         }
+
+        for (User user : myFriends) {
+            Boolean isFound = found.get(user.getId());
+            if (isFound == null) {
+                deleteFriendInDB(user);
+            }
+        }
+        // remove those wich are not friends anymore
+
 
     }
 

@@ -1,10 +1,16 @@
 package ir.treeco.aftabe;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
+
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import java.io.IOError;
 
@@ -17,6 +23,24 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 
+@ReportsCrashes(
+
+        formUri = "https://thawing-mesa-9618.herokuapp.com/reports",
+        //formKey = "", // This is required for backward compatibility but not used
+        customReportContent = {
+                ReportField.LOGCAT ,
+                ReportField.APP_VERSION_CODE,
+                ReportField.APP_VERSION_NAME,
+                ReportField.ANDROID_VERSION,
+                ReportField.PACKAGE_NAME,
+                ReportField.REPORT_ID,
+                ReportField.BUILD,
+                ReportField.STACK_TRACE
+        },
+        mode = ReportingInteractionMode.TOAST,
+        resToastText = R.string.crash_toast
+)
+
 public class MainApplication extends Application {
 
 
@@ -25,6 +49,16 @@ public class MainApplication extends Application {
     private HeadObject headObject;
 
     private final static String TAG = "MainApplication";
+
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this);
+    }
 
     @Override
     public void onCreate() {

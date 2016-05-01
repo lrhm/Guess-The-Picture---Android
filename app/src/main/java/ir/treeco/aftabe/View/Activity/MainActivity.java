@@ -206,7 +206,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpHeader();
         setOriginalBackgroundColor();
 
-        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.IRAN_APPS);
+        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.CAFE_BAZAAR);
 
         mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -879,6 +879,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void checkExtras(Bundle bundle) {
+
+        if (bundle == null)
+            return;
 
         boolean isThereFriendReq = bundle.getBoolean(ServiceConstants.IS_FRIEND_REQUEST_INTENT, false);
         boolean isThereMatchReq = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_INTENT, false);

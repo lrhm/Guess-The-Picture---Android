@@ -92,6 +92,10 @@ public class SocketAdapter {
 
         if (mSocket != null)
             return;
+
+        if(Tools.getCachedUser() == null)
+            return;
+
         Log.d(TAG, "initilizing socketa");
 
         String url = "https://aftabe2.com:2020";

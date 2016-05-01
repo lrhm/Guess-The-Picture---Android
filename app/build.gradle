@@ -28,6 +28,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
 
+    compile 'ch.acra:acra:4.8.5'
     compile 'io.reactivex:rxjava:1.0.12'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'

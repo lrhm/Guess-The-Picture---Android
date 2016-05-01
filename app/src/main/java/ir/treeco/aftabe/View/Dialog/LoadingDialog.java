@@ -75,7 +75,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         setContentView(R.layout.dialog_loading);
-        ((MainActivity) getOwnerActivity()).setIsInOnlineGame(true);
+        ((MainActivity) context).setIsInOnlineGame(true);
 
 
         mDismissed = false;
@@ -146,7 +146,7 @@ public class LoadingDialog extends Dialog implements Runnable,
             return;
 
         if (mLoadingStep == mImageLoadingIds.length) { // the last image
-            ((MainActivity) getOwnerActivity()).setIsInOnlineGame(false);
+            ((MainActivity) context).setIsInOnlineGame(false);
             dismiss();
             return;
         }
@@ -161,7 +161,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     @Override
     public void onBackPressed() {
-        ((MainActivity) getOwnerActivity()).setIsInOnlineGame(false);
+        ((MainActivity) context).setIsInOnlineGame(false);
 
         SocketAdapter.cancelRequest();
 
