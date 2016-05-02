@@ -175,6 +175,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 Log.d(TAG, "success on image load");
 
                 mTimer = new Timer();
+                ((MainActivity) getActivity()).setTimer(mRemainingTime);
+
                 mTimer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
@@ -222,16 +224,13 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    public void doDestory() {
-        super.onDestroy();
-    }
-
 
     @Override
     public void onDestroy() {
 
 
         if (state == 1 || state == 0 && mRemainingTime == 0) {
+            Log.d(TAG, "onDestroy , set online game false");
             ((MainActivity) getActivity()).setOnlineGame(false);
 
             synchronized (lock) {
@@ -248,7 +247,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
 
                     super.onDestroy();
-                    ((MainActivity) getActivity()).setOnlineGame(false);
                     mOnGameEndListener.onGameEnded();
 
 //                    mainActivity.setOnlineGameVisibilityGone();
@@ -324,7 +322,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         this.mGameResultHolder = GameResultHolder;
     }
 
-    public void doSkip(){
+    public void doSkip() {
 
         getActivity().getSupportFragmentManager().popBackStack();
 
@@ -340,6 +338,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         OnlineGameFragment gameFragment = new OnlineGameFragment();
         gameFragment.mRemainingTime = mRemainingTime;
+        gameFragment.mGameResult = mGameResult;
         gameFragment.setOnGameEndListener(mOnGameEndListener);
         gameFragment.setGameResultHolder(mGameResultHolder);
         gameFragment.setArguments(bundle);
@@ -361,8 +360,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 doSkip();
             }
         }, "نه", null).show();
-
-
 
 
     }
@@ -424,7 +421,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         Log.d(TAG, "on destroy");
         SocketAdapter.removeSocketListener(this);
-        mTimer.cancel();
+        if (mTimer != null)
+            mTimer.cancel();
         super.onDestroyView();
     }
 

@@ -11,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.Util.Tools;
 
 /**
  * Created by al on 4/25/16.
@@ -26,6 +28,7 @@ public class TimerView extends FrameLayout {
     int mReamingTime;
     SizeConverter mainConverter;
     ImageManager imageManager;
+    boolean isTimerBlue = true;
 
     public TimerView(Context context) {
         super(context);
@@ -52,7 +55,8 @@ public class TimerView extends FrameLayout {
         timer = new ImageView(context);
         mTextView = new TextView(context);
         mTextView.setGravity(Gravity.CENTER);
-        mainConverter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.18), 437, 257);
+        mTextView.setTypeface(FontsHolder.getNumeralSansMedium(context));
+        mainConverter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.16), 437, 257);
 
         container.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timer, mainConverter.mWidth, mainConverter.mHeight));
         timer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timerblue, mainConverter.mWidth, mainConverter.mHeight));
@@ -62,6 +66,7 @@ public class TimerView extends FrameLayout {
         animation1.setRepeatCount(Animation.INFINITE);
         timer.startAnimation(animation1);
 
+
         addView(container);
         addView(timer);
         addView(mTextView);
@@ -69,10 +74,19 @@ public class TimerView extends FrameLayout {
     }
 
     public void setTimer(int time) {
-        mTextView.setText(time + "");
+        mTextView.setText(Tools.numeralStringToPersianDigits(time + ""));
 
-        if (time == 30)
+
+        if (time == 30) {
             timer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timerred, mainConverter.mWidth, mainConverter.mHeight));
+
+            isTimerBlue = false;
+        }
+        else if (time > 30 && !isTimerBlue){
+            isTimerBlue = true;
+            timer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timerblue, mainConverter.mWidth, mainConverter.mHeight));
+        }
+
     }
 
 

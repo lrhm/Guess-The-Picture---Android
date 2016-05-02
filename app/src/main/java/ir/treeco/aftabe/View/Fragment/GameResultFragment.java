@@ -108,6 +108,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         coinTextView.setText((mWin) ? "160" : "0");
 
         scoreTextView.setText(mGameResultHolder.getMyScoreResult(myUser) + "");
+        ((MainActivity) getActivity()).setStarts(mGameResultHolder.getMyScoreResult(myUser));
 
         ImageManager imageManager = new ImageManager(getContext());
 

@@ -34,6 +34,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private int mUserLevel;
     private int mUserExp;
     private float mDimension;
+    private boolean isOnlineTop = false;
 
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
@@ -88,7 +89,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         mUserNameTextView = new MagicTextView(context);
         mUserNameTextView.setText("اسمته");
-        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 80);
+        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * ((isOnlineTop) ? 75 : 80));
         mUserNameTextView.setTextColor(Color.WHITE);
 
         setShadowLayer(mUserNameTextView);
@@ -168,6 +169,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     }
 
     public void setShadowLayer(MagicTextView mLevelTextView) {
+
 //        float shadowSize = (mDimension * 6 / (0.7f));
 //        Log.d("LevelUserVIew", shadowSize + " is the shadow size");
         float shadowSize = (mDimension / 0.7f) * 6;
@@ -177,6 +179,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 120);
 
+        if(!isOnlineTop)
         mLevelTextView.setStroke(strokeSize, Color.parseColor("#c9c9c9"));
 
     }
@@ -202,11 +205,14 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
                 attrs, R.styleable.UserLevelView, defStyle, 0);
 
         if (a.hasValue(R.styleable.UserLevelView_customDimension))
-            mDimension = a.getFloat(0, 0.5f);
+            mDimension = a.getFloat(R.styleable.UserLevelView_customDimension, 0.5f);
         if (a.hasValue(R.styleable.UserLevelView_textAlign)) {
-            mTextAlign = a.getInt(1, 1);
+            mTextAlign = a.getInt(R.styleable.UserLevelView_textAlign, 1);
         } else
             mTextAlign = 1;
+        if (a.hasValue(R.styleable.UserLevelView_isOnlineTop)) {
+            isOnlineTop = a.getBoolean(R.styleable.UserLevelView_isOnlineTop, isOnlineTop);
+        }
 
         a.recycle();
 
@@ -215,7 +221,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     public void setUserExp(int userExp) {
         mUserExp = userExp;
-        expView.setImageBitmap(imageManager.loadImageFromResource(getExpID(mUserExp),
+        expView.setImageBitmap(imageManager.loadImageFromResource(getExpID(),
                 (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
 
     }
@@ -225,8 +231,8 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         mLevelTextView.setText(Tools.numeralStringToPersianDigits(userMark + ""));
     }
 
-    private int getExpID(int expLevel) {
-        expLevel++;
+    private int getExpID() {
+        int expLevel = mUser.getExp() + 1;
         switch (expLevel) {
             case 1:
                 return R.drawable.exp1;
@@ -244,10 +250,12 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
                 return R.drawable.exp7;
             case 8:
                 return R.drawable.exp8;
+            case 9:
+                return R.drawable.exp8;
 
 
         }
-        return 0;
+        return R.drawable.exp1;
     }
 
     public void setUser(User user) {

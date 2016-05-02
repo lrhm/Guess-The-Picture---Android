@@ -46,6 +46,10 @@ public class StarView extends RelativeLayout {
 
     }
 
+    public void setActive() {
+        mStarView.setVisibility(View.VISIBLE);
+    }
+
     public void setDeActivate() {
 
         mStarView.setVisibility(View.GONE);

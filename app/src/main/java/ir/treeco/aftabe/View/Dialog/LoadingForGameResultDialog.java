@@ -88,7 +88,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         if (mLoadingImageHeight != 0 && mLoadingImageWidth != 0
                 && mImageLoadingIds != null)
             return;
-        SizeConverter converter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.5f,
+        SizeConverter converter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.3f,
                 128, 128);
         mLoadingImageHeight = converter.mHeight;
         mLoadingImageWidth = converter.mWidth;

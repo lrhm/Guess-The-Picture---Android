@@ -164,6 +164,9 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     @Override
     public void onBackPressed() {
+        if (mDismissed)
+            return;
+
         ((MainActivity) context).setIsInOnlineGame(false);
         ((MainActivity) context).setOnlineGame(false);
         coinAdapter.earnCoins(100);
@@ -237,7 +240,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         gameFragment.setArguments(bundle);
 
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, gameFragment , "FRAGMENT_ONLINE_GAME");
+        transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
         transaction.addToBackStack(null);
         transaction.commit();
 

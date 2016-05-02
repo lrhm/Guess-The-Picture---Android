@@ -249,8 +249,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         starViews[0].rotate(-30);
         starViews[2].rotate(30);
-        starViews[1].setDeActivate();
 
+    }
+
+    public void setStarts(int score) {
+        ArrayList<Integer> idxs = new ArrayList<>();
+        if (score >= 1)
+            idxs.add(0);
+        if (score >= 2)
+            idxs.add(1);
+        if (score >= 4)
+            idxs.add(2);
+        for (Integer integer : idxs)
+            starViews[integer].setActive();
     }
 
     public void initSizes() {
@@ -287,15 +298,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void setUpPlayers() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
-        lp.topMargin = (lengthManager.getHeaderHeight() - playerOne.getRealWidth()) / 2;
+        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.93f) / 2);
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
-        lpTwo.topMargin = (lengthManager.getHeaderHeight() - playerOne.getRealWidth()) / 2;
-        lpTwo.leftMargin = (int) (0.8 * lengthManager.getScreenWidth());
+        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.93f) / 2);
+        lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
     }
 
     public void setOnlineGame(boolean isOnline) {
+
+        Log.d(TAG, "set online game " + isOnline);
 
         isInOnlineGame = isOnline;
 
