@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -365,6 +366,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         coinBox.setOnClickListener(this);
 
         CoinAdapter coinAdapter = new CoinAdapter(getApplicationContext(), this);
+        coinAdapter.earnCoins(500);
         coinAdapter.setCoinsChangedListener(this);
     }
 
@@ -557,16 +559,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGetUser(User user) {
         Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
-        if (user.isMe()) {
-            Log.d(TAG, user.getLoginInfo().getAccessToken());
 
-            myUser = user;
-            Gson gson = new Gson();
-            Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
-            Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
-            SocketAdapter.ping();
-
-        }
         for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetUser(user);
 
@@ -581,12 +574,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onGetMyUser(User myUser) {
+    public void onGetMyUser(User mUser) {
 
         Log.d("TAG", "on get my user main");
 
-        for (UserFoundListener userFoundListener : mUserFoundListeners)
-            userFoundListener.onGetMyUser(myUser);
+
+        this.myUser = mUser;
+        Gson gson = new Gson();
+        Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
+        Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (UserFoundListener userFoundListener : mUserFoundListeners)
+                    userFoundListener.onGetMyUser(MainActivity.this.myUser);
+
+            }
+        });
 
     }
 
@@ -728,6 +734,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
 
+        if (resultHolder.getMyScoreResult(myUser) != 0) {
+
+            myUser.setScore(myUser.getScore() + resultHolder.getMyScoreResult(myUser));
+            onGetMyUser(myUser);
+        }
+
 //        if(resultHolder.getStatus().)
 
     }
@@ -770,6 +782,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
+    int backPressedCount = 0;
+
+    @Override
+    public void onBackPressed() {
+
+
+        OnlineGameFragment fragment = (OnlineGameFragment) getSupportFragmentManager().findFragmentByTag("FRAGMENT_ONLINE_GAME");
+        if (fragment == null) {
+            super.onBackPressed();
+            return;
+        }
+
+        if (backPressedCount % 2 == 0) {
+            ToastMaker.show(this, "are you sure ???", Toast.LENGTH_SHORT);
+            backPressedCount++;
+
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     protected void onPause() {
         if (mLoadingForGameResultDialog != null)
@@ -780,12 +813,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         SocketAdapter.disconnect();
 
+        backPressedCount = 0;
+
         super.onPause();
     }
 
     @Override
     protected void onResume() {
 
+        backPressedCount = 0;
         SocketAdapter.reconnect();
 
         super.onResume();

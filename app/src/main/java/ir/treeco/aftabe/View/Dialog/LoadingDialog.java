@@ -28,6 +28,7 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -53,6 +54,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     private GameResultHolder mGameResultHolder;
     private static final Object lock = new Object();
     private int mDownloadCount = 0;
+    CoinAdapter coinAdapter;
 
     String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
@@ -61,7 +63,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         super(context);
         this.context = context;
         imageManager = new ImageManager(context);
-
+        coinAdapter = new CoinAdapter(context, (MainActivity) context);
 
         initImageLoading();
 
@@ -147,6 +149,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         if (mLoadingStep == mImageLoadingIds.length) { // the last image
             ((MainActivity) context).setIsInOnlineGame(false);
+            coinAdapter.earnCoins(100);
             dismiss();
             return;
         }
@@ -162,7 +165,8 @@ public class LoadingDialog extends Dialog implements Runnable,
     @Override
     public void onBackPressed() {
         ((MainActivity) context).setIsInOnlineGame(false);
-
+        ((MainActivity) context).setOnlineGame(false);
+        coinAdapter.earnCoins(100);
         SocketAdapter.cancelRequest();
 
         super.onBackPressed();
@@ -233,7 +237,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         gameFragment.setArguments(bundle);
 
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, gameFragment);
+        transaction.replace(R.id.fragment_container, gameFragment , "FRAGMENT_ONLINE_GAME");
         transaction.addToBackStack(null);
         transaction.commit();
 

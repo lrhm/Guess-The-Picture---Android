@@ -85,6 +85,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     private GameResultHolder mGameResultHolder;
     private int state = 0;
     private ImageView skipButton;
+    User opponent;
 
     private ResultHolder mGameResult;
     private Object lock = new Object();
@@ -114,7 +115,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         setOnGameEndListener(mainActivity);
 
         ((MainActivity) getActivity()).setOnlineGame(true);
-        User opponent = new User();
+        opponent = new User();
         opponent.setName(mGameResultHolder.getOpponent().getName());
         opponent.setId(mGameResultHolder.getOpponent().getId());
         opponent.setScore(mGameResultHolder.getOpponent().getScore());
@@ -137,11 +138,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         int topMargin = lengthManager.getLevelImageHeight() +
                 (lengthManager.getLevelImageFrameHeight() - lengthManager.getLevelImageHeight()) / 2;
 
-
-        Log.d("TAG", lengthManager.getLevelThumbnailPadding() + "");
-        Log.d("TAG", lengthManager.getLevelImageFrameHeight() + "");
-        Log.d("TAG", lengthManager.getLevelFrameHeight() + "");
-        Log.d("TAG", lengthManager.getLevelImageHeight() + "");
 
         SizeConverter skipbuttonConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.20f, 510, 200);
         int leftMargin = (int) ((int) SizeManager.getScreenWidth() / 2 - skipbuttonConverter.getWidth() / 2);
@@ -214,6 +210,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     }
 
+
     @Override
     public void onClick(View view) {
 
@@ -235,7 +232,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             synchronized (lock) {
                 if (mGameResult == null) {
                     super.onDestroy();
-                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener).show();
+                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent).show();
                 } else {
                     boolean win = false;
                     if (mGameResult.getScores()[0].getUserId().equals(Tools.getCachedUser().getId()))
@@ -250,7 +247,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     mOnGameEndListener.onGameEnded();
 
 //                    mainActivity.setOnlineGameVisibilityGone();
-                    GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
+                    GameResultFragment gameResultFragment = GameResultFragment.newInstance(win, mGameResult, opponent);
                     FragmentTransaction transaction = (getActivity()).getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, gameResultFragment);
                     transaction.addToBackStack(null);
@@ -311,7 +308,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             gameFragment.setArguments(bundle);
 
             FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, gameFragment);
+            transaction.replace(R.id.fragment_container, gameFragment , "FRAGMENT_ONLINE_GAME");
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -346,7 +343,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         gameFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, gameFragment);
+        transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
         transaction.addToBackStack(null);
 
         transaction.commit();

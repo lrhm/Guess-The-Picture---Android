@@ -108,6 +108,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
             @Override
             public void onGetMyUser(User myUser) {
 
+
                 setUpAdapters();
 
             }
@@ -184,13 +185,13 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         if (getActivity() == null)
             return;
+        if (mAdaptersSet)
+            return;
 
         ((MainActivity) getActivity()).setFriendsAdapter(mFriendsAdapter);
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
 
-        if (mAdaptersSet)
-            return;
 
         if (myUser == null) {
             mAdaptersSet = false;

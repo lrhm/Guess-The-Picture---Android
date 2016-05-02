@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
+import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -37,11 +39,15 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     private UserLevelView mUserLevelView;
     private NotificationCountView msgCountView;
     private NotificationCountView frndReqCountView;
+    private CoinAdapter coinAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_online_primary, container, false);
+
+        coinAdapter = new CoinAdapter(getActivity(), getActivity());
+
         lengthManager = ((MainApplication) getActivity().getApplication()).getLengthManager();
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
         ImageView startOnlineView = (ImageView) view.findViewById(R.id.multiplay_image_button);
@@ -104,8 +110,6 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     @Override
     public void onGetUser(User user) {
-        if (user.isMe())
-            mUserLevelView.setUser(user);
     }
 
     @Override
@@ -115,7 +119,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     @Override
     public void onGetMyUser(User myUser) {
-
+        mUserLevelView.setUser(myUser);
     }
 
     private long lastTimeClicked = 0;
@@ -127,8 +131,10 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
             return;
         lastTimeClicked = System.currentTimeMillis();
 
+
         if (v.getId() == R.id.multiplay_image_button) {
-            ((MainActivity) getActivity()).requestRandomGame();
+            if (coinAdapter.spendCoins(100))
+                ((MainActivity) getActivity()).requestRandomGame();
         }
     }
 }

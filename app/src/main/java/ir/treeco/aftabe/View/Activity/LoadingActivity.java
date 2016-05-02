@@ -84,6 +84,7 @@ public class LoadingActivity extends Activity implements Runnable {
 
         DBAdapter db = DBAdapter.getInstance(getApplication());
 
+
         tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
         if (Prefs.getBoolean("firstAppRun", true)) {

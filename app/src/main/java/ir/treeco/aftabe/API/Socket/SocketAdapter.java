@@ -295,7 +295,6 @@ public class SocketAdapter {
     }
 
     private static void callFriendRequestListeners(FriendRequestHolder holder) {
-        synchronized (requestLock) {
             for (FriendRequestListener listener : requestLiseners) {
                 if (holder.isRequest())
                     listener.onFriendRequest(holder.getUser());
@@ -303,61 +302,54 @@ public class SocketAdapter {
                     listener.onFriendRequestReject(holder.getUser());
                 else listener.onFriendRequestAccept(holder.getUser());
             }
-        }
+
     }
 
     private static void callMatchRequest(MatchRequestHolder responseHolder) {
-        synchronized (friendsLock) {
             for (SocketFriendMatchListener socket : friendsListeners)
                 socket.onMatchRequest(responseHolder);
-        }
+
     }
 
 
     private static void callMatchResult(MatchResultHolder responseHolder) {
-        synchronized (friendsLock) {
             for (SocketFriendMatchListener socket : friendsListeners)
                 socket.onMatchResultToSender(responseHolder);
-        }
+
     }
 
     private static void callFriendStatusChanged(OnlineFriendStatusHolder responseHolder) {
-        synchronized (friendsLock) {
             for (SocketFriendMatchListener socket : friendsListeners)
                 socket.onOnlineFriendStatus(responseHolder);
-        }
+
     }
 
 
     private static void callGameStart(GameStartObject gameStartObject) {
 
-        synchronized (lock) {
             for (SocketListener socketListener : listeners)
                 socketListener.onGameStart(gameStartObject);
-        }
+
 
     }
 
     private static void callGameRequestResult(GameResultHolder gameResultHolder) {
-        synchronized (lock) {
 
             for (SocketListener socketListener : listeners)
                 socketListener.onGotGame(gameResultHolder);
-        }
+
     }
 
     private static void callGameResult(ResultHolder resultHolder) {
-        synchronized (lock) {
             for (SocketListener socketListener : listeners)
                 socketListener.onFinishGame(resultHolder);
-        }
+
     }
 
     private static void callGameActions(UserActionHolder userActionHolder) {
-        synchronized (lock) {
             for (SocketListener socketListener : listeners)
                 socketListener.onGotUserAction(userActionHolder);
-        }
+
     }
 
     public static void setReadyStatus() {

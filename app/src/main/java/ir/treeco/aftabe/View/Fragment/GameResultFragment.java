@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
+import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -21,10 +27,14 @@ import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 
-public class GameResultFragment extends Fragment {
+public class GameResultFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_WIN_OR_LOSE = "param_win_or_lose";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM2 = "param_game_result_holder";
+    private static final String ARG_USER_OP = "param_user_oppoenent";
+
+    private ResultHolder mGameResultHolder;
+    private User mOpponent;
 
     private boolean mWin;
 
@@ -36,10 +46,12 @@ public class GameResultFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static GameResultFragment newInstance(Boolean win) {
+    public static GameResultFragment newInstance(Boolean win, ResultHolder gameResultHolder, User opponent) {
         GameResultFragment fragment = new GameResultFragment();
         Bundle args = new Bundle();
-        args.putBoolean(ARG_PARAM2, win);
+        args.putBoolean(ARG_WIN_OR_LOSE, win);
+        args.putString(ARG_PARAM2, new Gson().toJson(gameResultHolder));
+        args.putString(ARG_USER_OP, new Gson().toJson(opponent));
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,7 +60,10 @@ public class GameResultFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mWin = getArguments().getBoolean(ARG_PARAM2);
+            mWin = getArguments().getBoolean(ARG_WIN_OR_LOSE);
+            mGameResultHolder = new Gson().fromJson(getArguments().getString(ARG_PARAM2), ResultHolder.class);
+            mOpponent = new Gson().fromJson(getArguments().getString(ARG_USER_OP), User.class);
+
         }
     }
 
@@ -58,6 +73,7 @@ public class GameResultFragment extends Fragment {
 
 
         Log.d("TAG", "win is " + mWin);
+
         ((MainActivity) getActivity()).setGameResult(true);
 
         View view = inflater.inflate(R.layout.fragment_game_result, container, false);
@@ -73,6 +89,9 @@ public class GameResultFragment extends Fragment {
         UserLevelView myUserLevelView = (UserLevelView) view.findViewById(R.id.fragment_result_my_user_level_view);
         UserLevelView opponentLevelView = (UserLevelView) view.findViewById(R.id.fragment_result_op_user_level_view);
 
+
+        opponentLevelView.setUser(mOpponent);
+
         mAddFriendImageView = (ImageView) view.findViewById(R.id.fragment_result_add_friend);
         mChatImageView = (ImageView) view.findViewById(R.id.fragment_result_chat);
 
@@ -86,8 +105,9 @@ public class GameResultFragment extends Fragment {
 
         myUserLevelView.setUser(myUser);
 
-        coinTextView.setText("coin");
-        scoreTextView.setText("score");
+        coinTextView.setText((mWin) ? "160" : "0");
+
+        scoreTextView.setText(mGameResultHolder.getMyScoreResult(myUser));
 
         ImageManager imageManager = new ImageManager(getContext());
 
@@ -95,6 +115,7 @@ public class GameResultFragment extends Fragment {
 
 
         mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.addfriends, width, width));
+        mAddFriendImageView.setOnClickListener(this);
         mChatImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, width, width));
 
         ((RelativeLayout.LayoutParams) mAddFriendImageView.getLayoutParams()).topMargin = (int) (0.04 * SizeManager.getScreenWidth());
@@ -121,7 +142,7 @@ public class GameResultFragment extends Fragment {
         lp.width = (int) (SizeManager.getScreenWidth() * 0.8);
         lp.height = (int) (SizeManager.getScreenHeight() * 0.075);
 
-        if(lp instanceof FrameLayout.LayoutParams) {
+        if (lp instanceof FrameLayout.LayoutParams) {
             ((FrameLayout.LayoutParams) lp).topMargin = (int) (0.04 * SizeManager.getScreenWidth());
         }
     }
@@ -131,5 +152,13 @@ public class GameResultFragment extends Fragment {
         super.onDestroy();
         ((MainActivity) getActivity()).setGameResult(false);
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.fragment_result_add_friend) {
+            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mOpponent.getId(), null);
+        }
     }
 }

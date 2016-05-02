@@ -17,6 +17,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
@@ -40,11 +41,13 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     private static int[] mImageLoadingIds;
     private OnlineGameFragment.OnGameEndListener mOnGameEndListener;
     int mLoadingStep = 0;
+    private User mOpponent;
 
 
-    public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener) {
+    public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener, User opponent) {
         super(context);
         this.context = context;
+        mOpponent = opponent;
         mOnGameEndListener = onGameEndListener;
         imageManager = new ImageManager(context);
         ((MainActivity) context).setLoadingForGameResultDialog(this);
@@ -196,7 +199,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         if (mOnGameEndListener != null)
             mOnGameEndListener.onGameEnded();
 
-        GameResultFragment gameResultFragment = GameResultFragment.newInstance(win);
+        GameResultFragment gameResultFragment = GameResultFragment.newInstance(win, resultHolder, mOpponent);
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, gameResultFragment);
         transaction.addToBackStack(null);

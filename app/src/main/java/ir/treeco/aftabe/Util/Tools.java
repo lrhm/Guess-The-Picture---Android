@@ -104,7 +104,7 @@ public class Tools {
         return px / (metrics.densityDpi / 160f);
     }
 
-    public static int convertDPtoPixel(int dp , Context context) {
+    public static int convertDPtoPixel(int dp, Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         return px;
@@ -456,6 +456,16 @@ public class Tools {
     }
 
     public static void backUpDB() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                backUpDBAsync();
+
+            }
+        }).run();
+    }
+
+    public static void backUpDBAsync() {
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
         File data = Environment.getDataDirectory();
         FileChannel source;
@@ -502,6 +512,17 @@ public class Tools {
     }
 
     public static void backUpDBJournal() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                backUpDBJournalAsync();
+
+            }
+        }).run();
+    }
+
+    public static void backUpDBJournalAsync() {
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
         File data = Environment.getDataDirectory();
         FileChannel source;
@@ -788,7 +809,6 @@ public class Tools {
         Prefs.putDouble(SHARED_PREFS_SEED, seed);
         return seed;
     }
-
 
 
 }
