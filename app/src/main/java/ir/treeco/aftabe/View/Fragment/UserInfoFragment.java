@@ -33,8 +33,6 @@ public class UserInfoFragment extends Fragment {
     ImageView mMatchButton;
     ImageView mChatButton;
 
-    public LeaderboardDialog parent;
-
 
     @Nullable
     @Override
@@ -58,8 +56,12 @@ public class UserInfoFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     new RegistrationDialog(getContext(), false).show();
-                    if (parent != null)
-                        parent.dismiss();
+
+                    Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("leaderboard");
+                    if (prev != null) {
+                        LeaderboardDialog df = (LeaderboardDialog) prev;
+                        df.dismiss();
+                    }
                 }
             });
         }

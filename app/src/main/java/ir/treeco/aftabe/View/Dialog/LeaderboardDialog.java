@@ -65,7 +65,7 @@ public class LeaderboardDialog extends DialogFragment {
                 .create()
         );
 
-        ((UserInfoFragment) fragmentPagerAdapter.getItem(0)).parent = this;
+
 
         MySmartTabLayout smartTabLayout = (MySmartTabLayout) view.findViewById(R.id.smart_tab_leaderboard);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager_leaderboard);
