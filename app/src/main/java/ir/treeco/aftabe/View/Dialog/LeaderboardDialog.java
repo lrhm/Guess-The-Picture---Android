@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import com.ogaclejapan.smarttablayout.MySmartTabLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
@@ -42,15 +43,13 @@ public class LeaderboardDialog extends DialogFragment {
 
 
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.getWindow().setLayout((int) (0.8 * SizeManager.getScreenWidth()), (int) (0.7 * SizeManager.getScreenHeight()));
         return dialog;
     }
-
 
 
     @Nullable
@@ -66,6 +65,7 @@ public class LeaderboardDialog extends DialogFragment {
                 .create()
         );
 
+        ((UserInfoFragment) fragmentPagerAdapter.getItem(0)).parent = this;
 
         MySmartTabLayout smartTabLayout = (MySmartTabLayout) view.findViewById(R.id.smart_tab_leaderboard);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager_leaderboard);

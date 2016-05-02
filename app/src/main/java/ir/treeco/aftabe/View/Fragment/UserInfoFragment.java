@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -19,6 +20,8 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
+import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 
 /**
  * Created by al on 1/22/16.
@@ -30,10 +33,8 @@ public class UserInfoFragment extends Fragment {
     ImageView mMatchButton;
     ImageView mChatButton;
 
+    public LeaderboardDialog parent;
 
-    public UserInfoFragment() {
-
-    }
 
     @Nullable
     @Override
@@ -48,6 +49,19 @@ public class UserInfoFragment extends Fragment {
             UserLevelView userLevelView = (UserLevelView) view.findViewById(R.id.fragment_user_info_user_view);
             userLevelView.setUser(user);
             userLevelView.setClick(false);
+        }
+        if (user.isGuest()) {
+            Button button = (Button) view.findViewById(R.id.fragment_user_info_register_guest);
+
+            button.setVisibility(View.VISIBLE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new RegistrationDialog(getContext(), false).show();
+                    if (parent != null)
+                        parent.dismiss();
+                }
+            });
         }
 //
 //          TODO force sign out

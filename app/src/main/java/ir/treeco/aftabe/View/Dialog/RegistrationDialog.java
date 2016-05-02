@@ -16,7 +16,11 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.SignInButton;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.MainApplication;
+import ir.treeco.aftabe.Object.TokenHolder;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
@@ -29,13 +33,15 @@ public class RegistrationDialog extends Dialog {
     Context context;
     Tools tools;
     ImageManager imageManager;
+    private boolean showGuest = false;
 
-    public RegistrationDialog(Context context) {
+    public RegistrationDialog(Context context, boolean showGuest) {
         super(context);
         this.context = context;
         tools = new Tools(context);
         imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
+        this.showGuest = showGuest;
     }
 
 
@@ -74,6 +80,38 @@ public class RegistrationDialog extends Dialog {
 
             }
         });
+
+        if (showGuest) {
+            ImageView guestImageView = (ImageView) findViewById(R.id.guest_register_image_view);
+            guestImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.login_guest, sizeConverter.mWidth, sizeConverter.mHeight));
+            guestImageView.setVisibility(View.VISIBLE);
+            guestImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AftabeAPIAdapter.createGuestUser(new UserFoundListener() {
+                        @Override
+                        public void onGetUser(User user) {
+
+                        }
+
+                        @Override
+                        public void onGetError() {
+
+                        }
+
+                        @Override
+                        public void onGetMyUser(User myUser) {
+                            myUser.setGuest(true);
+                            Tools.updateSharedPrefsToken(myUser, new TokenHolder(myUser));
+                            ((MainActivity) context).onGetMyUser(myUser);
+                        }
+                    });
+
+
+                    dismiss();
+                }
+            });
+        }
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());

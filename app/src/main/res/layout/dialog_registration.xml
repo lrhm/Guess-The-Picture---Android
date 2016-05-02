@@ -9,28 +9,30 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerInParent="true"
-        >
+        android:orientation="vertical">
+
         <ImageView
+            android:id="@+id/gmail_registration_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <ImageView
+            android:id="@+id/phone_registration_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/gmail_registration_image_view"
-            />
-
+            android:layout_marginTop="20dp" />
 
         <ImageView
+            android:id="@+id/guest_register_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:id="@+id/phone_registration_image_view"
-            />
-
+            android:visibility="gone" />
 
 
     </LinearLayout>
-
-
 
 
 </RelativeLayout>

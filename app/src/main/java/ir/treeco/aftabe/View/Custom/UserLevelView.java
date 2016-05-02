@@ -179,8 +179,8 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         int strokeSize = (int) (SizeManager.getScreenWidth() * mDimension / 120);
 
-        if(!isOnlineTop)
-        mLevelTextView.setStroke(strokeSize, Color.parseColor("#c9c9c9"));
+        if (!isOnlineTop)
+            mLevelTextView.setStroke(strokeSize, Color.parseColor("#c9c9c9"));
 
     }
 
@@ -359,7 +359,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             return;
         }
 
-        new RegistrationDialog(getContext()).show();
+        new RegistrationDialog(getContext(), false).show();
 
 
     }

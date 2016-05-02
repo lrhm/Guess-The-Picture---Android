@@ -666,6 +666,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+    public boolean isPaused() {
+        return isPaused;
+    }
+
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
 
@@ -816,6 +820,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }, "نه", null).show();
     }
 
+
+    private boolean isPaused = false;
+
     @Override
     protected void onPause() {
         if (mLoadingForGameResultDialog != null)
@@ -826,6 +833,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         SocketAdapter.disconnect();
 
+        isPaused = true;
 
         super.onPause();
     }
@@ -833,6 +841,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onResume() {
 
+        isPaused = false;
         SocketAdapter.reconnect();
 
         super.onResume();

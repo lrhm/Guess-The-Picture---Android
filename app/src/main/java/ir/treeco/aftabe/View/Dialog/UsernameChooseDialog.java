@@ -20,12 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.UsernameCheckListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
+import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 import ir.treeco.aftabe.API.Utils.SMSValidateToken;
+import ir.treeco.aftabe.Object.TokenHolder;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
@@ -34,10 +39,11 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
 
     Context context;
     Tools tools;
-    private final static long CHECK_USER_THRESH_HOLD = 500;
+    private final static long CHECK_USER_THRESH_HOLD = 100;
     private long lastTimeChecked = 0;
     GoogleToken googleToken = null;
     SMSValidateToken smsToken = null;
+
     EditText mEditText;
     Button mAcceptButton;
     ImageView mStatusImageView;
@@ -59,6 +65,10 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
 
     }
 
+    public UsernameChooseDialog(Context context, MainActivity mActivity) {
+        super(context);
+        this.mActivity = mActivity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +128,6 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         lpImageView.leftMargin = (int) (SizeManager.getScreenWidth() * 0.75);
 
 
-
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
         lp.width = SizeManager.getScreenWidth();
@@ -175,7 +184,6 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
             mStatusImageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
             return;
         }
-        Toast.makeText(context, "this name is available ", Toast.LENGTH_SHORT).show();
         mStatusImageView.setImageResource(R.drawable.ic_check_circle_black_24dp);
         mAcceptButton.setEnabled(true);
     }

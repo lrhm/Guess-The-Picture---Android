@@ -131,6 +131,13 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
             return;
         lastTimeClicked = System.currentTimeMillis();
 
+        if (!Tools.isUserRegistered()) {
+
+            new RegistrationDialog(getContext(), true).show();
+
+            return;
+
+        }
 
         if (v.getId() == R.id.multiplay_image_button) {
             if (coinAdapter.spendCoins(100))

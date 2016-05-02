@@ -378,7 +378,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     answerObject.setSkip();
                     SocketAdapter.setAnswerLevel(answerObject);
 
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    if (!((MainActivity) getActivity()).isPaused())
+                        getActivity().getSupportFragmentManager().popBackStack();
 
                     if (state == 1) {
                         Log.d(TAG, "return mikonim dg ");

@@ -7,110 +7,109 @@
 
 
     <ir.treeco.aftabe.View.Custom.UserLevelView
+        android:id="@+id/fragment_user_info_user_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:clickable="true"
-        android:id="@+id/fragment_user_info_user_view"
         app:customDimension="0.2"
         app:textAlign="below"
 
         />
 
 
-
     <RelativeLayout
+        android:id="@+id/fragment_user_info_text_cointainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="100dp"
-            >
+            android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="Lefty"
-                    />
+                    android:text="Lefty" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="Righty"
-                    />
+                    android:text="Righty" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="Lefty"
-                    />
+                    android:text="Lefty" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="Righty"
-                    />
+                    android:text="Righty" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="Lefty"
-                    />
+                    android:text="Lefty" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="Righty"
-                    />
+                    android:text="Righty" />
 
             </RelativeLayout>
-
-
 
 
         </LinearLayout>
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/fragment_user_info_register_guest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_user_info_text_cointainer"
+        android:layout_gravity="center_horizontal"
+        android:text="register"
+        android:visibility="gone" />
 
 
 </RelativeLayout>
