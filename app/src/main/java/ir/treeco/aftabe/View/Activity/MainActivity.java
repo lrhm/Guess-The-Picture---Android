@@ -86,6 +86,7 @@ import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
+import ir.treeco.aftabe.View.Dialog.SkipDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
@@ -782,25 +783,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    int backPressedCount = 0;
-
     @Override
     public void onBackPressed() {
 
 
-        OnlineGameFragment fragment = (OnlineGameFragment) getSupportFragmentManager().findFragmentByTag("FRAGMENT_ONLINE_GAME");
+        final OnlineGameFragment fragment = (OnlineGameFragment) getSupportFragmentManager().findFragmentByTag("FRAGMENT_ONLINE_GAME");
         if (fragment == null) {
             super.onBackPressed();
             return;
         }
 
-        if (backPressedCount % 2 == 0) {
-            ToastMaker.show(this, "are you sure ???", Toast.LENGTH_SHORT);
-            backPressedCount++;
+        new SkipDialog(this, "بازی تمام خواهد شد . \n ایا مطمپن هستین ؟", "اره", new TextView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        } else {
-            super.onBackPressed();
-        }
+                MainActivity.this.setOnlineGame(false);
+                MainActivity.this.getSupportFragmentManager().popBackStack();
+            }
+        }, "نه", null).show();
     }
 
     @Override
@@ -813,7 +813,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         SocketAdapter.disconnect();
 
-        backPressedCount = 0;
 
         super.onPause();
     }
@@ -821,7 +820,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onResume() {
 
-        backPressedCount = 0;
         SocketAdapter.reconnect();
 
         super.onResume();

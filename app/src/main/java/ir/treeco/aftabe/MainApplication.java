@@ -38,7 +38,7 @@ import ir.treeco.aftabe.Util.Tools;
                 ReportField.STACK_TRACE
         },
         mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.crash_toast
+        resToastText = R.string.toast_crash
 )
 
 public class MainApplication extends Application {
@@ -57,13 +57,17 @@ public class MainApplication extends Application {
         super.attachBaseContext(base);
 
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
+
+
     }
 
     @Override
     public void onCreate() {
 
         super.onCreate();
+
+        ACRA.init(this);
+
         new Prefs.Builder()
                 .setContext(this)
                 .setMode(MODE_PRIVATE)

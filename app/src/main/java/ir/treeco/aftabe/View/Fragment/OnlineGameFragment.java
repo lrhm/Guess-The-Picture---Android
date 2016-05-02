@@ -59,6 +59,7 @@ import ir.treeco.aftabe.View.Custom.KeyboardView;
 import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
+import ir.treeco.aftabe.View.Dialog.SkipDialog;
 
 
 public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
@@ -139,7 +140,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 (lengthManager.getLevelImageFrameHeight() - lengthManager.getLevelImageHeight()) / 2;
 
 
-        SizeConverter skipbuttonConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.20f, 510, 200);
+        SizeConverter skipbuttonConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.22f, 510, 200);
         int leftMargin = (int) ((int) SizeManager.getScreenWidth() / 2 - skipbuttonConverter.getWidth() / 2);
 
         skipButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.skipbutton, skipbuttonConverter.mWidth,
@@ -219,6 +220,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 new ImageFullScreenDialog(getContext(), imagePath).show();
                 break;
         }
+    }
+
+    public void doDestory() {
+        super.onDestroy();
     }
 
 
@@ -308,7 +313,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             gameFragment.setArguments(bundle);
 
             FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, gameFragment , "FRAGMENT_ONLINE_GAME");
+            transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -319,10 +324,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         this.mGameResultHolder = GameResultHolder;
     }
 
-    public void skip() {
-        if (state == 1)
-            return;
-
+    public void doSkip(){
 
         getActivity().getSupportFragmentManager().popBackStack();
 
@@ -347,6 +349,20 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         transaction.addToBackStack(null);
 
         transaction.commit();
+    }
+
+    public void skip() {
+        if (state == 1)
+            return;
+
+        new SkipDialog(getContext(), "مطمپنی میخوای رد شی ؟" + "\n" + "دیگه نمیتونی برگردی!", "باشه", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doSkip();
+            }
+        }, "نه", null).show();
+
+
 
 
     }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 /**
@@ -62,6 +63,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             super(v);
 
             mTextView = (TextView) itemView.findViewById(R.id.rank_leaderboard_item);
+            mTextView.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
             mUserLevelView = (UserLevelView) itemView.findViewById(R.id.leaderboard_mark_view);
         }
 
