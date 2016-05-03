@@ -455,11 +455,16 @@ public class Tools {
         }
     }
 
+    private static Object lock = new Object();
+
     public static void backUpDB() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                backUpDBAsync();
+
+                synchronized (lock) {
+                    backUpDBAsync();
+                }
 
             }
         }).run();

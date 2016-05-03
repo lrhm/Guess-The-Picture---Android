@@ -527,6 +527,8 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User[]> response) {
                 if (response.isSuccess()) {
                     if (response.body() != null && response.body().length != 0) {
+                        for (User user : response.body())
+                            user.setIsFriend(false);
                         listener.onGotUserList(response.body());
                         return;
                     }
@@ -580,6 +582,10 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User[]> response) {
                 if (response.isSuccess()) {
                     if (response.body().length != 0) {
+
+                        for (User user : response.body())
+                            user.setIsFriend(false);
+
                         listener.onGotUserList(response.body());
                         return;
                     }

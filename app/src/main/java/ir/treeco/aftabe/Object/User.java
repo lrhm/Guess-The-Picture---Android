@@ -57,7 +57,9 @@ public class User {
     @Expose
     private String code;
 
-    private boolean isFriend = false;
+
+    @Expose
+    Access access;
 
     LevelCalculator levelCalculator;
 
@@ -204,12 +206,25 @@ public class User {
     }
 
     public boolean isFriend() {
-        return isFriend;
+        return access.friend;
     }
-
 
     public void setIsFriend(boolean isFriend) {
-        this.isFriend = isFriend;
+        access = new Access();
+        access.friend = isFriend;
     }
+
+
+    public class Access {
+        @Expose
+        boolean friend;
+
+        @Expose
+        boolean FRfrom;
+
+        @Expose
+        boolean FRto;
+    }
+
 
 }

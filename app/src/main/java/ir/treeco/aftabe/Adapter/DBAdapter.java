@@ -163,7 +163,7 @@ public class DBAdapter {
         open();
         ContentValues values = new ContentValues();
         values.put(FRIEND_ID, otherUser.getId());
-        values.put(FRIEND_USER_GSON, friendGsonString);
+        values.put(FRIEND_USER_GSON, "'"+friendGsonString + "'");
         db.insert(FRIENDS, null, values);
         close();
     }
@@ -181,7 +181,8 @@ public class DBAdapter {
         if (cursor != null) {
             Gson gson = new Gson();
             while (cursor.moveToNext()) {
-                list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)), User.class));
+                Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
+                list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'",""), User.class));
             }
         }
         close();
@@ -193,8 +194,9 @@ public class DBAdapter {
         open();
         ContentValues values = new ContentValues();
         Gson gson = new Gson();
-        values.put(FRIEND_USER_GSON, gson.toJson(friendUser));
-        db.update(FRIENDS, values, FRIEND_ID + " = " + friendUser.getId(), null);
+        values.put(FRIEND_USER_GSON, "'"+gson.toJson(friendUser) + "'");
+        Log.d(TAG, gson.toJson(friendUser));
+        db.update(FRIENDS, values, FRIEND_ID + " = '" + friendUser.getId() +"'", null);
         close();
 
     }
@@ -202,9 +204,7 @@ public class DBAdapter {
     public void deleteFriendInDB(User friendUser) {
 
         open();
-        ContentValues values = new ContentValues();
-        Gson gson = new Gson();
-        db.delete(FRIENDS, FRIEND_ID + " = " + friendUser.getId(), null);
+        db.delete(FRIENDS, FRIEND_ID + " = '" + friendUser.getId()+"'", null);
         close();
 
     }

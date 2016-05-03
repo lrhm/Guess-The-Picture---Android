@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LoadingDialog mLoadingDialog;
     private LinearLayout starContainer;
     private StarView[] starViews;
-    private FriendsAdapter mFriendsAdapter;
+    public FriendsAdapter mFriendsAdapter;
     LoadingForGameResultDialog mLoadingForGameResultDialog = null;
 
     @Override
@@ -632,12 +632,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onFriendRequest(User user) {
-        FriendRequestDialog dialog = new FriendRequestDialog(this, user);
-        if (!isInOnlineGame)
-            dialog.show();
-        else
-            mCachedFriendRequestDialogs.add(dialog);
+    public void onFriendRequest(final User user) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                FriendRequestDialog dialog = new FriendRequestDialog(MainActivity.this, user);
+                if (!isInOnlineGame)
+                    dialog.show();
+                else
+                    mCachedFriendRequestDialogs.add(dialog);
+            }
+        });
+
 
     }
 

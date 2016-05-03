@@ -12,12 +12,15 @@ import android.widget.RelativeLayout;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
@@ -46,7 +49,7 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        setContentView(R.layout.dialog_match_request_view);
+        setContentView(R.layout.dialog_friend_request_view);
 
         mUserLevelView = (UserLevelView) findViewById(R.id.dialog_user_view_mark_view);
         mUserLevelView.setUser(mUser);
@@ -83,6 +86,9 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
 
         if (v.getId() == R.id.uv_match_button) {
             SocketAdapter.answerFriendRequest(mUser.getId(), true);
+            ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
+            DBAdapter dbAdapter = DBAdapter.getInstance(context);
+            dbAdapter.addFriendToDB(mUser);
         }
 
         dismiss();

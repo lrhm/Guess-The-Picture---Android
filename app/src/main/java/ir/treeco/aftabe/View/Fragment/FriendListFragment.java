@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.net.Socket;
@@ -209,8 +211,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 FriendListFragment.this.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        for (User user : users)
+                        for (User user : users) {
                             mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+                            Log.d(TAG, new Gson().toJson(user));
+                        }
                         friends = users;
                         DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
                         dbAdapter.updateFriendsFromAPI(users);

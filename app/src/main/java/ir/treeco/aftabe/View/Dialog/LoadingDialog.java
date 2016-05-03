@@ -92,6 +92,11 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     }
 
+    @Override
+    protected void onStop() {
+        mDismissed = true;
+        super.onStop();
+    }
 
     private void initImageLoading() {
 

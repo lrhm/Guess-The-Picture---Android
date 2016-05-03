@@ -10,21 +10,17 @@ import com.google.gson.annotations.Expose;
 public class OnlineFriendStatusHolder {
 
     @Expose
-    String friendId;
+    String friend;
 
     @Expose
     String status;
 
     public String getFriendId() {
-        return friendId;
+        return friend;
     }
 
     public boolean isOnline() {
         return status.equals("online") || isPlaying();
-    }
-
-    public boolean isOffline() {
-        return status.equals("offline");
     }
 
     public boolean isPlaying() {
