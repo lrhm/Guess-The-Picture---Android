@@ -87,7 +87,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
 
         dismiss();
 
-        new LoadingDialog(v.getContext()).show();
+        new LoadingDialog(context).show();
 
     }
 

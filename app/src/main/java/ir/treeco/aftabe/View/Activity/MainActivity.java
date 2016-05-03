@@ -613,12 +613,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onMatchRequest(MatchRequestHolder request) {
 
-        User friend = getUserFromFriendsById(request.getFriendId());
+        final User friend = getUserFromFriendsById(request.getFriendId());
         if (friend == null)
             return;
-        if (!isInOnlineGame)
+        if (!isInOnlineGame) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new MatchRequestDialog(MainActivity.this, friend).show();
 
-            new MatchRequestDialog(this, friend);
+                }
+            });
+
+        }
     }
 
     @Override
@@ -628,7 +635,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
+        if (result.isAccept()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new LoadingDialog(MainActivity.this).show();
 
+                }
+            });
+        }
     }
 
     @Override
@@ -637,6 +652,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+
                 FriendRequestDialog dialog = new FriendRequestDialog(MainActivity.this, user);
                 if (!isInOnlineGame)
                     dialog.show();
