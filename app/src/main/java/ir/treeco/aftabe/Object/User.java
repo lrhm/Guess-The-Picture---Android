@@ -70,6 +70,10 @@ public class User {
         guest = false;
     }
 
+    public void setAccess(Access access) {
+        this.access = access;
+    }
+
     public String getName() {
         return name;
     }

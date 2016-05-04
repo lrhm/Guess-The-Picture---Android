@@ -120,6 +120,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         opponent.setName(mGameResultHolder.getOpponent().getName());
         opponent.setId(mGameResultHolder.getOpponent().getId());
         opponent.setScore(mGameResultHolder.getOpponent().getScore());
+        opponent.setAccess(mGameResultHolder.getOpponent().getAccess());
 
         ((MainActivity) getActivity()).setOnlineGameUser(opponent);
 
