@@ -105,6 +105,11 @@ public class RegistrationDialog extends Dialog {
                             Tools.updateSharedPrefsToken(myUser, new TokenHolder(myUser));
                             ((MainActivity) context).onGetMyUser(myUser);
                         }
+
+                        @Override
+                        public void onForceLogout() {
+
+                        }
                     });
 
 

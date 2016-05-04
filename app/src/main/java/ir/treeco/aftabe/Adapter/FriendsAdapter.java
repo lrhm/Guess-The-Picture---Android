@@ -143,12 +143,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         else notifyItemRemoved(position + size + 1);
     }
 
-    public void removeAll(){
-        for(ArrayList<User> list : arrayLists)
+    public void removeAll() {
+        for (ArrayList<User> list : arrayLists)
             list.clear();
         notifyDataSetChanged();
     }
-
 
 
     @Override
@@ -231,10 +230,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        int[] sizes = new int[4];
+        int[] sizes = new int[arrayLists.size()];
         int size = 0;
         int tempSize = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < arrayLists.size(); i++) {
             ArrayList<User> list = arrayLists.get(i);
             sizes[i] = list.size();
             tempSize = size;
@@ -256,7 +255,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     @Override
     public int getItemCount() {
         int size = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < arrayLists.size(); i++) {
             ArrayList<User> list = arrayLists.get(i);
             size += list.size() + (list.isEmpty() ? 0 : 1);
         }
@@ -270,7 +269,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             int size = 0;
             int i = 0;
             int tempSize = 0;
-            for (i = 0; i < 4; i++) {
+            for (i = 0; i < arrayLists.size(); i++) {
                 ArrayList<User> list = arrayLists.get(i);
                 tempSize = size;
                 size += list.size() + (list.isEmpty() ? 0 : 1);
@@ -284,7 +283,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         }
         int size = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < arrayLists.size(); i++) {
             ArrayList<User> list = arrayLists.get(i);
             size += list.size() + (list.isEmpty() ? 0 : 1);
             if (position < size)

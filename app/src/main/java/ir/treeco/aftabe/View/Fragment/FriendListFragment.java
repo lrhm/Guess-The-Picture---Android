@@ -1,9 +1,12 @@
 package ir.treeco.aftabe.View.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
@@ -359,6 +362,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         }
 
+
         Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         while (phones.moveToNext()) {
 
@@ -434,36 +438,44 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onOnlineFriendStatus(OnlineFriendStatusHolder status) {
 
-        if (friends == null) {
-            Log.d(TAG, "friends is null before friend statues !");
-            return;
-        }
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
         if (status.isOnlineAndEmpty()) {
-            User u = null;
-            for (User user : friends) {
+            for(User user : dbAdapter.getMyCachedFriends()){
                 if (status.getFriendId().equals(user.getId())) {
-                    u = user;
+                    final User user1 = user;
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFriendsAdapter.addUser(user1, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+
+                        }
+                    });
+                    Log.d(TAG, "added online !");
                     return;
                 }
             }
-            if (u == null) {
-                Log.d(TAG, " friend not found in friend list !");
-                return;
-            }
-            mFriendsAdapter.addUser(u, FriendsAdapter.TYPE_ONLINE_FRIENDS);
         } else {
             User u = null;
-            for (User user : friends) {
+            for (User user : dbAdapter.getMyCachedFriends()) {
                 if (status.getFriendId().equals(user.getId())) {
                     u = user;
-                    return;
+                    break;
                 }
             }
             if (u == null) {
                 Log.d(TAG, " friend not found in friend list !");
                 return;
             }
-            mFriendsAdapter.removeUser(u, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+            final User finalU = u;
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    mFriendsAdapter.removeUser(finalU, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+
+
+                }
+            });
         }
     }
 

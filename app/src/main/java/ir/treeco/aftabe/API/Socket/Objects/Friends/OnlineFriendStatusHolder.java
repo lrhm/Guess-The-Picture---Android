@@ -10,13 +10,13 @@ import com.google.gson.annotations.Expose;
 public class OnlineFriendStatusHolder {
 
     @Expose
-    String friend;
+    String friendId;
 
     @Expose
     String status;
 
     public String getFriendId() {
-        return friend;
+        return friendId;
     }
 
     public boolean isOnline() {
