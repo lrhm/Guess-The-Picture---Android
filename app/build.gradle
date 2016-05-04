@@ -4,10 +4,10 @@ android {
     signingConfigs {
         config {
             keyAlias 'debug'
-            storeFile file('/home/al/.android/debug.keystore')
+            storeFile file('~/.android/debug.keystore')
         }
         debug {
-            storeFile file('/home/al/.android/debug.keystore')
+            storeFile file('~/.android/debug.keystore')
 
         }
     }
