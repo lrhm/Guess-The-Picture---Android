@@ -14,4 +14,6 @@ public interface UserFoundListener {
 
     void onGetMyUser(User myUser);
 
+    void onForceLogout();
+
 }

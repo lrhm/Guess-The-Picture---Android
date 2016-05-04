@@ -114,6 +114,12 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 setUpAdapters();
 
             }
+
+            @Override
+            public void onForceLogout() {
+
+                deleteCachedFriends();
+            }
         });
 
 
@@ -312,6 +318,12 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
 
     public void submitSearch() {
+
+        while (!mFriendsAdapter.mSearched.isEmpty()) {
+            User user = mFriendsAdapter.mSearched.get(0);
+            mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_SEARCHED);
+
+        }
         hideKeyboard();
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
@@ -373,6 +385,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 public void onGetMyUser(User myUser) {
 
                 }
+
+                @Override
+                public void onForceLogout() {
+
+                }
             });
 
         }
@@ -401,6 +418,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         Log.d("TAG", "on get my user friendlist");
         setUpAdapters();
 
+
+    }
+
+    @Override
+    public void onForceLogout() {
 
     }
 
@@ -448,5 +470,17 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
 
+    }
+
+
+    public void deleteCachedFriends() {
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
+
+        for (User user : mFriendsAdapter.getFriendList()) {
+            dbAdapter.deleteFriendInDB(user);
+        }
+
+        mFriendsAdapter.removeAll();
     }
 }

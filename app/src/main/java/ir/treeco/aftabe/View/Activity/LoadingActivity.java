@@ -39,7 +39,7 @@ public class LoadingActivity extends Activity implements Runnable {
         startTime = System.currentTimeMillis();
 
 
-        new Handler().postDelayed(this, 300);
+        new Handler().postDelayed(this, 500);
 
     }
 
@@ -64,8 +64,13 @@ public class LoadingActivity extends Activity implements Runnable {
 
 
         Intent intent = new Intent(this, MainActivity.class);
-        if (getIntent() != null && getIntent().getExtras() != null)
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            for(String key : getIntent().getExtras() .keySet()){
+                Object obj = getIntent().getExtras() .get(key);   //later parse it as per your required type
+                Log.d("LoadingActivity", key + ":" + obj.toString());
+            }
             intent.putExtras(getIntent().getExtras());
+        }
         startActivity(intent);
         finish();
     }

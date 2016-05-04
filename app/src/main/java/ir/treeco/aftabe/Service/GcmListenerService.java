@@ -30,8 +30,10 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
 
         String message = data.getString("message");
+        if (message != null)
+            Log.d(TAG, message);
 
-        Log.d(TAG, message);
+        Log.d(TAG, data.toString());
 
     }
 

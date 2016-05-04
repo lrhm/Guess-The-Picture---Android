@@ -122,6 +122,11 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         mUserLevelView.setUser(myUser);
     }
 
+    @Override
+    public void onForceLogout() {
+        mUserLevelView.setUserGuest();
+    }
+
     private long lastTimeClicked = 0;
 
     @Override

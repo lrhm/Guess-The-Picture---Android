@@ -210,14 +210,16 @@ public class AftabeAPIAdapter {
                                                final UserFoundListener userFoundListener) {
 
         Log.d(TAG, "get user by access token");
-        Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
+        Call<User> c = aftabeService.getMyUser(loginInfo.accessToken );
         c.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
 
                 if (!response.isSuccess()) {
                     userFoundListener.onGetError();
+//                    FORCE LOGOUT !
 
+                    userFoundListener.onForceLogout();
                     Log.d(TAG, " is not sucess");
                     return;
                 }

@@ -3,6 +3,7 @@ package ir.treeco.aftabe.View.Activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -101,6 +102,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     private ArrayList<FriendRequestDialog> mCachedFriendRequestDialogs = new ArrayList<>();
+
     private boolean isInOnlineGame = false;
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
     private static final int PERMISSION_REQUEST_CONTACT = 80;
@@ -139,6 +141,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "super.onCreate ended");
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -154,6 +159,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         askForContactPermission();
 
+        Log.d(TAG, "onCreate ended");
 
     }
 
@@ -227,6 +233,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         AftabeAPIAdapter.tryToLogin(this);
 
+//        Intent intent = new Intent(this, RegistrationIntentService.class);
+//        startService(intent);
 
         if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
@@ -611,17 +619,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
+    public void onForceLogout() {
+
+        Prefs.putString(Tools.SHARED_PREFS_TOKEN, "");
+        Prefs.putString(Tools.USER_SAVED_DATA, "");
+
+    }
+
+    @Override
     public void onMatchRequest(MatchRequestHolder request) {
 
         final User friend = getUserFromFriendsById(request.getFriendId());
         if (friend == null)
             return;
-        if (!isInOnlineGame) {
+        if (!isInOnlineGame && !isFinishing()) {
+
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    new MatchRequestDialog(MainActivity.this, friend).show();
 
+                    Dialog dialog = new MatchRequestDialog(MainActivity.this, friend);
+
+                    dialog.show();
                 }
             });
 
@@ -635,15 +655,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
-        if (result.isAccept()) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new LoadingDialog(MainActivity.this).show();
+        if (!isFinishing())
+            if (result.isAccept()) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadingDialog(MainActivity.this).show();
 
-                }
-            });
-        }
+                    }
+                });
+            }
     }
 
     @Override
@@ -655,7 +676,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
                 FriendRequestDialog dialog = new FriendRequestDialog(MainActivity.this, user);
-                if (!isInOnlineGame)
+                if (!isInOnlineGame && !isFinishing())
                     dialog.show();
                 else
                     mCachedFriendRequestDialogs.add(dialog);
@@ -684,7 +705,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGameEnded() {
 
         for (FriendRequestDialog dialog : mCachedFriendRequestDialogs) {
-            dialog.show();
+            if (!isFinishing())
+                dialog.show();
         }
         mCachedFriendRequestDialogs.clear();
 
@@ -865,10 +887,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onResume() {
 
+
         isPaused = false;
         SocketAdapter.reconnect();
 
         super.onResume();
+
+
+        Log.d(TAG, "super.onResume ended");
     }
 
     public void askForContactPermission() {

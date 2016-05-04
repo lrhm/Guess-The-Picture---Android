@@ -143,6 +143,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         else notifyItemRemoved(position + size + 1);
     }
 
+    public void removeAll(){
+        for(ArrayList<User> list : arrayLists)
+            list.clear();
+        notifyDataSetChanged();
+    }
+
+
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
