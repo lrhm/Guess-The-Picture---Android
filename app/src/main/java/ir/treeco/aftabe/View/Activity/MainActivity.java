@@ -144,6 +144,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Log.d(TAG, "super.onCreate ended");
 
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -625,8 +626,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onForceLogout() {
 
-        Prefs.putString(Tools.SHARED_PREFS_TOKEN, "");
-        Prefs.putString(Tools.USER_SAVED_DATA, "");
+        Prefs.remove(Tools.SHARED_PREFS_TOKEN);
+        Prefs.remove(Tools.USER_SAVED_DATA);
 
     }
 

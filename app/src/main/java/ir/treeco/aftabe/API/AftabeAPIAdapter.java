@@ -193,7 +193,10 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<SMSValidateToken> response) {
 
-                smsValidationListener.onSMSValidateSent(response.body());
+                if (!response.isSuccess()) {
+                    smsValidationListener.onSMSValidationFail();
+                } else
+                    smsValidationListener.onSMSValidateSent(response.body());
 
                 Log.d(TAG, "request sms activation on response " + response.isSuccess());
             }
@@ -210,7 +213,7 @@ public class AftabeAPIAdapter {
                                                final UserFoundListener userFoundListener) {
 
         Log.d(TAG, "get user by access token");
-        Call<User> c = aftabeService.getMyUser(loginInfo.accessToken );
+        Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
         c.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
@@ -303,7 +306,7 @@ public class AftabeAPIAdapter {
         try {
             Gson gson = new Gson();
             TokenHolder tokenHolder = gson.fromJson(Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""), TokenHolder.class);
-            if (tokenHolder.getLoginInfo() == null)
+            if (tokenHolder == null || tokenHolder.getLoginInfo() == null)
                 return;
             Log.d(TAG, Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""));
 
