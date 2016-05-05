@@ -11,11 +11,13 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
+import ir.treeco.aftabe.API.Utils.ContactsHolder;
 import ir.treeco.aftabe.API.Utils.FriendRequestSent;
 import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
+import ir.treeco.aftabe.API.Utils.LocationHolder;
 import ir.treeco.aftabe.API.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
@@ -442,7 +444,7 @@ public class AftabeAPIAdapter {
         init();
         int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
 
-        if(diff == 0)
+        if (diff == 0)
             return;
 
         CoinDiffHolder coinDiffHolder = new CoinDiffHolder(diff);
@@ -663,6 +665,43 @@ public class AftabeAPIAdapter {
                 listener.onFail();
             }
         });
+    }
+
+    public static void updateLocation(LocationHolder locationHolder) {
+        init();
+
+        if (!Tools.isUserRegistered())
+            return;
+        User user = Tools.getCachedUser();
+        Call<HashMap<String, Object>> call = aftabeService.putLocation(user.getId(),
+                user.getLoginInfo().getAccessToken(), locationHolder);
+
+        call.enqueue(new Callback<HashMap<String, Object>>() {
+            @Override
+            public void onResponse(Response<HashMap<String, Object>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    public static void updateContact(ContactsHolder contactsHolder, Callback<HashMap<String, String>> callback) {
+        init();
+
+        User user = Tools.getCachedUser();
+
+        if(user == null)
+            return;
+
+        Call<HashMap<String, String>> call = aftabeService.putContacts(user.getId(),
+                user.getLoginInfo().getAccessToken(), contactsHolder);
+
+        call.enqueue(callback);
+
     }
 
 }

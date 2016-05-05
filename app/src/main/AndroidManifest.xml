@@ -12,10 +12,12 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <permission android:name="ir.treeco.aftabe.permission.C2D_MESSAGE"
+    <permission
+        android:name="ir.treeco.aftabe.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="ir.treeco.aftabe.permission.C2D_MESSAGE" />
 
@@ -66,10 +68,11 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="ir.treeco.aftabe" />
 
             </intent-filter>
@@ -82,12 +85,11 @@
 
         <service
             android:name="ir.treeco.aftabe.Service.RegistrationIntentService"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
         <service
             android:name="ir.treeco.aftabe.Service.GcmListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
@@ -100,7 +102,12 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".Service.ActionEventReceiver"/>
+        <receiver android:name=".Service.ActionEventReceiver" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4150c278d5e47ac44513db398d88c074d628b50e" />
+
 
     </application>
 

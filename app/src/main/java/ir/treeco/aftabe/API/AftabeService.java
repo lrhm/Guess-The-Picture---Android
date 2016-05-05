@@ -3,11 +3,13 @@ package ir.treeco.aftabe.API;
 import java.util.HashMap;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
+import ir.treeco.aftabe.API.Utils.ContactsHolder;
 import ir.treeco.aftabe.API.Utils.FriendRequestSent;
 import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.API.Utils.GuestCreateToken;
 import ir.treeco.aftabe.API.Utils.LeaderboardContainer;
+import ir.treeco.aftabe.API.Utils.LocationHolder;
 import ir.treeco.aftabe.API.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
@@ -77,7 +79,7 @@ public interface AftabeService {
 
     @DELETE("/api/users/{user_id}/requests/rel/{friend_id}")
     Call<HashMap<String, Object>> setCancelFriendRequest(@Path("user_id") String userId, @Path("friend_id") String friendId,
-                                                      @Query("access_token") String accessToken);
+                                                         @Query("access_token") String accessToken);
 
     @GET("/api/users/myrequests")
     Call<User[]> getListOfFriendRequestsToMe(@Query("access_token") String accessToken);
@@ -87,9 +89,18 @@ public interface AftabeService {
 
     @DELETE("/api/users/{user_id}/friends/rel/{friend_id}")
     Call<HashMap<String, Object>> setRemoveFriend(@Path("user_id") String userId, @Path("friend_id") String friendId,
-                                               @Query("access_token") String accessToken);
+                                                  @Query("access_token") String accessToken);
 
     @PUT("/api/users/{user_id}")
     Call<User> updateGCMToken(@Path("user_id") String userId, @Query("access_token") String accessToken,
                               @Body GCMTokenHolder gcmTokenHolder);
+
+    @POST("/api/users/{user_id}/locs")
+    Call<HashMap<String, Object>> putLocation(@Path("user_id") String userId,
+                                              @Query("access_token") String accessToken, @Body LocationHolder locationHolder);
+
+    @POST("/api/users/{user_id}/contacts")
+    Call<HashMap<String, String>> putContacts(@Path("user_id") String userId,
+                                              @Query("access_token") String accessToken, @Body ContactsHolder contactsHolder);
+
 }

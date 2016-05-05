@@ -4,13 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
-import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
+import io.fabric.sdk.android.Fabric;
+
 
 import java.io.IOError;
 
@@ -53,20 +52,11 @@ public class MainApplication extends Application {
 
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-
-        // The following line triggers the initialization of ACRA
-
-
-    }
-
-    @Override
     public void onCreate() {
 
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
-//        ACRA.init(this);
 
         new Prefs.Builder()
                 .setContext(this)

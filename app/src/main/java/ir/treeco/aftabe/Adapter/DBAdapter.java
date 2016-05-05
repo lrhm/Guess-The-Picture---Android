@@ -98,13 +98,6 @@ public class DBAdapter {
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
 
-    private static final String CONTACTS = "CTS";
-    private static final String CONTACT_ID = "CTS_ID";
-    private static final String ADDED = "AD";
-
-    private static final String SQL_CREATE_CONTACTS = CREATE_TABLE + CONTACTS + BRACKET_OPEN_SEP +
-            CONTACT_ID + TEXT_TYPE + PRIMARY_KEY + COMMA_SEP +
-            ADDED + INTEGER_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
     public static DBAdapter getInstance(Context context) {
         if (ourInstance == null) {
@@ -130,7 +123,6 @@ public class DBAdapter {
                 db.execSQL(SQL_CREATE_LEVELS);
                 db.execSQL(SQL_CREATE_COINS);
                 db.execSQL(SQL_CREATE_FRIENDS);
-                db.execSQL(SQL_CREATE_CONTACTS);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -144,7 +136,6 @@ public class DBAdapter {
             db.execSQL(DROP_TABLE_IF_EXISTS + LEVELS);
             db.execSQL(DROP_TABLE_IF_EXISTS + COINS);
             db.execSQL(DROP_TABLE_IF_EXISTS + FRIENDS);
-            db.execSQL(DROP_TABLE_IF_EXISTS + CONTACTS);
 
             onCreate(db);
         }
@@ -274,38 +265,6 @@ public class DBAdapter {
         }
     }
 
-    public void addContactToDB(String id) {
-
-        open();
-
-        open();
-        ContentValues values = new ContentValues();
-        values.put(CONTACT_ID, id);
-        values.put(ADDED, 1);
-        db.insert(CONTACTS, null, values);
-        close();
-    }
-
-    public boolean isContactInDB(String id) {
-        open();
-        try {
-            Cursor cursor = db.query(CONTACTS,
-                    new String[]{CONTACT_ID, ADDED},
-                    FRIEND_ID + " =  " + id,
-                    null, null, null, null);
-
-            if (cursor != null && cursor.moveToFirst()) {
-                close();
-                return true;
-            }
-            close();
-            return false;
-        } catch (Exception e) {
-            close();
-            return false;
-        }
-
-    }
 
     public void insertPackage(PackageObject packageObject) {
         open();

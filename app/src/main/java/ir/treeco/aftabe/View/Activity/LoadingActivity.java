@@ -13,7 +13,9 @@ import android.view.WindowManager;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import ir.treeco.aftabe.Adapter.ContactsAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Adapter.LocationAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Service.ServiceConstants;
@@ -39,20 +41,17 @@ public class LoadingActivity extends Activity implements Runnable {
         startTime = System.currentTimeMillis();
 
 
-        new Handler().postDelayed(this, 100);
+        new Handler().postDelayed(this, 333);
 
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.d(this.getClass().getName(), "on destory");
-        super.onDestroy();
-    }
 
     @Override
     public void run() {
 
         initUtils();
+        new LocationAdapter(this);
+//        new ContactsAdapter(this);
         long diff = System.currentTimeMillis() - startTime;
 
         if (diff < 1000)

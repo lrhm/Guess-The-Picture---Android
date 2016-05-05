@@ -16,6 +16,7 @@ public class ContactsHolder {
     @Expose
     String email;
 
+    @Expose (serialize = false, deserialize = false)
     String id;
 
 
@@ -24,5 +25,9 @@ public class ContactsHolder {
         this.email = email;
         this.number = number;
         this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 }
