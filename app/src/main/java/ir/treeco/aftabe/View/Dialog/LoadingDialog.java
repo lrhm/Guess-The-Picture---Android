@@ -44,6 +44,7 @@ import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 public class LoadingDialog extends Dialog implements Runnable,
         SocketListener, DownloadTask.DownloadTaskListener, SocketFriendMatchListener {
 
+    private static final String TAG = "LoadingDialog";
     Context context;
     private boolean mDismissed = false;
     private int mLoadingStep;
@@ -64,6 +65,8 @@ public class LoadingDialog extends Dialog implements Runnable,
         this.context = context;
         imageManager = new ImageManager(context);
         coinAdapter = new CoinAdapter(context, (MainActivity) context);
+        SocketAdapter.addSocketListener(this);
+        SocketAdapter.addFriendSocketListener(this);
 
         initImageLoading();
 
@@ -86,8 +89,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
-        SocketAdapter.addSocketListener(this);
-        SocketAdapter.addFriendSocketListener(this);
+
 
 
     }
@@ -210,6 +212,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     public void onGotGame(GameResultHolder gameHolder) {
 
 
+        Log.d(TAG, "onGotGame in dialog");
         mGameResultHolder = gameHolder;
         clearFiles();
         String imagePath = baseUrl + gameHolder.getLevels()[0].getUrl();

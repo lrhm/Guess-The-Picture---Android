@@ -74,7 +74,7 @@ public class NotificationManager {
             title = "match request";
             content = "from " + notifHolder.getMatchSF().getFriendId();
 
-            pendingIntent = getIntentForMatchRequest(notifHolder, false);
+            pendingIntent = getIntentForMatchRequest(notifHolder, null);
             builder = createBasicNotification(title, content, drawable);
             builder.addAction(R.drawable.ic_check_circle_black_24dp, "accept", getIntentForMatchRequest(notifHolder, true));
 
@@ -101,7 +101,13 @@ public class NotificationManager {
 
     private PendingIntent getCancelPendingIntent(NotifHolder notifHolder) {
         Intent intent = new Intent(getBaseContext(), ActionEventReceiver.class);
-        intent.putExtra(ServiceConstants.IS_FRIEND_REQUEST_INTENT, true);
+        intent.putExtra(ServiceConstants.IS_FRIEND_REQUEST_INTENT, notifHolder.isFriendRequest());
+        intent.putExtra(ServiceConstants.IS_FRIEND_REQUEST_ACCEPT, false);
+
+        intent.putExtra(ServiceConstants.IS_MATCH_REQUEST_ACCEPT, false);
+        intent.putExtra(ServiceConstants.IS_MATCH_REQUEST_INTENT, notifHolder.isMatchRequest());
+
+
         intent.putExtra(ServiceConstants.NOTIF_DATA_INTENT, new Gson().toJson(notifHolder));
 
         return PendingIntent.getBroadcast(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -117,11 +123,12 @@ public class NotificationManager {
 
     }
 
-    private PendingIntent getIntentForMatchRequest(NotifHolder notifHolder, boolean accepted) {
+    private PendingIntent getIntentForMatchRequest(NotifHolder notifHolder, Boolean accepted) {
         Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
         intent.putExtra(ServiceConstants.IS_MATCH_REQUEST_INTENT, true);
         intent.putExtra(ServiceConstants.NOTIF_DATA_INTENT, new Gson().toJson(notifHolder));
-        intent.putExtra(ServiceConstants.IS_MATCH_REQUEST_ACCEPT, accepted);
+        if (accepted != null)
+            intent.putExtra(ServiceConstants.IS_MATCH_REQUEST_ACCEPT, accepted);
 
         return PendingIntent.getActivity(getBaseContext(),
                 ServiceConstants.MATCH_REQUEST_RQ_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);

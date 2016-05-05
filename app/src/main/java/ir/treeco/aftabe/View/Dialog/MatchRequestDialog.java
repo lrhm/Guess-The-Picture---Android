@@ -93,7 +93,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     public void acceptOrDeclineMatch(boolean accepted) {
 
         SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
-
+        new LoadingDialog(context).show();
 
 
     }

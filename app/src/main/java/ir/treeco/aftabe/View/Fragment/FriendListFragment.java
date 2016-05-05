@@ -398,7 +398,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
                         }
                     });
-                    Log.d(TAG, "added online !");
+//                    Log.d(TAG, "added online !");
                     return;
                 }
             }
@@ -411,11 +411,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 }
             }
             if (u == null) {
-                Log.d(TAG, " friend not found in friend list !");
+//                Log.d(TAG, " friend not found in friend list !");
                 return;
             }
             final User finalU = u;
-            Log.d(TAG, "removing offline user");
+//            Log.d(TAG, "removing offline user");
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

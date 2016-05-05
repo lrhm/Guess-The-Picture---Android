@@ -157,7 +157,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-                    Log.d(TAG, "online is : " + msg);
+//                    Log.d(TAG, "online is : " + msg);
                     OnlineFriendStatusHolder statusHolder = gson.fromJson(msg, OnlineFriendStatusHolder.class);
                     if (statusHolder.getStatus() != null)
                         callFriendStatusChanged(statusHolder);

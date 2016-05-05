@@ -182,7 +182,7 @@ public class DBAdapter {
         if (cursor != null) {
             Gson gson = new Gson();
             while (cursor.moveToNext()) {
-                Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
+//                Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
                 list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'", ""), User.class));
             }
         }
@@ -196,7 +196,7 @@ public class DBAdapter {
         ContentValues values = new ContentValues();
         Gson gson = new Gson();
         values.put(FRIEND_USER_GSON, "'" + gson.toJson(friendUser) + "'");
-        Log.d(TAG, gson.toJson(friendUser));
+//        Log.d(TAG, gson.toJson(friendUser));
         db.update(FRIENDS, values, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
         close();
 

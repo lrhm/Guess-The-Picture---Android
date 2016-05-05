@@ -25,6 +25,9 @@ public class NotifHolder {
     FriendRequestHolder friendSF;
 
     @Expose
+    String id;
+
+    @Expose
     String date;
 
     @Expose

@@ -127,7 +127,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     }
 
     public void removeUser(User user, int type) {
-        Log.d("FriendAdapter", "removing user");
         ArrayList<User> mList = arrayLists.get(type);
         int position = mList.indexOf(user);
         if (position == -1)

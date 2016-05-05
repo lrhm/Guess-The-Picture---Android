@@ -150,6 +150,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        checkExtras(getIntent().getExtras());
+
+
         SocketAdapter.setContext(this);
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendRequestListener(this);
@@ -157,7 +160,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         initActivity();
 
-        checkExtras(getIntent().getExtras());
 
         askForContactPermission();
 
@@ -670,7 +672,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        new LoadingDialog(MainActivity.this).show();
+//                        new LoadingDialog(MainActivity.this).show();
 
                     }
                 });
@@ -1014,16 +1016,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         String data = bundle.getString(ServiceConstants.NOTIF_DATA_INTENT);
+
+        Log.d(TAG, "friedReq? " + isThereFriendReq + " matchReq? " + isThereMatchReq);
+        Log.d(TAG, "intent : " + data);
+
         if (data == null)
             return;
         NotifHolder notifHolder = new Gson().fromJson(data, NotifHolder.class);
         if (isThereFriendReq) {
 //            TODO
-//            new FriendRequestDialog(getBaseContext(), notifHolder.getFriendSF()).show();
+            new FriendRequestDialog(getBaseContext(), notifHolder.getFriendSF().getUser()).show();
         } else if (isThereMatchReq) {
             boolean accepted = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_ACCEPT, false);
             if (accepted) {
+                Log.d(TAG, "match accepted true");
                 SocketAdapter.responseToMatchRequest(notifHolder.getMatchSF().getFriendId(), true);
+                new LoadingDialog(this).show();
             } else {
                 new MatchRequestDialog(getBaseContext(), getUserFromFriendsById(notifHolder.getMatchSF().getFriendId())).show();
             }
