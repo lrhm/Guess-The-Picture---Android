@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -384,11 +385,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         layoutParams.leftMargin = lengthManager.getScreenWidth() / 50;
 
         RelativeLayout.LayoutParams digitsLayoutParams = (RelativeLayout.LayoutParams) digits.getLayoutParams();
-        digitsLayoutParams.topMargin = lengthManager.getScreenWidth() * 34 / 400;
+        digitsLayoutParams.topMargin = lengthManager.getScreenWidth() * 32 / 400;
         digitsLayoutParams.leftMargin = lengthManager.getScreenWidth() * 577 / 3600;
-        digitsLayoutParams.width = lengthManager.getScreenWidth() / 5;
+        digitsLayoutParams.width = (int) (0.98 * lengthManager.getScreenWidth() / 5);
+
+
+        Log.d(TAG, "density dpi is " + coinBoxHeight);
 
         digits.setTypeface(FontsHolder.getNumeralSansMedium(this));
+        digits.setTextSize(TypedValue.COMPLEX_UNIT_PX, coinBoxHeight * 0.475f);
 
         coinBox.setOnClickListener(this);
 
@@ -697,13 +702,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onFriendRequestAccept(User user) {
+    public void onFriendRequestAccept(final User user) {
 
 
         DBAdapter dbAdapter = DBAdapter.getInstance(this);
         dbAdapter.addFriendToDB(user);
 
-        mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+        if (!isFinishing())
+            new Handler(getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+
+                }
+            });
     }
 
     @Override
@@ -844,6 +856,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setHeaderVisiblity(!doSet);
         starContainer.setVisibility(visibily);
+        if (!doSet)
+            setOnlineGameVisibilityGone();
     }
 
     public void setLoadingForGameResultDialog(LoadingForGameResultDialog loadingForGameResultDialog) {
@@ -865,6 +879,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
 
+                fragment.doLose();
                 MainActivity.this.setOnlineGame(false);
                 MainActivity.this.getSupportFragmentManager().popBackStack();
             }

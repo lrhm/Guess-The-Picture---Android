@@ -106,6 +106,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         gameFragment = this;
         state = getArguments().getInt("state");
 
+        Log.d(TAG, new Gson().toJson(mGameResultHolder));
+
         level = mGameResultHolder.getLevels()[state];
 
         tools = new Tools(getContext());
@@ -361,6 +363,21 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 doSkip();
             }
         }, "نه", null).show();
+
+
+    }
+
+    public void doLose() {
+
+        answerObject.setSkip();
+        SocketAdapter.setAnswerLevel(answerObject);
+
+        if (state == 0) {
+            AnswerObject answerObject1 = new AnswerObject(mGameResultHolder.getLevels()[1].getId());
+            answerObject1.setSkip();
+
+            SocketAdapter.setAnswerLevel(answerObject1);
+        }
 
 
     }

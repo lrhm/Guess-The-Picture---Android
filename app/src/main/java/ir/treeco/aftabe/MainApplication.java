@@ -23,23 +23,23 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
 
-@ReportsCrashes(
-
-        formUri = "https://thawing-mesa-9618.herokuapp.com/reports",
-        //formKey = "", // This is required for backward compatibility but not used
-        customReportContent = {
-                ReportField.LOGCAT ,
-                ReportField.APP_VERSION_CODE,
-                ReportField.APP_VERSION_NAME,
-                ReportField.ANDROID_VERSION,
-                ReportField.PACKAGE_NAME,
-                ReportField.REPORT_ID,
-                ReportField.BUILD,
-                ReportField.STACK_TRACE
-        },
-        mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.toast_crash
-)
+//@ReportsCrashes(
+//
+//        formUri = "https://thawing-mesa-9618.herokuapp.com/reports",
+//        //formKey = "", // This is required for backward compatibility but not used
+//        customReportContent = {
+//                ReportField.LOGCAT ,
+//                ReportField.APP_VERSION_CODE,
+//                ReportField.APP_VERSION_NAME,
+//                ReportField.ANDROID_VERSION,
+//                ReportField.PACKAGE_NAME,
+//                ReportField.REPORT_ID,
+//                ReportField.BUILD,
+//                ReportField.STACK_TRACE
+//        },
+//        mode = ReportingInteractionMode.TOAST,
+//        resToastText = R.string.toast_crash
+//)
 
 public class MainApplication extends Application {
 
@@ -66,7 +66,7 @@ public class MainApplication extends Application {
 
         super.onCreate();
 
-        ACRA.init(this);
+//        ACRA.init(this);
 
         new Prefs.Builder()
                 .setContext(this)

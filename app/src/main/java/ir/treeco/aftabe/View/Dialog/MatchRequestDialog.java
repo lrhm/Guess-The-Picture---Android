@@ -87,13 +87,14 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
 
         dismiss();
 
-        new LoadingDialog(context).show();
 
     }
 
     public void acceptOrDeclineMatch(boolean accepted) {
 
         SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
+
+
 
     }
 

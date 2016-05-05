@@ -347,59 +347,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     }
 
-
-    public void getContacts() {
-
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && !Prefs.getBoolean(MainActivity.CONTACTS_PERMISSION, false)) {
-            return;
-            // failed to get
-        }
-
-        User myUser = ((MainActivity) getActivity()).getMyUser();
-        if (myUser == null) {
-            Log.d("TAG", "user is null");
-            return;
-
-        }
-
-
-        Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        while (phones.moveToNext()) {
-
-            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            phoneNumber = phoneNumber.replace(" ", "");
-
-            phoneNumber = phoneNumber.replace("+", "00");
-            Log.d("TAG", "phone number " + phoneNumber + " " + Tools.isAPhoneNumber(phoneNumber));
-
-
-            AftabeAPIAdapter.searchForUser(myUser, phoneNumber, new UserFoundListener() {
-                @Override
-                public void onGetUser(User user) {
-                    mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_CONTACT);
-                }
-
-                @Override
-                public void onGetError() {
-
-                }
-
-                @Override
-                public void onGetMyUser(User myUser) {
-
-                }
-
-                @Override
-                public void onForceLogout() {
-
-                }
-            });
-
-        }
-        phones.close();
-    }
-
     public void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
@@ -468,6 +415,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 return;
             }
             final User finalU = u;
+            Log.d(TAG, "removing offline user");
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

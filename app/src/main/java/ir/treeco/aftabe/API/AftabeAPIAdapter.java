@@ -441,6 +441,10 @@ public class AftabeAPIAdapter {
     public static void updateCoin(User myUser) {
         init();
         int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+
+        if(diff == 0)
+            return;
+
         CoinDiffHolder coinDiffHolder = new CoinDiffHolder(diff);
         Call<User> call = aftabeService.updateCoin(coinDiffHolder, myUser.getId(), myUser.getLoginInfo().getAccessToken());
         call.enqueue(new Callback<User>() {

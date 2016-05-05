@@ -218,7 +218,16 @@ public class User {
         access.friend = isFriend;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof User))
+            return false;
+        if (obj == this)
+            return true;
 
+        User rhs = (User) obj;
+        return rhs.getId().equals(getId());
+    }
     public class Access {
         @Expose
         boolean friend;

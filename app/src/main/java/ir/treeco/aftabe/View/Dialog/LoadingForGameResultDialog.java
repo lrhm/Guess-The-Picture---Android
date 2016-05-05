@@ -163,6 +163,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     @Override
     public void onGotGame(GameResultHolder gameHolder) {
 
+        dismiss();
 
     }
 

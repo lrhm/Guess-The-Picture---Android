@@ -98,6 +98,14 @@ public class DBAdapter {
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
 
+    private static final String CONTACTS = "CTS";
+    private static final String CONTACT_ID = "CTS_ID";
+    private static final String ADDED = "AD";
+
+    private static final String SQL_CREATE_CONTACTS = CREATE_TABLE + CONTACTS + BRACKET_OPEN_SEP +
+            CONTACT_ID + TEXT_TYPE + PRIMARY_KEY + COMMA_SEP +
+            ADDED + INTEGER_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
+
     public static DBAdapter getInstance(Context context) {
         if (ourInstance == null) {
             ourInstance = new DBAdapter(context);
@@ -122,6 +130,7 @@ public class DBAdapter {
                 db.execSQL(SQL_CREATE_LEVELS);
                 db.execSQL(SQL_CREATE_COINS);
                 db.execSQL(SQL_CREATE_FRIENDS);
+                db.execSQL(SQL_CREATE_CONTACTS);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -135,6 +144,7 @@ public class DBAdapter {
             db.execSQL(DROP_TABLE_IF_EXISTS + LEVELS);
             db.execSQL(DROP_TABLE_IF_EXISTS + COINS);
             db.execSQL(DROP_TABLE_IF_EXISTS + FRIENDS);
+            db.execSQL(DROP_TABLE_IF_EXISTS + CONTACTS);
 
             onCreate(db);
         }
@@ -163,7 +173,7 @@ public class DBAdapter {
         open();
         ContentValues values = new ContentValues();
         values.put(FRIEND_ID, otherUser.getId());
-        values.put(FRIEND_USER_GSON, "'"+friendGsonString + "'");
+        values.put(FRIEND_USER_GSON, "'" + friendGsonString + "'");
         db.insert(FRIENDS, null, values);
         close();
     }
@@ -182,7 +192,7 @@ public class DBAdapter {
             Gson gson = new Gson();
             while (cursor.moveToNext()) {
                 Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
-                list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'",""), User.class));
+                list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'", ""), User.class));
             }
         }
         close();
@@ -194,9 +204,9 @@ public class DBAdapter {
         open();
         ContentValues values = new ContentValues();
         Gson gson = new Gson();
-        values.put(FRIEND_USER_GSON, "'"+gson.toJson(friendUser) + "'");
+        values.put(FRIEND_USER_GSON, "'" + gson.toJson(friendUser) + "'");
         Log.d(TAG, gson.toJson(friendUser));
-        db.update(FRIENDS, values, FRIEND_ID + " = '" + friendUser.getId() +"'", null);
+        db.update(FRIENDS, values, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
         close();
 
     }
@@ -204,7 +214,7 @@ public class DBAdapter {
     public void deleteFriendInDB(User friendUser) {
 
         open();
-        db.delete(FRIENDS, FRIEND_ID + " = '" + friendUser.getId()+"'", null);
+        db.delete(FRIENDS, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
         close();
 
     }
@@ -262,6 +272,39 @@ public class DBAdapter {
             close();
             return false;
         }
+    }
+
+    public void addContactToDB(String id) {
+
+        open();
+
+        open();
+        ContentValues values = new ContentValues();
+        values.put(CONTACT_ID, id);
+        values.put(ADDED, 1);
+        db.insert(CONTACTS, null, values);
+        close();
+    }
+
+    public boolean isContactInDB(String id) {
+        open();
+        try {
+            Cursor cursor = db.query(CONTACTS,
+                    new String[]{CONTACT_ID, ADDED},
+                    FRIEND_ID + " =  " + id,
+                    null, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                close();
+                return true;
+            }
+            close();
+            return false;
+        } catch (Exception e) {
+            close();
+            return false;
+        }
+
     }
 
     public void insertPackage(PackageObject packageObject) {

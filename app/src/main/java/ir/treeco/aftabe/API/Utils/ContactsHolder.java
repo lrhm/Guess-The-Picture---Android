@@ -16,10 +16,13 @@ public class ContactsHolder {
     @Expose
     String email;
 
+    String id;
 
-    public ContactsHolder(String name, String email, String number) {
+
+    public ContactsHolder(String name, String email, String number, String id) {
         this.name = name;
         this.email = email;
         this.number = number;
+        this.id = id;
     }
 }

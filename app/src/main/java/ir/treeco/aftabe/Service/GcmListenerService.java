@@ -33,7 +33,11 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         if (message != null)
             Log.d(TAG, message);
 
-        Log.d(TAG, data.toString());
+
+        for(String key :data .keySet()){
+            Object obj = data.get(key);   //later parse it as per your required type
+            Log.d(TAG, key + ":" + obj.toString());
+        }
 
     }
 
