@@ -53,6 +53,7 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.FriendRequestListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
@@ -641,12 +642,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    @Override
-    public void onMatchRequest(MatchRequestHolder request) {
 
-        final User friend = getUserFromFriendsById(request.getFriendId());
-        if (friend == null)
-            return;
+    @Override
+    public void onMatchRequest(final MatchRequestSFHolder request) {
         if (!isInOnlineGame && !isFinishing()) {
 
 
@@ -654,7 +652,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 @Override
                 public void run() {
 
-                    Dialog dialog = new MatchRequestDialog(MainActivity.this, friend);
+                    Dialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
 
                     dialog.show();
                 }
@@ -671,13 +669,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
         loadingDialogMatchReq = null;
-        if (!isFinishing())
-            if (result.isAccept()) {
-                new Handler(getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
+        if (result.isAccept()) {
+            new Handler(getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
 
-                        if (!isFinishing()) {
+                    if (!isFinishing()) {
+                        if (!isFinishing())
+
                             synchronized (matchRqResultLock) {
 
 
@@ -686,11 +685,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                     loadingDialogMatchReq.show();
                                 }
                             }
-                        }
-
                     }
-                });
-            }
+
+                }
+            });
+        }
     }
 
     @Override
@@ -1028,16 +1027,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.isInOnlineGame = isInOnlineGame;
     }
 
-    public User getUserFromFriendsById(String id) {
-        if (mFriendsAdapter == null)
-            return null;
-
-        for (User user : mFriendsAdapter.getFriendList())
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        return null;
-    }
 
     public void checkExtras(Bundle bundle) {
 
@@ -1065,31 +1054,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), true);
                 new LoadingDialog(this).show();
             } else {
-                String id = actionHolder.getNotifHolder().getMatchSF().getFriendId();
-                User from = getUserFromFriendsById(id);
-                if (from == null) {
-                    from = getUserFromCachedFriends(id);
-                }
-                if (from == null)
-                    return;
 
-                new MatchRequestDialog(this, from).show();
+                new MatchRequestDialog(this, actionHolder.getNotifHolder().getMatchSF().getFriend()).show();
             }
         }
 
 
     }
 
-    public User getUserFromCachedFriends(String id) {
-
-        DBAdapter dbAdapter = DBAdapter.getInstance(this);
-        ArrayList<User> list = dbAdapter.getMyCachedFriends();
-        if (list == null)
-            return null;
-        for (User user : list)
-            if (user.getId().equals(id))
-                return user;
-        return null;
-    }
 
 }

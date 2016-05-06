@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 
@@ -16,7 +17,7 @@ public class NotifHolder {
     OnlineFriendStatusHolder online;
 
     @Expose
-    MatchRequestHolder matchSF;
+    MatchRequestSFHolder matchSF;
 
     @Expose
     MatchResultHolder matchResult;
@@ -69,7 +70,7 @@ public class NotifHolder {
         return online;
     }
 
-    public MatchRequestHolder getMatchSF() {
+    public MatchRequestSFHolder getMatchSF() {
         return matchSF;
     }
 

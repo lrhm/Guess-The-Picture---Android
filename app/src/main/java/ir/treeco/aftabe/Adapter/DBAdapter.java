@@ -98,9 +98,9 @@ public class DBAdapter {
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
 
-    private ArrayList<User> mCachedFriends = null;
+    private static ArrayList<User> mCachedFriends = null;
 
-    private Object friendsLock = new Object();
+    private static Object friendsLock = new Object();
 
     private static Object lock = new Object();
 

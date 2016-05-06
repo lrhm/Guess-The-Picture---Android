@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
@@ -168,8 +169,9 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
         super.onDetachedFromWindow();
     }
 
+
     @Override
-    public void onMatchRequest(MatchRequestHolder request) {
+    public void onMatchRequest(MatchRequestSFHolder request) {
 
     }
 

@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.API.Socket;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -10,7 +11,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
  */
 public interface SocketFriendMatchListener {
 
-    void onMatchRequest(MatchRequestHolder request);
+    void onMatchRequest(MatchRequestSFHolder request);
 
     void onOnlineFriendStatus(OnlineFriendStatusHolder status);
 

@@ -80,7 +80,7 @@ public class NotificationManager {
         } else if (notifHolder.isMatchRequest()) {
 
             title = "match request";
-            content = "from " + notifHolder.getMatchSF().getFriendId();
+            content = "from " + notifHolder.getMatchSF().getFriend().getName();
 
             pendingIntent = getIntentForMatchRequest(notifHolder, notifID);
             builder = createBasicNotification(title, content, drawable);

@@ -19,6 +19,7 @@ import cn.aigestudio.downloader.interfaces.IDListener;
 import io.socket.client.Socket;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
@@ -89,7 +90,14 @@ public class LoadingDialog extends Dialog implements Runnable,
         mDismissed = false;
         mLoadingImageView = (ImageView) findViewById(R.id.activity_main_loading_image_view);
         mLoadingStep = 0;
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
+
+        SizeConverter converter = SizeConverter.SizeConverterFromLessOffset(SizeManager.getScreenWidth(), SizeManager.getScreenHeight(),
+                1200, 2000);
+        mLoadingImageHeight = converter.mHeight;
+        mLoadingImageWidth = converter.mWidth;
+
+
+        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(R.drawable.search_sc_1,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
 
@@ -304,8 +312,9 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     }
 
+
     @Override
-    public void onMatchRequest(MatchRequestHolder request) {
+    public void onMatchRequest(MatchRequestSFHolder request) {
 
     }
 

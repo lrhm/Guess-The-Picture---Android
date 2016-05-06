@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.BatchUserFoundListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
@@ -377,8 +378,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     }
 
+
+
     @Override
-    public void onMatchRequest(MatchRequestHolder request) {
+    public void onMatchRequest(MatchRequestSFHolder request) {
 
     }
 

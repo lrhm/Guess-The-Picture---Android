@@ -17,6 +17,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -169,7 +170,7 @@ public class SocketAdapter {
 
                     String msg = args[0].toString();
                     Log.d(TAG, "matchReqSF is : " + msg);
-                    MatchRequestHolder requestHolder = gson.fromJson(msg, MatchRequestHolder.class);
+                    MatchRequestSFHolder requestHolder = gson.fromJson(msg, MatchRequestSFHolder.class);
                     callMatchRequest(requestHolder);
 
                 }
@@ -307,7 +308,7 @@ public class SocketAdapter {
 
     }
 
-    private static void callMatchRequest(MatchRequestHolder responseHolder) {
+    private static void callMatchRequest(MatchRequestSFHolder responseHolder) {
 
         synchronized (friendsLock) {
             for (SocketFriendMatchListener socket : friendsListeners)
