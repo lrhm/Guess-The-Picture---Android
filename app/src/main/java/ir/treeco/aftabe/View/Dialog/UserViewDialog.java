@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -12,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -65,11 +68,18 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
-        mMatchButton.setImageBitmap(imageManager.loadImageFromResource(
-                !mUser.isFriend() ? R.drawable.ic_check_circle_black_24dp : R.drawable.challengebutton, size, size));
-        mChatButton.setImageBitmap(imageManager.loadImageFromResource(
-                !mUser.isFriend() ? R.drawable.ic_error_outline_black_24dp : R.drawable.chatbutton, size, size));
+        if (mUser.isFriend()) {
+            mMatchButton.setImageBitmap(imageManager.loadImageFromResource(
+                    R.drawable.challengebutton, size, size));
+            mChatButton.setImageBitmap(imageManager.loadImageFromResource(
+                    R.drawable.chatbutton, size, size));
 
+        }
+        else {
+            mMatchButton.setVisibility(View.GONE);
+            mChatButton.setImageBitmap(imageManager.loadImageFromResource(
+                    R.drawable.addfriends, size, size));
+        }
 
         mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);
@@ -80,16 +90,40 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
 
         if (v.getId() == R.id.uv_start_chat_button) {
-//            if (mUser.isFriend())
+            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), new OnFriendRequest() {
+                @Override
+                public void onFriendRequestSent() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onFriendRequestFailedToSend() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Toast.makeText(getContext(), "friend request failed to send", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+                }
+            });
+
         }
 
         if (v.getId() == R.id.uv_match_button) {
             if (mUser.isFriend())
                 requestMatch();
             else {
-                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), null);
-                Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
-            }
+           }
         }
 
 

@@ -48,14 +48,12 @@ public class LeaderboardFragment extends Fragment implements BatchUserFoundListe
         Log.d("TAG", "on got leaderboad size of " + users.length);
         for (int i = 0; i < users.length; i++) {
             mAdapter.addUser(users[i]);
-            Log.d(this.getClass().getSimpleName(), new Gson().toJson(users[i]));
         }
     }
 
     @Override
     public void onGotError() {
 
-        Log.d("TAG", "on got error");
 
     }
 }

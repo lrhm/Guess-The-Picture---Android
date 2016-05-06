@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.Adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +39,8 @@ import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
 
 
+    ImageManager imageManager;
+
     public ArrayList<User> mFriends;
     public ArrayList<User> mOnlineFriends;
     public ArrayList<User> mRequests;
@@ -52,12 +55,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public static final int TYPE_CONTACT = 3;
     public static final int TYPE_REQUEST = 1;
     public static final int TYPE_ONLINE_FRIENDS = 4;
-
     public static final int TYPE_HEADER = 5;
 
 
-    public FriendsAdapter(ArrayList<User> friends, ArrayList<User> requests, ArrayList<User> contacts, ArrayList<User> searched) {
+    public FriendsAdapter(Context context, ArrayList<User> friends, ArrayList<User> requests, ArrayList<User> contacts, ArrayList<User> searched) {
 
+        imageManager = new ImageManager(context);
         mFriends = friends == null ? new ArrayList<User>() : friends;
         mRequests = requests == null ? new ArrayList<User>() : requests;
         mContacts = contacts == null ? new ArrayList<User>() : contacts;
@@ -103,8 +106,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             mMatchButton = (ImageView) itemView.findViewById(R.id.match_button);
             mChatButton = (ImageView) itemView.findViewById(R.id.start_chat_button);
             int size = (int) (SizeManager.getScreenWidth() * 0.1);
-
-            ImageManager imageManager = ((MainApplication) v.getContext().getApplicationContext()).getImageManager();
 
             mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.challengebutton, size, size));
             mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, size, size));
@@ -164,56 +165,60 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         }
 
         final User user = getUser(type, realPosition);
+        int size = (int) (SizeManager.getScreenWidth() * 0.1);
 
-        holder.mChatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (user.isFriend()) {
+            if (holder.mChatButton.getVisibility() == View.GONE)
+                holder.mChatButton.setVisibility(View.VISIBLE);
+            holder.mChatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                ChatFragment chatFragment = new ChatFragment();
+                    ChatFragment chatFragment = new ChatFragment();
 
-                Log.d("TAG", "click Temp real pos " + realPosition);
-                FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, chatFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-        holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-//                int levelID = 0;
-//                bundle.putInt("LevelId", levelID);
-//                bundle.putInt("id", 0);
-//
-//                OnlineGameFragment gameFragment = new OnlineGameFragment();
-//                gameFragment.setArguments(bundle);
-//
-//                FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
-//                transaction.replace(R.id.fragment_container, gameFragment);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-//               TODO
+                    Log.d("TAG", "click Temp real pos " + realPosition);
+                    FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, chatFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
 
-                if (user.isFriend()) {
+            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.challengebutton, size, size));
+
+            holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
                     SocketAdapter.requestToAFriend(user.getId());
                     new LoadingForMatchRequestResult(v.getContext(), user).show();
 
-                    return;
                 }
-                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
-                    @Override
-                    public void onFriendRequestSent() {
+            });
 
-                    }
+        } else {
 
-                    @Override
-                    public void onFriendRequestFailedToSend() {
+            holder.mChatButton.setVisibility(View.GONE);
 
-                    }
-                });
-            }
-        });
+            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.addfriends, size, size));
+            holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
+                        @Override
+                        public void onFriendRequestSent() {
+
+                        }
+
+                        @Override
+                        public void onFriendRequestFailedToSend() {
+
+                        }
+                    });
+                }
+            });
+        }
 
         holder.mUserLevelView.setUser(user);
 

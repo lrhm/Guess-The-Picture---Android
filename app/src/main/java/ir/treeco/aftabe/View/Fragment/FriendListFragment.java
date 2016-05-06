@@ -145,13 +145,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         setUpAdapters();
         setUpRecylerViews();
 
-//        String[] objct = new String[6];
-//        objct[0] = "asghar";
-//        objct[1] = "ahmad";
-//        objct[5] = "ahmagh";
-//        objct[2] = "sahar";
-//        objct[3] = "golpar";
-//        objct[4] = "saghi";
 
 
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.search_text_input_layout);
@@ -192,7 +185,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
         if (mFriendsAdapter == null)
-            mFriendsAdapter = new FriendsAdapter(dbAdapter.getMyCachedFriends(), null, null, null);
+            mFriendsAdapter = new FriendsAdapter(getContext(), dbAdapter.getMyCachedFriends(), null, null, null);
 
 
         if (getActivity() == null)
@@ -343,7 +336,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         AftabeAPIAdapter.searchForUser(myUser, mAutoCompleteTextView.getText().toString(), this);
 
-        Log.d("TAG", "TODO submit search");
 
     }
 
@@ -355,18 +347,20 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onGetUser(User user) {
 
+        Log.d(TAG, new Gson().toJson(user));
         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_SEARCHED);
 
     }
 
     @Override
     public void onGetError() {
+
         Toast.makeText(getContext(), "user not found", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onGetMyUser(User myUser) {
-        Log.d("TAG", "on get my user friendlist");
+
         setUpAdapters();
 
 
@@ -376,7 +370,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public void onForceLogout() {
 
     }
-
 
 
     @Override
@@ -390,7 +383,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
         if (status.isOnlineAndEmpty()) {
-            for(User user : dbAdapter.getMyCachedFriends()){
+            for (User user : dbAdapter.getMyCachedFriends()) {
                 if (status.getFriendId().equals(user.getId())) {
                     final User user1 = user;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
