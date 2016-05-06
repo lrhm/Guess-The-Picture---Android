@@ -3,6 +3,8 @@ package ir.treeco.aftabe.Util;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -62,7 +64,7 @@ public class NotificationManager {
         String title = null;
         String content = null;
         int drawable = R.drawable.aftabe_icon;
-        int notifID = new Random(System.currentTimeMillis()).nextInt();
+        final int notifID = new Random(System.currentTimeMillis()).nextInt();
         NotificationCompat.Builder builder = null;
         if (notifHolder.isFriendRequest()) {
             //TODO set style for accept and ignore buttons
@@ -93,6 +95,14 @@ public class NotificationManager {
             builder.setContentIntent(pendingIntent);
         }
         showNotification(builder, notifID);
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "after 20 sec");
+                NotificationManager.dismissNotification(getBaseContext(), notifID);
+            }
+        }, 20000);
 
 
     }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -132,8 +133,8 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     private void initResultImageView(ImageView resultImageView) {
 
         int imgId = (mWin) ? R.drawable.aftabewin : R.drawable.aftabelose;
-        int width = (int) (SizeManager.getScreenWidth() * 0.7);
-
+        int width = (int) (SizeManager.getScreenWidth() * 0.6);
+        ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin = (int) (SizeManager.getScreenWidth() * 0.3);
         ImageManager imageManager = new ImageManager(getContext());
         resultImageView.setImageBitmap(imageManager.loadImageFromResource(imgId, width, width));
 

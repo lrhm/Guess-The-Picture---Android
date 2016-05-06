@@ -64,7 +64,6 @@
         android:id="@+id/fragment_result_win_or_lose_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
 
         android:paddingBottom="35dp"
         android:paddingTop="15dp" />

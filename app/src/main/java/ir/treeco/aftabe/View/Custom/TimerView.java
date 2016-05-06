@@ -29,6 +29,7 @@ public class TimerView extends FrameLayout {
     SizeConverter mainConverter;
     ImageManager imageManager;
     boolean isTimerBlue = true;
+    boolean doOnlyBlue = false;
 
     public TimerView(Context context) {
         super(context);
@@ -73,21 +74,39 @@ public class TimerView extends FrameLayout {
 
     }
 
+    public int getRealWidth(){
+        return mainConverter.mWidth;
+    }
+
+    public int getRealHeight(){
+        return mainConverter.mHeight;
+    }
+
     public void setTimer(int time) {
         mTextView.setText(Tools.numeralStringToPersianDigits(time + ""));
 
+        if (doOnlyBlue) {
+            if (!isTimerBlue) {
+                timer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timerblue, mainConverter.mWidth, mainConverter.mHeight));
+
+                isTimerBlue = true;
+            }
+            return;
+        }
 
         if (time == 30) {
             timer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timerred, mainConverter.mWidth, mainConverter.mHeight));
 
             isTimerBlue = false;
-        }
-        else if (time > 30 && !isTimerBlue){
+        } else if (time > 30 && !isTimerBlue) {
             isTimerBlue = true;
             timer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.timerblue, mainConverter.mWidth, mainConverter.mHeight));
         }
 
     }
 
+    public void setDoOnlyBlue(boolean doOnlyBlue) {
+        this.doOnlyBlue = doOnlyBlue;
+    }
 
 }

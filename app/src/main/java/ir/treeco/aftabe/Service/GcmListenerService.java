@@ -2,6 +2,7 @@ package ir.treeco.aftabe.Service;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -29,6 +30,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
         if (notif != null) {
             NotifHolder notifHolder = new Gson().fromJson(notif, NotifHolder.class);
+            Log.d(TAG, "got gcm " + notif);
             ir.treeco.aftabe.Util.NotificationManager manager = new NotificationManager(getApplicationContext());
             manager.createNotification(notifHolder);
         }
