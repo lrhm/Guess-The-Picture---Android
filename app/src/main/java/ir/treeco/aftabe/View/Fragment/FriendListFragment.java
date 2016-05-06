@@ -223,7 +223,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                     public void run() {
                         for (User user : users) {
                             mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
-                            Log.d(TAG, new Gson().toJson(user));
                         }
                         friends = users;
                         DBAdapter dbAdapter = DBAdapter.getInstance(getContext());

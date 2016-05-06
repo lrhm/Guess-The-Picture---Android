@@ -781,6 +781,12 @@ public class Tools {
     public static final Pattern VALID_PHONE_4 =
             Pattern.compile("^00989[0-9]{9}$");
 
+    public static final Pattern VALID_NAME_PATTERN_REGEX = Pattern.compile("[a-zA-Z_0-9]+$");
+
+    public static boolean isNameValid(String string) {
+        return VALID_NAME_PATTERN_REGEX.matcher(string).find();
+    }
+
     public static boolean isAEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();

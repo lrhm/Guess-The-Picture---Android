@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -69,7 +70,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
             public void run() {
                 runTimer();
             }
-        },0 ,1000);
+        }, 0, 1000);
 
     }
 
@@ -126,6 +127,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
 
     @Override
     public void onBackPressed() {
+        Toast.makeText(context, "باید صبر کنی", Toast.LENGTH_SHORT).show();
 //        super.onBackPressed();
     }
 

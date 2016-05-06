@@ -155,7 +155,7 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
             mEditText.setSelection(s.toString().replace(" ", "").length());
             return;
         }
-        if (s.length() < 6 || Tools.isAEmail(s.toString()) || Tools.isAPhoneNumber(s.toString())) {
+        if (s.length() < 6 || Tools.isAEmail(s.toString()) || Tools.isAPhoneNumber(s.toString()) || !Tools.isNameValid(s.toString())) {
             mStatusImageView.setVisibility(View.VISIBLE);
             mStatusImageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
             mProgressBar.setVisibility(View.GONE);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Window;
@@ -206,7 +207,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     }
 
-    public void downloadURL(String url) {
+    public void downloadURL(final String url) {
         final String path = context.getFilesDir().getPath() + "/online_game";
         Log.d("TAG", path);
 
@@ -215,7 +216,12 @@ public class LoadingDialog extends Dialog implements Runnable,
             parent.mkdir();
         }
 
-        new DownloadTask(context, this).execute(url, path);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                new DownloadTask(context, LoadingDialog.this).execute(url, path);
+            }
+        });
     }
 
     public void showGame(GameResultHolder gameResultHolder) {
