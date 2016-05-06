@@ -98,6 +98,10 @@ public class DBAdapter {
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
 
+    private ArrayList<User> mCachedFriends = null;
+
+    private Object friendsLock = new Object();
+
     private static Object lock = new Object();
 
     public static DBAdapter getInstance(Context context) {
@@ -164,32 +168,47 @@ public class DBAdapter {
         Gson gson = new Gson();
         String friendGsonString = gson.toJson(otherUser);
 
-        open();
-        ContentValues values = new ContentValues();
-        values.put(FRIEND_ID, otherUser.getId());
-        values.put(FRIEND_USER_GSON, "'" + friendGsonString + "'");
-        db.insert(FRIENDS, null, values);
-        close();
+        synchronized (friendsLock) {
+
+            open();
+            ContentValues values = new ContentValues();
+            values.put(FRIEND_ID, otherUser.getId());
+            values.put(FRIEND_USER_GSON, "'" + friendGsonString + "'");
+            db.insert(FRIENDS, null, values);
+            close();
+
+            if (mCachedFriends != null)
+                mCachedFriends.add(otherUser);
+        }
     }
 
     public ArrayList<User> getMyCachedFriends() {
 
-        ArrayList<User> list = new ArrayList<>();
-        open();
+        synchronized (friendsLock) {
 
-        Cursor cursor = db.query(FRIENDS,
-                new String[]{FRIEND_USER_GSON},
-                null,
-                null, null, null, null);
-
-        if (cursor != null) {
-            Gson gson = new Gson();
-            while (cursor.moveToNext()) {
-//                Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
-                list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'", ""), User.class));
-            }
+            if (mCachedFriends != null)
+                return mCachedFriends;
         }
-        close();
+
+        ArrayList<User> list = new ArrayList<>();
+
+        synchronized (friendsLock) {
+            open();
+
+            Cursor cursor = db.query(FRIENDS,
+                    new String[]{FRIEND_USER_GSON},
+                    null,
+                    null, null, null, null);
+
+            if (cursor != null) {
+                Gson gson = new Gson();
+                while (cursor.moveToNext()) {
+//                Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
+                    list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'", ""), User.class));
+                }
+            }
+            close();
+        }
         return list;
     }
 
