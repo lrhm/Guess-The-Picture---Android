@@ -71,12 +71,14 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Service.ServiceConstants;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.NotificationManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
@@ -103,8 +105,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     private ArrayList<FriendRequestDialog> mCachedFriendRequestDialogs = new ArrayList<>();
-
+    LoadingDialog loadingDialogMatchReq = null;
     private boolean isInOnlineGame = false;
+    private Object matchRqResultLock = new Object();
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
     private static final int PERMISSION_REQUEST_CONTACT = 80;
     private HeadObject headObject;
@@ -667,12 +670,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
+        loadingDialogMatchReq = null;
         if (!isFinishing())
             if (result.isAccept()) {
-                runOnUiThread(new Runnable() {
+                new Handler(getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-//                        new LoadingDialog(MainActivity.this).show();
+
+                        if (!isFinishing()) {
+                            synchronized (matchRqResultLock) {
+
+
+                                if (loadingDialogMatchReq == null) {
+                                    loadingDialogMatchReq = new LoadingDialog(MainActivity.this);
+                                    loadingDialogMatchReq.show();
+                                }
+                            }
+                        }
 
                     }
                 });
@@ -787,8 +801,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onGotGame(GameResultHolder gameHolder) {
+    public void onGotGame(final GameResultHolder gameHolder) {
 
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    synchronized (matchRqResultLock) {
+
+
+                        if (loadingDialogMatchReq != null) {
+                            loadingDialogMatchReq.showGame(gameHolder);
+                        } else {
+                            loadingDialogMatchReq = new LoadingDialog(MainActivity.this);
+                            loadingDialogMatchReq.show();
+                            loadingDialogMatchReq.onGotGame(gameHolder);
+                        }
+                    }
+
+                }
+            }
+        });
 
     }
 
@@ -1011,32 +1044,52 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (bundle == null)
             return;
 
-        boolean isThereFriendReq = bundle.getBoolean(ServiceConstants.IS_FRIEND_REQUEST_INTENT, false);
-        boolean isThereMatchReq = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_INTENT, false);
+        String data = bundle.getString(ServiceConstants.ACTION_DATA_INTENT);
 
-
-        String data = bundle.getString(ServiceConstants.NOTIF_DATA_INTENT);
-
-        Log.d(TAG, "friedReq? " + isThereFriendReq + " matchReq? " + isThereMatchReq);
-        Log.d(TAG, "intent : " + data);
 
         if (data == null)
             return;
-        NotifHolder notifHolder = new Gson().fromJson(data, NotifHolder.class);
-        if (isThereFriendReq) {
+
+        ActionHolder actionHolder = new Gson().fromJson(data, ActionHolder.class);
+
+        NotificationManager.dismissNotification(this, actionHolder.getNotificationID());
+
+
+        if (actionHolder.isFriendRequest()) {
 //            TODO
-            new FriendRequestDialog(getBaseContext(), notifHolder.getFriendSF().getUser()).show();
-        } else if (isThereMatchReq) {
-            boolean accepted = bundle.getBoolean(ServiceConstants.IS_MATCH_REQUEST_ACCEPT, false);
-            if (accepted) {
-                Log.d(TAG, "match accepted true");
-                SocketAdapter.responseToMatchRequest(notifHolder.getMatchSF().getFriendId(), true);
+            new FriendRequestDialog(this, actionHolder.getNotifHolder().getFriendSF().getUser()).show();
+            return;
+        }
+        if (actionHolder.isMatchRequest()) {
+            if (actionHolder.isActionSpecified()) {
+                SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), true);
                 new LoadingDialog(this).show();
             } else {
-                new MatchRequestDialog(getBaseContext(), getUserFromFriendsById(notifHolder.getMatchSF().getFriendId())).show();
+                String id = actionHolder.getNotifHolder().getMatchSF().getFriendId();
+                User from = getUserFromFriendsById(id);
+                if (from == null) {
+                    from = getUserFromCachedFriends(id);
+                }
+                if (from == null)
+                    return;
+
+                new MatchRequestDialog(this, from).show();
             }
         }
 
+
+    }
+
+    public User getUserFromCachedFriends(String id) {
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(this);
+        ArrayList<User> list = dbAdapter.getMyCachedFriends();
+        if (list == null)
+            return null;
+        for (User user : list)
+            if (user.getId().equals(id))
+                return user;
+        return null;
     }
 
 }

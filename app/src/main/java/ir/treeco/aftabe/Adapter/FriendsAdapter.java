@@ -28,6 +28,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
+import ir.treeco.aftabe.View.Dialog.LoadingForMatchRequestResult;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
@@ -196,7 +197,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                 if (user.isFriend()) {
                     SocketAdapter.requestToAFriend(user.getId());
-                    new LoadingDialog(v.getContext()).show();
+                    new LoadingForMatchRequestResult(v.getContext(), user).show();
 
                     return;
                 }

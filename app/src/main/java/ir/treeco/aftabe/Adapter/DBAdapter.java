@@ -98,10 +98,13 @@ public class DBAdapter {
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
 
+    private static Object lock = new Object();
 
     public static DBAdapter getInstance(Context context) {
-        if (ourInstance == null) {
-            ourInstance = new DBAdapter(context);
+        synchronized (lock) {
+            if (ourInstance == null) {
+                ourInstance = new DBAdapter(context);
+            }
         }
 
         return ourInstance;

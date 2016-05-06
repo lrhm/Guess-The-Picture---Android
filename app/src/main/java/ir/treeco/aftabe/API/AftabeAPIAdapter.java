@@ -673,6 +673,9 @@ public class AftabeAPIAdapter {
         if (!Tools.isUserRegistered())
             return;
         User user = Tools.getCachedUser();
+        if (user == null)
+            return;
+
         Call<HashMap<String, Object>> call = aftabeService.putLocation(user.getId(),
                 user.getLoginInfo().getAccessToken(), locationHolder);
 
@@ -694,7 +697,7 @@ public class AftabeAPIAdapter {
 
         User user = Tools.getCachedUser();
 
-        if(user == null)
+        if (user == null)
             return;
 
         Call<HashMap<String, String>> call = aftabeService.putContacts(user.getId(),

@@ -99,7 +99,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         SocketAdapter.requestToAFriend(mUser.getId());
 
-        new LoadingDialog(context).show();
+        new LoadingForMatchRequestResult(context, mUser).show();
 
     }
 

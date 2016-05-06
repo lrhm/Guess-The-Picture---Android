@@ -56,6 +56,8 @@ public class LoadingDialog extends Dialog implements Runnable,
     private static final Object lock = new Object();
     private int mDownloadCount = 0;
     CoinAdapter coinAdapter;
+    long creationTime;
+    boolean gotGame = false;
 
     String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
@@ -63,6 +65,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     public LoadingDialog(Context context) {
         super(context);
         this.context = context;
+        creationTime = System.currentTimeMillis();
         imageManager = new ImageManager(context);
         coinAdapter = new CoinAdapter(context, (MainActivity) context);
         SocketAdapter.addSocketListener(this);
@@ -89,7 +92,6 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
         new Handler().postDelayed(this, 1000);
-
 
 
     }
@@ -208,9 +210,17 @@ public class LoadingDialog extends Dialog implements Runnable,
         new DownloadTask(context, this).execute(url, path);
     }
 
+    public void showGame(GameResultHolder gameResultHolder) {
+        if (System.currentTimeMillis() - creationTime <= 15000)
+            onGotGame(gameResultHolder);
+    }
+
     @Override
     public void onGotGame(GameResultHolder gameHolder) {
 
+        if (gotGame)
+            return;
+        gotGame = true;
 
         Log.d(TAG, "onGotGame in dialog");
         mGameResultHolder = gameHolder;

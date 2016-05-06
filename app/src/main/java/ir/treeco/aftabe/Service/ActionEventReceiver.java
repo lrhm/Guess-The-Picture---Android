@@ -1,43 +1,63 @@
 package ir.treeco.aftabe.Service;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
+import ir.treeco.aftabe.Util.NotificationManager;
+import ir.treeco.aftabe.View.Activity.LoadingActivity;
 
 /**
  * Created by al on 5/1/16.
  */
 public class ActionEventReceiver extends BroadcastReceiver {
 
+    private static final String TAG = "ActionEventReceiver";
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        NotifHolder notifHolder;
-        String data = intent.getExtras().getString(ServiceConstants.NOTIF_DATA_INTENT);
+        String data = intent.getExtras().getString(ServiceConstants.ACTION_DATA_INTENT);
         if (data == null)
             return;
-        notifHolder = new Gson().fromJson(data, NotifHolder.class);
+        ActionHolder actionHolder = new Gson().fromJson(data, ActionHolder.class);
+
+        NotificationManager.dismissNotification(context, actionHolder.getNotificationID());
 
 
-        if (intent.getExtras().getBoolean(ServiceConstants.IS_FRIEND_REQUEST_INTENT, false)) {
+        Log.d(TAG, data);
 
+        if (actionHolder.isFriendRequest()) {
 
-            boolean accepted = intent.getExtras().getBoolean(ServiceConstants.IS_FRIEND_REQUEST_ACCEPT, false);
-            SocketAdapter.answerFriendRequest(notifHolder.getFriendSF().getUser().getId(), accepted);
+            boolean accepted = actionHolder.isFriendRequestAccepted();
+//            SocketAdapter.answerFriendRequest(notifHolder.getFriendSF().getUser().getId(), accepted);
 
         }
 
 
-        if (intent.getExtras().getBoolean(ServiceConstants.IS_MATCH_REQUEST_INTENT, false)) {
+        if (actionHolder.isMatchRequest()) {
 
-            SocketAdapter.responseToMatchRequest(notifHolder.getMatchSF().getFriendId(), false);
+            if (actionHolder.isMatchRequestAccepted()) {
+                Intent showIntent = new Intent(context, LoadingActivity.class);
+                showIntent.putExtra(ServiceConstants.ACTION_DATA_INTENT, data);
+                showIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                context.startActivity(showIntent);
+            }
+//            SocketAdapter.responseToMatchRequest(notifHolder.getMatchSF().getFriendId(), false);
         }
 
     }
+
+
 }
