@@ -156,7 +156,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        int type = getItemViewType(position);
+        final int type = getItemViewType(position);
         final int realPosition = getRealPosition(position, type);
         if (type == TYPE_HEADER) {
 
@@ -208,6 +208,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
                         @Override
                         public void onFriendRequestSent() {
+
+                            if (type == TYPE_REQUEST) {
+                                removeUser(user, type);
+                                addUser(user, TYPE_FRIEND);
+                            }
 
                         }
 

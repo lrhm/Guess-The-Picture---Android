@@ -146,7 +146,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             } else {
                 textLP.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
                 mUserNameTextView.setLayoutParams(textLP);
-
+                mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * (88));
                 addView(mUserNameTextView);
                 addView(imagesContainer);
             }
