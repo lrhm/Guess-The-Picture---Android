@@ -157,7 +157,7 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         }
         if (s.length() < 6 || Tools.isAEmail(s.toString()) || Tools.isAPhoneNumber(s.toString()) || !Tools.isNameValid(s.toString())) {
             mStatusImageView.setVisibility(View.VISIBLE);
-            mStatusImageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
+            mStatusImageView.setImageResource(R.drawable.no);
             mProgressBar.setVisibility(View.GONE);
             return;
         }
@@ -181,10 +181,10 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         mProgressBar.setVisibility(View.GONE);
         mStatusImageView.setVisibility(View.VISIBLE);
         if (!status || !mEditText.getText().toString().equals(username)) {
-            mStatusImageView.setImageResource(R.drawable.ic_error_outline_black_24dp);
+            mStatusImageView.setImageResource(R.drawable.yes);
             return;
         }
-        mStatusImageView.setImageResource(R.drawable.ic_check_circle_black_24dp);
+        mStatusImageView.setImageResource(R.drawable.no);
         mAcceptButton.setEnabled(true);
     }
 

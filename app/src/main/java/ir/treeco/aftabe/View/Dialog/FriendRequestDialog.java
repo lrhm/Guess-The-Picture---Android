@@ -68,8 +68,8 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
 
         ImageManager imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
-        mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.ic_check_circle_black_24dp, size, size));
-        mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.ic_error_outline_black_24dp, size, size));
+        mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.yes, size, size));
+        mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no, size, size));
 
         mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);

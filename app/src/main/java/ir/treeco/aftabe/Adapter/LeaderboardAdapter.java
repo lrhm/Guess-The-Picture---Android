@@ -40,7 +40,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
         User user = mList.get(position);
         holder.mUserLevelView.setUser(user);
-        holder.mTextView.setText("#" + user.getLevel() +"");
+        holder.mTextView.setText("#" + user.getLevel() + "");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         return mList.size();
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         mList.add(user);
         notifyDataSetChanged();
 
@@ -65,6 +65,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             mTextView = (TextView) itemView.findViewById(R.id.rank_leaderboard_item);
             mTextView.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
             mUserLevelView = (UserLevelView) itemView.findViewById(R.id.leaderboard_mark_view);
+            mUserLevelView.setUserNameTextSize(92);
         }
 
     }

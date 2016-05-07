@@ -196,10 +196,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 }
             });
 
-        } else {
+        } else if (type == TYPE_SEARCHED){
 
             holder.mChatButton.setVisibility(View.GONE);
 
+            holder.mMatchButton.setVisibility(View.VISIBLE);
             holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.addfriends, size, size));
             holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -221,6 +222,30 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                         }
                     });
+                }
+            });
+        } else if (type == TYPE_REQUEST){
+
+            holder.mChatButton.setVisibility(View.VISIBLE);
+            holder.mMatchButton.setVisibility(View.VISIBLE);
+
+            holder.mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no , size , size));
+            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.yes , size , size));
+
+            holder.mChatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeUser(user, type);
+                    SocketAdapter.answerFriendRequest(user.getId() , false);
+                }
+            });
+
+            holder.mChatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeUser(user,type);
+                    addUser(user , TYPE_FRIEND);
+                    SocketAdapter.answerFriendRequest(user.getId(), true);
                 }
             });
         }

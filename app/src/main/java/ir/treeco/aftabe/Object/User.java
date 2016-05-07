@@ -74,6 +74,10 @@ public class User {
         this.access = access;
     }
 
+    public Access getAccess(){
+        return access;
+    }
+
     public String getName() {
         return name;
     }

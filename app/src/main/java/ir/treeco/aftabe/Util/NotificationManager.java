@@ -77,7 +77,7 @@ public class NotificationManager {
                 return;
             }
             builder = createBasicNotification(title, content, drawable);
-            builder.addAction(R.drawable.ic_check_circle_black_24dp, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
+            builder.addAction(R.drawable.yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
 
         } else if (notifHolder.isMatchRequest()) {
 
@@ -86,11 +86,11 @@ public class NotificationManager {
 
             pendingIntent = getIntentForMatchRequest(notifHolder, notifID);
             builder = createBasicNotification(title, content, drawable);
-            builder.addAction(R.drawable.ic_check_circle_black_24dp, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
+            builder.addAction(R.drawable.yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
 
         }
         if (builder == null) builder = createBasicNotification(title, content, drawable);
-        builder.addAction(R.drawable.ic_error_outline_black_24dp, "reject", getRejectPendingIntent(notifHolder, notifID));
+        builder.addAction(R.drawable.no, "reject", getRejectPendingIntent(notifHolder, notifID));
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent);
         }

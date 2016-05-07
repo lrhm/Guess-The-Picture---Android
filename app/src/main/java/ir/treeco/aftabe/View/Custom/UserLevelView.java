@@ -168,6 +168,10 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     }
 
+    public void setUserNameTextSize(int size) {
+        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * size);
+    }
+
     public void setShadowLayer(MagicTextView mLevelTextView) {
 
         float dpi = getContext().getResources().getDisplayMetrics().density;
