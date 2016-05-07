@@ -65,6 +65,8 @@ import ir.treeco.aftabe.View.Dialog.SkipDialog;
 public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
 
 
+    private boolean lost = false;
+
     public interface OnGameEndListener {
         void onGameEnded();
     }
@@ -232,7 +234,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
 
 
-        if (state == 1 || state == 0 && mRemainingTime == 0) {
+        if (state == 1 || state == 0 && mRemainingTime == 0 || lost) {
             Log.d(TAG, "onDestroy , set online game false");
             ((MainActivity) getActivity()).setOnlineGame(false);
 
@@ -378,6 +380,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             SocketAdapter.setAnswerLevel(answerObject1);
         }
+        lost = true;
 
 
     }
@@ -468,6 +471,14 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         synchronized (lock) {
             mGameResult = resultHolder;
         }
+        doLose();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mainActivity.getSupportFragmentManager().popBackStack();
+
+            }
+        });
 
     }
 

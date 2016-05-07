@@ -141,6 +141,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private LinearLayout starContainer;
     private StarView[] starViews;
     public FriendsAdapter mFriendsAdapter;
+    private long matchResultTime = 0;
     LoadingForGameResultDialog mLoadingForGameResultDialog = null;
 
     @Override
@@ -669,6 +670,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
         loadingDialogMatchReq = null;
+        matchResultTime = System.currentTimeMillis();
+
         if (result.isAccept()) {
             new Handler(getMainLooper()).post(new Runnable() {
                 @Override
@@ -802,25 +805,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGotGame(final GameResultHolder gameHolder) {
 
-        new Handler(getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    synchronized (matchRqResultLock) {
+        if (System.currentTimeMillis() - matchResultTime < 1000)
+            new Handler(getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        synchronized (matchRqResultLock) {
 
 
-                        if (loadingDialogMatchReq != null) {
-                            loadingDialogMatchReq.showGame(gameHolder);
-                        } else {
-                            loadingDialogMatchReq = new LoadingDialog(MainActivity.this);
-                            loadingDialogMatchReq.show();
-                            loadingDialogMatchReq.onGotGame(gameHolder);
+                            if (loadingDialogMatchReq != null) {
+                                loadingDialogMatchReq.showGame(gameHolder);
+                            } else {
+                                loadingDialogMatchReq = new LoadingDialog(MainActivity.this);
+                                loadingDialogMatchReq.show();
+                                loadingDialogMatchReq.onGotGame(gameHolder);
+                            }
                         }
-                    }
 
+                    }
                 }
-            }
-        });
+            });
 
     }
 
@@ -890,7 +894,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setHeaderVisiblity(!doSet);
         starContainer.setVisibility(visibily);
-        if (!doSet)
+        if (doSet)
             setOnlineGameVisibilityGone();
     }
 

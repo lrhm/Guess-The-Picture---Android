@@ -21,6 +21,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
@@ -106,9 +107,13 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         myUserLevelView.setUser(myUser);
 
-        coinTextView.setText((mWin) ? "160" : "0");
+        String winText = "سکه " + Tools.numeralStringToPersianDigits((mWin) ? "160" : "0");
+        coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
+        coinTextView.setText(winText);
 
-        scoreTextView.setText(mGameResultHolder.getMyScoreResult(myUser) + "");
+        String scoreText = " امتیاز" + Tools.numeralStringToPersianDigits(mGameResultHolder.getMyScoreResult(myUser) + "");
+        scoreTextView.setText(scoreText);
+        scoreTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
         ((MainActivity) getActivity()).setStarts(mGameResultHolder.getMyScoreResult(myUser));
 
         ImageManager imageManager = new ImageManager(getContext());
@@ -134,7 +139,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         int imgId = (mWin) ? R.drawable.aftabewin : R.drawable.aftabelose;
         int width = (int) (SizeManager.getScreenWidth() * 0.6);
-        ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin = (int) (SizeManager.getScreenWidth() * 0.3);
+        ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin = -(int) (SizeManager.getScreenWidth() * 0.03);
         ImageManager imageManager = new ImageManager(getContext());
         resultImageView.setImageBitmap(imageManager.loadImageFromResource(imgId, width, width));
 

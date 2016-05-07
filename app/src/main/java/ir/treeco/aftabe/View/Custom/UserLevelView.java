@@ -171,7 +171,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     public void setShadowLayer(MagicTextView mLevelTextView) {
 
         float dpi = getContext().getResources().getDisplayMetrics().density;
-        if (dpi <= 1) {
+        if (SizeManager.getScreenWidth() < 800) {
             return;
         }
 
