@@ -16,18 +16,35 @@ public class ContactsHolder {
     @Expose
     String email;
 
-    @Expose (serialize = false, deserialize = false)
-    String id;
 
-
-    public ContactsHolder(String name, String email, String number, String id) {
+    public ContactsHolder(String name, String email, String number) {
         this.name = name;
         this.email = email;
         this.number = number;
-        this.id = id;
     }
 
-    public String getId() {
-        return id;
+    public int getId() {
+        return number.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return ((ContactsHolder) o).hashCode() == hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        String temp = number;
+        temp = temp.replace("+", "");
+        while (temp.charAt(0) == '0')
+            temp = temp.substring(1);
+        if (temp.substring(0, 2).equals("989"))
+            temp = temp.substring(2);
+
+        return temp.hashCode();
+    }
+
+    public String getNumber() {
+        return number;
     }
 }

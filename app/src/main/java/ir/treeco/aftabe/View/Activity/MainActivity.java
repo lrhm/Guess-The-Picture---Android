@@ -405,7 +405,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         coinBox.setOnClickListener(this);
 
         CoinAdapter coinAdapter = new CoinAdapter(getApplicationContext(), this);
-        coinAdapter.earnCoins(500);
         coinAdapter.setCoinsChangedListener(this);
     }
 

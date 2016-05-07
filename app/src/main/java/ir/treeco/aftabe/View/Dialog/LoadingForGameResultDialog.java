@@ -6,10 +6,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
@@ -24,6 +30,7 @@ import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
@@ -42,17 +49,26 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     private OnlineGameFragment.OnGameEndListener mOnGameEndListener;
     int mLoadingStep = 0;
     private User mOpponent;
+    private Timer mTimer;
+    TimerView mTimerView;
+    int mTimerStep = 0;
 
-
-    public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener, User opponent) {
+    public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener, User opponent, int timerStep) {
         super(context);
         this.context = context;
         mOpponent = opponent;
+        this.mTimerStep = timerStep;
         mOnGameEndListener = onGameEndListener;
         imageManager = new ImageManager(context);
         ((MainActivity) context).setLoadingForGameResultDialog(this);
         initImageLoading();
-
+        mTimer = new Timer();
+        mTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runTimer();
+            }
+        }, 0, 1000);
 
     }
 
@@ -71,6 +87,17 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         new Handler().postDelayed(this, 20);
         SocketAdapter.addSocketListener(this);
 
+        mTimerView = new TimerView(context);
+        mTimerView.setDoOnlyBlue(true);
+
+        FrameLayout container = (FrameLayout) findViewById(R.id.dialog_game_result_loading_container);
+
+        FrameLayout.LayoutParams timerLP = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        timerLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.2f);
+        timerLP.leftMargin = (SizeManager.getScreenWidth() - mTimerView.getRealWidth()) / 2;
+        container.addView(mTimerView, timerLP);
+
+
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
@@ -79,6 +106,23 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         getWindow().setAttributes(lp);
 
 
+    }
+
+
+    private void runTimer() {
+        if (mTimerStep == 0) {
+            mTimer.cancel();
+            dismiss();
+        }
+        mTimerStep--;
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mTimerView.setTimer(mTimerStep);
+
+            }
+        });
     }
 
 

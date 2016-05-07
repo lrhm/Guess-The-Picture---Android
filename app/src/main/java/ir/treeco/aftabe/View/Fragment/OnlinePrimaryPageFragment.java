@@ -70,6 +70,13 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         msgCountView = new NotificationCountView(getContext(), R.drawable.notifmsg);
         frndReqCountView = new NotificationCountView(getContext(), R.drawable.notifreq);
 
+        frndReqCountView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setCurrentItem(1, true);
+            }
+        });
+
         LengthManager lengthManager = new LengthManager(getContext());
 
         topMargin = (int) (SizeManager.getScreenHeight() - Tools.convertDPtoPixel(100, getContext()) - lengthManager.getHeaderHeight()
@@ -87,8 +94,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         notifContainer.addView(frndReqCountView);
 
 
-        msgCountView.setCount(3);
-        frndReqCountView.setCount(5);
+        msgCountView.setCount(0);
+        frndReqCountView.setCount(0);
 
 
         if (Prefs.contains(Tools.USER_SAVED_DATA)) {

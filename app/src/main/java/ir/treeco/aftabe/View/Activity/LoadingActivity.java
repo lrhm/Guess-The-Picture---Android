@@ -51,7 +51,7 @@ public class LoadingActivity extends Activity implements Runnable {
 
         initUtils();
         new LocationAdapter(this);
-//        new ContactsAdapter(this);
+        new ContactsAdapter(this);
         long diff = System.currentTimeMillis() - startTime;
 
         if (diff < 1000)
