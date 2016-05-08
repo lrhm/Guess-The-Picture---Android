@@ -68,6 +68,7 @@ public class LeaderboardDialog extends DialogFragment {
 
 
         MySmartTabLayout smartTabLayout = (MySmartTabLayout) view.findViewById(R.id.smart_tab_leaderboard);
+        smartTabLayout.getLayoutParams().height = (int) (SizeManager.getScreenHeight() * 0.08);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager_leaderboard);
 
         viewPager.setAdapter(fragmentPagerAdapter);

@@ -43,6 +43,7 @@ import ir.treeco.aftabe.*;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.Util.UiUtil;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as
@@ -360,6 +361,8 @@ public class MySmartTabLayout extends HorizontalScrollView {
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
+        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * mWidth), 0.0285f);
+
         if (tabViewBackgroundResId != NO_ID) {
             textView.setBackgroundResource(tabViewBackgroundResId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -389,11 +392,6 @@ public class MySmartTabLayout extends HorizontalScrollView {
     }
 
     public static int getTextViewWidth(TextView textView) {
-        WindowManager wm =
-                (WindowManager) textView.getContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-
-        int deviceWidth;
 
 
         int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(SizeManager.getScreenWidth(), View.MeasureSpec.AT_MOST);

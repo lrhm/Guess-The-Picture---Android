@@ -54,6 +54,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
@@ -67,7 +68,7 @@ import ir.treeco.aftabe.View.Custom.ToastMaker;
  * create an instance of this fragment.
  */
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
-        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener {
+        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener, View.OnFocusChangeListener {
 
     private static final String TAG = "FriendListFragmetn";
     ArrayAdapter<String> searchBarAdapter;
@@ -127,6 +128,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         });
 
 
+
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
@@ -163,11 +165,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         mAutoCompleteTextView.setOnKeyboardDismiss(this);
         mAutoCompleteTextView.addTextChangedListener(this);
         mAutoCompleteTextView.setOnEditorActionListener(this);
-
         mAutoCompleteTextView.setTypeface(FontsHolder.getSansMedium(getContext()));
 
         mAutoCompleteTextView.setHint("شماره تلفن یا نام کاربری      ");
-
+        UiUtil.setTextViewSize(mAutoCompleteTextView, (int) (SizeManager.getScreenWidth() * 0.5), 0.095f );
+        mAutoCompleteTextView.setOnFocusChangeListener(this);
 
 //
         ImageView searchFriendImageView = (ImageView) view.findViewById(R.id.search_friend_image);
@@ -293,11 +295,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        Log.d(TAG, "before text changed");
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
 
     }
 
@@ -309,6 +311,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     @Override
     public void onKeyboardDismiss() {
+
+        Log.d(TAG, "keyboard dissmiss");
         clear();
     }
 
@@ -320,6 +324,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
             submitSearch();
             handled = true;
         }
+
         return handled;
     }
 
@@ -448,5 +453,12 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         }
 
         mFriendsAdapter.removeAll();
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+
+        ((OnlineMenuFragment)getParentFragment()).verticalViewPager.setPagingEnabled(!hasFocus);
+
     }
 }

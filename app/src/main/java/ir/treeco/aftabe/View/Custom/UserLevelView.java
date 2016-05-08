@@ -22,6 +22,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.LeaderboardDialog;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
@@ -89,7 +90,10 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         mUserNameTextView = new MagicTextView(context);
         mUserNameTextView.setText("اسمته");
-        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * ((isOnlineTop) ? 75 : 80));
+
+        UiUtil.setTextViewSize(mUserNameTextView, (int) (SizeManager.getScreenHeight() * mDimension), (isOnlineTop) ? 0.14f : 0.15f);
+
+
         mUserNameTextView.setTextColor(Color.WHITE);
 
         setShadowLayer(mUserNameTextView);
@@ -101,7 +105,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
 
         mLevelTextView = new MagicTextView(context);
-        mLevelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * 150);
+        UiUtil.setTextViewSize(mLevelTextView, (int) (SizeManager.getScreenHeight() * mDimension), 0.22f);
         mLevelTextView.setTypeface(FontsHolder.getNumeralSansBold(context));
         mLevelTextView.setTextColor(Color.WHITE);
         mLevelTextView.setGravity(Gravity.CENTER);
@@ -138,7 +142,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         if (mTextAlign != TEXT_ALIGN_CENTER) {
 
             if (orientation == VERTICAL) {
-                textLP.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+                textLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.01);
                 mUserNameTextView.setLayoutParams(textLP);
 
                 addView(imagesContainer);
@@ -146,7 +150,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             } else {
                 textLP.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
                 mUserNameTextView.setLayoutParams(textLP);
-                mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * (88));
+                setUserNameTextSize(1.23f);
                 addView(mUserNameTextView);
                 addView(imagesContainer);
             }
@@ -168,8 +172,9 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     }
 
-    public void setUserNameTextSize(int size) {
-        mUserNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mDimension * size);
+    public void setUserNameTextSize(float size) {
+
+        UiUtil.setTextViewSize(mUserNameTextView, (int) (SizeManager.getScreenWidth() * mDimension), 0.275f * size);
     }
 
     public void setShadowLayer(MagicTextView mLevelTextView) {
@@ -301,6 +306,14 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     public int getRealWidth() {
         return (int) (lengthManager.getScreenWidth() * mDimension);
+    }
+
+    public int getRealHeight() {
+        return getRealWidth();
+    }
+
+    public int getHeightPlusTextView() {
+        return (int) (getRealHeight() + UiUtil.getTextViewHeight(mUserNameTextView) + SizeManager.getScreenHeight() * 0.01);
     }
 
     public void setOnlineStateClear() {

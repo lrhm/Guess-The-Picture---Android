@@ -17,7 +17,7 @@
         android:clipToPadding="false"
         app:stl_defaultTabTextAllCaps="true"
         app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
-        app:stl_defaultTabTextHorizontalPadding="25dp"
+        app:stl_defaultTabTextHorizontalPadding="15dp"
         app:stl_defaultTabTextMinWidth="0dp"
         app:stl_defaultTabTextSize="16sp"
         app:stl_distributeEvenly="true"

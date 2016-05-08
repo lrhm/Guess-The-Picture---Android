@@ -26,6 +26,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
@@ -92,6 +93,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 case TYPE_HEADER:
                     mHeaderTextView = (TextView) itemView.findViewById(R.id.header_item);
                     FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_BOLD);
+                    UiUtil.setTextViewSize(mHeaderTextView , SizeManager.getScreenWidth() , 0.25f * 0.23f);
+
                     return;
                 case TYPE_CONTACT:
                     break;

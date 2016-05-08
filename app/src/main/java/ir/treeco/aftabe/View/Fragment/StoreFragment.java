@@ -25,6 +25,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 
@@ -91,7 +92,7 @@ public class StoreFragment extends Fragment {
                 public void onClick(View view) {
                     db.updateReviewed(true);
 
-                    CoinAdapter coinAdapter = new CoinAdapter(getActivity(),getActivity());
+                    CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
                     coinAdapter.earnCoins(300);
 
                     Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
@@ -148,7 +149,9 @@ public class StoreFragment extends Fragment {
         textView.setText(label);
 
         textView.setTypeface(FontsHolder.getSansMedium(textView.getContext()));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
+
+        UiUtil.setTextViewSize(textView, lengthManager.getStoreItemHeight() , 0.275f);
         textView.setTextColor(Color.WHITE);
 
         textView.setShadowLayer(1, 2, 2, Color.BLACK);

@@ -79,9 +79,13 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         LengthManager lengthManager = new LengthManager(getContext());
 
-        topMargin = (int) (SizeManager.getScreenHeight() - Tools.convertDPtoPixel(100, getContext()) - lengthManager.getHeaderHeight()
-                - 2 * topMargin - randplayconverter.mHeight
-                - 0.4 * SizeManager.getScreenWidth() - (int) (SizeManager.getScreenWidth() * 0.14)) / 2;
+        topMargin = (int) (SizeManager.getScreenHeight()
+                - SizeManager.getScreenHeight() * 0.12 // height of tab bar
+                - lengthManager.getHeaderHeight() // header
+                - 2 * topMargin - randplayconverter.mHeight // margins and random play
+               - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
+                - mUserLevelView.getHeightPlusTextView() // userLevelView
+                    ) / 2;
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.01), 5);
         View view1 = new View(getContext());

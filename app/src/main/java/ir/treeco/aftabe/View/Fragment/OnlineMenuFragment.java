@@ -58,6 +58,8 @@ public class OnlineMenuFragment extends Fragment implements VerticalViewPager.Cu
 
 
         verticalViewPager.setCustomListener(this);
+
+
         return view;
 
     }

@@ -112,6 +112,7 @@ public class VerticalViewPager extends ViewGroup {
 
     private static final int DEFAULT_GUTTER_SIZE = 16; // dips
 
+
     private static final int[] LAYOUT_ATTRS = new int[]{
             android.R.attr.layout_gravity
     };
@@ -144,7 +145,7 @@ public class VerticalViewPager extends ViewGroup {
 
     private final Rect mTempRect = new Rect();
 
-
+    private boolean isPagingEnabled = true;
     private CustomListener mCustomListener;
     private float degreeOfFreedom = 4;
     private PagerAdapter mAdapter;
@@ -1366,7 +1367,7 @@ public class VerticalViewPager extends ViewGroup {
             final View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
 
-                if(child.getParent() instanceof FrameLayout)
+                if (child.getParent() instanceof FrameLayout)
                     continue;
 
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
@@ -1425,7 +1426,7 @@ public class VerticalViewPager extends ViewGroup {
             if (child.getVisibility() != GONE) {
                 if (DEBUG) Log.v(TAG, "Measuring #" + i + " " + child
                         + ": " + mChildWidthMeasureSpec);
-                if(child.getParent() instanceof FrameLayout)
+                if (child.getParent() instanceof FrameLayout)
                     continue;
 
 
@@ -1801,6 +1802,8 @@ public class VerticalViewPager extends ViewGroup {
          * scrolling there.
          */
 
+        if(!isPagingEnabled)
+            return false;
 
         final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
 
@@ -1952,6 +1955,10 @@ public class VerticalViewPager extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+
+        if (!isPagingEnabled)
+            return false;
+
         if (mFakeDragging) {
             // A fake drag is in progress already, ignore this real one
             // but still eat the touch events.
@@ -2879,11 +2886,16 @@ public class VerticalViewPager extends ViewGroup {
 
     public interface CustomListener {
         boolean onScroll(int dy);
+
         void onActionUp();
     }
 
     public void setCustomListener(CustomListener customListener) {
         this.mCustomListener = customListener;
+    }
+
+    public void setPagingEnabled(boolean enabled) {
+        isPagingEnabled = enabled;
     }
 
 }

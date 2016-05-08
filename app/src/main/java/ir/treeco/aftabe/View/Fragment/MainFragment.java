@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ogaclejapan.smarttablayout.MySmartTabLayout;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -40,7 +39,7 @@ public class MainFragment extends Fragment {
     public AppBarLayout mAppBarLayout;
     public MySmartTabLayout mSmartTabLayout;
     private ImageManager imageManager;
-    ImageView shaderImageView ;
+    ImageView shaderImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -55,18 +54,20 @@ public class MainFragment extends Fragment {
         fragmentPagerItemAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getActivity())
 //                .add("تازه‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 0).get())
-                .add("    "+"آفلاین"+ "    ", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
+                .add("    " + "آفلاین" + "    ", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 1).get())
 //                .add("محبوب‌ترین‌ها", PackagesFragment.class, new Bundler().putInt(FRAGMENT_TYPE, 2).get())
-                .add("    "+"آنلاین"+ "    ", OnlineMenuFragment.class)
+                .add("    " + "آنلاین" + "    ", OnlineMenuFragment.class)
                 .create()
         );
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 
-        
+
         mSmartTabLayout = (MySmartTabLayout) view.findViewById(R.id.viewpagertab);
         mSmartTabLayout.setViewPager(viewPager);
+
+        mSmartTabLayout.getLayoutParams().height = (int) (SizeManager.getScreenHeight() * 0.08);
 
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.toolbar);
@@ -93,7 +94,9 @@ public class MainFragment extends Fragment {
 
         shaderImageView = (ImageView) view.findViewById(R.id.shadeview);
         SizeConverter shadeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1857, 23);
-        shaderImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.shade , shadeConverter.mWidth , shadeConverter.mHeight , ImageManager.ScalingLogic.FIT));
+        shaderImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.shade, shadeConverter.mWidth, shadeConverter.mHeight, ImageManager.ScalingLogic.FIT));
+        MyCoordinatorLayout.LayoutParams params = (MyCoordinatorLayout.LayoutParams) shaderImageView.getLayoutParams();
+        params.topMargin = (int) (SizeManager.getScreenHeight() * 0.08);
 
         setUpAds(autoScrollViewPager);
 
