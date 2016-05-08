@@ -240,7 +240,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
         DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
-        AftabeAPIAdapter.tryToLogin(this);
 
 //        Intent intent = new Intent(this, RegistrationIntentService.class);
 //        startService(intent);
@@ -319,11 +318,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void setUpPlayers() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
-        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.80f) / 2);
+        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 1.05f) / 2);
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
-        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.80f) / 2);
+        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 1.05f) / 2);
         lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
     }
 
@@ -837,7 +836,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGotUserAction(final UserActionHolder actionHolder) {
 
         Log.d(TAG, "got user action");
-        if (!actionHolder.getUserId().equals(myUser.getId())) {
+        if (!actionHolder.getUserId().equals(Tools.getCachedUser().getId())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -949,7 +948,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         isPaused = false;
         SocketAdapter.reconnect();
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isPaused)
+                    SocketAdapter.requestOnlineFriendsStatus();
+
+            }
+        }, 3000);
+
         super.onResume();
+
+        AftabeAPIAdapter.tryToLogin(this);
 
 
         Log.d(TAG, "super.onResume ended");

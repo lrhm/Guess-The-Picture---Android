@@ -267,19 +267,22 @@ public class LoadingDialog extends Dialog implements Runnable,
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    dismiss();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("state", 0);
+                    if (!((MainActivity) context).isFinishing()) {
+                        dismiss();
 
-                    OnlineGameFragment gameFragment = new OnlineGameFragment();
-                    gameFragment.setGameResultHolder(gameHolder);
-                    gameFragment.setArguments(bundle);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("state", 0);
 
-                    FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                        OnlineGameFragment gameFragment = new OnlineGameFragment();
+                        gameFragment.setGameResultHolder(gameHolder);
+                        gameFragment.setArguments(bundle);
+
+                        FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
 
                 }
             });

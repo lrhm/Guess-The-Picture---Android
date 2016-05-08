@@ -96,13 +96,14 @@ public class NotificationManager {
         }
         showNotification(builder, notifID);
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "after 20 sec");
-                NotificationManager.dismissNotification(getBaseContext(), notifID);
-            }
-        }, 20000);
+        if (notifHolder.isMatchRequest())
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "after 20 sec");
+                    NotificationManager.dismissNotification(getBaseContext(), notifID);
+                }
+            }, 20000);
 
 
     }

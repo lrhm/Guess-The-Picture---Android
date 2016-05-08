@@ -231,7 +231,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                         }
 
 
-                        SocketAdapter.requestOnlineFriendsStatus();
+
                     }
                 });
             }

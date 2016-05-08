@@ -65,8 +65,8 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
             initTextViews(user);
 
         } else if (user.isGuest()) {
-            Button button = (Button) view.findViewById(R.id.fragment_user_info_register_guest);
 
+            Button button = (Button) view.findViewById(R.id.fragment_user_info_register_guest);
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
