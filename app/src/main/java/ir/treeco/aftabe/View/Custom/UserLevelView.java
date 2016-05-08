@@ -142,7 +142,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         if (mTextAlign != TEXT_ALIGN_CENTER) {
 
             if (orientation == VERTICAL) {
-                textLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.01);
+                textLP.topMargin = (int) ((int) (SizeManager.getScreenHeight() * 0.02) * mDimension);
                 mUserNameTextView.setLayoutParams(textLP);
 
                 addView(imagesContainer);
@@ -313,7 +313,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     }
 
     public int getHeightPlusTextView() {
-        return (int) (getRealHeight() + UiUtil.getTextViewHeight(mUserNameTextView) + SizeManager.getScreenHeight() * 0.01);
+        return (int) (getRealHeight() + UiUtil.getTextViewHeight(mUserNameTextView) + SizeManager.getScreenHeight() * 0.02 * mDimension);
     }
 
     public void setOnlineStateClear() {

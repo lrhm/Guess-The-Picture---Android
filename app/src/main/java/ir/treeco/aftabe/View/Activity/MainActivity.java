@@ -651,9 +651,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 @Override
                 public void run() {
 
-                    Dialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
+                    if(!isFinishing()) {
+                        Dialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
 
-                    dialog.show();
+                        dialog.show();
+                    }
                 }
             });
 

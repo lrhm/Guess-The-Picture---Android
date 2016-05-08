@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
@@ -18,6 +19,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
@@ -68,9 +70,18 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.yes, size, size));
         mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no, size, size));
 
+        int padding = (int) (SizeManager.getScreenWidth() * 0.01);
+        int leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - size * 2 - padding);
+        UiUtil.setLeftMargin(mMatchButton, leftMargin / 2);
+        UiUtil.setLeftMargin(mChatButton, padding);
+
         mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);
 
+        TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
+
+        leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
+        UiUtil.setLeftMargin(textView , leftMargin/2);
 
     }
 

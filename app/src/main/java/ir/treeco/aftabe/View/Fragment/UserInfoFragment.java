@@ -20,6 +20,7 @@ import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
@@ -64,9 +65,16 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
             userLevelView.setUser(user);
             initTextViews(user);
 
-        } else if (user.isGuest()) {
+        }
+        if (user != null && user.isGuest()) {
 
-            Button button = (Button) view.findViewById(R.id.fragment_user_info_register_guest);
+            Log.d("TAG", "setting sing in image");
+
+            SizeConverter converter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.2), 474, 192);
+            ImageManager imageManager = new ImageManager(getContext());
+
+            ImageView button = (ImageView) view.findViewById(R.id.fragment_user_info_register_guest);
+            button.setImageBitmap(imageManager.loadImageFromResource(R.drawable.register, converter.mWidth, converter.mHeight));
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
