@@ -145,7 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:clickable="true"
-        app:customDimension="0.2"
+        app:customDimension="0.25"
         app:textAlign="below"
 
 

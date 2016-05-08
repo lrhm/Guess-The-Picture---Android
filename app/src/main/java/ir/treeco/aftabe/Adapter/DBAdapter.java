@@ -220,14 +220,33 @@ public class DBAdapter {
         values.put(FRIEND_USER_GSON, "'" + gson.toJson(friendUser) + "'");
 //        Log.d(TAG, gson.toJson(friendUser));
         db.update(FRIENDS, values, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
+
+
+
         close();
+
+
+        synchronized (friendsLock) {
+            if (mCachedFriends != null) {
+                mCachedFriends.remove(friendUser);
+                mCachedFriends.add(friendUser);
+            }
+        }
 
     }
 
     public void deleteFriendInDB(User friendUser) {
 
+
+        synchronized (friendsLock){
+            if(mCachedFriends != null)
+                mCachedFriends.remove(friendUser);
+        }
+
         open();
         db.delete(FRIENDS, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
+
+
         close();
 
     }

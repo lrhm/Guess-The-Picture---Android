@@ -319,11 +319,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void setUpPlayers() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
-        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.87f) / 2);
+        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.80f) / 2);
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
-        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.87f) / 2);
+        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 0.80f) / 2);
         lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
     }
 
@@ -697,16 +697,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onFriendRequest(final User user) {
 
-        runOnUiThread(new Runnable() {
+        new Handler(getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
 
-
-                FriendRequestDialog dialog = new FriendRequestDialog(MainActivity.this, user);
-                if (!isInOnlineGame && !isFinishing())
-                    dialog.show();
-                else
-                    mCachedFriendRequestDialogs.add(dialog);
+                if (!isFinishing()) {
+                    FriendRequestDialog dialog = new FriendRequestDialog(MainActivity.this, user);
+                    if (!isInOnlineGame && !isFinishing())
+                        dialog.show();
+                    else
+                        mCachedFriendRequestDialogs.add(dialog);
+                }
             }
         });
 

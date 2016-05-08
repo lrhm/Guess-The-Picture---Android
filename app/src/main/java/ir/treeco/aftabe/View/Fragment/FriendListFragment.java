@@ -146,7 +146,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         setUpRecylerViews();
 
 
-
         TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.search_text_input_layout);
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.5), (int) (SizeManager.getScreenHeight() * 0.1));
@@ -183,6 +182,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void setUpAdapters() {
 
+
+        Log.d(TAG, "setting up adapter");
         DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
         if (mFriendsAdapter == null)
             mFriendsAdapter = new FriendsAdapter(getContext(), dbAdapter.getMyCachedFriends(), null, null, null);
@@ -207,19 +208,28 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
 //        getContacts();
 
+        Log.d(TAG, "will request friend list");
 
         AftabeAPIAdapter.getListOfMyFriends(myUser, new BatchUserFoundListener() {
             @Override
             public void onGotUserList(final User[] users) {
-                FriendListFragment.this.getActivity().runOnUiThread(new Runnable() {
+
+
+                Log.d(TAG, "get friend list");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        for (User user : users) {
-                            mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
-                        }
+
                         friends = users;
                         DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
                         dbAdapter.updateFriendsFromAPI(users);
+                        ArrayList<User> cachedUsers = dbAdapter.getMyCachedFriends();
+                        for (User user : mFriendsAdapter.getFriendList()) {
+                            if (!cachedUsers.contains(user)) {
+                                mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_FRIEND);
+                            }
+                        }
+
 
                         SocketAdapter.requestOnlineFriendsStatus();
                     }
@@ -229,13 +239,14 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
             @Override
             public void onGotError() {
 
+                Log.d(TAG, "Dident get friend list");
             }
         });
 
         AftabeAPIAdapter.getListOfFriendRequestsToMe(myUser, new BatchUserFoundListener() {
             @Override
             public void onGotUserList(final User[] users) {
-                FriendListFragment.this.getActivity().runOnUiThread(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         for (User user : users)

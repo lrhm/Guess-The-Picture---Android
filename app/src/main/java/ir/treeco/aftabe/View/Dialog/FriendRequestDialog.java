@@ -78,6 +78,14 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
     }
 
     @Override
+    public void onBackPressed() {
+
+        ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_REQUEST);
+
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v) {
 
         if (v.getId() == R.id.uv_start_chat_button) {
@@ -85,7 +93,8 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         }
 
         if (v.getId() == R.id.uv_match_button) {
-            SocketAdapter.answerFriendRequest(mUser.getId(), true);
+            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), null);
+            mUser.setIsFriend(true);
             ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
             DBAdapter dbAdapter = DBAdapter.getInstance(context);
             dbAdapter.addFriendToDB(mUser);

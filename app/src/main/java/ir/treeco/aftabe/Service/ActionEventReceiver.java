@@ -14,6 +14,7 @@ import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Util.NotificationManager;
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.LoadingActivity;
 
 /**
@@ -40,7 +41,10 @@ public class ActionEventReceiver extends BroadcastReceiver {
         if (actionHolder.isFriendRequest()) {
 
             boolean accepted = actionHolder.isFriendRequestAccepted();
-//            SocketAdapter.answerFriendRequest(notifHolder.getFriendSF().getUser().getId(), accepted);
+            if (accepted)
+                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), actionHolder.getNotifHolder().getFriendSF().getUser().getId(), null);
+            else
+                SocketAdapter.answerFriendRequest(actionHolder.getNotifHolder().getFriendSF().getUser().getId(), accepted);
 
         }
 

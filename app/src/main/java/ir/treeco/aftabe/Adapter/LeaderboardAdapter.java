@@ -65,7 +65,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             mTextView = (TextView) itemView.findViewById(R.id.rank_leaderboard_item);
             mTextView.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
             mUserLevelView = (UserLevelView) itemView.findViewById(R.id.leaderboard_mark_view);
-            mUserLevelView.setUserNameTextSize(92);
+            mUserLevelView.setUserNameTextSize(100);
         }
 
     }

@@ -57,6 +57,14 @@ public class User {
     @Expose
     private String code;
 
+    @Expose
+    private int rank;
+
+    @Expose
+    private int wins;
+
+    @Expose
+    private int loses;
 
     @Expose
     Access access;
@@ -70,11 +78,23 @@ public class User {
         guest = false;
     }
 
+    public int getRank() {
+        return rank;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public int getLoses() {
+        return loses;
+    }
+
     public void setAccess(Access access) {
         this.access = access;
     }
 
-    public Access getAccess(){
+    public Access getAccess() {
         return access;
     }
 
@@ -232,6 +252,7 @@ public class User {
         User rhs = (User) obj;
         return rhs.getId().equals(getId());
     }
+
     public class Access {
         @Expose
         boolean friend;

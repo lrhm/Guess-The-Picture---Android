@@ -39,6 +39,8 @@ import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
 
 
+    private static final String TAG = "FriendsAdapter";
+
     ImageManager imageManager;
 
     public ArrayList<User> mFriends;
@@ -48,13 +50,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public ArrayList<User> mSearched;
 
     ArrayList<ArrayList<User>> arrayLists;
-    private final String[] HEADERS = {"یافت شده گان", "درخواست ها", "دوستان", "مخاطبان", "دوستان انلاین"};
+    private final String[] HEADERS = {"یافت شده گان", "درخواست ها", "دوستان انلاین", "دوستان", "مخاطبان"};
 
-    public static final int TYPE_FRIEND = 2;
+    public static final int TYPE_FRIEND = 3;
     public static final int TYPE_SEARCHED = 0;
-    public static final int TYPE_CONTACT = 3;
+    public static final int TYPE_CONTACT = 4;
     public static final int TYPE_REQUEST = 1;
-    public static final int TYPE_ONLINE_FRIENDS = 4;
+    public static final int TYPE_ONLINE_FRIENDS = 2;
     public static final int TYPE_HEADER = 5;
 
 
@@ -70,9 +72,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         arrayLists = new ArrayList<>();
         arrayLists.add(mSearched);
         arrayLists.add(mRequests);
+        arrayLists.add(mOnlineFriends);
         arrayLists.add(mFriends);
         arrayLists.add(mContacts);
-        arrayLists.add(mOnlineFriends);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -196,7 +198,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 }
             });
 
-        } else if (type == TYPE_SEARCHED){
+        } else if (type == TYPE_SEARCHED) {
 
             holder.mChatButton.setVisibility(View.GONE);
 
@@ -224,28 +226,34 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     });
                 }
             });
-        } else if (type == TYPE_REQUEST){
+        } else if (type == TYPE_REQUEST) {
 
+            Log.d(TAG, "binded to type request");
             holder.mChatButton.setVisibility(View.VISIBLE);
             holder.mMatchButton.setVisibility(View.VISIBLE);
 
-            holder.mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no , size , size));
-            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.yes , size , size));
+            holder.mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no, size, size));
+            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.yes, size, size));
 
             holder.mChatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d(TAG, "click on no");
                     removeUser(user, type);
-                    SocketAdapter.answerFriendRequest(user.getId() , false);
+                    SocketAdapter.answerFriendRequest(user.getId(), false);
                 }
             });
 
-            holder.mChatButton.setOnClickListener(new View.OnClickListener() {
+            holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeUser(user,type);
-                    addUser(user , TYPE_FRIEND);
-                    SocketAdapter.answerFriendRequest(user.getId(), true);
+
+                    Log.d(TAG, "click on yes");
+                    removeUser(user, type);
+                    user.setIsFriend(true);
+                    addUser(user, TYPE_FRIEND);
+//                    SocketAdapter.answerFriendRequest(user.getId(), true);
+                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), null);
                 }
             });
         }

@@ -66,7 +66,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         mDataContainer = (RelativeLayout) findViewById(R.id.user_data_container);
         RelativeLayout.LayoutParams layoutParams = new
                 RelativeLayout.LayoutParams((int) (0.8 * SizeManager.getScreenWidth()), ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = (int) (SizeManager.getScreenWidth() * 0.09);
+        layoutParams.topMargin = (int) (SizeManager.getScreenWidth() * 0.12);
         mDataContainer.setLayoutParams(layoutParams);
         tools.setViewBackground(mDataContainer, new DialogDrawable(getContext()));
 
@@ -129,7 +129,6 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
                             if (context instanceof MainActivity) {
                                 ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_FRIEND);
-
                                 ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_ONLINE_FRIENDS);
                             }
                         }
