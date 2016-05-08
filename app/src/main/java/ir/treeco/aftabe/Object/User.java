@@ -78,8 +78,12 @@ public class User {
         guest = false;
     }
 
+    public void setRank(int rank){
+        this.rank = rank;
+    }
+
     public int getRank() {
-        return rank;
+        return rank + 1;
     }
 
     public int getWins() {

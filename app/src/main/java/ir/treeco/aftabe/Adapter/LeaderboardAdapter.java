@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 /**
@@ -40,7 +41,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
         User user = mList.get(position);
         holder.mUserLevelView.setUser(user);
-        holder.mTextView.setText("#" + user.getLevel() + "");
+        holder.mTextView.setText("#" + Tools.numeralStringToPersianDigits(user.getRank() + ""));
     }
 
     @Override

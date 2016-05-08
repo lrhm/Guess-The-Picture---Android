@@ -26,6 +26,7 @@
                 android:layout_marginTop="20dp">
 
                 <TextView
+                    android:id="@+id/dialog_user_view_first_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -33,8 +34,10 @@
 
 
                 <TextView
+                    android:id="@+id/dialog_user_view_first_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:layout_alignParentRight="true"
                     android:text="Righty" />
 
@@ -49,6 +52,7 @@
                 android:layout_marginTop="20dp">
 
                 <TextView
+                    android:id="@+id/dialog_user_view_2nd_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -56,8 +60,10 @@
 
 
                 <TextView
+                    android:id="@+id/dialog_user_view_2nd_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:layout_alignParentRight="true"
                     android:text="Righty" />
 
@@ -72,13 +78,16 @@
                 android:layout_marginTop="20dp">
 
                 <TextView
+                    android:id="@+id/dialog_user_view_3rd_left"
                     android:layout_width="wrap_content"
+
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:text="Lefty" />
 
 
                 <TextView
+                    android:id="@+id/dialog_user_view_3rd_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -86,25 +95,24 @@
 
             </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/uv_cancel_friendship"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textSize="20sp"
-                android:visibility="gone"
-                android:background="@drawable/cancel_friend_style"
-                />
-        </LinearLayout>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/uv_cancel_friendship"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/cancel_friend_style"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -112,8 +120,6 @@
                 android:layout_marginBottom="30dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
-
-
 
 
                 <ImageView

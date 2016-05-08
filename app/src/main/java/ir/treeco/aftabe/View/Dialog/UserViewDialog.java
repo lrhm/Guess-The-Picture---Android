@@ -23,6 +23,7 @@ import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
@@ -41,6 +42,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     User mUser;
     TextView mCancelTextView;
     ImageManager imageManager;
+    public static final String[] titles = new String[]{"رتبه", "تعداد برد", "تعداد باخت"};
 
 
     public UserViewDialog(Context context, User user) {
@@ -97,6 +99,24 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);
+
+
+        int[] textRightIds = new int[]{R.id.dialog_user_view_first_left, R.id.dialog_user_view_2nd_left, R.id.dialog_user_view_3rd_left};
+        int[] textLeftIds = new int[]{R.id.dialog_user_view_first_right, R.id.dialog_user_view_2nd_right, R.id.dialog_user_view_3rd_right};
+
+        String[] textRights = new String[]{mUser.getRank() + "", mUser.getWins() + "", mUser.getLoses() + ""};
+
+        for (int i = 0; i < 3; i++) {
+            TextView left = (TextView) findViewById(textLeftIds[i]);
+            left.setTypeface(FontsHolder.getSansBold(context));
+            left.setText(titles[i]);
+
+            TextView right = (TextView) findViewById(textRightIds[i]);
+            right.setTypeface(FontsHolder.getNumeralSansBold(context));
+            right.setText(textRights[i]);
+
+        }
+
     }
 
 
