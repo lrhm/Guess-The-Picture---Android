@@ -21,6 +21,7 @@ import java.util.TimerTask;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.ContactsHolder;
+import ir.treeco.aftabe.Adapter.Cache.ContactsCacheHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
@@ -34,16 +35,19 @@ import retrofit.Response;
 public class ContactsAdapter {
 
     private static final String TAG = "ContactsAdapter";
+    private static final String TAG_CACHE = "contacts_cached_aftabe";
 
     private Timer mTimer;
     private Context mContext;
     private DBAdapter dbAdapter;
     private Queue<ContactsHolder> contactsHolders;
+    private ContactsCacheHolder contactsCacheHolder;
 
     public ContactsAdapter(Context context) {
         mContext = context;
         dbAdapter = DBAdapter.getInstance(context);
         contactsHolders = new LinkedList<>();
+        contactsCacheHolder = ContactsCacheHolder.getInstance();
 
         getContacts();
 
@@ -89,7 +93,7 @@ public class ContactsAdapter {
 
 
             ContactsHolder contactsHolder = new ContactsHolder(name, mail, phoneNumber);
-            if (!Prefs.contains(contactsHolder.hashCode() + "")) {
+            if (!contactsCacheHolder.contains(contactsHolder)){
                 set.add(new ContactsHolder(name, mail, phoneNumber));
 
             }
@@ -121,7 +125,7 @@ public class ContactsAdapter {
         };
 
         mTimer = new Timer();
-        mTimer.scheduleAtFixedRate(timerTask, 4000, 1000);
+        mTimer.scheduleAtFixedRate(timerTask, 4000, 1500);
 
     }
 
@@ -138,7 +142,7 @@ public class ContactsAdapter {
 
                 if (response.isSuccess()) {
                 }
-                Prefs.putString(contactsHolder.hashCode() + "", RandomString.nextString());
+                contactsCacheHolder.addToList(contactsHolder);
 
             }
 

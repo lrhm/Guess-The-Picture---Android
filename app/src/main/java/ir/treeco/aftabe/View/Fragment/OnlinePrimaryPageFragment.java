@@ -80,7 +80,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         LengthManager lengthManager = new LengthManager(getContext());
 
         topMargin = (int) (SizeManager.getScreenHeight()
-                - SizeManager.getScreenHeight() * 0.12 // height of tab bar
+                - SizeManager.getScreenHeight() * 0.08 // height of tab bar
                 - lengthManager.getHeaderHeight() // header
                 - 2 * topMargin - randplayconverter.mHeight // margins and random play
                - (int) (SizeManager.getScreenWidth() * 0.14) // notifs

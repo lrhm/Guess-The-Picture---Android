@@ -466,17 +466,13 @@ public class Tools {
             isBackupInProgress = true;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                synchronized (lock) {
-                    backUpDBAsync();
-                    isBackupInProgress = false;
-                }
+        backUpDBAsync();
 
-            }
-        }).run();
+        synchronized (lock) {
+            isBackupInProgress = false;
+
+        }
     }
 
     public static void backUpDBAsync() {
@@ -537,15 +533,10 @@ public class Tools {
             backupJournalInProgress = true;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                backUpDBJournalAsync();
-                backupJournalInProgress = false;
-
-            }
-        }).run();
-
+        backUpDBJournalAsync();
+        synchronized (journalLock) {
+            backupJournalInProgress = false;
+        }
     }
 
     public static void backUpDBJournalAsync() {

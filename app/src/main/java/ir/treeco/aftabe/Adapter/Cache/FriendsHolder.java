@@ -19,7 +19,7 @@ import ir.treeco.aftabe.Object.User;
 public class FriendsHolder {
 
     private static final String TAG = "FriendsHolder";
-    private final String KEY_TAG = "friends_cached_aftabe";
+    private static final String KEY_TAG = "friends_cached_aftabe";
 
     private static FriendsHolder friendsHolder;
     private Object lock;
@@ -33,7 +33,7 @@ public class FriendsHolder {
             if (friendsHolder != null)
                 return friendsHolder;
 
-            String cachedString = Prefs.getString(TAG, "");
+            String cachedString = Prefs.getString(KEY_TAG, "");
             if (cachedString.equals("")) {
                 friendsHolder = new FriendsHolder();
                 friendsHolder.friends = new HashSet<>();
