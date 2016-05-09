@@ -20,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -28,7 +29,9 @@ import android.widget.TextView;
 
 import ir.treeco.aftabe.R;
 
-public class MagicTextView extends TextView {
+public class MagicTextView extends AppCompatTextView {
+
+
     private ArrayList<Shadow> outerShadows;
     private ArrayList<Shadow> innerShadows;
 

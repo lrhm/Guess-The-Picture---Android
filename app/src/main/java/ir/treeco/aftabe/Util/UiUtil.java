@@ -1,5 +1,7 @@
 package ir.treeco.aftabe.Util;
 
+import android.content.Context;
+import android.renderscript.Type;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewParent;
@@ -8,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import ir.treeco.aftabe.View.Custom.MagicTextView;
 
 /**
  * Created by root on 5/8/16.
@@ -55,6 +59,24 @@ public class UiUtil {
             layoutParams.leftMargin = leftMargin;
             return;
         }
+    }
+
+
+    public static float getAdjustTextSize(TextView textView, int width, int height , int textSize) {
+
+        String textBackUp = textView.getText().toString();
+        String temp = "gsjskssgwaminsaf";
+        temp = temp.substring(0, textSize);
+        textView.setText(temp);
+
+      float  startPx = textView.getTextSize();
+        while (getTextViewHeight(textView) < height && getTextViewWidth(textView) < width) {
+
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, startPx);
+            startPx += 1;
+        }
+        return startPx;
+
     }
 
 

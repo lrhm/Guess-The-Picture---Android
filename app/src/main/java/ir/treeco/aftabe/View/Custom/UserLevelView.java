@@ -54,6 +54,8 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private ImageView stateView;
     private ImageView baseView;
     private ImageView coverView;
+
+
     private MagicTextView mUserNameTextView;
     private MagicTextView mLevelTextView;
     private LengthManager lengthManager;
@@ -415,6 +417,15 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     public void setClick(boolean mClick) {
         this.mClick = mClick;
+    }
+
+
+    public MagicTextView getUserNameTextView() {
+        return mUserNameTextView;
+    }
+
+    public MagicTextView getLevelTextView() {
+        return mLevelTextView;
     }
 
 }
