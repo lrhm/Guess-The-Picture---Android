@@ -338,7 +338,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     }
 
     public int getHeightPlusTextView() {
-        return (int) (getRealHeight() + UiUtil.getTextViewHeight(mUserNameTextView) + SizeManager.getScreenHeight() * 0.02 * mDimension);
+        return (int) (getRealHeight() + UiUtil.getTextViewHeight(mUserNameTextView) + SizeManager.getScreenHeight() * 0.08 * mDimension);
     }
 
     public void setOnlineStateClear() {

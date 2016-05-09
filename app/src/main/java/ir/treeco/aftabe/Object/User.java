@@ -72,6 +72,7 @@ public class User {
     LevelCalculator levelCalculator;
 
 
+
     private boolean isMe = false;
 
     public User() {
@@ -246,6 +247,8 @@ public class User {
         access.friend = isFriend;
     }
 
+
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof User))
@@ -255,6 +258,11 @@ public class User {
 
         User rhs = (User) obj;
         return rhs.getId().equals(getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     public class Access {

@@ -1,75 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ir.treeco.aftabe.View.Custom.MyCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:smt="http://schemas.android.com/apk/lib/com.ogaclejapan.smarttablayout"
     android:id="@+id/my_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="5dp">
+    android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/adtest"
+
+    <com.ogaclejapan.smarttablayout.MySmartTabLayout
+        android:id="@+id/viewpagertab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp">
+        android:layout_height="40dp"
+        android:layout_below="@id/header"
+        android:clipToPadding="false"
+        app:stl_defaultTabTextAllCaps="true"
+        app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
+        app:stl_defaultTabTextHorizontalPadding="15dp"
+        app:stl_defaultTabTextMinWidth="0dp"
+        app:stl_defaultTabTextSize="16sp"
+        app:stl_distributeEvenly="true"
+        app:stl_dividerColor="#00000000"
+        app:stl_dividerThickness="0dp"
+        app:stl_indicatorAlwaysInCenter="false"
+        app:stl_indicatorColor="#44000000"
+        app:stl_indicatorCornerRadius="20dp"
+        app:stl_indicatorGravity="center"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorThickness="35dp"
+        app:stl_indicatorWithoutPadding="true"
+        app:stl_underlineColor="#66000000"
+        app:stl_underlineThickness="0dp" />
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-            <ir.treeco.aftabe.View.Custom.AutoScrollViewPager
-                android:id="@+id/ad_view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:visibility="gone"/>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-        <com.ogaclejapan.smarttablayout.MySmartTabLayout
-            android:layout_marginTop="2dp"
-            android:id="@+id/viewpagertab"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/header"
-            android:clipToPadding="false"
-            app:stl_defaultTabTextAllCaps="true"
-            app:stl_defaultTabTextColor="@color/tab_view_pager_text_color"
-            app:stl_defaultTabTextHorizontalPadding="15dp"
-            app:stl_defaultTabTextMinWidth="0dp"
-            app:stl_defaultTabTextSize="16sp"
-            app:stl_distributeEvenly="true"
-            app:stl_dividerColor="#00000000"
-            app:stl_dividerThickness="0dp"
-            app:stl_indicatorAlwaysInCenter="false"
-            app:stl_indicatorColor="#44000000"
-            app:stl_indicatorCornerRadius="20dp"
-            app:stl_indicatorInterpolation="smart"
-            app:stl_indicatorThickness="35dp"
-            app:stl_indicatorWithoutPadding="true"
-            app:stl_indicatorGravity="center"
-            app:stl_underlineColor="#66000000"
-            app:stl_underlineThickness="0dp" />
-
-
-    </android.support.design.widget.AppBarLayout>
-
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ImageView
-        android:layout_marginTop="42dp"
         android:id="@+id/shadeview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </RelativeLayout>
 
-
-</ir.treeco.aftabe.View.Custom.MyCoordinatorLayout>
+</LinearLayout>

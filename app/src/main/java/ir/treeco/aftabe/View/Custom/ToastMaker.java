@@ -2,6 +2,7 @@ package ir.treeco.aftabe.View.Custom;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -15,6 +16,13 @@ import ir.treeco.aftabe.Util.Tools;
 
 public class ToastMaker {
     public static void show(Context context, String content, int duration) {
+
+        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (manager.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE) {
+            Toast.makeText(context, content, duration).show();
+            return;
+        }
+
         Tools tools = new Tools(context);
         LengthManager lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
         TextView textView = new TextView(context);

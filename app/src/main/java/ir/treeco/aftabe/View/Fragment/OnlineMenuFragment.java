@@ -20,15 +20,13 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Custom.MyCoordinatorLayout;
 import ir.treeco.aftabe.View.Custom.VerticalViewPager;
 
 /**
  * Created by al on 12/24/15.
  */
-public class OnlineMenuFragment extends Fragment implements VerticalViewPager.CustomListener {
+public class OnlineMenuFragment extends Fragment  {
 
-    private boolean isDegreeOfFreedomSetted = false;
 
     MainFragment mainFragment;
     VerticalViewPager verticalViewPager;
@@ -57,33 +55,11 @@ public class OnlineMenuFragment extends Fragment implements VerticalViewPager.Cu
         verticalViewPager.setDegreeOfFreedom(4);
 
 
-        verticalViewPager.setCustomListener(this);
 
 
         return view;
 
     }
 
-    @Override
-    public boolean onScroll(int dy) {
-        if (!mainFragment.myCoordinatorLayout.isAllowForScrool())
-            return false;
-        MyCoordinatorLayout.LayoutParams params = (MyCoordinatorLayout.LayoutParams) mainFragment.mAppBarLayout.getLayoutParams();
 
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        if (behavior != null) {
-            behavior.onNestedPreScroll(mainFragment.myCoordinatorLayout, mainFragment.mAppBarLayout, verticalViewPager, 0, -dy, new int[2]);
-        }
-        return true;
-
-
-    }
-
-    @Override
-    public void onActionUp() {
-
-        if (!mainFragment.myCoordinatorLayout.isAllowForScrool())
-            return;
-        mainFragment.mAppBarLayout.setExpanded(false, true);
-    }
 }

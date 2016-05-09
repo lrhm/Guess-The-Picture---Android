@@ -146,7 +146,6 @@ public class VerticalViewPager extends ViewGroup {
     private final Rect mTempRect = new Rect();
 
     private boolean isPagingEnabled = true;
-    private CustomListener mCustomListener;
     private float degreeOfFreedom = 4;
     private PagerAdapter mAdapter;
     private float mPageHeight = 1;
@@ -1914,7 +1913,6 @@ public class VerticalViewPager extends ViewGroup {
                 if ((mScrollState == SCROLL_STATE_SETTLING &&
                         Math.abs(mScroller.getFinalY() - mScroller.getCurrY()) > mCloseEnough)) {
                     // Let the user 'catch' the pager as it animates.
-                    Log.d(TAG, "in fucking if");
                     mScroller.abortAnimation();
                     mPopulatePending = false;
                     populate();
@@ -2026,13 +2024,11 @@ public class VerticalViewPager extends ViewGroup {
                             ev, mActivePointerId);
                     final float y = MotionEventCompat.getY(ev, activePointerIndex);
 //                    Log.d(TAG, "perform y " + (y - mLastMotionY));
-                    boolean cancel = mCustomListener.onScroll((int) (y - mLastMotionY));
-                    if (!cancel)
+
                         needsInvalidate |= performDrag(y);
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                mCustomListener.onActionUp();
                 if (mIsBeingDragged) {
                     final VelocityTracker velocityTracker = mVelocityTracker;
                     velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
@@ -2884,15 +2880,6 @@ public class VerticalViewPager extends ViewGroup {
         }
     }
 
-    public interface CustomListener {
-        boolean onScroll(int dy);
-
-        void onActionUp();
-    }
-
-    public void setCustomListener(CustomListener customListener) {
-        this.mCustomListener = customListener;
-    }
 
     public void setPagingEnabled(boolean enabled) {
         isPagingEnabled = enabled;
