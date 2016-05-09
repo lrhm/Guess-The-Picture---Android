@@ -176,7 +176,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void initActivity() {
 
-        initSizes();
+        SizeManager.initSizes(this);
 
         mUserFoundListeners = new ArrayList<>();
 
@@ -190,7 +190,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         logo = (ImageView) findViewById(R.id.logo);
         playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
         playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
-
 
 
         playerOne.setUserNameTextSize(0.85f);
@@ -294,37 +293,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             starViews[integer].setActive();
     }
 
-    public void initSizes() {
-        int screenWidth = 0;
-        int screenHeight = 0;
-        if (Build.VERSION.SDK_INT >= 11) {
-            Point size = new Point();
-            try {
-                // this.getWindowManager().getDefaultDisplay().getRealSize(size);
-
-                this.getWindowManager().getDefaultDisplay().getSize(size);
-                screenWidth = size.x;
-                screenHeight = size.y;
-            } catch (NoSuchMethodError e) {
-
-                DisplayMetrics metrics = new DisplayMetrics();
-                this.getWindowManager().getDefaultDisplay()
-                        .getRealMetrics(metrics);
-                screenWidth = metrics.widthPixels;
-                screenHeight = metrics.heightPixels;
-
-            }
-
-        } else {
-            DisplayMetrics metrics = new DisplayMetrics();
-            this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            screenWidth = metrics.widthPixels;
-            screenHeight = metrics.heightPixels;
-        }
-        SizeManager.setScreenHeight(screenHeight);
-        SizeManager.setScreenWidth(screenWidth);
-
-    }
 
     private void setUpPlayers() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
@@ -334,7 +302,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
         lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 1.05f) / 2);
         lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
-
 
 
     }
@@ -411,6 +378,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Log.d(TAG, "density dpi is " + coinBoxHeight);
 
+        if (SizeManager.getScreenWidth() < 800)
+            digits.setShadowLayer(0.5f, 1, 1, Color.BLACK);
         digits.setTypeface(FontsHolder.getNumeralSansMedium(this));
         digits.setTextSize(TypedValue.COMPLEX_UNIT_PX, coinBoxHeight * 0.475f);
 
@@ -664,7 +633,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 @Override
                 public void run() {
 
-                    if(!isFinishing()) {
+                    if (!isFinishing()) {
                         Dialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
 
                         dialog.show();

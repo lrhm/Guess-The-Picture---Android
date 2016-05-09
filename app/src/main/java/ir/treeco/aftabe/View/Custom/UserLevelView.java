@@ -20,6 +20,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
@@ -32,6 +33,7 @@ import ir.treeco.aftabe.View.Dialog.UserViewDialog;
  * TODO: document your custom view class.
  */
 public class UserLevelView extends LinearLayout implements View.OnClickListener {
+    private static final String TAG = "UserLevelView";
     private int mUserLevel;
     private int mUserExp;
     private float mDimension;
@@ -41,6 +43,8 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private static final int TEXT_ALIGN_BELOW = 1;
     private static final int TEXT_ALIGN_CENTER = 2;
 
+
+    SizeConverter imageConverter;
     private boolean mClick = true;
 
     private boolean mFirstState = true;
@@ -74,18 +78,19 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
         imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
 
+        imageConverter = SizeConverter.SizeConvertorFromWidth(lengthManager.getScreenWidth() * mDimension, 824, 837);
 
+        Log.d(TAG, "width and height is " + imageConverter.mWidth + " " + imageConverter.mHeight);
         FrameLayout imagesContainer = new FrameLayout(context);
 
 
         baseView = new ImageView(context);
         baseView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.base),
-                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
+                imageConverter.mWidth, imageConverter.mHeight, ImageManager.ScalingLogic.FIT));
 
 
         coverView = new ImageView(context);
-        coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.cover),
-                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
+        coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.cover), imageConverter.mWidth, imageConverter.mHeight, ImageManager.ScalingLogic.FIT));
 
 
         mUserNameTextView = new MagicTextView(context);
@@ -172,7 +177,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     }
 
-    public void setLevelTextSize(){
+    public void setLevelTextSize() {
 
         UiUtil.setTextViewSize(mLevelTextView, (int) (SizeManager.getScreenWidth() * mDimension), 0.42f);
 
@@ -192,6 +197,12 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         float dpi = getContext().getResources().getDisplayMetrics().density;
         if (SizeManager.getScreenWidth() < 800) {
+            int dropShadowColor = Color.parseColor("#393939");
+
+            float size = (float) (0.5 * mDimension / 0.4);
+            mLevelTextView.addOuterShadow(0.3f, size, size, dropShadowColor);
+            mLevelTextView.addInnerShadow(0.3f, size, size, dropShadowColor);
+
             return;
         }
 
@@ -246,8 +257,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     public void setUserExp(int userExp) {
         mUserExp = userExp;
-        expView.setImageBitmap(imageManager.loadImageFromResource(getExpID(),
-                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.CROP));
+        expView.setImageBitmap(imageManager.loadImageFromResource(getExpID(), imageConverter.mWidth, imageConverter.mHeight, ImageManager.ScalingLogic.FIT));
 
     }
 
@@ -289,6 +299,9 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         setUserExp(user.getExp());
         setUserName(user.getName());
 
+        setShadowLayer(mLevelTextView);
+        setShadowLayer(mUserNameTextView);
+
 
     }
 
@@ -310,17 +323,16 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     public void setForOnlineGame() {
         setLevelTextSize();
-        coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.coveronlinegame),
-                (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
+        coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.coveronlinegame), imageConverter.mWidth, imageConverter.mHeight, ImageManager.ScalingLogic.FIT));
 
     }
 
     public int getRealWidth() {
-        return (int) (lengthManager.getScreenWidth() * mDimension);
+        return imageConverter.mWidth;
     }
 
     public int getRealHeight() {
-        return getRealWidth();
+        return imageConverter.mHeight;
     }
 
     public int getHeightPlusTextView() {
@@ -339,16 +351,15 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         Log.d(this.getClass().getSimpleName(), "got user action " + mFirstState);
         Log.d(this.getClass().getSimpleName(), "got user action " + gameActionResult.getResult().toString());
 
-        int width = (int) (SizeManager.getScreenWidth() * mDimension);
 
         if (mFirstState) {
             expView.setVisibility(View.VISIBLE);
-            expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(gameActionResult), width, width));
+            expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(gameActionResult), imageConverter.mWidth, imageConverter.mHeight));
             mFirstState = false;
             return;
         }
         stateView.setVisibility(View.VISIBLE);
-        stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(gameActionResult), width, width));
+        stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(gameActionResult), imageConverter.mWidth, imageConverter.mHeight));
 
 
     }
