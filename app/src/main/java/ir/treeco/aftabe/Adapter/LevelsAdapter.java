@@ -42,6 +42,10 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemLevel);
             frame = (ImageView) itemView.findViewById(R.id.itemLevel_frame);
+            int size = (int) (SizeManager.getScreenWidth() * 0.235);
+
+            imageView.getLayoutParams().width = size;
+            imageView.getLayoutParams().height = size;
 
             v.setOnClickListener(this);
         }
