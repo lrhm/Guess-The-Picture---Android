@@ -170,6 +170,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Log.d(TAG, "onCreate ended");
 
+
     }
 
 
@@ -190,6 +191,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
         playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
 
+
+
+        playerOne.setUserNameTextSize(0.85f);
+        playerTwo.setUserNameTextSize(0.85f);
+
+
         playerOne.setForOnlineGame();
         playerTwo.setForOnlineGame();
 
@@ -201,6 +208,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initStars();
 
         setUpPlayers();
+
 
         cheatButton.setOnClickListener(this);
 
@@ -248,6 +256,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+
+
     }
 
 
@@ -324,6 +334,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
         lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 1.05f) / 2);
         lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
+
+
+
     }
 
     public void setOnlineGame(boolean isOnline) {

@@ -25,6 +25,7 @@ import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 
 public class KeyboardView extends RelativeLayout {
+    private static final String TAG = "KeyboardView";
     public OnKeyboardEvent onKeyboardEvent;
     SizeConverter answerConverter;
     public KeyView[] buttons;
@@ -46,6 +47,7 @@ public class KeyboardView extends RelativeLayout {
     public KeyboardView(Context context, String solution) {
         super(context);
 
+        solution = solution.replace(".", "/");
         this.solution = solution;
         imageManager = new ImageManager(context);
         levelAnswer = solution.replace(" ", "").replace("/", "");
@@ -259,9 +261,12 @@ public class KeyboardView extends RelativeLayout {
         if (isTwoLine) {
             if (lineNumber == 1) {
                 topMargin = mMargin;
+                Log.d(TAG, "line 1 and margin si " + mMargin);
             }
             if (lineNumber == 2) {
-                topMargin = (int) (mMargin + answerCointainer.getHeight() * 1.1d);
+                topMargin = (int) (mMargin + answerConverter.getHeight() * 1.1d);
+
+                Log.d(TAG, "line 2 and margin si " + mMargin);
             }
         } else {
             topMargin = mMargin;

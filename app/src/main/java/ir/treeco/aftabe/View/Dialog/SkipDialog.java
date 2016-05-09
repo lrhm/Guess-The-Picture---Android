@@ -87,6 +87,7 @@ public class SkipDialog extends Dialog {
     public void setWidth(TextView textView, double percent, String text) {
         textView.getLayoutParams().width = (int) (SizeManager.getScreenWidth() * percent);
         textView.setTypeface(FontsHolder.getSansMedium(getContext()));
+        textView.setTextColor(Color.WHITE);
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
     }

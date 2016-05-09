@@ -150,7 +150,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             } else {
                 textLP.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
                 mUserNameTextView.setLayoutParams(textLP);
-                setUserNameTextSize(1.23f);
+                setUserNameTextSize(1.15f);
                 addView(mUserNameTextView);
                 addView(imagesContainer);
             }
@@ -172,9 +172,20 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
     }
 
+    public void setLevelTextSize(){
+
+        UiUtil.setTextViewSize(mLevelTextView, (int) (SizeManager.getScreenWidth() * mDimension), 0.42f);
+
+    }
+
     public void setUserNameTextSize(float size) {
 
         UiUtil.setTextViewSize(mUserNameTextView, (int) (SizeManager.getScreenWidth() * mDimension), 0.275f * size);
+    }
+
+    public void setUserNameTextSizeHeightlyScaled(float size) {
+
+        UiUtil.setTextViewSize(mUserNameTextView, (int) (SizeManager.getScreenHeight() * mDimension), 0.275f * size);
     }
 
     public void setShadowLayer(MagicTextView mLevelTextView) {
@@ -298,7 +309,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     }
 
     public void setForOnlineGame() {
-
+        setLevelTextSize();
         coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.coveronlinegame),
                 (int) (lengthManager.getScreenWidth() * (mDimension)), (int) (lengthManager.getScreenWidth() * (mDimension)), ImageManager.ScalingLogic.FIT));
 

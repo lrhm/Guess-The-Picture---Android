@@ -257,13 +257,15 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mSocket.emit("gameRequest", msg, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        Log.d(TAG, " got ack in game requeset ");
 
-                    }
-                });
+                if (mSocket != null)
+                    mSocket.emit("gameRequest", msg, new Ack() {
+                        @Override
+                        public void call(Object... args) {
+                            Log.d(TAG, " got ack in game requeset ");
+
+                        }
+                    });
             }
         }).run();
 
@@ -282,13 +284,15 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mSocket.emit(Socket.EVENT_PING, msg, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        Log.d(TAG, " got ack in pong " + ((args.length != 0) ? args[0].toString() : ""));
+                if (mSocket != null)
 
-                    }
-                });
+                    mSocket.emit(Socket.EVENT_PING, msg, new Ack() {
+                        @Override
+                        public void call(Object... args) {
+                            Log.d(TAG, " got ack in pong " + ((args.length != 0) ? args[0].toString() : ""));
+
+                        }
+                    });
             }
         }).run();
 
@@ -377,7 +381,9 @@ public class SocketAdapter {
             @Override
             public void run() {
                 Log.d(TAG, "emit:ready " + msg);
-                mSocket.emit("ready", msg);
+                if (mSocket != null)
+
+                    mSocket.emit("ready", msg);
             }
 
         }).run();
@@ -395,12 +401,14 @@ public class SocketAdapter {
             @Override
             public void run() {
                 Log.d(TAG, "answerLevel : " + msg);
-                mSocket.emit("answerLevel", msg, new Ack() {
-                    @Override
-                    public void call(Object... args) {
-                        Log.d(TAG, "got asnwer level ack");
-                    }
-                });
+                if (mSocket != null)
+
+                    mSocket.emit("answerLevel", msg, new Ack() {
+                        @Override
+                        public void call(Object... args) {
+                            Log.d(TAG, "got asnwer level ack");
+                        }
+                    });
             }
         }).run();
 
@@ -416,7 +424,9 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mSocket.emit("cancelRequest", msg);
+                if (mSocket != null)
+
+                    mSocket.emit("cancelRequest", msg);
             }
         }).run();
 
@@ -434,8 +444,9 @@ public class SocketAdapter {
 
                 Log.d(TAG, "emit matchUS : " + gson.toJson(requestHolder));
 
+                if (mSocket != null)
 
-                mSocket.emit("matchUS", gson.toJson(requestHolder));
+                    mSocket.emit("matchUS", gson.toJson(requestHolder));
 
             }
         }).start();
@@ -452,7 +463,9 @@ public class SocketAdapter {
                 MatchResponseHolder responseHolder = new MatchResponseHolder(friendId, accepted);
                 Gson gson = new Gson();
                 Log.d(TAG, "emit matchResponse : " + gson.toJson(responseHolder));
-                mSocket.emit("matchResponse", gson.toJson(responseHolder));
+                if (mSocket != null)
+
+                    mSocket.emit("matchResponse", gson.toJson(responseHolder));
 
             }
         }).start();
@@ -468,7 +481,8 @@ public class SocketAdapter {
                 RequestHolder requestHolder = new RequestHolder();
                 Gson gson = new Gson();
                 Log.d(TAG, "emit onlineRequest : " + gson.toJson(requestHolder));
-                mSocket.emit("onlineRequest", gson.toJson(requestHolder));
+                if (mSocket != null)
+                    mSocket.emit("onlineRequest", gson.toJson(requestHolder));
 
             }
         }).start();
@@ -485,7 +499,9 @@ public class SocketAdapter {
                 FriendRequestResultHolder holder = new FriendRequestResultHolder(userId, accept);
                 Gson gson = new Gson();
                 Log.d(TAG, "emit friendUS : " + gson.toJson(holder));
-                mSocket.emit("friendUS", gson.toJson(holder));
+                if (mSocket != null)
+
+                    mSocket.emit("friendUS", gson.toJson(holder));
 
             }
         }).start();

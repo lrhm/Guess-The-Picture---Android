@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,6 +24,7 @@ import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
@@ -40,7 +40,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     ImageView mChatButton;
     UserLevelView mUserLevelView;
     User mUser;
-    TextView mCancelTextView;
+    ImageView mCancelImageView;
     ImageManager imageManager;
     public static final String[] titles = new String[]{"رتبه", "تعداد برد", "تعداد باخت"};
 
@@ -76,15 +76,17 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         mChatButton = (ImageView) findViewById(R.id.uv_start_chat_button);
         int size = (int) (SizeManager.getScreenWidth() * 0.1);
 
-        mCancelTextView = (TextView) findViewById(R.id.uv_cancel_friendship);
-        mCancelTextView.setText("unfriend");
+        SizeConverter converter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.2), 474, 192);
+        mCancelImageView = (ImageView) findViewById(R.id.uv_cancel_friendship);
 
         imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
+        mCancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.deletefriend , converter.mWidth , converter.mHeight   ));
+
         if (mUser.isFriend()) {
 
-            mCancelTextView.setVisibility(View.VISIBLE);
-            mCancelTextView.setOnClickListener(this);
+            mCancelImageView.setVisibility(View.VISIBLE);
+            mCancelImageView.setOnClickListener(this);
 
             mMatchButton.setImageBitmap(imageManager.loadImageFromResource(
                     R.drawable.challengebutton, size, size));
@@ -145,7 +147,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                             mChatButton.setImageBitmap(imageManager.loadImageFromResource(
                                     R.drawable.addfriends, size, size));
                             mMatchButton.setVisibility(View.GONE);
-                            mCancelTextView.setVisibility(View.GONE);
+                            mCancelImageView.setVisibility(View.GONE);
 
                             if (context instanceof MainActivity) {
                                 ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_FRIEND);

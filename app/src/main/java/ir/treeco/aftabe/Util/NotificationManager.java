@@ -63,7 +63,7 @@ public class NotificationManager {
         PendingIntent pendingIntent = null;
         String title = null;
         String content = null;
-        int drawable = R.drawable.aftabe_icon;
+        int drawable = R.drawable.notificon;
         final int notifID = new Random(System.currentTimeMillis()).nextInt();
         NotificationCompat.Builder builder = null;
         if (notifHolder.isFriendRequest()) {
@@ -77,7 +77,7 @@ public class NotificationManager {
                 return;
             }
             builder = createBasicNotification(title, content, drawable);
-            builder.addAction(R.drawable.yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
+            builder.addAction(R.drawable.notif_yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
 
         } else if (notifHolder.isMatchRequest()) {
 
@@ -86,11 +86,11 @@ public class NotificationManager {
 
             pendingIntent = getIntentForMatchRequest(notifHolder, notifID);
             builder = createBasicNotification(title, content, drawable);
-            builder.addAction(R.drawable.yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
+            builder.addAction(R.drawable.notif_yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
 
         }
         if (builder == null) builder = createBasicNotification(title, content, drawable);
-        builder.addAction(R.drawable.no, "reject", getRejectPendingIntent(notifHolder, notifID));
+        builder.addAction(R.drawable.notif_no, "reject", getRejectPendingIntent(notifHolder, notifID));
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent);
         }

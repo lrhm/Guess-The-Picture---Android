@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.LevelsAdapter;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.Tools;
 
 public class LevelsFragment extends Fragment {
+
+    private static final String TAG = "LevelsFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

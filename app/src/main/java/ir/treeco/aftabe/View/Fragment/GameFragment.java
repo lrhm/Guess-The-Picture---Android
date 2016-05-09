@@ -41,6 +41,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 
 public class GameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent {
+    private static final String TAG = "GameFragment";
     private int levelId;
     private ImageView imageView;
     private int packageId;
@@ -521,7 +522,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     @Override
     public void onAllAnswered(String guess) {
 
-        if ((guess.replace("آ", "ا")).equals((solution.replace("/",
+        if ((guess.replace("آ", "ا")).equals((solution.replace(".",
                 "")).replace("آ", "ا"))) {
             if (!level.isResolved()) {
                 coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);

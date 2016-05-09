@@ -102,15 +102,13 @@
                 android:orientation="horizontal">
 
 
-                <TextView
+                <ImageView
                     android:id="@+id/uv_cancel_friendship"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:background="@drawable/cancel_friend_style"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:textSize="20sp"
                     android:visibility="gone" />
             </LinearLayout>
 

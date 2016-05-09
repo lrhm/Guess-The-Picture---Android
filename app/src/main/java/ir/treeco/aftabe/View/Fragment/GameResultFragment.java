@@ -39,6 +39,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     private User mOpponent;
 
     private boolean mWin;
+    private boolean mDraw;
 
     ImageView mAddFriendImageView;
     ImageView mChatImageView;
@@ -76,6 +77,8 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         Log.d("TAG", "win is " + mWin);
 
+        mDraw = mGameResultHolder.getScores()[0].isWinner() && mGameResultHolder.getScores()[1].isWinner();
+
         ((MainActivity) getActivity()).setGameResult(true);
 
         View view = inflater.inflate(R.layout.fragment_game_result, container, false);
@@ -107,7 +110,14 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         myUserLevelView.setUser(myUser);
 
-        String winText = "سکه " + Tools.numeralStringToPersianDigits((mWin) ? "160" : "0");
+        int coin = 0;
+        if (mWin)
+            coin = 160;
+        if (mDraw)
+            coin = 80;
+
+
+        String winText = "سکه " + Tools.numeralStringToPersianDigits(coin + "");
         coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
         coinTextView.setText(winText);
 
@@ -138,8 +148,12 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     private void initResultImageView(ImageView resultImageView) {
 
         int imgId = (mWin) ? R.drawable.aftabewin : R.drawable.aftabelose;
+        if (mDraw)
+            imgId = R.drawable.aftabedraw;
+
         int width = (int) (SizeManager.getScreenWidth() * 0.6);
-        ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin = -(int) (SizeManager.getScreenWidth() * 0.03);
+        ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin =
+                +(int) (SizeManager.getScreenWidth() * 0.17);
         ImageManager imageManager = new ImageManager(getContext());
         resultImageView.setImageBitmap(imageManager.loadImageFromResource(imgId, width, width));
 
