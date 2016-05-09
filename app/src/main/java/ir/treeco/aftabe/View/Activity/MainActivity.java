@@ -65,6 +65,7 @@ import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
+import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
@@ -706,8 +707,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onFriendRequestAccept(final User user) {
 
 
-        DBAdapter dbAdapter = DBAdapter.getInstance(this);
-        dbAdapter.addFriendToDB(user);
+        FriendsHolder friendsHolder = FriendsHolder.getInstance();
+        friendsHolder.addFriendToList(user);
 
         if (!isFinishing())
             new Handler(getMainLooper()).post(new Runnable() {

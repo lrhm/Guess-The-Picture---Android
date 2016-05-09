@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -74,7 +75,6 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no, size, size));
 
 
-
         int padding = (int) (SizeManager.getScreenWidth() * 0.01);
         int leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - size * 2 - padding);
         UiUtil.setLeftMargin(mMatchButton, leftMargin / 2);
@@ -87,7 +87,7 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
         textView.setText("درخواست دوستی");
         leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
-        UiUtil.setLeftMargin(textView , leftMargin/2);
+        UiUtil.setLeftMargin(textView, leftMargin / 2);
 
 
     }
@@ -111,8 +111,9 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
             AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), null);
             mUser.setIsFriend(true);
             ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
-            DBAdapter dbAdapter = DBAdapter.getInstance(context);
-            dbAdapter.addFriendToDB(mUser);
+
+            FriendsHolder friendsHolder = FriendsHolder.getInstance();
+            friendsHolder.addFriendToList(mUser);
         }
 
         dismiss();

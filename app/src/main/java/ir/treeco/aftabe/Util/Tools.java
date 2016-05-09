@@ -456,14 +456,23 @@ public class Tools {
     }
 
     private static Object lock = new Object();
+    private static boolean isBackupInProgress = false;
 
     public static void backUpDB() {
+
+        synchronized (lock) {
+            if (isBackupInProgress)
+                return;
+            isBackupInProgress = true;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 synchronized (lock) {
                     backUpDBAsync();
+                    isBackupInProgress = false;
                 }
 
             }
@@ -516,15 +525,27 @@ public class Tools {
         }
     }
 
+    private static Object journalLock = new Object();
+
+    private static boolean backupJournalInProgress = false;
+
     public static void backUpDBJournal() {
+
+        synchronized (journalLock) {
+            if (backupJournalInProgress)
+                return;
+            backupJournalInProgress = true;
+        }
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 backUpDBJournalAsync();
+                backupJournalInProgress = false;
 
             }
         }).run();
+
     }
 
     public static void backUpDBJournalAsync() {
@@ -740,10 +761,13 @@ public class Tools {
     public static void updateSharedPrefsToken(User user, TokenHolder tokenHolder) {
         Gson gson = new Gson();
         Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
-        Prefs.putString(ENCRYPT_KEY, user.getKey());
-        storeKey();
-        backUpDB();
-        backUpDBJournal();
+        String oldKey = Prefs.getString(ENCRYPT_KEY, "");
+        if (!oldKey.equals(user.getKey())) {
+            Prefs.putString(ENCRYPT_KEY, user.getKey());
+            storeKey();
+            backUpDB();
+            backUpDBJournal();
+        }
 
     }
 

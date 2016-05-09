@@ -44,6 +44,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
@@ -128,7 +129,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         });
 
 
-
         imageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
@@ -168,7 +168,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         mAutoCompleteTextView.setTypeface(FontsHolder.getSansMedium(getContext()));
 
         mAutoCompleteTextView.setHint("شماره تلفن یا نام کاربری      ");
-        UiUtil.setTextViewSize(mAutoCompleteTextView, (int) (SizeManager.getScreenWidth() * 0.5), 0.095f );
+        UiUtil.setTextViewSize(mAutoCompleteTextView, (int) (SizeManager.getScreenWidth() * 0.5), 0.095f);
         mAutoCompleteTextView.setOnFocusChangeListener(this);
 
 //
@@ -186,9 +186,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
 
         Log.d(TAG, "setting up adapter");
-        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
+
+        final FriendsHolder friendsHolder = FriendsHolder.getInstance();
         if (mFriendsAdapter == null)
-            mFriendsAdapter = new FriendsAdapter(getContext(), dbAdapter.getMyCachedFriends(), null, null, null);
+            mFriendsAdapter = new FriendsAdapter(getContext(), friendsHolder.getFriends(), null, null, null);
 
 
         if (getActivity() == null)
@@ -223,15 +224,16 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                     public void run() {
 
                         friends = users;
-                        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
-                        dbAdapter.updateFriendsFromAPI(users);
-                        ArrayList<User> cachedUsers = dbAdapter.getMyCachedFriends();
+                        friendsHolder.updateFriendsFromAPI(users);
+                        ArrayList<User> cachedUsers = friendsHolder.getFriends();
                         for (User user : mFriendsAdapter.getFriendList()) {
                             if (!cachedUsers.contains(user)) {
                                 mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_FRIEND);
                             }
                         }
-
+                        for (User user : users)
+                            if(!mFriendsAdapter.getFriendList().contains(user))
+                                mFriendsAdapter.addUser(user , FriendsAdapter.TYPE_FRIEND);
 
 
                     }
@@ -397,9 +399,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public void onOnlineFriendStatus(OnlineFriendStatusHolder status) {
 
 
-        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
+        FriendsHolder friendsHolder = FriendsHolder.getInstance();
+        ArrayList<User> friendList = friendsHolder.getFriends();
         if (status.isOnlineAndEmpty()) {
-            for (User user : dbAdapter.getMyCachedFriends()) {
+            for (User user : friendList) {
                 if (status.getFriendId().equals(user.getId())) {
                     final User user1 = user;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -415,7 +418,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
             }
         } else {
             User u = null;
-            for (User user : dbAdapter.getMyCachedFriends()) {
+            for (User user : friendList) {
                 if (status.getFriendId().equals(user.getId())) {
                     u = user;
                     break;
@@ -446,10 +449,10 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     public void deleteCachedFriends() {
 
-        DBAdapter dbAdapter = DBAdapter.getInstance(getContext());
+        FriendsHolder friendsHolder = FriendsHolder.getInstance();
 
         for (User user : mFriendsAdapter.getFriendList()) {
-            dbAdapter.deleteFriendInDB(user);
+            friendsHolder.removeFriend(user);
         }
 
         mFriendsAdapter.removeAll();
@@ -458,7 +461,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
 
-        ((OnlineMenuFragment)getParentFragment()).verticalViewPager.setPagingEnabled(!hasFocus);
+        ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setPagingEnabled(!hasFocus);
 
     }
 }

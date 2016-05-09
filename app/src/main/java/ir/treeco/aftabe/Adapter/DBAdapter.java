@@ -98,9 +98,7 @@ public class DBAdapter {
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
 
-    private static ArrayList<User> mCachedFriends = null;
 
-    private static Object friendsLock = new Object();
 
     private static Object lock = new Object();
 
@@ -129,7 +127,7 @@ public class DBAdapter {
                 db.execSQL(SQL_CREATE_PACKAGES);
                 db.execSQL(SQL_CREATE_LEVELS);
                 db.execSQL(SQL_CREATE_COINS);
-                db.execSQL(SQL_CREATE_FRIENDS);
+//                db.execSQL(SQL_CREATE_FRIENDS);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -142,7 +140,7 @@ public class DBAdapter {
             db.execSQL(DROP_TABLE_IF_EXISTS + PACKAGES);
             db.execSQL(DROP_TABLE_IF_EXISTS + LEVELS);
             db.execSQL(DROP_TABLE_IF_EXISTS + COINS);
-            db.execSQL(DROP_TABLE_IF_EXISTS + FRIENDS);
+//            db.execSQL(DROP_TABLE_IF_EXISTS + FRIENDS);
 
             onCreate(db);
         }
@@ -155,155 +153,6 @@ public class DBAdapter {
 
     public void close() {
         DBHelper.close();
-    }
-
-    public void addFriendToDB(User otherUser) {
-
-        if (otherUser.isMe())
-            return;
-
-        if (isFriendInDB(otherUser))
-            return;
-
-        Gson gson = new Gson();
-        String friendGsonString = gson.toJson(otherUser);
-
-        synchronized (friendsLock) {
-
-            open();
-            ContentValues values = new ContentValues();
-            values.put(FRIEND_ID, otherUser.getId());
-            values.put(FRIEND_USER_GSON, "'" + friendGsonString + "'");
-            db.insert(FRIENDS, null, values);
-            close();
-
-            if (mCachedFriends != null)
-                mCachedFriends.add(otherUser);
-        }
-    }
-
-    public ArrayList<User> getMyCachedFriends() {
-
-        synchronized (friendsLock) {
-
-            if (mCachedFriends != null)
-                return mCachedFriends;
-        }
-
-        ArrayList<User> list = new ArrayList<>();
-
-        synchronized (friendsLock) {
-            open();
-
-            Cursor cursor = db.query(FRIENDS,
-                    new String[]{FRIEND_USER_GSON},
-                    null,
-                    null, null, null, null);
-
-            if (cursor != null) {
-                Gson gson = new Gson();
-                while (cursor.moveToNext()) {
-//                Log.d(TAG, cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)));
-                    list.add(gson.fromJson(cursor.getString(cursor.getColumnIndex(FRIEND_USER_GSON)).replace("'", ""), User.class));
-                }
-            }
-            close();
-        }
-        return list;
-    }
-
-    public void updateFriendInDB(User friendUser) {
-
-        open();
-        ContentValues values = new ContentValues();
-        Gson gson = new Gson();
-        values.put(FRIEND_USER_GSON, "'" + gson.toJson(friendUser) + "'");
-//        Log.d(TAG, gson.toJson(friendUser));
-        db.update(FRIENDS, values, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
-
-
-
-        close();
-
-
-        synchronized (friendsLock) {
-            if (mCachedFriends != null) {
-                mCachedFriends.remove(friendUser);
-                mCachedFriends.add(friendUser);
-            }
-        }
-
-    }
-
-    public void deleteFriendInDB(User friendUser) {
-
-
-        synchronized (friendsLock){
-            if(mCachedFriends != null)
-                mCachedFriends.remove(friendUser);
-        }
-
-        open();
-        db.delete(FRIENDS, FRIEND_ID + " = '" + friendUser.getId() + "'", null);
-
-
-        close();
-
-    }
-
-
-    public void updateFriendsFromAPI(User[] newList) {
-
-        ArrayList<User> myFriends = getMyCachedFriends();
-        HashMap<String, Boolean> found = new HashMap<>();
-
-        for (User updatedFriend : newList) {
-            for (User myFriend : myFriends) {
-                if (myFriend.getId().equals(updatedFriend.getId())) {
-                    Gson gson = new Gson();
-                    found.put(myFriend.getId(), true);
-                    if (!gson.toJson(myFriend).equals(gson.toJson(updatedFriend)))
-                        updateFriendInDB(updatedFriend);
-                    break;
-
-                }
-            } //Didnt find this user in friend list , add
-
-            addFriendToDB(updatedFriend);
-
-
-        }
-
-        for (User user : myFriends) {
-            Boolean isFound = found.get(user.getId());
-            if (isFound == null) {
-                deleteFriendInDB(user);
-            }
-        }
-        // remove those wich are not friends anymore
-
-
-    }
-
-    public boolean isFriendInDB(User otherUser) {
-        open();
-
-        try {
-            Cursor cursor = db.query(FRIENDS,
-                    new String[]{FRIEND_USER_GSON, FRIEND_ID},
-                    FRIEND_ID + " =  \"" + otherUser.getId() + "\"",
-                    null, null, null, null);
-
-            if (cursor != null && cursor.moveToFirst()) {
-                close();
-                return true;
-            }
-            close();
-            return false;
-        } catch (Exception e) {
-            close();
-            return false;
-        }
     }
 
 
