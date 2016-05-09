@@ -5,6 +5,7 @@ import android.renderscript.Type;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewParent;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +45,38 @@ public class UiUtil {
         return textView.getMeasuredHeight();
     }
 
+    public static void setTopMargin(View view, int topMargin) {
+
+        ViewParent parent = view.getParent();
+
+        if (parent instanceof LinearLayout) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.topMargin = topMargin;
+            return;
+        }
+        if (parent instanceof RelativeLayout) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.topMargin = topMargin;
+            return;
+        }
+    }
+
+
+    public static void setBottomMargin(View view, int bottomMargin) {
+
+        ViewParent parent = view.getParent();
+
+        if (parent instanceof LinearLayout) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.bottomMargin = bottomMargin;
+            return;
+        }
+        if (parent instanceof RelativeLayout) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.bottomMargin = bottomMargin;
+            return;
+        }
+    }
 
     public static void setLeftMargin(View view, int leftMargin) {
 
@@ -60,6 +93,26 @@ public class UiUtil {
             return;
         }
     }
+
+
+    public static void setRightMargin(View view, int rightMargin) {
+
+        ViewParent parent = view.getParent();
+
+        if (parent instanceof LinearLayout) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.rightMargin = rightMargin;
+            return;
+        }
+        if (parent instanceof RelativeLayout) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.rightMargin = rightMargin;
+            return;
+        }
+
+
+    }
+
 
 
     public static float getAdjustTextSize(TextView textView, int width, int height , int textSize) {

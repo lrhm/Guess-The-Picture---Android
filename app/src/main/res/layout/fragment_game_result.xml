@@ -33,13 +33,12 @@
 
                 />
 
+
+
             <TextView
                 android:id="@+id/fragment_result_score_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
                 android:layout_toLeftOf="@id/fragment_result_my_user_level_view"
 
                 />
@@ -49,9 +48,6 @@
                 android:id="@+id/fragment_result_coin_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@id/fragment_result_my_user_level_view"
 
                 />
@@ -96,7 +92,6 @@
                 android:id="@+id/fragment_result_add_friend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/fragment_result_shape_container_below_tmp"
 
                 />
 
@@ -114,7 +109,6 @@
                 android:id="@+id/fragment_result_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@id/fragment_result_shape_container_below_tmp"
 
                 />
 

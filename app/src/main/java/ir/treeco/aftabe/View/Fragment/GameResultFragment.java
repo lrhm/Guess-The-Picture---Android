@@ -16,15 +16,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
-import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
@@ -42,7 +41,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     private boolean mDraw;
 
     ImageView mAddFriendImageView;
-    ImageView mChatImageView;
+    ImageView mBackImageView;
 
 
     public GameResultFragment() {
@@ -77,7 +76,9 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         Log.d("TAG", "win is " + mWin);
 
-        mDraw = mGameResultHolder.getScores()[0].isWinner() && mGameResultHolder.getScores()[1].isWinner();
+        mOpponent = Tools.getCachedUser();
+        mOpponent.setIsFriend(false);
+        mDraw = true;//mGameResultHolder.getScores()[0].isWinner() && mGameResultHolder.getScores()[1].isWinner();
 
         ((MainActivity) getActivity()).setGameResult(true);
 
@@ -94,11 +95,10 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         UserLevelView myUserLevelView = (UserLevelView) view.findViewById(R.id.fragment_result_my_user_level_view);
         UserLevelView opponentLevelView = (UserLevelView) view.findViewById(R.id.fragment_result_op_user_level_view);
 
-
         opponentLevelView.setUser(mOpponent);
 
         mAddFriendImageView = (ImageView) view.findViewById(R.id.fragment_result_add_friend);
-        mChatImageView = (ImageView) view.findViewById(R.id.fragment_result_chat);
+        mBackImageView = (ImageView) view.findViewById(R.id.fragment_result_chat);
 
         ImageView resultImageView = (ImageView) view.findViewById(R.id.fragment_result_win_or_lose_iv);
         initResultImageView(resultImageView);
@@ -121,22 +121,38 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
         coinTextView.setText(winText);
 
-        String scoreText = " امتیاز" + Tools.numeralStringToPersianDigits(mGameResultHolder.getMyScoreResult(myUser) + "");
+        String scoreText = " امتیاز" + 6; // + Tools.numeralStringToPersianDigits(mGameResultHolder.getMyScoreResult(myUser) + "");
         scoreTextView.setText(scoreText);
         scoreTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
-        ((MainActivity) getActivity()).setStarts(mGameResultHolder.getMyScoreResult(myUser));
+
+        UiUtil.setTextViewSize(scoreTextView, (int) (SizeManager.getScreenHeight() * 0.075), 0.4f);
+        UiUtil.setTextViewSize(coinTextView, (int) (SizeManager.getScreenHeight() * 0.075), 0.4f);
+        UiUtil.setLeftMargin(coinTextView, (int) (SizeManager.getScreenWidth() * 0.1));
+        UiUtil.setRightMargin(scoreTextView, (int) (SizeManager.getScreenWidth() * 0.1));
+
+        int textHeight = UiUtil.getTextViewHeight(scoreTextView) ;
+        int topMargin = (int) (SizeManager.getScreenHeight() * 0.075 - textHeight/10);
+        UiUtil.setTopMargin(coinTextView, topMargin / 2);
+        UiUtil.setTopMargin(scoreTextView, topMargin / 2);
+
+        ((MainActivity) getActivity()).setStarts(6); //GameResultHolder.getMyScoreResult(myUser)
 
         ImageManager imageManager = new ImageManager(getContext());
 
-        int width = (int) (SizeManager.getScreenWidth() * 0.14);
+        int width = (int) (SizeManager.getScreenWidth() * 0.16);
 
 
-        mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.addfriends, width, width));
+        mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(
+                (mOpponent.isFriend()) ? R.drawable.chatbutton : R.drawable.addfriends, width, width));
         mAddFriendImageView.setOnClickListener(this);
-        mChatImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, width, width));
+        mBackImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.continuebutton, width, width));
 
-        ((RelativeLayout.LayoutParams) mAddFriendImageView.getLayoutParams()).topMargin = (int) (0.04 * SizeManager.getScreenWidth());
-        ((RelativeLayout.LayoutParams) mChatImageView.getLayoutParams()).topMargin = (int) (0.04 * SizeManager.getScreenWidth());
+        ((RelativeLayout.LayoutParams) mAddFriendImageView.getLayoutParams()).topMargin = (int) (0.035 * SizeManager.getScreenWidth());
+        ((RelativeLayout.LayoutParams) mBackImageView.getLayoutParams()).topMargin = (int) (0.035 * SizeManager.getScreenWidth());
+        int leftMargin = (int) (SizeManager.getScreenWidth() * 0.1 - width * 0.1);
+        UiUtil.setLeftMargin(mAddFriendImageView, leftMargin);
+        leftMargin = (int) (SizeManager.getScreenWidth() * 0.9 - width * 0.9);
+        UiUtil.setLeftMargin(mBackImageView, leftMargin);
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) secShapeContainerTmp.getLayoutParams();
         layoutParams.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
@@ -151,7 +167,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         if (mDraw)
             imgId = R.drawable.aftabedraw;
 
-        int width = (int) (SizeManager.getScreenWidth() * 0.6);
+        int width = (int) (SizeManager.getScreenWidth() * 0.65);
         ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin =
                 +(int) (SizeManager.getScreenWidth() * 0.17);
         ImageManager imageManager = new ImageManager(getContext());
@@ -179,7 +195,12 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
 
         if (v.getId() == R.id.fragment_result_add_friend) {
-            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mOpponent.getId(), null);
+            if (!mOpponent.isFriend())
+                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mOpponent.getId(), null);
+//            TODO chat here
+        }
+        if (v.getId() == R.id.fragment_result_chat) {
+            getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 }

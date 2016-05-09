@@ -95,6 +95,7 @@ import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
 import ir.treeco.aftabe.View.Dialog.SkipDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
+import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
@@ -224,7 +225,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         mainFragment = new MainFragment();
 
-        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
+        ResultHolder gameResultHolder = new ResultHolder();
+        GameResultFragment gameResultFragment = GameResultFragment.newInstance(true, gameResultHolder , null);
+
+        fragmentTransaction.replace(R.id.fragment_container, gameResultFragment);
         fragmentTransaction.commit();
 
         setUpCoinBox();
