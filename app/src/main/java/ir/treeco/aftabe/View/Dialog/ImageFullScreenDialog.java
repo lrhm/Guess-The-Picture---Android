@@ -42,7 +42,7 @@ public class ImageFullScreenDialog extends Dialog implements View.OnClickListene
 
         imageView.setOnClickListener(this);
 
-        Picasso.with(context).load(path).into(imageView);
+        Picasso.with(context).load(path).rotate(-90).into(imageView);
     }
 
     @Override

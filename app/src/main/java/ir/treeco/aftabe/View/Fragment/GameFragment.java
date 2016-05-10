@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -26,8 +24,6 @@ import java.util.Random;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
-import ir.treeco.aftabe.Adapter.KeyboardAdapter;
-import ir.treeco.aftabe.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.Interface.FinishLevel;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -36,6 +32,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.CheatDrawable;
 import ir.treeco.aftabe.View.Custom.KeyboardView;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
@@ -46,29 +43,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     private ImageView imageView;
     private int packageId;
     private Tools tools;
-    private String status;
-    private char[] statusAdapter;
-    private char[] keyboardChars;
-    private char[] solutionAdapter;
-    private SolutionAdapter solutionAdapter0;
-    private SolutionAdapter solutionAdapter1;
-    private SolutionAdapter solutionAdapter2;
-    private int break0;
-    private int break1;
-    private int[] sAndkIndex;  //!! should use hashMap
-    private KeyboardAdapter keyboardAdapter;
-    private int[] keyboardStatus;
-    private Random random;
-    private boolean[] keyboardB;
+
     private DBAdapter db;
     private Level level;
     private View view;
     private View[] cheatButtons;
     private View blackWidow;
     private String solution;
-    private int solutionSize;
     private int packageSize;
-    private GameFragment gameFragment;
     private CoinAdapter coinAdapter;
     private LengthManager lengthManager;
     private ImageManager imageManager;
@@ -80,7 +62,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                              @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_game, container, false);
-        gameFragment = this;
 
         tools = new Tools(getContext());
         db = DBAdapter.getInstance(getActivity());
@@ -97,7 +78,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         packageSize = db.getLevels(packageId).length;
 
         solution = tools.decodeBase64(level.getJavab());
-        StringBuilder stringBuilder = new StringBuilder(solution);
 
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragment_game_keyboard_container);
 
@@ -116,176 +96,32 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         return view;
     }
 
-    public void selectKeyboard(int adapterPosition) {
-        for (int i = 0; i < statusAdapter.length; i++) {
-            if (statusAdapter[i] == '-') {
-                statusAdapter[i] = keyboardChars[adapterPosition];
-                sAndkIndex[i] = adapterPosition;
-                keyboardStatus[adapterPosition] = 1;
-
-                keyboardAdapter.notifyDataSetChanged();
-
-                if (i <= break0) {
-                    solutionAdapter0.notifyDataSetChanged();
-                } else if (i <= break1) {
-                    solutionAdapter1.notifyDataSetChanged();
-                } else {
-                    solutionAdapter2.notifyDataSetChanged();
-                }
-                cheakSolotion();
-                return;
-            }
-        }
-    }
-
-    public void removeFromSolution(int adapterPosition, int keyboard) {
-        statusAdapter[adapterPosition] = '-';
-        keyboardStatus[sAndkIndex[adapterPosition]] = keyboard;
-        keyboardAdapter.notifyDataSetChanged();
-
-        if (adapterPosition <= break0) {
-            solutionAdapter0.notifyDataSetChanged();
-        } else if (adapterPosition <= break1) {
-            solutionAdapter1.notifyDataSetChanged();
-        } else {
-            solutionAdapter2.notifyDataSetChanged();
-        }
-        cheakSolotion();
-    }
-
-    private int getBreak(char[] string, int n) {
-        int number = n;
-        for (int i = 0; i < string.length; i++) {
-            if (string[i] == '.') {
-                if (number == 0) {
-                    return i;
-                } else {
-                    number--;
-                }
-            }
-        }
-        return n;
-    }
-
-
-    private int getWidth(char[] string, int n) {
-        int number = n - 1;
-        int width = 0;
-        for (int i = 0; i < string.length; i++) {
-            if (string[i] == ' ') {
-                width += solutionSize / 2;
-            } else if (string[i] != '.') {
-                width += solutionSize;
-            } else if (string[i] == '.') {
-                if (number == 0) {
-                    return width;
-                } else {
-                    width = 0;
-                    number--;
-                }
-            }
-        }
-        return width;
-    }
 
     private void cheatHazf() {
         if (level.isResolved()) {
-//            hazf();
             keyboardView.removeSome();
         } else if (coinAdapter.spendCoins(CoinAdapter.ALPHABET_HIDING_COST)) {
-//            hazf();
-            keyboardView.removeSome();
+            if (!keyboardView.removeSome()) {
+                String toastText = "امکان حذف کردن وجود ندارد";
+                ToastMaker.show(getContext(), toastText, Toast.LENGTH_SHORT);
+                coinAdapter.earnCoins(CoinAdapter.ALPHABET_HIDING_COST);
+            }
         }
 
     }
 
-    private void hazf() {
-        ArrayList<Integer> array = new ArrayList<>();
-        for (int i = 0; i < 21; i++) {
-            if (!keyboardB[i] && keyboardStatus[i] != 2) {
-                array.add(i);
-            }
-        }
 
-        for (int i = 0; i < 7 && 0 < array.size(); i++) {
-
-            int j = random.nextInt(array.size());
-            if (keyboardStatus[array.get(j)] == 1) {
-                for (int n = 0; n < sAndkIndex.length; n++) {
-                    if (sAndkIndex[n] == array.get(j)) {
-                        removeFromSolution(n, 2);
-                        break;
-                    }
-                }
-            } else {
-                keyboardStatus[array.get(j)] = 2;
-                keyboardAdapter.notifyDataSetChanged();
-            }
-            array.remove(j);
-        }
-    }
-
-    private void cheatAzafe() { //is bad algoritm
+    private void cheatAzafe() {
         if (level.isResolved()) {
             keyboardView.showOne();
-//            ezafe();
         } else if (coinAdapter.spendCoins(CoinAdapter.LETTER_REVEAL_COST)) {
-//            ezafe();
-            keyboardView.showOne();
-        }
-
-    }
-
-    private void ezafe() {
-        int rand;
-        while (true) {
-            rand = random.nextInt(statusAdapter.length);
-
-            if (statusAdapter[rand] != '*' && statusAdapter[rand] != ' ' && statusAdapter[rand] != '.') {
-
-                if (statusAdapter[rand] == '-') {
-                    break;
-                } else {
-                    if (solutionAdapter[rand] != statusAdapter[rand]) {
-                        removeFromSolution(rand, 0);
-                        break;
-                    }
-                }
+            if (!keyboardView.showOne()) {
+                String toastText = "امکان ندارد";
+                ToastMaker.show(getContext(), toastText, Toast.LENGTH_SHORT);
+                coinAdapter.earnCoins(CoinAdapter.LETTER_REVEAL_COST);
             }
         }
 
-        statusAdapter[rand] = '*';
-
-        boolean key = false;
-
-        for (int i = 0; i < keyboardChars.length; i++) {
-            if (keyboardChars[i] == solutionAdapter[rand] && keyboardStatus[i] == 0) {
-                keyboardStatus[i] = 1;
-                keyboardAdapter.notifyDataSetChanged();
-                key = true;
-                break;
-            }
-        }
-
-        if (!key) {
-            for (int i = 0; i < statusAdapter.length; i++) {
-                if (statusAdapter[i] == solutionAdapter[rand]) {
-                    if (statusAdapter[i] != '*' && statusAdapter[i] != solutionAdapter[i]) {
-                        removeFromSolution(i, 1);
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (rand <= break0) {
-            solutionAdapter0.notifyDataSetChanged();
-        } else if (rand <= break1) {
-            solutionAdapter1.notifyDataSetChanged();
-        } else {
-            solutionAdapter2.notifyDataSetChanged();
-        }
-        cheakSolotion();
     }
 
     private void setUpImagePlace() {
@@ -337,8 +173,22 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         blackWidow = view.findViewById(R.id.black_widow);
     }
 
+
+    private long lastTimeClicked = 0;
+    private long treshHold = 850;
+    private long skipThreshHold = 3000;
+
     @Override
     public void onClick(View view) {
+
+        long clickTime = System.currentTimeMillis();
+        if (clickTime - lastTimeClicked < treshHold)
+            return;
+
+        Log.d(TAG, "last time is " + lastTimeClicked);
+        Log.d(TAG, "current time is " + clickTime);
+
+        lastTimeClicked = clickTime;
 
         switch (view.getId()) {
             case R.id.cheat_remove_some_letters:
@@ -352,6 +202,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 break;
 
             case R.id.cheat_skip_level:
+                if (clickTime - lastTimeClicked < skipThreshHold)
+                    return;
                 ((MainActivity) getActivity()).toggleCheatButton();
                 cheatNext();
                 break;
@@ -462,21 +314,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         ((MainActivity) getActivity()).disableCheatButton(true);
 
         super.onDetach();
-    }
-
-    private boolean cheakSolotion() {
-        for (int i = 0; i < solutionAdapter.length; i++) {
-            if (solutionAdapter[i] != statusAdapter[i] && statusAdapter[i] != '*') {
-                return false;
-            }
-        }
-
-        if (!level.isResolved()) {
-            coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
-        }
-
-        nextLevel();
-        return true;
     }
 
     private void cheatNext() {

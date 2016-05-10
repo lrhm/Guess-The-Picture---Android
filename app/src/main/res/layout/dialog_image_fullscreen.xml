@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
         android:id="@+id/image"
-        android:rotation="-90"/>
+      />
 
 </LinearLayout>

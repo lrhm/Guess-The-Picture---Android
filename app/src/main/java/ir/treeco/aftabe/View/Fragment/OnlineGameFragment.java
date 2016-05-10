@@ -41,8 +41,6 @@ import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
-import ir.treeco.aftabe.Adapter.KeyboardAdapter;
-import ir.treeco.aftabe.Adapter.SolutionAdapter;
 import ir.treeco.aftabe.Interface.FinishLevel;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.Level;

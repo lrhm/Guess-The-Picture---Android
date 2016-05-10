@@ -67,7 +67,7 @@ public class CoinAdapter {
 
     private void setCoinsCount(int nextAmount) {
         db.updateCoins(nextAmount);
-        tools.backUpDB();
+//        tools.backUpDB();
 
         if (listener != null)
             listener.changed(nextAmount);
