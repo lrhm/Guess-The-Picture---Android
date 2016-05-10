@@ -102,7 +102,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
             keyboardView.removeSome();
         } else if (coinAdapter.spendCoins(CoinAdapter.ALPHABET_HIDING_COST)) {
             if (!keyboardView.removeSome()) {
-                String toastText = "امکان حذف کردن وجود ندارد";
+                String toastText = "نمیشه دیگه";
                 ToastMaker.show(getContext(), toastText, Toast.LENGTH_SHORT);
                 coinAdapter.earnCoins(CoinAdapter.ALPHABET_HIDING_COST);
             }
@@ -116,7 +116,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
             keyboardView.showOne();
         } else if (coinAdapter.spendCoins(CoinAdapter.LETTER_REVEAL_COST)) {
             if (!keyboardView.showOne()) {
-                String toastText = "امکان ندارد";
+                String toastText = "نمیشه دیگه";
                 ToastMaker.show(getContext(), toastText, Toast.LENGTH_SHORT);
                 coinAdapter.earnCoins(CoinAdapter.LETTER_REVEAL_COST);
             }
@@ -176,7 +176,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     private long lastTimeClicked = 0;
     private long treshHold = 850;
-    private long skipThreshHold = 3000;
 
     @Override
     public void onClick(View view) {
@@ -202,8 +201,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 break;
 
             case R.id.cheat_skip_level:
-                if (clickTime - lastTimeClicked < skipThreshHold)
-                    return;
                 ((MainActivity) getActivity()).toggleCheatButton();
                 cheatNext();
                 break;
@@ -326,7 +323,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     private void nextLevel() {
         db.resolveLevel(packageId, levelId);
-        tools.backUpDB();
+//        tools.backUpDB();
         new FinishDailog(getActivity(), level, packageSize,
                 new FinishLevel() {
                     @Override

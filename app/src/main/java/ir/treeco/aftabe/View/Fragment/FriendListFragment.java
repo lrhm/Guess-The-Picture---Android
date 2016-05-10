@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -158,6 +159,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         textInputLayout.setLayoutParams(layoutParams);
 
         mAutoCompleteTextView = (MyAutoCompleteTextView) view.findViewById(R.id.search_text_view);
+        mAutoCompleteTextView.setOnClickListener(this);
 
 
         searchBarAdapter = new ArrayAdapter<>(getActivity(),
@@ -290,7 +292,15 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     @Override
     public void onClick(View v) {
-        clear();
+
+        if (v.getId() == R.id.clear_button) {
+            clear();
+
+        }
+        if (v.getId() == R.id.search_text_view) {
+            ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setPagingEnabled(false);
+
+        }
     }
 
     public void clear() {
@@ -392,7 +402,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         mProgressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getContext(), "user not found", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "user not found", Toast.LENGTH_SHORT).show();
     }
 
     @Override

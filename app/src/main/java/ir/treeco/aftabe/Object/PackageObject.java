@@ -3,6 +3,8 @@ package ir.treeco.aftabe.Object;
 import java.util.ArrayList;
 
 public class PackageObject {
+
+
     private String name;
     private int id;
     private ArrayList<Level> levels;
@@ -43,4 +45,6 @@ public class PackageObject {
     public void setLevels(ArrayList<Level> levels) {
         this.levels = levels;
     }
+
+
 }
