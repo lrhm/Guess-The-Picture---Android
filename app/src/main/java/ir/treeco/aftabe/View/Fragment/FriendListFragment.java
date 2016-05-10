@@ -25,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +81,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     View clearButton;
     View mainLayout;
     User[] friends;
+    ProgressBar mProgressBar;
 
     Boolean mAdaptersSet = false;
 
@@ -133,6 +135,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
+
         mainLayout = view.findViewById(R.id.friend_list_main_layout);
         mFriendsRecyclerView = (RecyclerView) view.findViewById(R.id.friends_recyler_view);
 
@@ -177,6 +180,15 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         searchFriendImageView.setImageBitmap
                 (imageManager.loadImageFromResource(R.drawable.searchbar, searchFriendConverter.mWidth
                         , searchFriendConverter.mHeight, ImageManager.ScalingLogic.FIT));
+
+
+        mProgressBar = (ProgressBar) view.findViewById(R.id.search_friend_progress_bar);
+
+        int size = (int) (searchFriendConverter.mHeight * 2 / 3.);
+        UiUtil.setWidth(mProgressBar, size);
+        UiUtil.setHeight(mProgressBar, size);
+        UiUtil.setRightMargin(mProgressBar, (int) (SizeManager.getScreenWidth() * 0.02));
+
 
         return view;
     }
@@ -232,8 +244,8 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                             }
                         }
                         for (User user : users)
-                            if(!mFriendsAdapter.getFriendList().contains(user))
-                                mFriendsAdapter.addUser(user , FriendsAdapter.TYPE_FRIEND);
+                            if (!mFriendsAdapter.getFriendList().contains(user))
+                                mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
 
 
                     }
@@ -297,7 +309,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        Log.d(TAG, "before text changed");
     }
 
     @Override
@@ -314,7 +325,6 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onKeyboardDismiss() {
 
-        Log.d(TAG, "keyboard dissmiss");
         clear();
     }
 
@@ -338,6 +348,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
             mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_SEARCHED);
 
         }
+
         hideKeyboard();
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
@@ -353,6 +364,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
             return;
 
         AftabeAPIAdapter.searchForUser(myUser, mAutoCompleteTextView.getText().toString(), this);
+        mProgressBar.setVisibility(View.VISIBLE);
 
 
     }
@@ -360,6 +372,9 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+
+        ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setPagingEnabled(true);
+
     }
 
     @Override
@@ -367,11 +382,15 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         Log.d(TAG, new Gson().toJson(user));
         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_SEARCHED);
+        mProgressBar.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onGetError() {
+
+
+        mProgressBar.setVisibility(View.GONE);
 
         Toast.makeText(getContext(), "user not found", Toast.LENGTH_SHORT).show();
     }

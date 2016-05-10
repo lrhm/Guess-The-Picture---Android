@@ -3,11 +3,9 @@
     android:id="@+id/friend_list_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="ir.treeco.aftabe.View.Fragment.FriendListFragment"
     android:focusableInTouchMode="true"
-    >
-
+    android:orientation="vertical"
+    tools:context="ir.treeco.aftabe.View.Fragment.FriendListFragment">
 
 
     <RelativeLayout
@@ -16,11 +14,29 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp">
 
-        <ImageView
-            android:id="@+id/search_friend_image"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp" />
+            android:layout_marginTop="13dp"
+
+            >
+
+            <ImageView
+                android:id="@+id/search_friend_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ProgressBar
+                android:id="@+id/search_friend_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_alignRight="@id/search_friend_image"
+                />
+
+        </RelativeLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/search_text_input_layout"
@@ -35,9 +51,9 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:cursorVisible="true"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
-                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="15sp" />
@@ -49,15 +65,13 @@
             android:id="@+id/clear_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="13dp"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/search_text_input_layout"
-            />
+            android:textColor="@android:color/white"
+            android:textSize="13dp" />
 
     </RelativeLayout>
-
 
 
     <android.support.v7.widget.RecyclerView
@@ -65,7 +79,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"></android.support.v7.widget.RecyclerView>
-
 
 
 </LinearLayout>

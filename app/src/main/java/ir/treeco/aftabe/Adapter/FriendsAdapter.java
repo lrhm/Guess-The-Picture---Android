@@ -94,6 +94,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     mHeaderTextView = (TextView) itemView.findViewById(R.id.header_item);
                     FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_BOLD);
                     UiUtil.setTextViewSize(mHeaderTextView , SizeManager.getScreenWidth() , 0.25f * 0.23f);
+                    UiUtil.setTopMargin(mHeaderTextView , (int) (SizeManager.getScreenHeight() * 0.05));
+                    UiUtil.setBottomMargin(mHeaderTextView , (int) (SizeManager.getScreenHeight() * 0.05));
 
                     return;
                 case TYPE_CONTACT:
