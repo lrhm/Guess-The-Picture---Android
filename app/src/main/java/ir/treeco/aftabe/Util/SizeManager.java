@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.Display;
 
 public class SizeManager {
 
@@ -33,32 +34,20 @@ public class SizeManager {
     public static void initSizes(Activity context) {
         int screenWidth = 0;
         int screenHeight = 0;
-        if (Build.VERSION.SDK_INT >= 11) {
+        if (Build.VERSION.SDK_INT >= 13) {
             Point size = new Point();
 
             // this.getWindowManager().getDefaultDisplay().getRealSize(size);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                context.getWindowManager().getDefaultDisplay().getSize(size);
-                screenWidth = size.x;
-                screenHeight = size.y;
-            }
-
-
-            DisplayMetrics metrics = new DisplayMetrics();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                context.getWindowManager().getDefaultDisplay()
-                        .getRealMetrics(metrics);
-                screenWidth = metrics.widthPixels;
-                screenHeight = metrics.heightPixels;
-            }
+            context.getWindowManager().getDefaultDisplay().getSize(size);
+            screenWidth = size.x;
+            screenHeight = size.y;
 
 
         } else {
-            DisplayMetrics metrics = new DisplayMetrics();
-            context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            screenWidth = metrics.widthPixels;
-            screenHeight = metrics.heightPixels;
+            Display display = context.getWindowManager().getDefaultDisplay();
+            screenWidth = display.getWidth();
+            screenHeight = display.getHeight();
         }
         SizeManager.setScreenHeight(screenHeight);
         SizeManager.setScreenWidth(screenWidth);

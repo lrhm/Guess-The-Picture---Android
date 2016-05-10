@@ -112,6 +112,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private boolean isInOnlineGame = false;
     private Object matchRqResultLock = new Object();
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
+    public static final String CONTACTS_ASKED_PERMISSION_COUNT = "shared_prefs_contacts_permission_asked_count";
+
     private static final int PERMISSION_REQUEST_CONTACT = 80;
     private HeadObject headObject;
     private DBAdapter db;
@@ -169,6 +171,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         askForContactPermission();
+
+        Log.d(TAG, "height is " + SizeManager.getScreenHeight());
 
         Log.d(TAG, "onCreate ended");
 
@@ -952,14 +956,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void askForContactPermission() {
+
+        int tryed = Prefs.getInt(CONTACTS_ASKED_PERMISSION_COUNT, 0);
+//        if (tryed > 2)
+//            return;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("دست رسی مخاطبان");
-
-                builder.setMessage("برای پیدا کردن دوستان و ثبت اطلاعات کاربری ");//TODO put real question
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setTitle("دست رسی مخاطبان")
+                        .setMessage("برای پیدا کردن دوستان و ثبت اطلاعات کاربری ")
+                        .setPositiveButton("باشه", new DialogInterface.OnClickListener() {
 
                     @TargetApi(Build.VERSION_CODES.M)
                     @Override
@@ -972,16 +980,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                 , PERMISSION_REQUEST_CONTACT);
 
                     }
-                });
-                builder.setNegativeButton("نه", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("نه", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         dialog.dismiss();
 
                     }
+                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        int tryed = Prefs.getInt(CONTACTS_ASKED_PERMISSION_COUNT, 0);
+                        Prefs.putInt(CONTACTS_ASKED_PERMISSION_COUNT, tryed + 1);
+                    }
                 });
-                builder.show();
+                builder.create().show();
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
