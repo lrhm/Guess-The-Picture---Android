@@ -76,9 +76,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         Log.d("TAG", "win is " + mWin);
 
-        mOpponent = Tools.getCachedUser();
-        mOpponent.setIsFriend(false);
-        mDraw = true;//mGameResultHolder.getScores()[0].isWinner() && mGameResultHolder.getScores()[1].isWinner();
+        mDraw = mGameResultHolder.getScores()[0].isWinner() && mGameResultHolder.getScores()[1].isWinner();
 
         ((MainActivity) getActivity()).setGameResult(true);
 
@@ -117,25 +115,28 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
             coin = 80;
 
 
-        String winText = "سکه " + Tools.numeralStringToPersianDigits(coin + "");
+        String winText = Tools.numeralStringToPersianDigits(coin + "") + "سکه ";
         coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
         coinTextView.setText(winText);
 
-        String scoreText = " امتیاز" + 6; // + Tools.numeralStringToPersianDigits(mGameResultHolder.getMyScoreResult(myUser) + "");
+        String scoreText = Tools.numeralStringToPersianDigits(mGameResultHolder.getMyScoreResult(myUser) + "") + " امتیاز"; // ;
         scoreTextView.setText(scoreText);
         scoreTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
 
         UiUtil.setTextViewSize(scoreTextView, (int) (SizeManager.getScreenHeight() * 0.075), 0.4f);
         UiUtil.setTextViewSize(coinTextView, (int) (SizeManager.getScreenHeight() * 0.075), 0.4f);
-        UiUtil.setLeftMargin(coinTextView, (int) (SizeManager.getScreenWidth() * 0.1));
-        UiUtil.setRightMargin(scoreTextView, (int) (SizeManager.getScreenWidth() * 0.1));
+        UiUtil.setLeftMargin(scoreTextView, (int) (SizeManager.getScreenWidth() * 0.13));
+        UiUtil.setRightMargin(coinTextView, (int) (SizeManager.getScreenWidth() * 0.13));
 
-        int textHeight = UiUtil.getTextViewHeight(scoreTextView) ;
-        int topMargin = (int) (SizeManager.getScreenHeight() * 0.075 - textHeight/10);
-        UiUtil.setTopMargin(coinTextView, topMargin / 2);
-        UiUtil.setTopMargin(scoreTextView, topMargin / 2);
 
-        ((MainActivity) getActivity()).setStarts(6); //GameResultHolder.getMyScoreResult(myUser)
+        UiUtil.setTopMargin(coinTextView, (int) (0.04 * SizeManager.getScreenWidth()));
+        UiUtil.setTopMargin(scoreTextView, (int) (0.04 * SizeManager.getScreenWidth()));
+        int shapeHeight = (int) (SizeManager.getScreenHeight() * 0.075);
+        UiUtil.setHeight(coinTextView, shapeHeight);
+        UiUtil.setHeight(scoreTextView, shapeHeight);
+
+
+        ((MainActivity) getActivity()).setStarts(mGameResultHolder.getMyScoreResult(myUser));
 
         ImageManager imageManager = new ImageManager(getContext());
 

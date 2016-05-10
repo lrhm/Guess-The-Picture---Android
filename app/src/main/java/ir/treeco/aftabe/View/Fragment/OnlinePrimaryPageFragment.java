@@ -79,19 +79,9 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         LengthManager lengthManager = new LengthManager(getContext());
 
-        topMargin = (int) (SizeManager.getScreenHeight()
-                - SizeManager.getScreenHeight() * 0.08 // height of tab bar
-                - lengthManager.getHeaderHeight() // header
-                - 2 * topMargin - randplayconverter.mHeight // margins and random play
-                - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
-                - mUserLevelView.getHeightPlusTextView() // userLevelView
-                - SizeManager.getScreenWidth() * 0.06
-        ) / 2;
-
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.01), 5);
         View view1 = new View(getContext());
 
-        ((LinearLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = topMargin;
 
 
         notifContainer.addView(msgCountView);
@@ -115,6 +105,18 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
             mUserLevelView.setUserGuest();
 
         }
+
+
+        topMargin = (int) (SizeManager.getScreenHeight()
+                - SizeManager.getScreenHeight() * 0.08 // height of tab bar
+                - lengthManager.getHeaderHeight() // header
+                - 2 * topMargin - randplayconverter.mHeight // margins and random play
+                - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
+                - mUserLevelView.getHeightPlusTextView() // userLevelView
+                - SizeManager.getScreenHeight() * 0.02
+        ) / 2;
+        ((LinearLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = topMargin;
+
 
 
         return view;

@@ -20,7 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+          >
 
 
             <ir.treeco.aftabe.View.Custom.UserLevelView
@@ -39,7 +39,7 @@
                 android:id="@+id/fragment_result_score_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/fragment_result_my_user_level_view"
+                android:gravity="center_vertical"
 
                 />
 
@@ -48,7 +48,8 @@
                 android:id="@+id/fragment_result_coin_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/fragment_result_my_user_level_view"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
 
                 />
 

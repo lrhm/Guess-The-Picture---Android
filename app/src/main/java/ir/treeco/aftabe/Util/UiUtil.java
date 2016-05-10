@@ -45,6 +45,14 @@ public class UiUtil {
         return textView.getMeasuredHeight();
     }
 
+    public static void setHeight(View view, int height) {
+        view.getLayoutParams().height = height;
+    }
+
+    public static void setWidth(View view, int width) {
+        view.getLayoutParams().width = width;
+    }
+
     public static void setTopMargin(View view, int topMargin) {
 
         ViewParent parent = view.getParent();
@@ -114,15 +122,14 @@ public class UiUtil {
     }
 
 
-
-    public static float getAdjustTextSize(TextView textView, int width, int height , int textSize) {
+    public static float getAdjustTextSize(TextView textView, int width, int height, int textSize) {
 
         String textBackUp = textView.getText().toString();
         String temp = "gsjskssgwaminsaf";
         temp = temp.substring(0, textSize);
         textView.setText(temp);
 
-      float  startPx = textView.getTextSize();
+        float startPx = textView.getTextSize();
         while (getTextViewHeight(textView) < height && getTextViewWidth(textView) < width) {
 
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, startPx);

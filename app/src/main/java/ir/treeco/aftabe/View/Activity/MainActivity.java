@@ -225,10 +225,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         mainFragment = new MainFragment();
 
-        ResultHolder gameResultHolder = new ResultHolder();
-        GameResultFragment gameResultFragment = GameResultFragment.newInstance(true, gameResultHolder , null);
-
-        fragmentTransaction.replace(R.id.fragment_container, gameResultFragment);
+        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
         fragmentTransaction.commit();
 
         setUpCoinBox();
