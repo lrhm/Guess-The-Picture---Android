@@ -10,25 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.OnlineLevel;
@@ -38,12 +31,7 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketListener;
-import ir.treeco.aftabe.API.UserFoundListener;
-import ir.treeco.aftabe.Adapter.CoinAdapter;
-import ir.treeco.aftabe.Adapter.DBAdapter;
-import ir.treeco.aftabe.Interface.FinishLevel;
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -52,12 +40,10 @@ import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Custom.CheatDrawable;
 import ir.treeco.aftabe.View.Custom.KeyboardView;
-import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
-import ir.treeco.aftabe.View.Dialog.SkipDialog;
+import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 
 
 public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
@@ -146,7 +132,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         SizeConverter skipbuttonConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.22f, 510, 200);
         int leftMargin = (int) ((int) SizeManager.getScreenWidth() / 2 - skipbuttonConverter.getWidth() / 2);
 
-        skipButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.skipbutton, skipbuttonConverter.mWidth,
+        skipButton.setImageBitmap(imageManager.loadImageFromResource(
+                (state == 0) ? R.drawable.skipbutton : R.drawable.forfeit, skipbuttonConverter.mWidth,
                 skipbuttonConverter.mHeight));
         RelativeLayout.LayoutParams skipButtonLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -154,14 +141,16 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         skipButtonLP.topMargin = topMargin;
 
 
-        if (state == 0)
-            ((RelativeLayout) view).addView(skipButton, skipButtonLP);
+        ((RelativeLayout) view).addView(skipButton, skipButtonLP);
 
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                skip();
+                if (state == 0)
+                    skip();
+                else
+                    forfeit();
             }
         });
 
@@ -357,12 +346,25 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         if (state == 1)
             return;
 
-        new SkipDialog(getContext(), "مطمپنی میخوای رد شی ؟" + "\n" + "دیگه نمیتونی برگردی!", "باشه", new View.OnClickListener() {
+        new CustomAlertDialog(getContext(), "مطمپنی میخوای رد شی ؟" + "\n" + "دیگه نمیتونی برگردی!", "باشه", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doSkip();
             }
         }, "نه", null).show();
+
+
+    }
+
+    public void forfeit() {
+
+        new CustomAlertDialog(getContext(), "میبازی ها !", "باشه", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doLose();
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        }, "ادامه میدم", null).show();
 
 
     }

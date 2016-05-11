@@ -437,6 +437,9 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+                            if (!user1.isFriend()) {
+                                user1.setIsFriend(true);
+                            }
                             mFriendsAdapter.addUser(user1, FriendsAdapter.TYPE_ONLINE_FRIENDS);
 
                         }

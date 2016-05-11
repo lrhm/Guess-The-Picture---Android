@@ -29,6 +29,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForMatchRequestResult;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
@@ -93,9 +94,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 case TYPE_HEADER:
                     mHeaderTextView = (TextView) itemView.findViewById(R.id.header_item);
                     FontsHolder.setFont(mHeaderTextView, FontsHolder.SANS_BOLD);
-                    UiUtil.setTextViewSize(mHeaderTextView , SizeManager.getScreenWidth() , 0.25f * 0.23f);
-                    UiUtil.setTopMargin(mHeaderTextView , (int) (SizeManager.getScreenHeight() * 0.05));
-                    UiUtil.setBottomMargin(mHeaderTextView , (int) (SizeManager.getScreenHeight() * 0.05));
+                    UiUtil.setTextViewSize(mHeaderTextView, SizeManager.getScreenWidth(), 0.25f * 0.23f);
+                    UiUtil.setTopMargin(mHeaderTextView, (int) (SizeManager.getScreenHeight() * 0.05));
+                    UiUtil.setBottomMargin(mHeaderTextView, (int) (SizeManager.getScreenHeight() * 0.05));
 
                     return;
                 case TYPE_CONTACT:
@@ -197,8 +198,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    SocketAdapter.requestToAFriend(user.getId());
-                    new LoadingForMatchRequestResult(v.getContext(), user).show();
+                    DialogAdapter.makeMatchRequestDialog(v.getContext(), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            SocketAdapter.requestToAFriend(user.getId());
+                            new LoadingForMatchRequestResult(v.getContext(), user).show();
+                        }
+                    });
 
                 }
             });
@@ -212,21 +219,23 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
+                    DialogAdapter.makeFriendRequestDialog(v.getContext(), new View.OnClickListener() {
                         @Override
-                        public void onFriendRequestSent() {
+                        public void onClick(View v) {
 
-                            if (type == TYPE_REQUEST) {
-                                removeUser(user, type);
-                                addUser(user, TYPE_FRIEND);
-                            }
+                            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
+                                @Override
+                                public void onFriendRequestSent() {
 
-                        }
+                                    removeUser(user, type);
 
-                        @Override
-                        public void onFriendRequestFailedToSend() {
+                                }
 
+                                @Override
+                                public void onFriendRequestFailedToSend() {
+
+                                }
+                            });
                         }
                     });
                 }
@@ -255,8 +264,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                     Log.d(TAG, "click on yes");
                     removeUser(user, type);
-                    user.setIsFriend(true);
-                    addUser(user, TYPE_FRIEND);
+//                    user.setIsFriend(true);
+//                    addUser(user, TYPE_FRIEND);
 //                    SocketAdapter.answerFriendRequest(user.getId(), true);
                     AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), null);
                 }

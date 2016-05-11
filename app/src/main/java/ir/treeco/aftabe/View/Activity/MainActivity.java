@@ -4,12 +4,10 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +16,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -51,8 +47,6 @@ import java.util.ArrayList;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.FriendRequestListener;
-import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
-import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -74,7 +68,6 @@ import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
-import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Service.ServiceConstants;
 import ir.treeco.aftabe.Util.FontsHolder;
@@ -92,10 +85,9 @@ import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
-import ir.treeco.aftabe.View.Dialog.SkipDialog;
+import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
-import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
@@ -711,6 +703,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onFriendRequestAccept(final User user) {
 
+        if (!user.isFriend()) {
+            user.setIsFriend(true);
+        }
 
         FriendsHolder friendsHolder = FriendsHolder.getInstance();
         friendsHolder.addFriendToList(user);
@@ -902,7 +897,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        new SkipDialog(this, "بازی تمام خواهد شد . \n ایا مطمپن هستین ؟", "اره", new TextView.OnClickListener() {
+        new CustomAlertDialog(this, "بازی تمام خواهد شد . \n ایا مطمپن هستین ؟", "اره", new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -969,18 +964,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         .setMessage("برای پیدا کردن دوستان و ثبت اطلاعات کاربری ")
                         .setPositiveButton("باشه", new DialogInterface.OnClickListener() {
 
-                    @TargetApi(Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @TargetApi(Build.VERSION_CODES.M)
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                        requestPermissions(
-                                new String[]
-                                        {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION}
-                                , PERMISSION_REQUEST_CONTACT);
+                                requestPermissions(
+                                        new String[]
+                                                {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION}
+                                        , PERMISSION_REQUEST_CONTACT);
 
-                    }
-                }).setNegativeButton("نه", new DialogInterface.OnClickListener() {
+                            }
+                        }).setNegativeButton("نه", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

@@ -22,7 +22,7 @@ import ir.treeco.aftabe.Util.Tools;
 /**
  * Created by root on 5/2/16.
  */
-public class SkipDialog extends Dialog {
+public class CustomAlertDialog extends Dialog {
 
     String message;
     String okMsg;
@@ -31,8 +31,8 @@ public class SkipDialog extends Dialog {
     TextView.OnClickListener cancelListener;
     Context context;
 
-    public SkipDialog(Context context, String msg, String okMsg, TextView.OnClickListener okListener,
-                      String cancelMsg, TextView.OnClickListener cancelListener) {
+    public CustomAlertDialog(Context context, String msg, String okMsg, TextView.OnClickListener okListener,
+                             String cancelMsg, TextView.OnClickListener cancelListener) {
         super(context);
         this.context = context;
         message = msg;

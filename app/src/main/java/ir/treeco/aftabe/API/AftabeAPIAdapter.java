@@ -1,8 +1,8 @@
 package ir.treeco.aftabe.API;
 
+import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.common.api.Batch;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,6 +30,7 @@ import ir.treeco.aftabe.API.Utils.LoginInfo;
 import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -501,6 +502,7 @@ public class AftabeAPIAdapter {
     public static void requestFriend(User myUser, String friendId, final OnFriendRequest onFriendRequest) {
 
         init();
+
 
         Call<FriendRequestSent> call = aftabeService.requestFriend(myUser.getId(), friendId, myUser.getLoginInfo().getAccessToken());
         call.enqueue(new Callback<FriendRequestSent>() {

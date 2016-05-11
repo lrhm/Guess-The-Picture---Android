@@ -81,7 +81,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
 
-        mCancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.deletefriend , converter.mWidth , converter.mHeight   ));
+        mCancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.deletefriend, converter.mWidth, converter.mHeight));
 
         if (mUser.isFriend()) {
 
@@ -126,68 +126,81 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
 
         if (v.getId() == R.id.uv_cancel_friendship) {
-            AftabeAPIAdapter.removeFriend(Tools.getCachedUser(), mUser.getId(), new OnCancelFriendReqListener() {
+            DialogAdapter.makeFriendRemoveDialog(context, new View.OnClickListener() {
                 @Override
-                public void onFail() {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                public void onClick(View v) {
+                    AftabeAPIAdapter.removeFriend(Tools.getCachedUser(), mUser.getId(), new OnCancelFriendReqListener() {
                         @Override
-                        public void run() {
-                            Toast.makeText(context, "nashod", Toast.LENGTH_SHORT).show();
+                        public void onFail() {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, "nashod", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int size = (int) (SizeManager.getScreenWidth() * 0.1);
+                                    mChatButton.setImageBitmap(imageManager.loadImageFromResource(
+                                            R.drawable.addfriends, size, size));
+                                    mMatchButton.setVisibility(View.GONE);
+                                    mCancelImageView.setVisibility(View.GONE);
+
+                                    if (context instanceof MainActivity) {
+                                        ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_FRIEND);
+                                        ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+                                    }
+                                }
+                            });
 
                         }
                     });
-                }
-
-                @Override
-                public void onSuccess() {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int size = (int) (SizeManager.getScreenWidth() * 0.1);
-                            mChatButton.setImageBitmap(imageManager.loadImageFromResource(
-                                    R.drawable.addfriends, size, size));
-                            mMatchButton.setVisibility(View.GONE);
-                            mCancelImageView.setVisibility(View.GONE);
-
-                            if (context instanceof MainActivity) {
-                                ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_FRIEND);
-                                ((MainActivity) context).mFriendsAdapter.removeUser(mUser, FriendsAdapter.TYPE_ONLINE_FRIENDS);
-                            }
-                        }
-                    });
-
                 }
             });
 
         }
 
         if (v.getId() == R.id.uv_start_chat_button) {
-            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), new OnFriendRequest() {
-                @Override
-                public void onFriendRequestSent() {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
+            if (!mUser.isFriend()) {
+                DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), new OnFriendRequest() {
+                            @Override
+                            public void onFriendRequestSent() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
 
-                            Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
+                                    }
+                                });
 
-                }
+                            }
 
-                @Override
-                public void onFriendRequestFailedToSend() {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
+                            @Override
+                            public void onFriendRequestFailedToSend() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
 
-                            Toast.makeText(getContext(), "friend request failed to send", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "friend request failed to send", Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
-                }
-            });
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                });
+            }
 
         }
 
@@ -203,9 +216,15 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
     public void requestMatch() {
 
-        SocketAdapter.requestToAFriend(mUser.getId());
+        DialogAdapter.makeMatchRequestDialog(context, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SocketAdapter.requestToAFriend(mUser.getId());
 
-        new LoadingForMatchRequestResult(context, mUser).show();
+                new LoadingForMatchRequestResult(context, mUser).show();
+            }
+        });
+
 
     }
 

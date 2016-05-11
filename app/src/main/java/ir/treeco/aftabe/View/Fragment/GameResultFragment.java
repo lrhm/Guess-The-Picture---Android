@@ -115,7 +115,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
             coin = 80;
 
 
-        String winText = Tools.numeralStringToPersianDigits(coin + "") + "سکه ";
+        String winText = Tools.numeralStringToPersianDigits(coin + "") + " " + "سکه"  + " ";
         coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
         coinTextView.setText(winText);
 
@@ -146,6 +146,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(
                 (mOpponent.isFriend()) ? R.drawable.chatbutton : R.drawable.addfriends, width, width));
         mAddFriendImageView.setOnClickListener(this);
+        mBackImageView.setOnClickListener(this);
         mBackImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.continuebutton, width, width));
 
         ((RelativeLayout.LayoutParams) mAddFriendImageView.getLayoutParams()).topMargin = (int) (0.035 * SizeManager.getScreenWidth());
