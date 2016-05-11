@@ -361,7 +361,10 @@ public class MySmartTabLayout extends HorizontalScrollView {
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
-        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * mWidth), 0.0285f);
+        float temp = mWidth;
+        if (mWidth < 1)
+            temp = (mWidth * 1.2f);
+        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * temp), 0.0285f);
 
         if (tabViewBackgroundResId != NO_ID) {
             textView.setBackgroundResource(tabViewBackgroundResId);

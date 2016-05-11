@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
@@ -65,16 +67,28 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         mUserLevelView.setUser(mUser);
         mUserLevelView.setClick(false);
 
+        int containersHeight = (int) (SizeManager.getScreenHeight() * 0.50);
         mDataContainer = (RelativeLayout) findViewById(R.id.user_data_container);
         RelativeLayout.LayoutParams layoutParams = new
-                RelativeLayout.LayoutParams((int) (0.8 * SizeManager.getScreenWidth()), ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = (int) (SizeManager.getScreenWidth() * 0.12);
+                RelativeLayout.LayoutParams((int) (0.8 * SizeManager.getScreenWidth()), containersHeight);
+        layoutParams.topMargin = +(int) (mUserLevelView.getRealHeight() / 2);
+        layoutParams.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
+
         mDataContainer.setLayoutParams(layoutParams);
         tools.setViewBackground(mDataContainer, new DialogDrawable(getContext()));
 
+        View textContainers = findViewById(R.id.dialog_user_view_text_containers);
+        UiUtil.setTopMargin(textContainers, (int) (layoutParams.topMargin
+                + UiUtil.getTextViewHeight(mUserLevelView.getUserNameTextView())
+                + SizeManager.getScreenHeight() * 0.01));
+
         mMatchButton = (ImageView) findViewById(R.id.uv_match_button);
         mChatButton = (ImageView) findViewById(R.id.uv_start_chat_button);
-        int size = (int) (SizeManager.getScreenWidth() * 0.1);
+
+
+        int size = (int) (SizeManager.getScreenWidth() * 0.135);
+
+
 
         SizeConverter converter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.2), 474, 192);
         mCancelImageView = (ImageView) findViewById(R.id.uv_cancel_friendship);
@@ -105,6 +119,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         int[] textRightIds = new int[]{R.id.dialog_user_view_first_left, R.id.dialog_user_view_2nd_left, R.id.dialog_user_view_3rd_left};
         int[] textLeftIds = new int[]{R.id.dialog_user_view_first_right, R.id.dialog_user_view_2nd_right, R.id.dialog_user_view_3rd_right};
+        int[] parentIds = new int[]{R.id.dialog_user_view_parent_1, R.id.dialog_user_view_parent_2, R.id.dialog_user_view_parent_3};
 
         String[] textRights = new String[]{mUser.getRank() + "", mUser.getWins() + "", mUser.getLoses() + ""};
 
@@ -112,13 +127,31 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             TextView left = (TextView) findViewById(textLeftIds[i]);
             left.setTypeface(FontsHolder.getSansBold(context));
             left.setText(titles[i]);
+            int margin = (int) (SizeManager.getScreenWidth() * 0.2);
+            UiUtil.setRightMargin(left, margin);
 
             TextView right = (TextView) findViewById(textRightIds[i]);
             right.setTypeface(FontsHolder.getNumeralSansBold(context));
             right.setText(textRights[i]);
+            UiUtil.setLeftMargin(right, margin);
+
+            UiUtil.setTopMargin(findViewById(parentIds[i]) , (int) (SizeManager.getScreenHeight() * 0.02));
+
+            UiUtil.setTextViewSize(right , (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
+            UiUtil.setTextViewSize(left , (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
+
 
         }
 
+        int topMargin = // margin top container
+                (int) (+ containersHeight  + layoutParams.topMargin - size * (0.7));
+        UiUtil.setTopMargin(mChatButton, topMargin);
+        UiUtil.setTopMargin(mMatchButton, topMargin);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(getWindow().getAttributes());
+        lp.width = SizeManager.getScreenWidth();
+        getWindow().setAttributes(lp);
     }
 
 

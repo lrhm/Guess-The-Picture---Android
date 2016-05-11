@@ -60,7 +60,7 @@ public class LeaderboardDialog extends DialogFragment {
         // tab slider
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), FragmentPagerItems.with(getContext())
-                .add("پروفایل", UserInfoFragment.class)
+                .add( " "+ "پروفایل"+" ", UserInfoFragment.class)
                 .add("برترین ها", LeaderboardFragment.class)
                 .create()
         );

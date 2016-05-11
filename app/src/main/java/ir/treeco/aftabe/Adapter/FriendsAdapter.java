@@ -15,6 +15,8 @@ import android.widget.TextView;
 import org.joda.time.IllegalFieldValueException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.OnFriendRequest;
@@ -124,7 +126,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     }
 
-    public void addUser(User user, int type) {
+    public void addUser(User user, final int type) {
         ArrayList<User> mList = arrayLists.get(type);
 
         for (User u : mList)
@@ -132,6 +134,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 return;
 
         mList.add(user);
+        Collections.sort(mList, new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return Integer.valueOf(lhs.getScore()).compareTo(rhs.getScore());
+            }
+        });
         notifyDataSetChanged();
 
     }
@@ -148,9 +156,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             ArrayList<User> list = arrayLists.get(i);
             size += list.size() + (list.isEmpty() ? 0 : 1);
         }
-        if (mList.isEmpty())
-            notifyItemRangeRemoved(position + size, 2);
-        else notifyItemRemoved(position + size + 1);
+
+        notifyDataSetChanged();
+//        if (mList.isEmpty())
+//            notifyItemRangeRemoved(position + size, 2);
+//        else notifyItemRemoved(position + size + 1);
 
     }
 
@@ -168,7 +178,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         final int realPosition = getRealPosition(position, type);
         if (type == TYPE_HEADER) {
 
-            holder.mHeaderTextView.setText(HEADERS[realPosition]);
+            holder.mHeaderTextView.setText(String.format("%s (%s)", HEADERS[realPosition], Tools.numeralStringToPersianDigits(arrayLists.get(realPosition).size() + "")));
             return;
         }
 
