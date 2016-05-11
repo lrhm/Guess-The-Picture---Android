@@ -74,6 +74,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         layoutParams.topMargin = +(int) (mUserLevelView.getRealHeight() / 2);
         layoutParams.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
 
+
         mDataContainer.setLayoutParams(layoutParams);
         tools.setViewBackground(mDataContainer, new DialogDrawable(getContext()));
 
@@ -87,7 +88,6 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
 
         int size = (int) (SizeManager.getScreenWidth() * 0.135);
-
 
 
         SizeConverter converter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.2), 474, 192);
@@ -122,29 +122,31 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         int[] parentIds = new int[]{R.id.dialog_user_view_parent_1, R.id.dialog_user_view_parent_2, R.id.dialog_user_view_parent_3};
 
         String[] textRights = new String[]{mUser.getRank() + "", mUser.getWins() + "", mUser.getLoses() + ""};
+        Integer leftMargin = null;
 
         for (int i = 0; i < 3; i++) {
             TextView left = (TextView) findViewById(textLeftIds[i]);
             left.setTypeface(FontsHolder.getSansBold(context));
             left.setText(titles[i]);
             int margin = (int) (SizeManager.getScreenWidth() * 0.2);
-            UiUtil.setRightMargin(left, margin);
 
             TextView right = (TextView) findViewById(textRightIds[i]);
             right.setTypeface(FontsHolder.getNumeralSansBold(context));
             right.setText(textRights[i]);
             UiUtil.setLeftMargin(right, margin);
 
-            UiUtil.setTopMargin(findViewById(parentIds[i]) , (int) (SizeManager.getScreenHeight() * 0.02));
+            UiUtil.setTopMargin(findViewById(parentIds[i]), (int) (SizeManager.getScreenHeight() * 0.02));
+            UiUtil.setWidth(findViewById(parentIds[i]) , (int) (SizeManager.getScreenWidth() * 0.8));
 
-            UiUtil.setTextViewSize(right , (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
-            UiUtil.setTextViewSize(left , (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
+            UiUtil.setTextViewSize(right, (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
+            UiUtil.setTextViewSize(left, (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
+            UiUtil.setRightMargin(left , margin);
 
 
         }
 
         int topMargin = // margin top container
-                (int) (+ containersHeight  + layoutParams.topMargin - size * (0.7));
+                (int) (+containersHeight + layoutParams.topMargin - size * (0.7));
         UiUtil.setTopMargin(mChatButton, topMargin);
         UiUtil.setTopMargin(mMatchButton, topMargin);
 
