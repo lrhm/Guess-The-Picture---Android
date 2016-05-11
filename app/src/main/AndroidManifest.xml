@@ -24,7 +24,10 @@
     <application
         android:name=".MainApplication"
         android:icon="@drawable/aftabe_icon"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/fullScreenTheme"
+        android:screenOrientation="portrait"
+        >
         <receiver
             android:name=".Synchronization.Synchronize"
             android:label="NetChangeReceiver">
@@ -38,14 +41,13 @@
             android:name=".View.Activity.MainActivity"
             android:label="Aftabe"
             android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"
             android:windowSoftInputMode="adjustResize">
 
         </activity>
 
-        <activity android:name=".View.Activity.LoadingActivity">
-            android:theme="@style/noAnimTheme"
-
+        <activity android:name=".View.Activity.LoadingActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

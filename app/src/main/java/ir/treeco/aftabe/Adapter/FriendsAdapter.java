@@ -34,6 +34,7 @@ import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForMatchRequestResult;
+import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
@@ -229,11 +230,19 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    final User myUser = Tools.getCachedUser();
+
+                    if (myUser == null || myUser.isGuest()) {
+
+                        new RegistrationDialog(v.getContext(), false).show();
+                        return;
+                    }
                     DialogAdapter.makeFriendRequestDialog(v.getContext(), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
-                            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), new OnFriendRequest() {
+                            AftabeAPIAdapter.requestFriend(myUser, user.getId(), new OnFriendRequest() {
                                 @Override
                                 public void onFriendRequestSent() {
 
@@ -262,7 +271,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mChatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "click on no");
+
+                    final User myUser = Tools.getCachedUser();
+
+                    if (myUser == null || myUser.isGuest()) {
+
+                        new RegistrationDialog(v.getContext(), false).show();
+                        return;
+                    }
+
                     removeUser(user, type);
                     SocketAdapter.answerFriendRequest(user.getId(), false);
                 }
@@ -271,6 +288,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    final User myUser = Tools.getCachedUser();
+
+                    if (myUser == null || myUser.isGuest()) {
+
+                        new RegistrationDialog(v.getContext(), false).show();
+                        return;
+                    }
+
 
                     Log.d(TAG, "click on yes");
                     removeUser(user, type);

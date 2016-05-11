@@ -18,6 +18,7 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
@@ -41,6 +42,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
+            imageView.getLayoutParams().height = lengthManager.getPackageIconSize();
+            imageView.getLayoutParams().width = lengthManager.getPackageIconSize();
+
             v.setOnClickListener(this);
         }
 
@@ -63,7 +67,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 PackageFragment packageFragment = new PackageFragment();
                 packageFragment.setArguments(bundle);
 
-                FragmentTransaction transaction =  ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, packageFragment, "LevelsActivityNew1");
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -84,7 +88,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
 
         String imagePath = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects[i].getId() + "_front" + ".png";
-        Picasso.with(context).load(imagePath).into(viewHolder.imageView);
+        Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
@@ -44,11 +46,12 @@ import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
  * Created by al on 3/16/16.
  */
 public class LoadingDialog extends Dialog implements Runnable,
-        SocketListener, DownloadTask.DownloadTaskListener, SocketFriendMatchListener {
+        SocketListener, DownloadTask.DownloadTaskListener, SocketFriendMatchListener, View.OnClickListener {
 
     private static final String TAG = "LoadingDialog";
     Context context;
     private boolean mDismissed = false;
+    private boolean mRequestCancel = false;
     private int mLoadingStep;
     private ImageView mLoadingImageView;
     private static int mLoadingImageWidth = 0, mLoadingImageHeight = 0;
@@ -60,6 +63,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     CoinAdapter coinAdapter;
     long creationTime;
     boolean gotGame = false;
+
 
     String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
@@ -100,6 +104,16 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(R.drawable.search_sc_1,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
+
+
+        ImageView cancelImageView = (ImageView) findViewById(R.id.loading_dialog_cancel);
+        SizeConverter cancelConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.2f, 169, 98);
+        cancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.cancel, cancelConverter.mWidth, cancelConverter.mHeight));
+        cancelImageView.setOnClickListener(this);
+
+        UiUtil.setLeftMargin(cancelImageView, SizeManager.getScreenWidth() / 2 - cancelConverter.mWidth / 2);
+        UiUtil.setTopMargin(cancelImageView, converter.convertHeight(1680) + converter.getTopOffset());
+
         new Handler().postDelayed(this, 1000);
 
 
@@ -348,5 +362,17 @@ public class LoadingDialog extends Dialog implements Runnable,
         if (!result.isAccept()) {
             dismiss();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+
+        ((MainActivity) context).setIsInOnlineGame(false);
+        ((MainActivity) context).setOnlineGame(false);
+        coinAdapter.earnCoins(100);
+        SocketAdapter.cancelRequest();
+        dismiss();
+
     }
 }

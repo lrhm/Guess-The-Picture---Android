@@ -67,6 +67,13 @@ public class UiUtil {
             layoutParams.topMargin = topMargin;
             return;
         }
+
+        if (parent instanceof FrameLayout) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.topMargin = topMargin;
+            return;
+        }
+
     }
 
 
@@ -84,6 +91,12 @@ public class UiUtil {
             layoutParams.bottomMargin = bottomMargin;
             return;
         }
+
+        if (parent instanceof FrameLayout) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.bottomMargin = bottomMargin;
+            return;
+        }
     }
 
     public static void setLeftMargin(View view, int leftMargin) {
@@ -97,6 +110,11 @@ public class UiUtil {
         }
         if (parent instanceof RelativeLayout) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.leftMargin = leftMargin;
+            return;
+        }
+        if (parent instanceof FrameLayout) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
             layoutParams.leftMargin = leftMargin;
             return;
         }
@@ -118,7 +136,11 @@ public class UiUtil {
             return;
         }
 
-
+        if (parent instanceof FrameLayout) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+            layoutParams.rightMargin = rightMargin;
+            return;
+        }
     }
 
 

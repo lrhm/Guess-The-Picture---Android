@@ -45,6 +45,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     ImageView mCancelImageView;
     ImageManager imageManager;
     public static final String[] titles = new String[]{"رتبه", "تعداد برد", "تعداد باخت"};
+    User myUser;
 
 
     public UserViewDialog(Context context, User user) {
@@ -53,6 +54,10 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         tools = new Tools(context);
         mUser = user;
 
+        if (context instanceof MainActivity)
+            myUser = ((MainActivity) context).getMyUser();
+        if (myUser == null)
+            myUser = Tools.getCachedUser();
     }
 
 
@@ -136,11 +141,11 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             UiUtil.setLeftMargin(right, margin);
 
             UiUtil.setTopMargin(findViewById(parentIds[i]), (int) (SizeManager.getScreenHeight() * 0.02));
-            UiUtil.setWidth(findViewById(parentIds[i]) , (int) (SizeManager.getScreenWidth() * 0.8));
+            UiUtil.setWidth(findViewById(parentIds[i]), (int) (SizeManager.getScreenWidth() * 0.8));
 
             UiUtil.setTextViewSize(right, (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
             UiUtil.setTextViewSize(left, (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
-            UiUtil.setRightMargin(left , margin);
+            UiUtil.setRightMargin(left, margin);
 
 
         }
@@ -160,11 +165,18 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
+        if (myUser.isGuest()) {
+            dismiss();
+            new RegistrationDialog(context, false).show();
+
+            return;
+        }
+
         if (v.getId() == R.id.uv_cancel_friendship) {
             DialogAdapter.makeFriendRemoveDialog(context, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AftabeAPIAdapter.removeFriend(Tools.getCachedUser(), mUser.getId(), new OnCancelFriendReqListener() {
+                    AftabeAPIAdapter.removeFriend(myUser, mUser.getId(), new OnCancelFriendReqListener() {
                         @Override
                         public void onFail() {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -206,7 +218,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                 DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), new OnFriendRequest() {
+                        AftabeAPIAdapter.requestFriend(myUser, mUser.getId(), new OnFriendRequest() {
                             @Override
                             public void onFriendRequestSent() {
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
