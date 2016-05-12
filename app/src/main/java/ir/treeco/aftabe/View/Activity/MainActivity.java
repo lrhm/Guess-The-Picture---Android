@@ -598,10 +598,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         this.myUser = mUser;
-        Gson gson = new Gson();
-        Prefs.putString(Tools.USER_SAVED_DATA, gson.toJson(myUser));
-        Prefs.putDouble(Tools.SHARED_PREFS_SEED, myUser.getSeed());
-
 
         runOnUiThread(new Runnable() {
             @Override
@@ -652,6 +648,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onMatchResultToSender(MatchResultHolder result) {
         loadingDialogMatchReq = null;
         matchResultTime = System.currentTimeMillis();
+
+        Log.d(TAG, "result is " + new Gson().toJson(result));
 
         if(!result.isAccept()){
             new Handler(getMainLooper()).post(new Runnable() {
@@ -977,8 +975,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void askForContactPermission() {
 
         int tryed = Prefs.getInt(CONTACTS_ASKED_PERMISSION_COUNT, 0);
-//        if (tryed > 2)
-//            return;
+        if (tryed > 2)
+            return;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -1035,6 +1033,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Prefs.putBoolean(CONTACTS_PERMISSION, true);
+                    Tools.checkKey();
+                    tools.checkDB();
+
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
@@ -1083,6 +1084,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         if (actionHolder.isMatchRequest()) {
             if (actionHolder.isActionSpecified()) {
+
+                if(!coinAdapter.spendCoins(100)){
+
+                    SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), false);
+                    return;
+                }
+
                 SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), true);
                 new LoadingDialog(this).show();
             } else {

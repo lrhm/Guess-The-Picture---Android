@@ -765,12 +765,14 @@ public class Tools {
         Gson gson = new Gson();
         Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
         String oldKey = Prefs.getString(ENCRYPT_KEY, "");
-        if (!oldKey.equals(user.getKey())) {
+        if (!oldKey.equals(user.getKey()) || getCachedUser() == null || !getCachedUser().getId().equals(user.getId())) {
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB();
             backUpDBJournal();
         }
+        Prefs.putDouble(Tools.SHARED_PREFS_SEED, user.getSeed());
+        Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));
 
     }
 

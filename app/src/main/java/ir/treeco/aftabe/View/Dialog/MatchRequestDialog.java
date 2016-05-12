@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -20,6 +21,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
@@ -33,12 +35,13 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     UserLevelView mUserLevelView;
     User mUser;
     Boolean toSend;
-
+    CoinAdapter coinAdapter;
     View.OnClickListener yesClick;
 
     public MatchRequestDialog(Context context, User user) {
         super(context);
         this.context = context;
+        coinAdapter = ((MainActivity) context).getCoinAdapter();
         tools = new Tools(context);
         mUser = user;
         toSend = false;
@@ -92,10 +95,10 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         mMatchButton.setOnClickListener(this);
 
         TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
-        if (toSend) {
-            String msg = "درخواست بازی" + "\n" + "۱۰۰ سکه";
-            textView.setText(msg);
-        }
+
+        String msg = "درخواست بازی" + "\n" + "۱۰۰ سکه";
+        textView.setText(msg);
+
 
         leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
         UiUtil.setLeftMargin(textView, leftMargin / 2);
@@ -105,6 +108,9 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
+
+        dismiss();
+
         if (v.getId() == R.id.uv_start_chat_button) {
             acceptOrDeclineMatch(false, v);
         }
@@ -113,17 +119,22 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
             acceptOrDeclineMatch(true, v);
         }
 
-        dismiss();
-
 
     }
 
     public void acceptOrDeclineMatch(boolean accepted, View v) {
 
         if (!toSend) {
-            SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
-            new LoadingDialog(context).show();
+            if (accepted) {
 
+                if (!coinAdapter.spendCoins(100)) {
+                    SocketAdapter.responseToMatchRequest(mUser.getId(), false);
+                    return;
+                }
+                SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
+                new LoadingDialog(context).show();
+
+            }
         } else {
             if (accepted)
                 yesClick.onClick(v);
