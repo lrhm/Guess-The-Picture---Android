@@ -23,6 +23,7 @@ import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
+import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
@@ -503,7 +504,7 @@ public class AftabeAPIAdapter {
 
     }
 
-    public static void requestFriend(User myUser, String friendId, final OnFriendRequest onFriendRequest) {
+    public static void requestFriend(User myUser, final String friendId, final OnFriendRequest onFriendRequest) {
 
         init();
 
@@ -515,9 +516,12 @@ public class AftabeAPIAdapter {
 
                 if (response.isSuccess())
                     if (response.body() != null) {
-                        if (onFriendRequest != null)
+                        if (onFriendRequest != null) {
                             onFriendRequest.onFriendRequestSent();
 
+                            FriendRequestState.getInstance().friendRequestSend(friendId);
+
+                        }
                         return;
                     }
                 if (onFriendRequest != null)

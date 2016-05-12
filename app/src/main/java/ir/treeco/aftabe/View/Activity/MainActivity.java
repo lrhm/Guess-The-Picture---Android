@@ -59,7 +59,9 @@ import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
+import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
+import ir.treeco.aftabe.Adapter.Cache.MatchRequestCache;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
@@ -146,7 +148,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
 
 
-
         setContentView(R.layout.activity_main);
         coinAdapter = new CoinAdapter(getApplicationContext(), this);
 
@@ -162,7 +163,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         askForContactPermission();
-
 
 
     }
@@ -615,16 +615,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onMatchRequest(final MatchRequestSFHolder request) {
-        if (!isInOnlineGame && !isFinishing()) {
 
+        if (!isInOnlineGame && !isFinishing()) {
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 
                     if (!isFinishing()) {
-                        Dialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
-
+                        MatchRequestDialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
+                        MatchRequestCache.getInstance().add(dialog);
                         dialog.show();
                     }
                 }
@@ -645,11 +645,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Log.d(TAG, "result is " + new Gson().toJson(result));
 
-        if(!result.isAccept()){
+        if (!result.isAccept()) {
             new Handler(getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    if(!isFinishing()) {
+                    if (!isFinishing()) {
 
                         coinAdapter.earnCoins(100);
 
@@ -704,10 +704,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onFriendRequestReject(User user) {
 
+        FriendRequestState.getInstance().friendRequestEvent(user, true);
     }
 
     @Override
     public void onFriendRequestAccept(final User user) {
+
+        FriendRequestState.getInstance().friendRequestEvent(user, false);
 
         if (!user.isFriend()) {
             user.setIsFriend(true);
@@ -827,7 +830,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGotUserAction(final UserActionHolder actionHolder) {
 
 
-
         Log.d(TAG, "got user action");
         if (!actionHolder.getUserId().equals(Tools.getCachedUser().getId())) {
             UserActionCache.getInstance().addToOpponentList(actionHolder.getAction());
@@ -866,7 +868,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        if(!coinAdapter.spendCoins(100)){
+        if (!coinAdapter.spendCoins(100)) {
 
 
             return;
@@ -876,7 +878,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         playerTwo.setOnlineStateClear();
 
 
-        mLoadingDialog = new LoadingDialog(this , true);
+        mLoadingDialog = new LoadingDialog(this, true);
 
         mLoadingDialog.show();
         SocketAdapter.requestGame();
@@ -1075,7 +1077,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (actionHolder.isMatchRequest()) {
             if (actionHolder.isActionSpecified()) {
 
-                if(!coinAdapter.spendCoins(100)){
+                if (!coinAdapter.spendCoins(100)) {
 
                     SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), false);
                     return;
@@ -1096,7 +1098,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public CoinAdapter getCoinAdapter() {
         return coinAdapter;
     }
-
 
 
 }

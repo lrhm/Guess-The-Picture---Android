@@ -105,7 +105,7 @@ public class FriendsHolder {
         friends.addAll(toAdd);
 
         backupCache();
-        // remove those wich are not friends anymore
+        // remove those wich are not list anymore
 
 
     }

@@ -19,6 +19,7 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.OnCancelFriendReqListener;
 import ir.treeco.aftabe.API.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -114,11 +115,13 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         } else {
             mMatchButton.setVisibility(View.GONE);
+            int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(mUser)) ? R.drawable.addfriends : R.drawable.notifreq;
             mChatButton.setImageBitmap(imageManager.loadImageFromResource(
-                    R.drawable.addfriends, size, size));
+                    friendReqDrawable, size, size));
         }
 
-        mChatButton.setOnClickListener(this);
+        if (FriendRequestState.getInstance().requestShallPASS(mUser))
+            mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);
 
 
@@ -215,38 +218,43 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         if (v.getId() == R.id.uv_start_chat_button) {
             if (!mUser.isFriend()) {
-                DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AftabeAPIAdapter.requestFriend(myUser, mUser.getId(), new OnFriendRequest() {
-                            @Override
-                            public void onFriendRequestSent() {
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
+                if (FriendRequestState.getInstance().requestShallPASS(mUser))
+                    DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AftabeAPIAdapter.requestFriend(myUser, mUser.getId(), new OnFriendRequest() {
+                                @Override
+                                public void onFriendRequestSent() {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            int size = (int) (SizeManager.getScreenWidth() * 0.135);
 
-                                        Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
+                                            mChatButton.setImageBitmap(imageManager.loadImageFromResource(
+                                                    R.drawable.notifreq, size, size));
 
-                                    }
-                                });
+                                            Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
 
-                            }
+                                        }
+                                    });
 
-                            @Override
-                            public void onFriendRequestFailedToSend() {
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
+                                }
 
-                                        Toast.makeText(getContext(), "friend request failed to send", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onFriendRequestFailedToSend() {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
 
-                                    }
-                                });
-                            }
-                        });
+                                            Toast.makeText(getContext(), "friend request failed to send", Toast.LENGTH_SHORT).show();
 
-                    }
-                });
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    });
             }
 
         }
@@ -263,7 +271,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
     public void requestMatch() {
 
-        DialogAdapter.makeMatchRequestDialog(context, mUser ,new View.OnClickListener() {
+        DialogAdapter.makeMatchRequestDialog(context, mUser, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!((MainActivity) context).getCoinAdapter().spendCoins(100))

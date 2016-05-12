@@ -21,6 +21,7 @@ import java.util.Comparator;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -215,11 +216,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    DialogAdapter.makeMatchRequestDialog(context , user , new View.OnClickListener() {
+                    DialogAdapter.makeMatchRequestDialog(context, user, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
-                            if(!coinAdapter.spendCoins(100)){
+                            if (!coinAdapter.spendCoins(100)) {
                                 return;
                             }
 
@@ -236,39 +237,42 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mChatButton.setVisibility(View.GONE);
 
             holder.mMatchButton.setVisibility(View.VISIBLE);
-            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.addfriends, size, size));
-            holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(user)) ? R.drawable.addfriends : R.drawable.notifreq;
 
-                    final User myUser = Tools.getCachedUser();
+            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(friendReqDrawable, size, size));
+            if (FriendRequestState.getInstance().requestShallPASS(user))
+                holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    if (myUser == null || myUser.isGuest()) {
+                        final User myUser = Tools.getCachedUser();
 
-                        new RegistrationDialog(context, false).show();
-                        return;
-                    }
-                    DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        if (myUser == null || myUser.isGuest()) {
 
-                            AftabeAPIAdapter.requestFriend(myUser, user.getId(), new OnFriendRequest() {
-                                @Override
-                                public void onFriendRequestSent() {
-
-                                    removeUser(user, type);
-
-                                }
-
-                                @Override
-                                public void onFriendRequestFailedToSend() {
-
-                                }
-                            });
+                            new RegistrationDialog(context, false).show();
+                            return;
                         }
-                    });
-                }
-            });
+                        DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                AftabeAPIAdapter.requestFriend(myUser, user.getId(), new OnFriendRequest() {
+                                    @Override
+                                    public void onFriendRequestSent() {
+
+                                        removeUser(user, type);
+
+                                    }
+
+                                    @Override
+                                    public void onFriendRequestFailedToSend() {
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
         } else if (type == TYPE_REQUEST) {
 
             Log.d(TAG, "binded to type request");

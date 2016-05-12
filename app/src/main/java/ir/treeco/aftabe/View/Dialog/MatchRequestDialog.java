@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResponseHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
+import ir.treeco.aftabe.Adapter.Cache.MatchRequestCache;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -37,6 +38,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     Boolean toSend;
     CoinAdapter coinAdapter;
     View.OnClickListener yesClick;
+    private boolean accepted = false;
 
     public MatchRequestDialog(Context context, User user) {
         super(context);
@@ -117,24 +119,29 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
 
 
-        dismiss();
-
         if (v.getId() == R.id.uv_start_chat_button) {
-            acceptOrDeclineMatch(false, v);
+//            acceptOrDeclineMatch(false, v);
         }
 
         if (v.getId() == R.id.uv_match_button) {
             acceptOrDeclineMatch(true, v);
+            accepted = true;
         }
+        dismiss();
 
 
     }
 
     @Override
-    public void onBackPressed() {
-        if (!toSend)
+    public void dismiss() {
+        if (!toSend && !accepted) {
             SocketAdapter.responseToMatchRequest(mUser.getId(), false);
-        super.onBackPressed();
+        } else if (!toSend && accepted) {
+            MatchRequestCache.getInstance().remove(this);
+            MatchRequestCache.getInstance().dismissAll();
+        }
+        super.dismiss();
+
     }
 
     public void acceptOrDeclineMatch(boolean accepted, View v) {
