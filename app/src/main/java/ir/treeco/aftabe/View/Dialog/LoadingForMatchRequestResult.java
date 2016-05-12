@@ -29,6 +29,7 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
@@ -57,10 +58,12 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     private Timer mTimer;
     TimerView mTimerView;
     int mTimerStep = 0;
+    CoinAdapter coinAdapter;
 
     public LoadingForMatchRequestResult(Context context, User opponent) {
         super(context);
         this.context = context;
+        coinAdapter = ((MainActivity) context).getCoinAdapter();
         mOpponent = opponent;
         imageManager = new ImageManager(context);
         initImageLoading();
@@ -109,7 +112,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     }
 
     private void runTimer() {
-        if (mTimerStep == 30) {
+        if (mTimerStep == 33) {
             mTimer.cancel();
             dismiss();
         }
@@ -118,7 +121,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                mTimerView.setTimer(30 - mTimerStep);
+                mTimerView.setTimer(33 - mTimerStep);
 
             }
         });
@@ -231,5 +234,6 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     public void onMatchResultToSender(MatchResultHolder result) {
 
         dismiss();
+
     }
 }

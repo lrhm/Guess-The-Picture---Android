@@ -28,6 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/dialog_match_request_text_view"
+                    android:gravity="center"
                     android:text="درخواست بازی " />
 
 

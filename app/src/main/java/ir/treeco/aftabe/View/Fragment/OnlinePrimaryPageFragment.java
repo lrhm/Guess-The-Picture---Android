@@ -83,7 +83,6 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         View view1 = new View(getContext());
 
 
-
         notifContainer.addView(msgCountView);
         notifContainer.addView(view1, lp);
         notifContainer.addView(frndReqCountView);
@@ -116,7 +115,6 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
                 - SizeManager.getScreenHeight() * 0.02
         ) / 2;
         ((LinearLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = topMargin;
-
 
 
         return view;
@@ -159,8 +157,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         }
 
         if (v.getId() == R.id.multiplay_image_button) {
-            if (coinAdapter.spendCoins(100))
-                ((MainActivity) getActivity()).requestRandomGame();
+            ((MainActivity) getActivity()).requestRandomGame();
         }
     }
 }

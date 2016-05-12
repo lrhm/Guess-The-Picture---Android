@@ -73,7 +73,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         this.context = context;
         creationTime = System.currentTimeMillis();
         imageManager = new ImageManager(context);
-        coinAdapter = new CoinAdapter(context, (MainActivity) context);
+        coinAdapter = ((MainActivity)context).getCoinAdapter();
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendSocketListener(this);
 

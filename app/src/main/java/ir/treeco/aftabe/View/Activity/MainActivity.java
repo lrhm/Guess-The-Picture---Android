@@ -653,6 +653,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         loadingDialogMatchReq = null;
         matchResultTime = System.currentTimeMillis();
 
+        if(!result.isAccept()){
+            new Handler(getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if(!isFinishing()) {
+
+                        coinAdapter.earnCoins(100);
+
+                    }
+                }
+            });
+        }
+
         if (result.isAccept()) {
             new Handler(getMainLooper()).post(new Runnable() {
                 @Override
@@ -858,6 +871,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (myUser == null) {
             Toast.makeText(this, "not connected , try again ", Toast.LENGTH_SHORT).show();
             AftabeAPIAdapter.tryToLogin(this);
+            return;
+        }
+
+        if(!coinAdapter.spendCoins(100)){
+
+
             return;
         }
 
@@ -1074,6 +1093,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     }
+
+
+    public CoinAdapter getCoinAdapter() {
+        return coinAdapter;
+    }
+
 
 
 }

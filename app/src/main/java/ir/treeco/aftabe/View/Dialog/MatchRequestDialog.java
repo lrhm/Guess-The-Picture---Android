@@ -32,13 +32,26 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     ImageView mChatButton;
     UserLevelView mUserLevelView;
     User mUser;
+    Boolean toSend;
 
+    View.OnClickListener yesClick;
 
     public MatchRequestDialog(Context context, User user) {
         super(context);
         this.context = context;
         tools = new Tools(context);
         mUser = user;
+        toSend = false;
+
+    }
+
+    public MatchRequestDialog(Context context, User user, boolean toSend, View.OnClickListener yesClick) {
+        super(context);
+        this.context = context;
+        tools = new Tools(context);
+        mUser = user;
+        this.toSend = toSend;
+        this.yesClick = yesClick;
 
     }
 
@@ -79,9 +92,13 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         mMatchButton.setOnClickListener(this);
 
         TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
+        if (toSend) {
+            String msg = "درخواست بازی" + "\n" + "۱۰۰ سکه";
+            textView.setText(msg);
+        }
 
         leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
-        UiUtil.setLeftMargin(textView , leftMargin/2);
+        UiUtil.setLeftMargin(textView, leftMargin / 2);
 
     }
 
@@ -89,11 +106,11 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
 
         if (v.getId() == R.id.uv_start_chat_button) {
-            acceptOrDeclineMatch(false);
+            acceptOrDeclineMatch(false, v);
         }
 
         if (v.getId() == R.id.uv_match_button) {
-            acceptOrDeclineMatch(true);
+            acceptOrDeclineMatch(true, v);
         }
 
         dismiss();
@@ -101,11 +118,16 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
 
     }
 
-    public void acceptOrDeclineMatch(boolean accepted) {
+    public void acceptOrDeclineMatch(boolean accepted, View v) {
 
-        SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
-        new LoadingDialog(context).show();
+        if (!toSend) {
+            SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
+            new LoadingDialog(context).show();
 
+        } else {
+            if (accepted)
+                yesClick.onClick(v);
+        }
 
     }
 

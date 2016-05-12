@@ -64,9 +64,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public static final int TYPE_ONLINE_FRIENDS = 2;
     public static final int TYPE_HEADER = 5;
 
+    Context context;
+
+    private CoinAdapter coinAdapter;
 
     public FriendsAdapter(Context context, ArrayList<User> friends, ArrayList<User> requests, ArrayList<User> contacts, ArrayList<User> searched) {
 
+        this.context = context;
         imageManager = new ImageManager(context);
         mFriends = friends == null ? new ArrayList<User>() : friends;
         mRequests = requests == null ? new ArrayList<User>() : requests;
@@ -80,6 +84,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         arrayLists.add(mOnlineFriends);
         arrayLists.add(mFriends);
         arrayLists.add(mContacts);
+
+        coinAdapter = ((MainActivity) context).getCoinAdapter();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -196,7 +202,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     ChatFragment chatFragment = new ChatFragment();
 
                     Log.d("TAG", "click Temp real pos " + realPosition);
-                    FragmentTransaction transaction = ((MainActivity) v.getContext()).getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, chatFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
@@ -209,12 +215,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    DialogAdapter.makeMatchRequestDialog(v.getContext(), new View.OnClickListener() {
+                    DialogAdapter.makeMatchRequestDialog(context , user , new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
+                            if(!coinAdapter.spendCoins(100)){
+                                return;
+                            }
+
                             SocketAdapter.requestToAFriend(user.getId());
-                            new LoadingForMatchRequestResult(v.getContext(), user).show();
+                            new LoadingForMatchRequestResult(context, user).show();
                         }
                     });
 
@@ -235,10 +245,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                     if (myUser == null || myUser.isGuest()) {
 
-                        new RegistrationDialog(v.getContext(), false).show();
+                        new RegistrationDialog(context, false).show();
                         return;
                     }
-                    DialogAdapter.makeFriendRequestDialog(v.getContext(), new View.OnClickListener() {
+                    DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
