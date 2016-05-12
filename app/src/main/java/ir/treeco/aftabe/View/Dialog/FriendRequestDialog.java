@@ -19,6 +19,7 @@ import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
@@ -86,8 +87,17 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
 
         TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
         textView.setText("درخواست دوستی");
+        textView.setTypeface(FontsHolder.getSansMedium(context));
+
+        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * 0.1), 0.3f);
+
         leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
         UiUtil.setLeftMargin(textView, leftMargin / 2);
+
+
+        UiUtil.setTopMargin(findViewById(R.id.dialog_match_request_text_containers), (int) (UiUtil.getTextViewHeight(mUserLevelView.getUserNameTextView())
+                + SizeManager.getScreenHeight() * 0.03)
+        );
 
 
     }

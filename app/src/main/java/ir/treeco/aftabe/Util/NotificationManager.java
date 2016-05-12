@@ -69,28 +69,27 @@ public class NotificationManager {
         if (notifHolder.isFriendRequest()) {
             //TODO set style for accept and ignore buttons
 
-            title = "friend " + "request";
-            content = "from " + notifHolder.getFriendSF().getUser().getName();
+            title = "درخواست دوستی";
+            content = "از " + notifHolder.getFriendSF().getUser().getName();
             if (notifHolder.getFriendSF().isRequest()) {
                 pendingIntent = getIntentForFriendRequest(notifHolder, notifID);
             } else {
                 return;
             }
             builder = createBasicNotification(title, content, drawable);
-            builder.addAction(R.drawable.notif_yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
+            builder.addAction(R.drawable.notif_yes, "باشه", getAcceptPendingIntent(notifHolder, true, notifID));
 
         } else if (notifHolder.isMatchRequest()) {
 
-            title = "match request";
-            content = "from " + notifHolder.getMatchSF().getFriend().getName();
-
+            title = "درخواست بازی";
+            content = "۱۰۰ سکه";
             pendingIntent = getIntentForMatchRequest(notifHolder, notifID);
             builder = createBasicNotification(title, content, drawable);
-            builder.addAction(R.drawable.notif_yes, "accept", getAcceptPendingIntent(notifHolder, true, notifID));
+            builder.addAction(R.drawable.notif_yes, "باشه", getAcceptPendingIntent(notifHolder, true, notifID));
 
         }
         if (builder == null) builder = createBasicNotification(title, content, drawable);
-        builder.addAction(R.drawable.notif_no, "reject", getRejectPendingIntent(notifHolder, notifID));
+        builder.addAction(R.drawable.notif_no, "نه", getRejectPendingIntent(notifHolder, notifID));
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent);
         }

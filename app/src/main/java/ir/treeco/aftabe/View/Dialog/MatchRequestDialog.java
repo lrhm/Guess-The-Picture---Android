@@ -18,6 +18,7 @@ import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
@@ -101,6 +102,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
 
         String msg = "درخواست بازی" + "\n" + "۱۰۰ سکه";
+        textView.setTypeface(FontsHolder.getSansMedium(context));
         textView.setText(msg);
 
         UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * 0.1), 0.3f);
