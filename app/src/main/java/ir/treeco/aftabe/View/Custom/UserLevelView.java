@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
+import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -323,8 +324,9 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         mUserNameTextView.setText("عضویت/ورود");
     }
 
-    public void setForOnlineGame() {
-        setLevelTextSize();
+    public void setForOnlineGame(boolean changeTextSize) {
+        if (changeTextSize)
+            setLevelTextSize();
         coverView.setImageBitmap(imageManager.loadImageFromResource((R.drawable.coveronlinegame), imageConverter.mWidth, imageConverter.mHeight, ImageManager.ScalingLogic.FIT));
 
     }
@@ -349,6 +351,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     }
 
     public void setOnlineState(GameActionResult gameActionResult) {
+
 
         Log.d(this.getClass().getSimpleName(), "got user action " + mFirstState);
         Log.d(this.getClass().getSimpleName(), "got user action " + gameActionResult.getResult().toString());

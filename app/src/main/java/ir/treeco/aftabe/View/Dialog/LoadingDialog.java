@@ -97,7 +97,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingStep = 0;
 
         SizeConverter converter = SizeConverter.SizeConverterFromLessOffset(SizeManager.getScreenWidth(), SizeManager.getScreenHeight(),
-                1200, 2000);
+                1080, 1800);
         mLoadingImageHeight = converter.mHeight;
         mLoadingImageWidth = converter.mWidth;
 
@@ -112,7 +112,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         cancelImageView.setOnClickListener(this);
 
         UiUtil.setLeftMargin(cancelImageView, SizeManager.getScreenWidth() / 2 - cancelConverter.mWidth / 2);
-        UiUtil.setTopMargin(cancelImageView, converter.convertHeight(1680) + converter.getTopOffset());
+        UiUtil.setTopMargin(cancelImageView, converter.convertHeight(1400) + converter.getTopOffset());
 
         new Handler().postDelayed(this, 1000);
 
@@ -132,7 +132,7 @@ public class LoadingDialog extends Dialog implements Runnable,
                 && mImageLoadingIds != null)
             return;
         SizeConverter converter = SizeConverter.SizeConverterFromLessOffset(SizeManager.getScreenWidth(), SizeManager.getScreenHeight(),
-                1200, 2000);
+                1080, 1800);
         mLoadingImageHeight = converter.mHeight;
         mLoadingImageWidth = converter.mWidth;
 

@@ -19,6 +19,7 @@ import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
+import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
@@ -42,8 +43,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
-            imageView.getLayoutParams().height = lengthManager.getPackageIconSize();
-            imageView.getLayoutParams().width = lengthManager.getPackageIconSize();
+            int packageSize = (int) (SizeManager.getScreenWidth() * 0.45);
+            imageView.getLayoutParams().height = packageSize;
+            imageView.getLayoutParams().width = packageSize;
 
             v.setOnClickListener(this);
         }
@@ -78,9 +80,10 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public PackageAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_package, viewGroup, false);
+        int packageSize = (int) (SizeManager.getScreenWidth() * 0.45);
         v.setLayoutParams(new RecyclerView.LayoutParams(
-                lengthManager.getPackageIconSize(),
-                lengthManager.getPackageIconSize()));
+                packageSize,
+                packageSize));
         return new ViewHolder(v);
     }
 

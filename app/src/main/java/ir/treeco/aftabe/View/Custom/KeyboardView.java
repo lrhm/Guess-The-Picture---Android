@@ -96,7 +96,7 @@ public class KeyboardView extends RelativeLayout {
 
         LengthManager lengthManager = new LengthManager(getContext());
 
-        mReaminingLenght = SizeManager.getScreenHeight() -lengthManager.getHeaderHeight() - lengthManager.getLevelImageFrameHeight() ;
+        mReaminingLenght = SizeManager.getScreenHeight() - lengthManager.getHeaderHeight() - lengthManager.getLevelImageFrameHeight();
 
         Log.d("TAG", "whole" + SizeManager.getScreenHeight());
         Log.d("TAG", "reamaning " + mReaminingLenght);
@@ -929,11 +929,14 @@ public class KeyboardView extends RelativeLayout {
                         int index = otherIndex;
                         otherIndex = -1;
                         buttons[index].state = STATE_NORMAL;
+                        int buttonDrawable =
+                                (buttons[index].type == TYPE_LEFT) ? R.drawable.button_left
+                                        : R.drawable.button_right;
+                        if (buttons[index].type == TYPE_CENTER)
+                            buttonDrawable = R.drawable.keyboardcenterbutton;
                         buttons[index].imgView.setImageBitmap(imageManager
                                 .loadImageFromResource(
-
-                                        (buttons[index].type == TYPE_LEFT) ? R.drawable.button_left
-                                                : R.drawable.button_right,
+                                        buttonDrawable,
                                         buttonConvertor.mHeight,
                                         buttonConvertor.mWidth,
                                         ImageManager.ScalingLogic.FIT));
@@ -1002,11 +1005,13 @@ public class KeyboardView extends RelativeLayout {
                             answers[mIndex].otherIndex = index;
                             otherIndex = mIndex;
                             thisView.state = STATE_TOUCHED;
+                            int touchedDrawable = (thisView.type == TYPE_LEFT) ? R.drawable.button_left_touched
+                                    : R.drawable.button_right_touched;
+                            if (thisView.type == TYPE_CENTER)
+                                touchedDrawable = R.drawable.keyboardcenterbuttontouched;
                             thisView.imgView.setImageBitmap(imageManager
                                     .loadImageFromResource(
-
-                                            (thisView.type == TYPE_LEFT) ? R.drawable.button_left_touched
-                                                    : R.drawable.button_right_touched,
+                                            touchedDrawable,
                                             buttonConvertor.mHeight,
                                             buttonConvertor.mWidth,
                                             ImageManager.ScalingLogic.FIT));

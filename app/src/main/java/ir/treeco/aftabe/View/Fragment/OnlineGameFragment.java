@@ -31,6 +31,7 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -85,8 +86,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        if (mRemainingTime == null)
+        if (mRemainingTime == null) {
             mRemainingTime = 120;
+            UserActionCache.getInstance().clearCache();
+        }
         SocketAdapter.addSocketListener(this);
         view = inflater.inflate(R.layout.fragment_game, container, false);
         gameFragment = this;
@@ -281,6 +284,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             Toast.makeText(getContext(), "answer is right", Toast.LENGTH_LONG);
 
             GameActionResult gameActionResult = new GameActionResult("correct");
+
+            UserActionCache.getInstance().addToMyList(gameActionResult);
+
             mainActivity.playerOne.setOnlineState(gameActionResult);
 
             answerObject.setCorrect();
@@ -323,6 +329,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
 
         GameActionResult gameActionResult = new GameActionResult("skip");
+
+        UserActionCache.getInstance().addToMyList(gameActionResult);
+
         mainActivity.playerOne.setOnlineState(gameActionResult);
 
         Bundle bundle = new Bundle();
@@ -374,12 +383,18 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         answerObject.setSkip();
         SocketAdapter.setAnswerLevel(answerObject);
 
+        GameActionResult gameActionResult = new GameActionResult("skip");
+        UserActionCache.getInstance().addToMyList(gameActionResult);
+
         if (state == 0) {
             AnswerObject answerObject1 = new AnswerObject(mGameResultHolder.getLevels()[1].getId());
             answerObject1.setSkip();
+            UserActionCache.getInstance().addToMyList(gameActionResult);
 
             SocketAdapter.setAnswerLevel(answerObject1);
         }
+
+
         lost = true;
 
 
@@ -392,6 +407,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             Log.d(TAG, "state is " + state);
             mTimer.cancel();
             final GameActionResult gameActionResult = new GameActionResult("skip");
+            UserActionCache.getInstance().addToMyList(gameActionResult);
             mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -411,6 +427,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                         answerObject1.setSkip();
 
                         SocketAdapter.setAnswerLevel(answerObject1);
+                        UserActionCache.getInstance().addToMyList(gameActionResult);
 
 
                         return;

@@ -60,6 +60,7 @@ import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
+import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
@@ -194,8 +195,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         playerTwo.setUserNameTextSize(0.85f);
 
 
-        playerOne.setForOnlineGame();
-        playerTwo.setForOnlineGame();
+        playerOne.setForOnlineGame(true);
+        playerTwo.setForOnlineGame(true);
 
         mTimerView = new TimerView(this);
         mTimerContainer = ((FrameLayout) findViewById(R.id.timer_online));
@@ -820,8 +821,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGotUserAction(final UserActionHolder actionHolder) {
 
+
+
         Log.d(TAG, "got user action");
         if (!actionHolder.getUserId().equals(Tools.getCachedUser().getId())) {
+            UserActionCache.getInstance().addToOpponentList(actionHolder.getAction());
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

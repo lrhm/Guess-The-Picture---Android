@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
+import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
@@ -33,6 +35,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     private static final String ARG_WIN_OR_LOSE = "param_win_or_lose";
     private static final String ARG_PARAM2 = "param_game_result_holder";
     private static final String ARG_USER_OP = "param_user_oppoenent";
+    private static final String TAG = "GameResultFragment";
 
     private ResultHolder mGameResultHolder;
     private User mOpponent;
@@ -93,7 +96,19 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         UserLevelView myUserLevelView = (UserLevelView) view.findViewById(R.id.fragment_result_my_user_level_view);
         UserLevelView opponentLevelView = (UserLevelView) view.findViewById(R.id.fragment_result_op_user_level_view);
 
+
+        opponentLevelView.setForOnlineGame(false);
         opponentLevelView.setUser(mOpponent);
+        opponentLevelView.setOnlineStateClear();
+
+        for (GameActionResult gameActionResult : UserActionCache.getInstance().getOpponentList()) {
+            opponentLevelView
+
+
+                    .
+                            setOnlineState(gameActionResult);
+            Log.d( TAG,"Enemys one");
+        }
 
         mAddFriendImageView = (ImageView) view.findViewById(R.id.fragment_result_add_friend);
         mBackImageView = (ImageView) view.findViewById(R.id.fragment_result_chat);
@@ -105,8 +120,15 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         initShapeLP(secondShapeContainer.getLayoutParams());
         initShapeLP(secShapeContainerTmp.getLayoutParams());
 
+        myUserLevelView.setForOnlineGame(false);
 
         myUserLevelView.setUser(myUser);
+        myUserLevelView.setOnlineStateClear();
+
+        for (GameActionResult gameActionResult : UserActionCache.getInstance().getMyList()) {
+            myUserLevelView.setOnlineState(gameActionResult);
+            Log.d(TAG, "my one");
+        }
 
         int coin = 0;
         if (mWin)
@@ -115,7 +137,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
             coin = 80;
 
 
-        String winText = Tools.numeralStringToPersianDigits(coin + "") + " " + "سکه"  + " ";
+        String winText = Tools.numeralStringToPersianDigits(coin + "") + " " + "سکه" + " ";
         coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
         coinTextView.setText(winText);
 
