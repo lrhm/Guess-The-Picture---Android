@@ -63,7 +63,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     CoinAdapter coinAdapter;
     long creationTime;
     boolean gotGame = false;
-
+    boolean showCancel;
 
     String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
@@ -76,7 +76,22 @@ public class LoadingDialog extends Dialog implements Runnable,
         coinAdapter = ((MainActivity)context).getCoinAdapter();
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendSocketListener(this);
+        showCancel = false;
+        initImageLoading();
 
+
+    }
+
+
+    public LoadingDialog(Context context , boolean showCancel) {
+        super(context);
+        this.context = context;
+        creationTime = System.currentTimeMillis();
+        imageManager = new ImageManager(context);
+        coinAdapter = ((MainActivity)context).getCoinAdapter();
+        SocketAdapter.addSocketListener(this);
+        SocketAdapter.addFriendSocketListener(this);
+        this.showCancel = showCancel;
         initImageLoading();
 
 
@@ -106,13 +121,18 @@ public class LoadingDialog extends Dialog implements Runnable,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
 
 
-        ImageView cancelImageView = (ImageView) findViewById(R.id.loading_dialog_cancel);
-        SizeConverter cancelConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.2f, 169, 98);
-        cancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.cancel, cancelConverter.mWidth, cancelConverter.mHeight));
-        cancelImageView.setOnClickListener(this);
+        if(showCancel) {
+            ImageView cancelImageView = (ImageView) findViewById(R.id.loading_dialog_cancel);
+            SizeConverter cancelConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.2f, 169, 98);
+            cancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.cancel, cancelConverter.mWidth, cancelConverter.mHeight));
+            cancelImageView.setOnClickListener(this);
 
-        UiUtil.setLeftMargin(cancelImageView, SizeManager.getScreenWidth() / 2 - cancelConverter.mWidth / 2);
-        UiUtil.setTopMargin(cancelImageView, converter.convertHeight(1400) + converter.getTopOffset());
+            UiUtil.setLeftMargin(cancelImageView, SizeManager.getScreenWidth() / 2 - cancelConverter.mWidth / 2);
+            UiUtil.setTopMargin(cancelImageView, converter.convertHeight(1400) + converter.getTopOffset());
+            cancelImageView.setVisibility(View.VISIBLE);
+        }
+
+
 
         new Handler().postDelayed(this, 1000);
 

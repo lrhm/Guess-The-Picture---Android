@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.pixplicity.easyprefs.library.Prefs;
+
 import org.w3c.dom.Text;
 
 import ir.treeco.aftabe.View.Custom.MagicTextView;
@@ -144,9 +146,14 @@ public class UiUtil {
     }
 
 
-    public static float getAdjustTextSize(TextView textView, int width, int height, int textSize) {
+    public static float getAdjustTextSize(TextView textView, int width, int height, int textSize, String request) {
 
-        String textBackUp = textView.getText().toString();
+
+        float res = Prefs.getFloat(request + "_TextSize", -10);
+        if (res != -10)
+            return res;
+
+
         String temp = "gsjskssgwaminsaf";
         temp = temp.substring(0, textSize);
         textView.setText(temp);
@@ -157,6 +164,9 @@ public class UiUtil {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, startPx);
             startPx += 1;
         }
+
+        Prefs.putFloat(request + "_TextSize", startPx);
+
         return startPx;
 
     }

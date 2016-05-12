@@ -174,7 +174,11 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<SMSValidateToken> response) {
 
-                smsValidationListener.onValidatedCode(response.body());
+                if (response.isSuccess())
+                    smsValidationListener.onValidatedCode(response.body());
+                else
+                    smsValidationListener.onSMSValidationCodeFail();
+
             }
 
             @Override

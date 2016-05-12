@@ -54,6 +54,8 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         tools = new Tools(context);
         mUser = user;
         this.toSend = toSend;
+        coinAdapter = ((MainActivity) context).getCoinAdapter();
+
         this.yesClick = yesClick;
 
     }
@@ -99,9 +101,15 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         String msg = "درخواست بازی" + "\n" + "۱۰۰ سکه";
         textView.setText(msg);
 
+        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * 0.1), 0.3f);
 
         leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
         UiUtil.setLeftMargin(textView, leftMargin / 2);
+
+
+        UiUtil.setTopMargin(findViewById(R.id.dialog_match_request_text_containers), (int) (UiUtil.getTextViewHeight(mUserLevelView.getUserNameTextView())
+                + SizeManager.getScreenHeight() * 0.03)
+        );
 
     }
 
@@ -120,6 +128,13 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
         }
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!toSend)
+            SocketAdapter.responseToMatchRequest(mUser.getId(), false);
+        super.onBackPressed();
     }
 
     public void acceptOrDeclineMatch(boolean accepted, View v) {

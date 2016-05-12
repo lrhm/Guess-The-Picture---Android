@@ -34,6 +34,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 
 public class SMSRegisterDialog extends Dialog implements SMSValidationListener, View.OnClickListener {
 
@@ -42,6 +43,9 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
     private final static long CHECK_USER_THRESH_HOLD = 500;
     private long lastTimeChecked = 0;
+
+    private final static int MAX_CODE_RETRY = 3;
+    private int retryCount = 0;
 
 
     TextView firstTextView;
@@ -201,7 +205,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
     @Override
     public void onSMSValidationFail() {
         Log.d("TAG", "valid fail");
-        Toast.makeText(getContext(), "failed , try again", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
         dismiss();
 
 
@@ -209,7 +213,14 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
     @Override
     public void onSMSValidationCodeFail() {
-        Log.d("TAG", "valid code fail");
+
+        retryCount++;
+        if (retryCount != MAX_CODE_RETRY) {
+            ToastMaker.show(context, "کد اشتباه است . دوباره تلاش کنید", Toast.LENGTH_SHORT);
+            mEditText.setText("");
+            isSMSValidationCodeChecked = false;
+            return;
+        }
 
         isSMSValidationCodeChecked = false;
         isInPhoneReqState = true;
@@ -218,6 +229,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         secondTextView.setText(phoneReq[1]);
         upperSecondTextView.setText("توجه");
         mEditText.setText("");
+
     }
 
     @Override

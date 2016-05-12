@@ -145,12 +145,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "super.onCreate ended");
 
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        coinAdapter = new CoinAdapter(getApplicationContext(), this);
 
         checkExtras(getIntent().getExtras());
 
@@ -165,9 +163,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         askForContactPermission();
 
-        Log.d(TAG, "height is " + SizeManager.getScreenHeight());
-
-        Log.d(TAG, "onCreate ended");
 
 
     }
@@ -180,7 +175,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mUserFoundListeners = new ArrayList<>();
 
         tools = new Tools(getApplication());
-        coinAdapter = new CoinAdapter(getApplicationContext(), this);
         lengthManager = ((MainApplication) getApplicationContext()).getLengthManager();
         imageManager = ((MainApplication) getApplicationContext()).getImageManager();
 
@@ -880,19 +874,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         playerOne.setOnlineStateClear();
         playerTwo.setOnlineStateClear();
-        startLoading();
+
+
+        mLoadingDialog = new LoadingDialog(this , true);
+
+        mLoadingDialog.show();
         SocketAdapter.requestGame();
 
     }
 
-    public void startLoading() {
-
-
-        mLoadingDialog = new LoadingDialog(this);
-
-        mLoadingDialog.show();
-
-    }
 
     public void setGameResult(boolean doSet) {
 
