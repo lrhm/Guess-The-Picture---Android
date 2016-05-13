@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -73,6 +75,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     private GameResultHolder mGameResultHolder;
     private int state = 0;
     private ImageView skipButton;
+    private String gameType = null;
+    private static final String[] types = {"Match", "Random"};
     User opponent;
 
     private ResultHolder mGameResult;
@@ -94,6 +98,17 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.fragment_game, container, false);
         gameFragment = this;
         state = getArguments().getInt("state");
+        if (gameType == null) {
+            boolean isMatch = getArguments().getBoolean("isMatch");
+            gameType = types[1];
+            if (isMatch) {
+                gameType = types[0];
+            }
+
+            Answers.getInstance().logCustom(
+                    new CustomEvent("Online Game")
+                            .putCustomAttribute("Type", gameType));
+        }
 
         Log.d(TAG, new Gson().toJson(mGameResultHolder));
 
@@ -304,6 +319,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             OnlineGameFragment gameFragment = new OnlineGameFragment();
             gameFragment.mRemainingTime = mRemainingTime;
+            gameFragment.gameType = gameType;
             gameFragment.setOnGameEndListener(mOnGameEndListener);
             gameFragment.setGameResultHolder(mGameResultHolder);
             gameFragment.setArguments(bundle);
@@ -340,6 +356,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         OnlineGameFragment gameFragment = new OnlineGameFragment();
         gameFragment.mRemainingTime = mRemainingTime;
         gameFragment.mGameResult = mGameResult;
+        gameFragment.gameType = gameType;
         gameFragment.setOnGameEndListener(mOnGameEndListener);
         gameFragment.setGameResultHolder(mGameResultHolder);
         gameFragment.setArguments(bundle);

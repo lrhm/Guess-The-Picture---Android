@@ -15,6 +15,7 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.R;
@@ -45,8 +46,11 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
             int size = (int) (SizeManager.getScreenWidth() * 0.235);
             int myPadding = lengthManager.getLevelThumbnailPadding();
 
-            imageView.getLayoutParams().width = size - myPadding ;
-            imageView.getLayoutParams().height = size - myPadding ;
+            imageView.getLayoutParams().width = size - myPadding;
+            imageView.getLayoutParams().height = size - myPadding;
+
+            UiUtil.setWidth(frame, size - myPadding);
+            UiUtil.setHeight(frame, size - myPadding);
 
             v.setOnClickListener(this);
         }
@@ -90,22 +94,22 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         int levelPosition = page * 16 + position;
         if (levelPosition == 0 || levels[levelPosition].isResolved() || levels[levelPosition - 1].isResolved()) {
 
-            String imagePath = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + packageId + "_" +levels[levelPosition].getResources();
+            String imagePath = "file://" + context.getFilesDir().getPath() + "/Packages/package_" + packageId + "/"
+                    + levels[levelPosition].getResources();
 
-            String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + packageId + "_levelUnlocked.png";
+//            String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+//                    + packageId + "_levelUnlocked.png";
 
             Picasso.with(context).load(imagePath).fit().centerCrop().into(viewHolder.imageView);
-            Picasso.with(context).load(frame).into(viewHolder.frame);
+            Picasso.with(context).load(R.drawable.level_unlocked).into(viewHolder.frame);
 
             viewHolder.imageView.setVisibility(View.VISIBLE);
         } else {
             viewHolder.imageView.setVisibility(View.GONE);
-            String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
-                    + packageId + "_levelLocked.png";
+//            String frame = "file://" + context.getFilesDir().getPath() + "/Downloaded/"
+//                    + packageId + "_levelLocked.png";
 
-            Picasso.with(context).load(frame).into(viewHolder.frame);
+            Picasso.with(context).load(R.drawable.level_locked).into(viewHolder.frame);
         }
     }
 

@@ -1,8 +1,15 @@
 {
-  "local": [
-    {
-      "name": "آفتابه مسی",
-      "id": 0
-    }
+ "objects" : [
+		{
+  "id": 0,
+  "price": 0,
+  "name": "افتابه مسی",
+  "hash": "44d7ef279dad23061eacc9789e712784",
+  "sku": "sku_big",
+  "file": {
+    "name": "offline_p_0.zip"
+  }
+		}
   ]
+
 }

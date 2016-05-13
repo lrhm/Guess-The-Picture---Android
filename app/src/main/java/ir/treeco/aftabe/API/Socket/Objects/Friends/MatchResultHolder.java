@@ -33,4 +33,8 @@ public class MatchResultHolder {
     public boolean isOffline() {
         return status.equals("offline");
     }
+
+    public String getStatus() {
+        return status;
+    }
 }

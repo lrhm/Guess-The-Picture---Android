@@ -33,6 +33,7 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.StartCheckoutEvent;
 import com.google.android.gms.auth.api.Auth;
@@ -71,7 +72,6 @@ import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
-import ir.treeco.aftabe.Object.HeadObject;
 import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -115,7 +115,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final String CONTACTS_ASKED_PERMISSION_COUNT = "shared_prefs_contacts_permission_asked_count";
 
     private static final int PERMISSION_REQUEST_CONTACT = 80;
-    private HeadObject headObject;
     private DBAdapter db;
     private Tools tools;
     private ImageView cheatButton;
@@ -528,7 +527,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onProductPurchased(String productId, TransactionDetails details) {
 
         Integer price = StoreItemHolder.getInstnce().getPrice(productId);
-        if(price == null)
+        if (price == null)
             price = 500;
         //TODO check price is never null
         Answers.getInstance().logPurchase(new PurchaseEvent()
@@ -658,6 +657,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         matchResultTime = System.currentTimeMillis();
 
         Log.d(TAG, "result is " + new Gson().toJson(result));
+
+        Answers.getInstance().logCustom(new CustomEvent("Match Request Result")
+                .putCustomAttribute("status", result.getStatus()));
 
         if (!result.isAccept()) {
             new Handler(getMainLooper()).post(new Runnable() {
@@ -1044,21 +1046,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Prefs.putBoolean(CONTACTS_PERMISSION, true);
-                    Tools.checkKey();
-                    tools.checkDB();
+
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
-                } else {
+                }
+                if (grantResults.length > 0) {
+                    Tools.checkKey();
+                    tools.checkDB();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+
+                // other 'case' lines to check for other
+                // permissions this app might request
         }
     }
 

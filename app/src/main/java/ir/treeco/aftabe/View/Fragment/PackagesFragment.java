@@ -36,31 +36,16 @@ public class PackagesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        PackageObject[] news = ((MainApplication) getActivity().getApplication()).getHeadObject().getNews();
         PackageObject[] downloadedPackage = db.getPackages();
-        PackageObject[] saller = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
 
-        int size = 0;
-        if (news != null)
-            size += news.length;
-        if (downloadedPackage != null)
-            size += downloadedPackage.length;
-        if (saller != null)
-            size += saller.length;
+        int size = downloadedPackage.length;
 
         packageObjects = new PackageObject[size];
 
         int i = 0;
-        if (news != null)
-            for (PackageObject packageObject : news)
-                packageObjects[i++] = packageObject;
 
         if (downloadedPackage != null)
             for (PackageObject packageObject : downloadedPackage)
-                packageObjects[i++] = packageObject;
-
-        if (saller != null)
-            for (PackageObject packageObject : saller)
                 packageObjects[i++] = packageObject;
 
         ArrayList<PackageObject> packages = new ArrayList<PackageObject>();
@@ -77,28 +62,6 @@ public class PackagesFragment extends Fragment {
                 packages.add(packageObject);
             }
         }
-//        switch (type) {
-//            case 0:
-//                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getNews();
-//                break;
-//
-//            case 1:
-//                PackageObject[] downloadedPackage = db.getPackages();
-//                PackageObject[] temp = new PackageObject[10];
-//                for (int i = 0; i < 10; i++) {
-//                    temp[i] = downloadedPackage[0];
-////                    temp[i].setId(i);
-//                }
-//                if (downloadedPackage != null) {
-//                    packageObjects = downloadedPackage;
-//                    packageObjects = temp;
-//                }
-//                break;
-//
-//            case 2:
-//                packageObjects = ((MainApplication) getActivity().getApplication()).getHeadObject().getSaller();
-//                break;
-//        }
 
         packageObjects = new PackageObject[packages.size()];
         i = 0;

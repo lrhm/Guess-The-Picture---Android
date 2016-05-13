@@ -19,14 +19,12 @@ import ir.treeco.aftabe.Adapter.LocationAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Service.ServiceConstants;
+import ir.treeco.aftabe.Util.PackageTools;
 import ir.treeco.aftabe.Util.Tools;
 
 public class LoadingActivity extends Activity implements Runnable {
 
     long startTime;
-    private boolean mIsThereFriendReq;
-    private boolean mIsThereMatchReq;
-    private NotifHolder mNotifHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,6 @@ public class LoadingActivity extends Activity implements Runnable {
 
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_loading);
 
         startTime = System.currentTimeMillis();
@@ -89,16 +85,14 @@ public class LoadingActivity extends Activity implements Runnable {
         DBAdapter db = DBAdapter.getInstance(getApplication());
 
 
-        tools.parseJson(getApplicationContext().getFilesDir().getPath() + "/head.json");
 
         if (Prefs.getBoolean("firstAppRun", true)) {
 
             db.insertCoins(399);
-            tools.copyLocalpackages();
+            new PackageTools(this).copyLocalpackages();
             Prefs.putBoolean("firstAppRun", false);
         }
 
-        tools.downloadHead();
 
     }
 

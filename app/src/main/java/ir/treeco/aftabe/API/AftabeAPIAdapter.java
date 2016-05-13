@@ -312,6 +312,7 @@ public class AftabeAPIAdapter {
         if (!Prefs.contains(Tools.ENCRYPT_KEY) || !Prefs.contains(Tools.SHARED_PREFS_TOKEN))
             return;
         try {
+            Log.d("AftabeAPIAdapter", "shared pref have some thing for you");
             Gson gson = new Gson();
             TokenHolder tokenHolder = gson.fromJson(Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""), TokenHolder.class);
             if (tokenHolder == null || tokenHolder.getLoginInfo() == null)

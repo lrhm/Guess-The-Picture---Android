@@ -35,7 +35,7 @@ public class Synchronize extends BroadcastReceiver {
         int days = Days.daysBetween(new DateTime(past), new DateTime(now)).getDays();
         if (days >= 4) {
             Tools tools = new Tools(context);
-                    tools.downloadHead();
+//                    tools.downloadHead();
         } else {
             Prefs.putString(context.getResources().
                             getString(R.string.updated_time_shared_preference),

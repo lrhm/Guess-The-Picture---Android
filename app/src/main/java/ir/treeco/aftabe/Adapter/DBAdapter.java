@@ -46,16 +46,12 @@ public class DBAdapter {
     private static final String PACKAGES = "PACKAGES";
     private static final String PACKAGE_SQL_ID = "PACKAGE_SQL_ID";
     private static final String PACKAGE_ID = "PACKAGE_ID";
-    private static final String PACKAGE_NAME = "PACKAGE_NAME";
-    private static final String PACKAGE_URL = "PACKAGE_URL";
-    private static final String PACKAGE_DOWNLOADED = "PACKAGE_DOWNLOADED";
+    private static final String PACKAGE_GSON = "PACKAGE_GSON";
 
     private static final String SQL_CREATE_PACKAGES = CREATE_TABLE + PACKAGES + BRACKET_OPEN_SEP +
             PACKAGE_SQL_ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_SEP +
             PACKAGE_ID + INTEGER_TYPE + NOT_NULL + UNIQUE + COMMA_SEP +
-            PACKAGE_NAME + TEXT_TYPE + COMMA_SEP +
-            PACKAGE_URL + TEXT_TYPE + COMMA_SEP +
-            PACKAGE_DOWNLOADED + BLOB_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
+            PACKAGE_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
     private static final String LEVELS = "LEVELS";
     private static final String LEVEL_SQL_ID = "LEVEL_SQL_ID";
@@ -96,8 +92,6 @@ public class DBAdapter {
 //            FRIENDS_SQL_ID + INTEGER_TYPE +  + AUTOINCREMENT + COMMA_SEP +
             FRIEND_ID + TEXT_TYPE + PRIMARY_KEY + COMMA_SEP +
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
-
-
 
 
     private static Object lock = new Object();
@@ -160,9 +154,8 @@ public class DBAdapter {
         open();
         ContentValues values = new ContentValues();
         values.put(PACKAGE_ID, packageObject.getId());
-        values.put(PACKAGE_NAME, packageObject.getName());
-        values.put(PACKAGE_URL, packageObject.getUrl());
-        values.put(PACKAGE_DOWNLOADED, true);
+        values.put(PACKAGE_GSON, new Gson().toJson(packageObject));
+
         db.insert(PACKAGES, null, values);
         close();
 
@@ -239,16 +232,16 @@ public class DBAdapter {
     public PackageObject[] getPackages() {
         open();
         Cursor cursor = db.query(PACKAGES,
-                new String[]{PACKAGE_ID, PACKAGE_NAME, PACKAGE_URL, PACKAGE_DOWNLOADED},
+                new String[]{PACKAGE_ID, PACKAGE_GSON},
                 null, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             PackageObject[] packages = new PackageObject[cursor.getCount()];
             for (int i = 0; i < cursor.getCount(); i++, cursor.moveToNext()) {
-                PackageObject packageObject = new PackageObject();
-                packageObject.setId(cursor.getInt(cursor.getColumnIndex(PACKAGE_ID)));
-                packageObject.setName(cursor.getString(cursor.getColumnIndex(PACKAGE_NAME)));
-                packageObject.setUrl(cursor.getString(cursor.getColumnIndex(PACKAGE_URL)));
+
+                String packageGson = cursor.getString(cursor.getColumnIndex(PACKAGE_GSON));
+
+                PackageObject packageObject = new Gson().fromJson(packageGson, PackageObject.class);
                 packages[i] = packageObject;
             }
             close();

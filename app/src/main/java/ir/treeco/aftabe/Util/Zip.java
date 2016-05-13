@@ -14,7 +14,7 @@ import java.util.zip.ZipInputStream;
 
 public class Zip {
     public boolean unpackZip(String path, int id, Context context) {
-        String newPath = context.getFilesDir().getPath() + "/Downloaded/";
+        String newPath = context.getFilesDir().getPath() + "/Packages/package_"+id+"/";
         Log.e("path", "newPath: " + newPath);
 
         File fmd1 = new File(newPath);
@@ -31,7 +31,7 @@ public class Zip {
 
             while ((ze = zis.getNextEntry()) != null) {
                 filename = ze.getName();
-                FileOutputStream fout = new FileOutputStream(newPath + id + "_" + filename);
+                FileOutputStream fout = new FileOutputStream(newPath + filename);
 
                 while ((count = zis.read(buffer)) != -1) {
                     fout.write(buffer, 0, count);

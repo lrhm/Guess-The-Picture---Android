@@ -53,18 +53,19 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         @Override
         public void onClick(View v) {
 
-            File file = new File(context.getFilesDir().getPath() + "/p_" + packageObjects[getAdapterPosition()].getId() + ".zip");
+            int id = packageObjects[getAdapterPosition()].getId();
+            File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
             //todo chack md5
 
             if (!file.exists()) {
-                tools.downloadPackage(
-                        packageObjects[getAdapterPosition()].getUrl(),
-                        context.getFilesDir().getPath(),
-                        packageObjects[getAdapterPosition()].getId(),
-                        packageObjects[getAdapterPosition()].getName());
+//                tools.downloadPackage(
+//                        packageObjects[getAdapterPosition()].getUrl(),
+//                        context.getFilesDir().getPath(),
+//                        packageObjects[getAdapterPosition()].getId(),
+//                packageObjects[getAdapterPosition()].getName());
             } else {
                 Bundle bundle = new Bundle();
-                bundle.putInt("id", packageObjects[getAdapterPosition()].getId());
+                bundle.putInt("id", id);
 
                 PackageFragment packageFragment = new PackageFragment();
                 packageFragment.setArguments(bundle);
@@ -90,7 +91,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
 
-        String imagePath = "file://" + context.getFilesDir().getPath() + "/" + "p_" + packageObjects[i].getId() + "_front" + ".png";
+        int id = packageObjects[i].getId();
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/Packages/package_" + id + "/" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
     }
 

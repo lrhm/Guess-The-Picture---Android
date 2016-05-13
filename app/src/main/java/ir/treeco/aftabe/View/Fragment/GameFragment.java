@@ -112,8 +112,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         imageView = (ImageView) view.findViewById(R.id.image_game);
         imageView.setOnClickListener(this);
 
-        imagePath = "file://" + getActivity().getFilesDir().getPath() + "/Downloaded/"
-                + packageId + "_" + level.getResources();
+        imagePath = "file://" + getActivity().getFilesDir().getPath() + "/Packages/package_" + packageId + "/" + level.getResources();
 
         Picasso.with(getActivity()).load(imagePath).into(imageView);
         return view;

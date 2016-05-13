@@ -73,7 +73,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         this.context = context;
         creationTime = System.currentTimeMillis();
         imageManager = new ImageManager(context);
-        coinAdapter = ((MainActivity)context).getCoinAdapter();
+        coinAdapter = ((MainActivity) context).getCoinAdapter();
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendSocketListener(this);
         showCancel = false;
@@ -83,12 +83,12 @@ public class LoadingDialog extends Dialog implements Runnable,
     }
 
 
-    public LoadingDialog(Context context , boolean showCancel) {
+    public LoadingDialog(Context context, boolean showCancel) {
         super(context);
         this.context = context;
         creationTime = System.currentTimeMillis();
         imageManager = new ImageManager(context);
-        coinAdapter = ((MainActivity)context).getCoinAdapter();
+        coinAdapter = ((MainActivity) context).getCoinAdapter();
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendSocketListener(this);
         this.showCancel = showCancel;
@@ -121,7 +121,7 @@ public class LoadingDialog extends Dialog implements Runnable,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
 
 
-        if(showCancel) {
+        if (showCancel) {
             ImageView cancelImageView = (ImageView) findViewById(R.id.loading_dialog_cancel);
             SizeConverter cancelConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.2f, 169, 98);
             cancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.cancel, cancelConverter.mWidth, cancelConverter.mHeight));
@@ -131,7 +131,6 @@ public class LoadingDialog extends Dialog implements Runnable,
             UiUtil.setTopMargin(cancelImageView, converter.convertHeight(1400) + converter.getTopOffset());
             cancelImageView.setVisibility(View.VISIBLE);
         }
-
 
 
         new Handler().postDelayed(this, 1000);
@@ -307,6 +306,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
                         Bundle bundle = new Bundle();
                         bundle.putInt("state", 0);
+                        bundle.putBoolean("isMatch", !showCancel);
 
                         OnlineGameFragment gameFragment = new OnlineGameFragment();
                         gameFragment.setGameResultHolder(gameHolder);
