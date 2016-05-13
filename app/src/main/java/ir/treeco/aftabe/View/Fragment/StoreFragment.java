@@ -57,7 +57,6 @@ public class StoreFragment extends Fragment {
             SKU_BIG_COIN
     };
 
-    public static HashMap<String, Integer> skuPrice;
 
     private View layout;
 
@@ -81,7 +80,6 @@ public class StoreFragment extends Fragment {
 
         for (int i = 0; i < SKUs.length; i++) {
             final int finalI = i;
-            skuPrice.put(SKUs[i], prices[i]);
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -72,6 +72,7 @@ import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.HeadObject;
+import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
@@ -526,7 +527,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
 
-        Integer price = StoreFragment.skuPrice.get(productId);
+        Integer price = StoreItemHolder.getInstnce().getPrice(productId);
         if(price == null)
             price = 500;
         //TODO check price is never null
