@@ -32,6 +32,9 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.BillingWrapper;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.PurchaseEvent;
+import com.crashlytics.android.answers.StartCheckoutEvent;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -42,6 +45,7 @@ import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.picasso.Picasso;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
@@ -521,6 +525,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
+
+        Integer price = StoreFragment.skuPrice.get(productId);
+        if(price == null)
+            price = 500;
+        //TODO check price is never null
+        Answers.getInstance().logPurchase(new PurchaseEvent()
+                .putItemPrice(BigDecimal.valueOf(price))
+                .putItemId(productId));
+
         if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN))
             coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
         else if (productId.equals(StoreFragment.SKU_SMALL_COIN))
@@ -750,10 +763,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    public void purchase(String sku) {
-        if (billingProcessor.isInitialized())
+    public void purchase(String sku, int price) {
+        if (billingProcessor.isInitialized()) {
+            Answers.getInstance().logStartCheckout(new StartCheckoutEvent()
+                    .putTotalPrice(BigDecimal.valueOf(price))
+                    .putCustomAttribute("sku", sku));
+
+
             billingProcessor.purchase(sku);
-        else {
+        } else {
             ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
         }
     }

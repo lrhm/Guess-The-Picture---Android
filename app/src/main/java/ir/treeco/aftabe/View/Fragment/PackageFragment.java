@@ -1,9 +1,11 @@
 package ir.treeco.aftabe.View.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import ir.treeco.aftabe.R;
 
 public class PackageFragment extends Fragment {
     public final static String LEVEL_PAGE = "level_page";
+    private static final String TAG = "PackageFragment";
     private LengthManager lengthManager;
     private ImageManager imageManager;
 
@@ -86,6 +89,9 @@ public class PackageFragment extends Fragment {
         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
         viewPagerTab.setViewPager(viewPager);
 
+
+
         return view;
     }
+
 }

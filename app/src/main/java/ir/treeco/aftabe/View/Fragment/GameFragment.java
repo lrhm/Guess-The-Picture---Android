@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.View.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.LevelEndEvent;
+import com.crashlytics.android.answers.LevelStartEvent;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -21,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ir.treeco.aftabe.Adapter.TimeStampAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
@@ -43,7 +50,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     private ImageView imageView;
     private int packageId;
     private Tools tools;
-
+    private boolean resulved = false;
     private DBAdapter db;
     private Level level;
     private View view;
@@ -56,13 +63,17 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     private ImageManager imageManager;
     private String imagePath;
     private KeyboardView keyboardView;
+    private TimeStampAdapter timeStampAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+
+        Log.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_game, container, false);
 
+        timeStampAdapter = new TimeStampAdapter();
         tools = new Tools(getContext());
         db = DBAdapter.getInstance(getActivity());
         coinAdapter = new CoinAdapter(getActivity(), getActivity());
@@ -78,6 +89,18 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         packageSize = db.getLevels(packageId).length;
 
         solution = tools.decodeBase64(level.getJavab());
+
+        Answers.getInstance().logLevelStart(new LevelStartEvent()
+                .putLevelName(solution)
+                .putCustomAttribute("Package", packageId)
+                .putCustomAttribute("Package Name", "package " + packageId)
+                .putCustomAttribute("Solved Before", (level.isResolved() ? 1 : 0))
+        );
+
+//        Answers.getInstance().logCustom(
+//                new CustomEvent("Package Play")
+//                        .putCustomAttribute("PackageID", packageId)
+//                        .putCustomAttribute("PackageName", "package " + packageId));
 
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragment_game_keyboard_container);
 
@@ -215,6 +238,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     public void onDestroy() {
         super.onDestroy();
         ((MainActivity) getActivity()).hideCheatButton();
+        Answers.getInstance().logLevelEnd(new LevelEndEvent()
+                .putLevelName(solution)
+                .putSuccess(resulved)
+                .putCustomAttribute("Solved Before", (level.isResolved() ? 1 : 0))
+                .putCustomAttribute("Package", packageId)
+                .putCustomAttribute("Package Name", "package " + packageId)
+                .putCustomAttribute("Time", timeStampAdapter.getTimeStamp(getActivity())));
+        Log.d(TAG, "onDestory");
     }
 
     public void showCheats() {
@@ -360,11 +391,41 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 "")).replace("آ", "ا"))) {
             if (!level.isResolved()) {
                 coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
+                resulved = true;
             }
 
             nextLevel();
 
         }
 
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        Log.d(TAG, "onAttach");
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause");
+
+        timeStampAdapter.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView");
+        super.onDestroyView();
+    }
+
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        timeStampAdapter.onResume();
+        super.onResume();
     }
 }

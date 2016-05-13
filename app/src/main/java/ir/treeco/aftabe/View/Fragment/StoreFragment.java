@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import java.util.HashMap;
+
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
@@ -55,6 +57,8 @@ public class StoreFragment extends Fragment {
             SKU_BIG_COIN
     };
 
+    public static HashMap<String, Integer> skuPrice;
+
     private View layout;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,12 +77,15 @@ public class StoreFragment extends Fragment {
         int padding = lengthManager.getStoreDialogPadding();
         dialog.setPadding(padding, padding, padding, padding);
 
+        final int[] prices = new int[]{450, 800, 1500, 5000, -1, -1};
+
         for (int i = 0; i < SKUs.length; i++) {
             final int finalI = i;
+            skuPrice.put(SKUs[i], prices[i]);
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) getActivity()).purchase(SKUs[finalI]);
+                    ((MainActivity) getActivity()).purchase(SKUs[finalI], prices[finalI]);
                 }
             });
         }
@@ -137,10 +144,15 @@ public class StoreFragment extends Fragment {
 
         for (int i = 0; i < items.length; i++) {
             String persianPrice = "فقط " + tools.numeralStringToPersianDigits("" + prices[i]) + " تومان";
+            int j = i;
             if (i == 4)
                 persianPrice = "نظر در بازار";
-            if (i == 5)
+            if (i == 5) {
                 persianPrice = "تبلیغ ببین سکه ببر";
+                if (db.getCoinsReviewed()) {
+                    j = i - 1;
+                }
+            }
             setupItem(items[i], persianPrice, revenues[i], i % 2 == 1);
         }
     }
@@ -151,7 +163,7 @@ public class StoreFragment extends Fragment {
         textView.setTypeface(FontsHolder.getSansMedium(textView.getContext()));
 //        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
 
-        UiUtil.setTextViewSize(textView, lengthManager.getStoreItemHeight() , 0.275f);
+        UiUtil.setTextViewSize(textView, lengthManager.getStoreItemHeight(), 0.275f);
         textView.setTextColor(Color.WHITE);
 
         textView.setShadowLayer(1, 2, 2, Color.BLACK);
