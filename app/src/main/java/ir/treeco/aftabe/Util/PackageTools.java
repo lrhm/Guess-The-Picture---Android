@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Random;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
@@ -43,10 +44,25 @@ public class PackageTools {
 
     public static final String LAST_PACKAGE_KEY = "LAST_PACKAGE_AFTABE_KEY";
 
+    private HashMap<Integer, Boolean> isDownloadInProgress;
+
+    private static Object lock = new Object();
+    private static PackageTools instance;
+
+    public PackageTools getInstance(Context context) {
+        synchronized (lock) {
+            if (instance != null)
+                return instance;
+            instance = new PackageTools(context);
+            return instance;
+        }
+    }
 
     private Context context;
 
-    public PackageTools(Context context) {
+    private PackageTools(Context context) {
+
+        isDownloadInProgress = new HashMap<>();
         this.context = context;
     }
 
@@ -215,6 +231,14 @@ public class PackageTools {
 
 
     public void downloadPackage(final PackageObject packageObject) {
+
+        Boolean isDling = isDownloadInProgress.get(packageObject.getId());
+        if(isDling  != null){
+            if(isDling)
+                return;
+        }
+        isDownloadInProgress.put(packageObject.getId(), true);
+
         final String name = packageObject.getName();
         String url = packageObject.getUrl();
         final int id = new Random(System.currentTimeMillis()).nextInt();
@@ -240,6 +264,7 @@ public class PackageTools {
                     if (file.exists())
                         file.delete();
                     notificationAdapter.faildDownload(id, name);
+                    isDownloadInProgress.put(packageObject.getId(), false);
 
                     return;
                 }
@@ -259,6 +284,7 @@ public class PackageTools {
             @Override
             public void onDownloadError(String error) {
                 notificationAdapter.faildDownload(id, name);
+                isDownloadInProgress.put(packageObject.getId(), false);
 
             }
         }).execute(url, path, "p_" + packageObject.getId() + ".zip");
