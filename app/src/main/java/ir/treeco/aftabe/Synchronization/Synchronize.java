@@ -39,7 +39,7 @@ public class Synchronize extends BroadcastReceiver {
         int days = Days.daysBetween(new DateTime(past), new DateTime(now)).getDays();
         if (days >= 1) {
 
-            new PackageTools(context).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
+            PackageTools.getInstance(context).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
                 @Override
                 public void onNewPackage(PackageObject packageObject) {
 

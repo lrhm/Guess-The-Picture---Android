@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.API;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
@@ -114,6 +115,9 @@ public interface AftabeService {
 
     @GET("/api/ps/count")
     Call<CountHolder> getPackagesCount();
+
+    @GET("/api/users/buypackage/{id}?access_token={user_atk}")
+    Call<ArrayList<Integer>> buyPackages(@Path("id") String packageId, @Query("access_token") String accessToken);
 
 
 

@@ -49,7 +49,7 @@ public class PackageTools {
     private static Object lock = new Object();
     private static PackageTools instance;
 
-    public PackageTools getInstance(Context context) {
+    public static   PackageTools getInstance(Context context) {
         synchronized (lock) {
             if (instance != null)
                 return instance;

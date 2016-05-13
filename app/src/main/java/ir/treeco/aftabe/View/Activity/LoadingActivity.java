@@ -37,6 +37,12 @@ public class LoadingActivity extends Activity implements Runnable {
 
         startTime = System.currentTimeMillis();
 
+        PackageTools.getInstance(this).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
+            @Override
+            public void onNewPackage(PackageObject packageObject) {
+
+            }
+        });
 
         new Handler().postDelayed(this, 333);
 
@@ -74,12 +80,7 @@ public class LoadingActivity extends Activity implements Runnable {
 
     private void initUtils() {
 
-        new PackageTools(this).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
-            @Override
-            public void onNewPackage(PackageObject packageObject) {
 
-            }
-        });
 
         Tools tools = new Tools(this);
 
@@ -95,7 +96,7 @@ public class LoadingActivity extends Activity implements Runnable {
         if (Prefs.getBoolean("firstAppRun", true)) {
 
             db.insertCoins(399);
-            new PackageTools(this).copyLocalpackages();
+            PackageTools.getInstance(this).copyLocalpackages();
 
 
             Prefs.putBoolean("firstAppRun", false);

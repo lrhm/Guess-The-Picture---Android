@@ -526,6 +526,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onProductPurchased(String productId, TransactionDetails details) {
 
+
+
         Integer price = StoreItemHolder.getInstnce().getPrice(productId);
         if (price == null)
             price = 500;

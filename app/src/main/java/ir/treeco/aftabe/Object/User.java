@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import ir.treeco.aftabe.API.Utils.LoginInfo;
@@ -66,12 +67,17 @@ public class User {
     @Expose
     private int loses;
 
+    private ArrayList<Integer> packages;
+
     @Expose
     Access access;
 
     LevelCalculator levelCalculator;
 
 
+    public ArrayList<Integer> getPackages() {
+        return packages;
+    }
 
     private boolean isMe = false;
 

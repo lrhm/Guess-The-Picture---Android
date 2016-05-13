@@ -1,12 +1,12 @@
 package ir.treeco.aftabe.API;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +33,6 @@ import ir.treeco.aftabe.API.Utils.LoginInfo;
 import ir.treeco.aftabe.Service.RegistrationIntentService;
 import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
-import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -740,6 +739,32 @@ public class AftabeAPIAdapter {
         init();
 
         aftabeService.getAllPackages().enqueue(callback);
+
+    }
+
+    public static void buyPackage(int packageId, final OnPackageBuyListener listener) {
+        init();
+
+        User user = Tools.getCachedUser();
+        if (user == null)
+            return;
+        aftabeService.buyPackages(packageId + "", user.getLoginInfo().getAccessToken()).enqueue(new Callback<ArrayList<Integer>>() {
+            @Override
+            public void onResponse(Response<ArrayList<Integer>> response) {
+
+                if (response.isSuccess())
+                    listener.onPurchaseSuccess();
+                else
+                    listener.onPurchasedBefore();
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
 
     }
 

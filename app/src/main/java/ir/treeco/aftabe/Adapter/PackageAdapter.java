@@ -14,8 +14,12 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.OnPackageBuyListener;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.PackageObject;
+import ir.treeco.aftabe.Object.StoreItemHolder;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.PackageTools;
@@ -56,7 +60,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         @Override
         public void onClick(View v) {
 
-            if(System.currentTimeMillis() - lastTimeClicked < timeStamp)
+            if (System.currentTimeMillis() - lastTimeClicked < timeStamp)
                 return;
             lastTimeClicked = System.currentTimeMillis();
 
@@ -65,7 +69,30 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
             if (!file.exists()) {
 
-                new PackageTools(context).downloadPackage(packageObjects[getAdapterPosition()]);
+                User myUser = ((MainActivity) context).getMyUser();
+                if (myUser == null)
+                    myUser = Tools.getCachedUser();
+
+                if (packageObjects[getAdapterPosition()].getPrice() == 0 || (myUser.getPackages() != null && myUser.getPackages().contains(id)))
+                    PackageTools.getInstance(context).downloadPackage(packageObjects[getAdapterPosition()]);
+                else {
+                    final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
+                    if (coinAdapter.spendCoins(packageObjects[getAdapterPosition()].getPrice())) {
+                        AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
+                            @Override
+                            public void onPurchasedBefore() {
+                                coinAdapter.earnCoins(packageObjects[getAdapterPosition()].getPrice());
+                            }
+
+                            @Override
+                            public void onPurchaseSuccess() {
+
+                            }
+                        });
+                        PackageTools.getInstance(context).downloadPackage(packageObjects[getAdapterPosition()]);
+
+                    }
+                }
 
             } else {
                 Bundle bundle = new Bundle();

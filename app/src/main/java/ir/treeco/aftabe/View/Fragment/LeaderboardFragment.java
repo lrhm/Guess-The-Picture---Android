@@ -47,7 +47,6 @@ public class LeaderboardFragment extends Fragment implements BatchUserFoundListe
 
         Log.d("TAG", "on got leaderboad size of " + users.length);
         for (int i = 0; i < users.length; i++) {
-            users[i].setRank(i); //TODO remove this line
             mAdapter.addUser(users[i]);
         }
     }
