@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.ContactsHolder;
+import ir.treeco.aftabe.API.Utils.CountHolder;
 import ir.treeco.aftabe.API.Utils.FriendRequestSent;
 import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
@@ -25,6 +26,7 @@ import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
+import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
@@ -716,6 +718,28 @@ public class AftabeAPIAdapter {
                 user.getLoginInfo().getAccessToken(), contactsHolder);
 
         call.enqueue(callback);
+
+    }
+
+    public static void getPackage(int id, Callback<PackageObject> callback) {
+
+        init();
+
+        aftabeService.getPackage(id + "").enqueue(callback);
+
+    }
+
+    public static void getPackageCount(Callback<CountHolder> callback) {
+
+        init();
+
+        aftabeService.getPackagesCount().enqueue(callback);
+    }
+
+    public static void getAllPackages(Callback<PackageObject[]> callback) {
+        init();
+
+        aftabeService.getAllPackages().enqueue(callback);
 
     }
 

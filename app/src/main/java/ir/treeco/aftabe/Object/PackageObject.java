@@ -10,6 +10,7 @@ public class PackageObject {
     @Expose
     int id;
 
+
     @Expose
     int price;
 
@@ -25,6 +26,15 @@ public class PackageObject {
     @Expose
     URLHolder file;
 
+    @Expose
+    Boolean isDownloaded;
+
+    @Expose
+    Boolean isPurchased;
+
+    @Expose
+    String imageUrl;
+
     private ArrayList<Level> levels;
 
     public String getName() {
@@ -39,11 +49,6 @@ public class PackageObject {
         return id;
     }
 
-    // this method must be called from getted packages
-    public void incrementId() {
-
-        id++;
-    }
 
     public String getUrl() {
         return "https://aftabe2.com:2020/api/files/p/download/" + file.name;
@@ -55,6 +60,42 @@ public class PackageObject {
 
     public void setLevels(ArrayList<Level> levels) {
         this.levels = levels;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Boolean getPurchased() {
+        return isPurchased;
+    }
+
+    public void setPurchased(Boolean purchased) {
+        isPurchased = purchased;
+    }
+
+    public Boolean getDownloaded() {
+        return isDownloaded;
+    }
+
+    public void setDownloaded(Boolean downloaded) {
+        isDownloaded = downloaded;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public URLHolder getFile() {
+        return file;
     }
 
 

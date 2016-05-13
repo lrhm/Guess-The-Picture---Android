@@ -18,6 +18,7 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.LengthManager;
+import ir.treeco.aftabe.Util.PackageTools;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
@@ -39,6 +40,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
+        private long lastTimeClicked = 0;
+        private long timeStamp = 1000;
 
         public ViewHolder(View v) {
             super(v);
@@ -53,16 +56,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         @Override
         public void onClick(View v) {
 
+            if(System.currentTimeMillis() - lastTimeClicked < timeStamp)
+                return;
+            lastTimeClicked = System.currentTimeMillis();
+
             int id = packageObjects[getAdapterPosition()].getId();
             File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
-            //todo chack md5
 
             if (!file.exists()) {
-//                tools.downloadPackage(
-//                        packageObjects[getAdapterPosition()].getUrl(),
-//                        context.getFilesDir().getPath(),
-//                        packageObjects[getAdapterPosition()].getId(),
-//                packageObjects[getAdapterPosition()].getName());
+
+                new PackageTools(context).downloadPackage(packageObjects[getAdapterPosition()]);
+
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", id);
@@ -92,7 +96,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
 
         int id = packageObjects[i].getId();
-        String imagePath = "file://" + context.getFilesDir().getPath() + "/Packages/package_" + id + "/" + "front" + ".png";
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
     }
 

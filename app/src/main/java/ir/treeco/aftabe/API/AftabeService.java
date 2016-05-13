@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.ContactsHolder;
+import ir.treeco.aftabe.API.Utils.CountHolder;
 import ir.treeco.aftabe.API.Utils.FriendRequestSent;
 import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
@@ -15,6 +16,7 @@ import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
+import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
 import retrofit.Call;
@@ -102,5 +104,17 @@ public interface AftabeService {
     @POST("/api/users/{user_id}/contacts")
     Call<HashMap<String, String>> putContacts(@Path("user_id") String userId,
                                               @Query("access_token") String accessToken, @Body ContactsHolder contactsHolder);
+
+
+    @GET("/api/ps")
+    Call<PackageObject[]> getAllPackages();
+
+    @GET("/api/ps/{id}")
+    Call<PackageObject> getPackage(@Path("id") String id);
+
+    @GET("/api/ps/count")
+    Call<CountHolder> getPackagesCount();
+
+
 
 }

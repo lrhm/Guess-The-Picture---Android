@@ -47,6 +47,9 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             mDownloadTaskListener.onDownloadSuccess();
     }
 
+    /** first param is url , second is path without last /
+     param object is fileName if needed
+        **/
     @Override
     protected String doInBackground(String... sUrl) {
         InputStream input = null;
@@ -56,6 +59,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             URL url = new URL(sUrl[0]);
             String path = sUrl[1];
             String exactPath = path + "/" + sUrl[0].split("/")[sUrl[0].split("/").length - 1];
+            if (sUrl.length == 3)
+                exactPath = path + "/" + sUrl[2];
 
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
@@ -87,7 +92,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                 total += count;
                 // publishing the progress....
                 if (fileLength > 0) // only if total length is known
-                    publishProgress((int) (total * 100 / fileLength));
+                    mDownloadTaskListener.onProgress((int) (total * 100 / fileLength));
                 output.write(data, 0, count);
             }
         } catch (Exception e) {
@@ -107,7 +112,10 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         return null;
     }
 
+
     public interface DownloadTaskListener {
+
+        void onProgress(int progress);
 
         void onDownloadSuccess();
 

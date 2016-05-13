@@ -345,6 +345,11 @@ public class LoadingDialog extends Dialog implements Runnable,
     }
 
     @Override
+    public void onProgress(int progress) {
+
+    }
+
+    @Override
     public void onDownloadSuccess() {
         synchronized (lock) {
             Log.d("TAG", "downloaded");

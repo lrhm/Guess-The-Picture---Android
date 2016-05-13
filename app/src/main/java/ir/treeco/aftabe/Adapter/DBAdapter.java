@@ -151,6 +151,7 @@ public class DBAdapter {
 
 
     public void insertPackage(PackageObject packageObject) {
+
         open();
         ContentValues values = new ContentValues();
         values.put(PACKAGE_ID, packageObject.getId());
@@ -159,7 +160,17 @@ public class DBAdapter {
         db.insert(PACKAGES, null, values);
         close();
 
-        insertLevels(packageObject.getLevels(), packageObject.getId());
+        if (packageObject.getLevels() != null)
+            insertLevels(packageObject.getLevels(), packageObject.getId());
+    }
+
+    public void updatePackage(PackageObject object) {
+
+        open();
+        ContentValues values = new ContentValues();
+        values.put(PACKAGE_GSON, new Gson().toJson(object));
+        db.update(PACKAGES, values, PACKAGE_ID + " = " + object.getId(), null);
+        close();
     }
 
     private void insertLevels(ArrayList<Level> levels, int packageID) {

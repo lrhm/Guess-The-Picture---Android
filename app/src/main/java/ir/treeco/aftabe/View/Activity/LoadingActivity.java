@@ -16,6 +16,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import ir.treeco.aftabe.Adapter.ContactsAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.LocationAdapter;
+import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Service.ServiceConstants;
@@ -60,8 +61,8 @@ public class LoadingActivity extends Activity implements Runnable {
 
         Intent intent = new Intent(this, MainActivity.class);
         if (getIntent() != null && getIntent().getExtras() != null) {
-            for(String key : getIntent().getExtras() .keySet()){
-                Object obj = getIntent().getExtras() .get(key);   //later parse it as per your required type
+            for (String key : getIntent().getExtras().keySet()) {
+                Object obj = getIntent().getExtras().get(key);   //later parse it as per your required type
                 Log.d("LoadingActivity", key + ":" + obj.toString());
             }
             intent.putExtras(getIntent().getExtras());
@@ -73,6 +74,12 @@ public class LoadingActivity extends Activity implements Runnable {
 
     private void initUtils() {
 
+        new PackageTools(this).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
+            @Override
+            public void onNewPackage(PackageObject packageObject) {
+
+            }
+        });
 
         Tools tools = new Tools(this);
 
@@ -85,11 +92,12 @@ public class LoadingActivity extends Activity implements Runnable {
         DBAdapter db = DBAdapter.getInstance(getApplication());
 
 
-
         if (Prefs.getBoolean("firstAppRun", true)) {
 
             db.insertCoins(399);
             new PackageTools(this).copyLocalpackages();
+
+
             Prefs.putBoolean("firstAppRun", false);
         }
 

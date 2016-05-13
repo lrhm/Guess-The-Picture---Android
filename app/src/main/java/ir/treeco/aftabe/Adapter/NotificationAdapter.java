@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import ir.treeco.aftabe.Service.ServiceConstants;
+import ir.treeco.aftabe.View.Activity.LoadingActivity;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.R;
 
@@ -35,16 +37,13 @@ public class NotificationAdapter {
                     .setProgress(0, 0, true);
 
             Intent MyIntent;
-            MyIntent = new Intent(context, MainActivity.class);
+            MyIntent = new Intent(context, LoadingActivity.class);
 
             MyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addParentStack(MainActivity.class);
-            stackBuilder.addNextIntent(MyIntent);
 
-            PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            nBuilder.setContentIntent(pendingIntent);
+            nBuilder.setContentIntent(PendingIntent.getActivity(context,
+                    25, MyIntent, PendingIntent.FLAG_UPDATE_CURRENT));
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             notificationManager.notify(name, id, nBuilder.build());

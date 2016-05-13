@@ -14,12 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import ir.treeco.aftabe.Adapter.NotificationAdapter;
+import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.NotificationManager;
+import ir.treeco.aftabe.Util.PackageTools;
 import ir.treeco.aftabe.Util.Tools;
 
 public class Synchronize extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         Date now = Calendar.getInstance().getTime();
         Date past = new Date();
         try {
@@ -33,9 +37,16 @@ public class Synchronize extends BroadcastReceiver {
         }
 
         int days = Days.daysBetween(new DateTime(past), new DateTime(now)).getDays();
-        if (days >= 4) {
-            Tools tools = new Tools(context);
-//                    tools.downloadHead();
+        if (days >= 1) {
+
+            new PackageTools(context).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
+                @Override
+                public void onNewPackage(PackageObject packageObject) {
+
+                    NotificationManager manager = new NotificationManager(context);
+                    manager.showNewPackageNotification(packageObject);
+                }
+            });
         } else {
             Prefs.putString(context.getResources().
                             getString(R.string.updated_time_shared_preference),

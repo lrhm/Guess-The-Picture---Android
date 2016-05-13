@@ -2,9 +2,6 @@ package ir.treeco.aftabe.Util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,18 +17,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
-import cn.aigestudio.downloader.bizs.DLManager;
-import cn.aigestudio.downloader.interfaces.DLTaskListener;
+import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Utils.CountHolder;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Custom.ToastMaker;
+import retrofit.Callback;
+import retrofit.Response;
 
 /**
  * Created by al on 5/13/16.
@@ -39,6 +40,10 @@ import ir.treeco.aftabe.View.Custom.ToastMaker;
 public class PackageTools {
 
     private static final String TAG = "PackageTools";
+
+    public static final String LAST_PACKAGE_KEY = "LAST_PACKAGE_AFTABE_KEY";
+
+
     private Context context;
 
     public PackageTools(Context context) {
@@ -67,6 +72,7 @@ public class PackageTools {
         for (PackageObject object : objects) {
 
             String zipFileName = object.getFileName().substring(0, object.getFileName().length() - 4);
+            writeRawFiles(object, "package_0_front", ".png", object.getId());
             writeRawFiles(object, zipFileName, "zip", object.getId());
         }
     }
@@ -95,12 +101,17 @@ public class PackageTools {
         if (type.equals("zip")) {
             Zip zip = new Zip();
             zip.unpackZip(path, id, context);
-            saveToDownloadsJson(packageObject, id);
+            addLevelListToPackage(packageObject, id);
+
+            DBAdapter db = DBAdapter.getInstance(context);
+            if (db.getLevels(id) == null) {
+                db.insertPackage(packageObject);
+            }
         }
     }
 
 
-    public void saveToDownloadsJson(PackageObject packageObject, int id) {
+    public void addLevelListToPackage(PackageObject packageObject, int id) {
         LevelListHolder list = null;
 
         try {
@@ -117,85 +128,185 @@ public class PackageTools {
         }
 
 
-        DBAdapter db = DBAdapter.getInstance(context);
-        if (db.getLevels(id) == null) {
-            db.insertPackage(packageObject);
-        }
     }
 
-//    public void downloadPackage(String url, String path, final int id, final String name) {
-//        final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, name);
-//        DLManager.getInstance(context).dlStart(url, path, new DLTaskListener() {
-//                    int n = 0;
-//
-//                    @Override
-//                    public void onProgress(int progress) {
-//                        super.onProgress(progress);
-//                        if (progress % 10 == 0) {
-//                            notificationAdapter.notifyDownload(progress, id, name);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(String error) {
-//                        super.onError(error);
-//                        notificationAdapter.faildDownload(id, name);
-//                        ToastMaker.show(context, "دانلود بسته با مشکل روبرو شد :(", Toast.LENGTH_LONG);
-//                    }
-//
-//                    @Override
-//                    public void onFinish(File file) {
-//                        super.onFinish(file); //todo chack md5 & save in json file
-//                        notificationAdapter.finalDownload(id, name);
-//                        Zip zip = new Zip();
-//                        zip.unpackZip(file.getPath(), id, context);
-//                        saveToDownloadsJson(id);
-//                        makeFirstHSV(id);
-//                    }
-//                }
-//        );
-//    }
-//
-//
-//    public void downloadHead() {
-//        DLManager.getInstance(context)
-//                .dlStart("http://pfont.ir/files/aftabe/head.json", context.getFilesDir().getPath(),
-//                        new DLTaskListener() {
-//                            @Override
-//                            public void onFinish(File file) {
-//                                super.onFinish(file);
-//
-//                                Prefs.putString(
-//                                        context.getResources()
-//                                                .getString(R.string.updated_time_shared_preference),
-//                                        new SimpleDateFormat("dd-MM-yyyy")
-//                                                .format(Calendar.getInstance().getTime()));
-//
-//                                parseJson(context.getFilesDir().getPath() + "/head.json");
-//                                downloadTask();
-//                            }
-//                        }
-//                );
-//    }
-//
-//    public void downloadTask() {
-//        for (int i = 0; i < headObject.getDownloadtask().length; i++) {
-//            File file = new File(context.getFilesDir().getPath() + "/" + headObject.getDownloadtask()[i].getName());
-//
-//            if (!file.exists()) {
-//                DLManager.getInstance(context).dlStart(headObject.getDownloadtask()[i].getUrl(), context.getFilesDir().getPath(),
-//                        new DLTaskListener() {
-//
-//                            @Override
-//                            public void onFinish(File file) {
-//                                super.onFinish(file);
-//                            }
-//                        }
-//                );
-//            }
-//        }
-//    }
+    public void checkForNewPackage(final OnNewPackageFoundListener listener) {
 
+        AftabeAPIAdapter.getPackageCount(new Callback<CountHolder>() {
+            @Override
+            public void onResponse(Response<CountHolder> response) {
+                if (response.isSuccess()) {
+                    if (response.body() != null) {
+                        DBAdapter dbAdapter = DBAdapter.getInstance(context);
+                        int myLastPackageCheckd = dbAdapter.getPackages().length;
+                        int count = response.body().getCount();
+                        if (count > myLastPackageCheckd) {
+                            for (int i = myLastPackageCheckd; i < count; i++) {
+                                newPackageFound(i, listener);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    public void newPackageFound(int id, final OnNewPackageFoundListener listener) {
+
+        AftabeAPIAdapter.getPackage(id, new Callback<PackageObject>() {
+            @Override
+            public void onResponse(Response<PackageObject> response) {
+
+                if (response.isSuccess())
+                    if (response.body() != null) {
+                        PackageObject packageObject = response.body();
+                        packageObject.setDownloaded(false);
+                        packageObject.setPurchased(packageObject.getPrice() == 0);
+
+                        downloadPicture(packageObject, listener);
+                        Prefs.putString(
+                                context.getResources()
+                                        .getString(R.string.updated_time_shared_preference),
+                                new SimpleDateFormat("dd-MM-yyyy")
+                                        .format(Calendar.getInstance().getTime()));
+
+
+                    }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+
+    }
+
+    public void downloadPicture(final PackageObject object, final OnNewPackageFoundListener listener) {
+        new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
+            @Override
+            public void onProgress(int progress) {
+
+            }
+
+            @Override
+            public void onDownloadSuccess() {
+                DBAdapter dbAdapter = DBAdapter.getInstance(context);
+                dbAdapter.insertPackage(object);
+
+                listener.onNewPackage(object);
+            }
+
+            @Override
+            public void onDownloadError(String error) {
+
+            }
+        }).execute(object.getImageUrl(), context.getFilesDir().getPath(), "package_" + object.getId() + "_front.png");
+    }
+
+
+    public void downloadPackage(final PackageObject packageObject) {
+        final String name = packageObject.getName();
+        String url = packageObject.getUrl();
+        final int id = new Random(System.currentTimeMillis()).nextInt();
+        ;
+        final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, name);
+        final String path = context.getFilesDir().getPath();
+        new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
+            @Override
+            public void onProgress(int progress) {
+                if (progress % 10 == 0) {
+                    notificationAdapter.notifyDownload(progress, id, name);
+                }
+            }
+
+            @Override
+            public void onDownloadSuccess() {
+
+                String zipFilePath = path + "p_" + packageObject.getId() + ".zip";
+
+                if (!checkMd5Sum(zipFilePath, packageObject.getHash())) {
+
+                    File file = new File(path);
+                    if (file.exists())
+                        file.delete();
+                    notificationAdapter.faildDownload(id, name);
+
+                    return;
+                }
+
+                Zip zip = new Zip();
+                zip.unpackZip(path + "p_" + packageObject.getId() + ".zip", id, context);
+                addLevelListToPackage(packageObject, id);
+                DBAdapter db = DBAdapter.getInstance(context);
+                if (db.getLevels(id) == null) {
+                    db.insertPackage(packageObject);
+
+                    notificationAdapter.finalDownload(id, name);
+
+                }
+            }
+
+            @Override
+            public void onDownloadError(String error) {
+                notificationAdapter.faildDownload(id, name);
+
+            }
+        }).execute(url, path, "p_" + packageObject.getId() + ".zip");
+
+
+    }
+
+
+    public boolean checkMd5Sum(String path, String md5Sum) {
+        InputStream in = null;
+        try {
+            in = new FileInputStream(path);
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] buffer = new byte[1024];
+
+            while (true) {
+                int c = in.read(buffer);
+
+                if (c > 0)
+                    md5.update(buffer, 0, c);
+                else if (c < 0)
+                    break;
+            }
+
+            in.close();
+
+            byte[] result = md5.digest();
+            return new String(result).equals(md5Sum);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return false;
+
+        }
+
+
+        return true;
+    }
+
+    public interface OnNewPackageFoundListener {
+        void onNewPackage(PackageObject packageObject);
+    }
 
     private class PackageObjectListHolder {
         @Expose

@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import java.util.Random;
 
+import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.ActionEventReceiver;
 import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
@@ -37,6 +38,16 @@ public class NotificationManager {
         return context;
     }
 
+    public void showNewPackageNotification(PackageObject packageObject) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+        builder.setSmallIcon(R.drawable.notificon)
+                .setContentTitle("پکیج جدید افتابه")
+                .setContentText(packageObject.getName())
+                .setAutoCancel(true);
+
+        showNotification(builder, ServiceConstants.newPackageId);
+    }
 
     private NotificationCompat.Builder createBasicNotification(String title, String content, int drawable) {
         Context context = getBaseContext();
@@ -57,6 +68,12 @@ public class NotificationManager {
         android.app.NotificationManager mNotificationManager = (android.app.NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(id);
+    }
+
+    public static void dismissALLNotification(Context context) {
+        android.app.NotificationManager mNotificationManager = (android.app.NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
     }
 
     public void createNotification(NotifHolder notifHolder) {
