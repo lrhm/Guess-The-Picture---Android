@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.OnPackageBuyListener;
@@ -27,17 +30,20 @@ import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
+import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
-    private PackageObject[] packageObjects;
+    private ArrayList<PackageObject> packageObjects;
     private Activity context;
     private Tools tools;
     private LengthManager lengthManager;
 
-    public PackageAdapter(Activity context, PackageObject[] packageObjects) {
+    public PackageAdapter(Activity context, PackageObject[] packageObjectss) {
         this.context = context;
-        this.packageObjects = packageObjects;
+        this.packageObjects = new ArrayList<>();
+        Collections.addAll(packageObjects, packageObjectss);
         tools = new Tools(context);
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
@@ -64,7 +70,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 return;
             lastTimeClicked = System.currentTimeMillis();
 
-            int id = packageObjects[getAdapterPosition()].getId();
+            int id = packageObjects.get(getAdapterPosition()).getId();
+
             File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
 
             if (!file.exists()) {
@@ -73,15 +80,18 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 if (myUser == null)
                     myUser = Tools.getCachedUser();
 
-                if (packageObjects[getAdapterPosition()].getPrice() == 0 || (myUser.getPackages() != null && myUser.getPackages().contains(id)))
-                    PackageTools.getInstance(context).downloadPackage(packageObjects[getAdapterPosition()]);
+                if (packageObjects.get(getAdapterPosition()).getPrice() == 0 ||  (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))){
+                    ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
+                    PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()));
+
+                }
                 else {
                     final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
-                    if (coinAdapter.spendCoins(packageObjects[getAdapterPosition()].getPrice())) {
+                    if (coinAdapter.spendCoins(packageObjects.get(getAdapterPosition()).getPrice())) {
                         AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
                             @Override
                             public void onPurchasedBefore() {
-                                coinAdapter.earnCoins(packageObjects[getAdapterPosition()].getPrice());
+                                coinAdapter.earnCoins(packageObjects.get(getAdapterPosition()).getPrice());
                             }
 
                             @Override
@@ -89,7 +99,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
                             }
                         });
-                        PackageTools.getInstance(context).downloadPackage(packageObjects[getAdapterPosition()]);
+                        PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()));
+                        ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
 
                     }
                 }
@@ -122,7 +133,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
 
-        int id = packageObjects[i].getId();
+        int id = packageObjects.get(i).getId();
         String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
     }
@@ -131,6 +142,12 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public int getItemCount() {
         if (packageObjects == null)
             return 0;
-        return packageObjects.length;
+        return packageObjects.size();
+    }
+
+    public void addPackage(PackageObject packageObject){
+        packageObjects.add(packageObject);
+        notifyDataSetChanged();
+
     }
 }

@@ -1,6 +1,8 @@
 package ir.treeco.aftabe.View.Fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,12 +18,12 @@ import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.PackageAdapter;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.PackageTools;
 
-public class PackagesFragment extends Fragment {
+public class PackagesFragment extends Fragment implements PackageTools.OnNewPackageFoundListener {
     private RecyclerView recyclerView;
     private PackageAdapter adapter;
     int type;
-    PackageObject[] packageObjects;
     private DBAdapter db;
 
     @Override
@@ -38,39 +40,10 @@ public class PackagesFragment extends Fragment {
 
         PackageObject[] downloadedPackage = db.getPackages();
 
-        int size = downloadedPackage.length;
+        PackageTools.getInstance(getContext()).checkForNewPackage(this);
 
-        packageObjects = new PackageObject[size];
 
-        int i = 0;
-
-        if (downloadedPackage != null)
-            for (PackageObject packageObject : downloadedPackage)
-                packageObjects[i++] = packageObject;
-
-        ArrayList<PackageObject> packages = new ArrayList<PackageObject>();
-        for (PackageObject packageObject : packageObjects) {
-            boolean added = false;
-            for (PackageObject mPackage : packages) {
-                if (mPackage.getId() == packageObject.getId()) {
-                    added = true;
-                    break;
-                }
-
-            }
-            if (!added) {
-                packages.add(packageObject);
-            }
-        }
-
-        packageObjects = new PackageObject[packages.size()];
-        i = 0;
-        for (PackageObject packageObject : packages) {
-
-            packageObjects[i++] = packageObject;
-        }
-
-        adapter = new PackageAdapter(getActivity(), packageObjects);
+        adapter = new PackageAdapter(getActivity(), downloadedPackage);
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -80,5 +53,17 @@ public class PackagesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onNewPackage(final PackageObject packageObject) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.addPackage(packageObject);
+
+            }
+        });
+
     }
 }

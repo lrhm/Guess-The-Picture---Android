@@ -27,6 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/fullScreenTheme"
         android:screenOrientation="portrait"
+        android:launchMode="singleInstance"
         >
         <receiver
             android:name=".Synchronization.Synchronize"

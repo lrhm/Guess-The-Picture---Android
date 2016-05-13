@@ -173,7 +173,7 @@ public class DBAdapter {
         close();
     }
 
-    private void insertLevels(ArrayList<Level> levels, int packageID) {
+    public void insertLevels(ArrayList<Level> levels, int packageID) {
         open();
 
         for (int i = 0; i < levels.size(); i++) {

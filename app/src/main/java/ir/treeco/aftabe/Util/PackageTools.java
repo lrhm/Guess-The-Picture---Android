@@ -2,6 +2,7 @@ package ir.treeco.aftabe.Util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -49,7 +51,7 @@ public class PackageTools {
     private static Object lock = new Object();
     private static PackageTools instance;
 
-    public static   PackageTools getInstance(Context context) {
+    public static PackageTools getInstance(Context context) {
         synchronized (lock) {
             if (instance != null)
                 return instance;
@@ -88,7 +90,7 @@ public class PackageTools {
         for (PackageObject object : objects) {
 
             String zipFileName = object.getFileName().substring(0, object.getFileName().length() - 4);
-            writeRawFiles(object, "package_0_front", ".png", object.getId());
+            writeRawFiles(object, "package_0_front", "png", object.getId());
             writeRawFiles(object, zipFileName, "zip", object.getId());
         }
     }
@@ -148,34 +150,43 @@ public class PackageTools {
 
     public void checkForNewPackage(final OnNewPackageFoundListener listener) {
 
+        Log.d(TAG, "checkForNewPackage");
         AftabeAPIAdapter.getPackageCount(new Callback<CountHolder>() {
             @Override
             public void onResponse(Response<CountHolder> response) {
                 if (response.isSuccess()) {
                     if (response.body() != null) {
                         DBAdapter dbAdapter = DBAdapter.getInstance(context);
-                        int myLastPackageCheckd = dbAdapter.getPackages().length;
+                        PackageObject[] packages = dbAdapter.getPackages();
+                        int myLastPackageCheckd = packages.length;
                         int count = response.body().getCount();
+                        Log.d(TAG, "new packages " + count + " my packages " + myLastPackageCheckd);
+
                         if (count > myLastPackageCheckd) {
                             for (int i = myLastPackageCheckd; i < count; i++) {
                                 newPackageFound(i, listener);
+                                Log.d(TAG, "found new package " + i);
                             }
 
                         }
+                        checkLocalPackages();
                     }
+                } else {
+                    Log.d(TAG, "response is not cool");
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
 
+                Log.d(TAG, "YOU ARE A FAILURE AND I AM SCREAMING");
             }
         });
 
 
     }
 
-    public void newPackageFound(int id, final OnNewPackageFoundListener listener) {
+    public void newPackageFound(final int id, final OnNewPackageFoundListener listener) {
 
         AftabeAPIAdapter.getPackage(id, new Callback<PackageObject>() {
             @Override
@@ -183,6 +194,7 @@ public class PackageTools {
 
                 if (response.isSuccess())
                     if (response.body() != null) {
+                        Log.d(TAG, "got package object " + id);
                         PackageObject packageObject = response.body();
                         packageObject.setDownloaded(false);
                         packageObject.setPurchased(packageObject.getPrice() == 0);
@@ -208,6 +220,9 @@ public class PackageTools {
     }
 
     public void downloadPicture(final PackageObject object, final OnNewPackageFoundListener listener) {
+        String url = object.getImageUrl();
+        if (url == null)
+            url = "http://8pic.ir/images/5n3gllw1feumq4zhmjli.png";
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
@@ -216,33 +231,34 @@ public class PackageTools {
 
             @Override
             public void onDownloadSuccess() {
+                Log.d(TAG, "downloaded picture");
                 DBAdapter dbAdapter = DBAdapter.getInstance(context);
                 dbAdapter.insertPackage(object);
 
-                listener.onNewPackage(object);
+                if (listener != null) listener.onNewPackage(object);
             }
 
             @Override
             public void onDownloadError(String error) {
 
+                Log.d(TAG, "download error :( " + error);
             }
-        }).execute(object.getImageUrl(), context.getFilesDir().getPath(), "package_" + object.getId() + "_front.png");
+        }).execute(url, context.getFilesDir().getPath(), "package_" + object.getId() + "_front.png");
     }
 
 
     public void downloadPackage(final PackageObject packageObject) {
 
         Boolean isDling = isDownloadInProgress.get(packageObject.getId());
-        if(isDling  != null){
-            if(isDling)
+        if (isDling != null) {
+            if (isDling)
                 return;
         }
         isDownloadInProgress.put(packageObject.getId(), true);
 
         final String name = packageObject.getName();
         String url = packageObject.getUrl();
-        final int id = new Random(System.currentTimeMillis()).nextInt();
-        ;
+        final int id = packageObject.getId();
         final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, name);
         final String path = context.getFilesDir().getPath();
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
@@ -256,25 +272,26 @@ public class PackageTools {
             @Override
             public void onDownloadSuccess() {
 
-                String zipFilePath = path + "p_" + packageObject.getId() + ".zip";
+                String zipFilePath = path + "/p_" + packageObject.getId() + ".zip";
 
-                if (!checkMd5Sum(zipFilePath, packageObject.getHash())) {
-
-                    File file = new File(path);
-                    if (file.exists())
-                        file.delete();
-                    notificationAdapter.faildDownload(id, name);
-                    isDownloadInProgress.put(packageObject.getId(), false);
-
-                    return;
-                }
+//                TODO uncomment
+//                if (!checkMd5Sum(zipFilePath, packageObject.getHash())) {
+//
+//                    File file = new File(path);
+//                    if (file.exists())
+//                        file.delete();
+//                    notificationAdapter.faildDownload(id, name);
+//                    isDownloadInProgress.put(packageObject.getId(), false);
+//
+//                    return;
+//                }
 
                 Zip zip = new Zip();
-                zip.unpackZip(path + "p_" + packageObject.getId() + ".zip", id, context);
+                zip.unpackZip(path + "/p_" + packageObject.getId() + ".zip", id, context);
                 addLevelListToPackage(packageObject, id);
                 DBAdapter db = DBAdapter.getInstance(context);
                 if (db.getLevels(id) == null) {
-                    db.insertPackage(packageObject);
+                    db.insertLevels(packageObject.getLevels() , packageObject.getId());
 
                     notificationAdapter.finalDownload(id, name);
 
@@ -311,14 +328,26 @@ public class PackageTools {
 
             in.close();
 
-            byte[] result = md5.digest();
-            return new String(result).equals(md5Sum);
+
+
+
+            String md = new BigInteger(1, md5.digest()).toString(16);
+            while ( md.length() < 32 ) {
+                md = "0"+md;
+            }
+            Log.d(TAG, "md5 is " + md + " api md5 is " + md5Sum);
+            return md.equals(md5Sum);
         } catch (FileNotFoundException e) {
+            Log.d(TAG, "file not found");
             e.printStackTrace();
             return false;
 
         } catch (NoSuchAlgorithmException e) {
+            Log.d(TAG, "no such algorighm");
+
             e.printStackTrace();
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -327,7 +356,23 @@ public class PackageTools {
         }
 
 
-        return true;
+    }
+
+
+
+    public void checkLocalPackages() {
+        DBAdapter dbAdapter = DBAdapter.getInstance(context);
+        PackageObject[] objects = dbAdapter.getPackages();
+
+        for (PackageObject object : objects)
+            if (!isPackageImageDownleaded(object.getId()))
+                downloadPicture(object, null);
+    }
+
+    public boolean isPackageImageDownleaded(int id) {
+        File file = new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png");
+        return (file.exists());
+
     }
 
     public interface OnNewPackageFoundListener {

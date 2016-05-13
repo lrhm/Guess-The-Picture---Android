@@ -37,13 +37,6 @@ public class LoadingActivity extends Activity implements Runnable {
 
         startTime = System.currentTimeMillis();
 
-        PackageTools.getInstance(this).checkForNewPackage(new PackageTools.OnNewPackageFoundListener() {
-            @Override
-            public void onNewPackage(PackageObject packageObject) {
-
-            }
-        });
-
         new Handler().postDelayed(this, 333);
 
     }

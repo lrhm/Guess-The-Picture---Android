@@ -37,10 +37,12 @@ public class NotificationAdapter {
                     .setProgress(0, 0, true);
 
             Intent MyIntent;
-            MyIntent = new Intent(context, LoadingActivity.class);
+            MyIntent = new Intent(context, MainActivity.class);
 
             MyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            stackBuilder.addParentStack(LoadingActivity.class);
+            stackBuilder.addNextIntent(MyIntent);
 
             nBuilder.setContentIntent(PendingIntent.getActivity(context,
                     25, MyIntent, PendingIntent.FLAG_UPDATE_CURRENT));
