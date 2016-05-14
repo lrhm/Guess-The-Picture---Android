@@ -24,6 +24,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameRequest.RequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
+import ir.treeco.aftabe.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.Util.Tools;
@@ -36,11 +37,12 @@ public class SocketAdapter {
     private static ArrayList<SocketListener> listeners = new ArrayList<>();
     private static ArrayList<SocketFriendMatchListener> friendsListeners = new ArrayList<>();
     private static ArrayList<FriendRequestListener> requestLiseners = new ArrayList<>();
+    private static ArrayList<NotifListener> notifListeners = new ArrayList<>();
 
     private static final Object lock = new Object();
     private static final Object friendsLock = new Object();
     private static final Object requestLock = new Object();
-
+    private static final Object notifLock = new Object();
 
     private static Socket mSocket;
     private static Context mContext;
@@ -50,6 +52,26 @@ public class SocketAdapter {
     public static void setContext(Context context) {
         if (mContext == null)
             mContext = context;
+    }
+
+    public static void addNotifListener(NotifListener notifListener) {
+        synchronized (notifLock) {
+            notifListeners.add(notifListener);
+        }
+    }
+
+    public static void removeNotifListener(NotifListener notifListener) {
+        synchronized (notifLock) {
+            notifListeners.remove(notifListener);
+        }
+    }
+
+    private static void callNotifListners(NotifCountHolder countHolder) {
+        synchronized (notifLock) {
+            for (NotifListener listener : notifListeners)
+                listener.onNewNotification(countHolder);
+
+        }
     }
 
     public static void addFriendSocketListener(SocketFriendMatchListener socketListener) {
@@ -195,14 +217,22 @@ public class SocketAdapter {
                     callFriendRequestListeners(friendRequestHolder);
 
                 }
-            }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            }).on("notifWarn", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-
-                    Log.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
-
+                    String msg = args[0].toString();
+                    Log.d(TAG, "notifWarn is : " + msg);
+                    NotifCountHolder countHolder = gson.fromJson(msg, NotifCountHolder.class);
+                    callNotifListners(countHolder);
                 }
-            }).on(Socket.EVENT_PING, new Emitter.Listener() {
+            }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+
+                            Log.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
+
+                        }
+                    }).on(Socket.EVENT_PING, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
 //                    Log.d(TAG, "ping " + ((args.length != 0) ? args[0].toString() : ""));

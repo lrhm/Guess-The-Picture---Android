@@ -1,6 +1,8 @@
 package ir.treeco.aftabe.View.Fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +14,9 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import ir.treeco.aftabe.API.Socket.NotifListener;
+import ir.treeco.aftabe.API.Socket.Objects.Notifs.NotifCountHolder;
+import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
@@ -32,7 +37,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 /**
  * Created by al on 12/25/15.
  */
-public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener {
+public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener {
 
     private ImageManager imageManager;
     private LengthManager lengthManager;
@@ -41,10 +46,15 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     private NotificationCountView frndReqCountView;
     private CoinAdapter coinAdapter;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+
+
         final View view = inflater.inflate(R.layout.fragment_online_primary, container, false);
+
+        SocketAdapter.addNotifListener(this);
 
         coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
@@ -159,5 +169,17 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         if (v.getId() == R.id.multiplay_image_button) {
             ((MainActivity) getActivity()).requestRandomGame();
         }
+    }
+
+    @Override
+    public void onNewNotification(final NotifCountHolder countHolder) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                msgCountView.setCount(countHolder.getChats());
+                frndReqCountView.setCount(countHolder.getRequests());
+            }
+        });
+
     }
 }
