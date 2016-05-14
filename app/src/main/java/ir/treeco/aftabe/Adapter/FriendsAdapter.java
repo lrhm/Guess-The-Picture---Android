@@ -22,6 +22,7 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
+import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -75,7 +76,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         imageManager = new ImageManager(context);
         mFriends = friends == null ? new ArrayList<User>() : friends;
         mRequests = requests == null ? new ArrayList<User>() : requests;
-        mContacts = contacts == null ? new ArrayList<User>() : contacts;
+        mContacts = contacts == null ? (FriendsHolder.getInstance().getContacts()) : contacts;
         mSearched = searched == null ? new ArrayList<User>() : searched;
         mOnlineFriends = new ArrayList<>();
 

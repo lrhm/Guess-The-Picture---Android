@@ -11,16 +11,14 @@ public class LevelCalculator {
     private ArrayList<Integer> scoreLevels;
 
     public LevelCalculator(int score) {
-        mScore = score;
-        mScore++;
+        mScore = score + 3; // 3 for big 3 dummies
 
         scoreLevels = new ArrayList<>();
         scoreLevels.add(0);
         scoreLevels.add(8);
-        scoreLevels.add(16);
-        int last = 16;
+        int last = 8;
         while (last <= mScore) {
-            last = (int) (last * 1.4 + 1);
+            last += 8;
             scoreLevels.add(last);
         }
     }
@@ -37,7 +35,7 @@ public class LevelCalculator {
 
     public int getExp() {
         int level = getLevel();
-        if(level <= 0)
+        if (level <= 0)
             return 0;
         int lvlScore = scoreLevels.get(level);
         int scoreDiff = mScore - scoreLevels.get(level - 1);

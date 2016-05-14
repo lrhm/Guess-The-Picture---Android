@@ -33,6 +33,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
+import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 
@@ -76,7 +77,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
             lastTimeClicked = System.currentTimeMillis();
 
-            int id = packageObjects.get(getAdapterPosition()).getId();
+            final int id = packageObjects.get(getAdapterPosition()).getId();
+            final PackageObject packageObject = packageObjects.get(getAdapterPosition());
 
             File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
 
@@ -86,28 +88,39 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 if (myUser == null)
                     myUser = Tools.getCachedUser();
 
-                if (packageObjects.get(getAdapterPosition()).getPrice() == 0 || (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))) {
+                if (packageObject.getPrice() == 0 || (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))) {
                     ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
-                    PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()), this);
+                    PackageTools.getInstance(context).downloadPackage(packageObject, this);
 
                 } else {
                     final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
-                    if (coinAdapter.spendCoins(packageObjects.get(getAdapterPosition()).getPrice())) {
-                        AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
-                            @Override
-                            public void onPurchasedBefore() {
-                                coinAdapter.earnCoins(packageObjects.get(getAdapterPosition()).getPrice());
+
+
+                    String firstLine = String.format("%s %s", "خرید پکیج", packageObject.getName());
+                    String secondLine = String.format("%s %s %s", "فقط", Tools.numeralStringToPersianDigits(packageObject.getPrice() + ""), "سکه");
+                    String msg = String.format("%s\n%s", firstLine, secondLine);
+                    new CustomAlertDialog(context, msg, "باشه", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (coinAdapter.spendCoins(packageObject.getPrice())) {
+                                AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
+                                    @Override
+                                    public void onPurchasedBefore() {
+                              //          coinAdapter.earnCoins(packageObject.getPrice());
+                                    }
+
+                                    @Override
+                                    public void onPurchaseSuccess() {
+
+                                    }
+                                });
+                                PackageTools.getInstance(context).downloadPackage(packageObject, ViewHolder.this);
+                                ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
+
                             }
+                        }
+                    }, "نمیخرم", null).show();
 
-                            @Override
-                            public void onPurchaseSuccess() {
-
-                            }
-                        });
-                        PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()), this);
-                        ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
-
-                    }
                 }
 
             } else {

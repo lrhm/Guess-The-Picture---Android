@@ -24,6 +24,14 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 
+
+/**
+ * for whom reads this code , i have wrote this code in my darkest hours
+ * even i . the creator cannot understand this code . the only thing matters is this works
+ * if you want to make a change , you'll have better luck writing a new one.
+ * may the force be with you
+ * use the source luke
+ */
 public class KeyboardView extends RelativeLayout {
     private static final String TAG = "KeyboardView";
     public OnKeyboardEvent onKeyboardEvent;

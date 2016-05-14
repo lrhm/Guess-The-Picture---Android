@@ -22,11 +22,13 @@ public class FriendsHolder {
     private static final String KEY_TAG = "friends_cached_aftabe";
 
     private static FriendsHolder friendsHolder;
-    private Object lock;
     private static Object getInstanceLock = new Object();
 
     @Expose
     HashSet<User> friends;
+
+    @Expose
+    HashSet<User> contacts;
 
     public static FriendsHolder getInstance() {
         synchronized (getInstanceLock) {
@@ -37,12 +39,24 @@ public class FriendsHolder {
             if (cachedString.equals("")) {
                 friendsHolder = new FriendsHolder();
                 friendsHolder.friends = new HashSet<>();
+                friendsHolder.contacts = new HashSet<>();
             } else {
                 friendsHolder = new Gson().fromJson(cachedString, FriendsHolder.class);
+                if (friendsHolder.contacts == null)
+                    friendsHolder.contacts = new HashSet<>();
             }
 
             return friendsHolder;
         }
+    }
+
+    public ArrayList<User> getContacts() {
+        return new ArrayList<>(contacts);
+    }
+
+    public void addToContacts(User user) {
+        contacts.add(user);
+        backupCache();
     }
 
     public ArrayList<User> getFriends() {
@@ -51,20 +65,14 @@ public class FriendsHolder {
 
     public void addFriendToList(User user) {
         friends.add(user);
+        if (contacts.contains(user))
+            contacts.remove(user);
         backupCache();
     }
 
     public void removeFriend(User user) {
         friends.remove(user);
         backupCache();
-    }
-
-    public void updateFriend(User user) {
-        friends.remove(user);
-        friends.add(user);
-
-        backupCache();
-
     }
 
 

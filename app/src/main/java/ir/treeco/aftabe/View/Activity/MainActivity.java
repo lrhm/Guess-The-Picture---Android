@@ -84,6 +84,7 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.NotificationManager;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Custom.BackgroundDrawable;
 import ir.treeco.aftabe.View.Custom.StarView;
 import ir.treeco.aftabe.View.Custom.TimerView;
@@ -169,6 +170,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         askForContactPermission();
 
 
+
+
     }
 
 
@@ -211,6 +214,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cheatButton.getLayoutParams();
         layoutParams.leftMargin = (int) (0.724 * lengthManager.getScreenWidth());
         layoutParams.topMargin = (int) (0.07 * lengthManager.getScreenWidth());
+        UiUtil.setWidth(cheatButton, lengthManager.getCheatButtonSize());
+        UiUtil.setHeight(cheatButton, lengthManager.getCheatButtonSize());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -438,10 +443,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         areCheatsVisible = false;
         currentLevel = id;
 
-        String cheatImagePath = "file://" + getFilesDir().getPath() + "/Downloaded/"
-                + id + "_cheatBitmap.png";
 
-        Picasso.with(this).load(cheatImagePath).into(cheatButton);
+        Picasso.with(this).load(R.drawable.cheat_button).fit().into(cheatButton);
     }
 
     public void hideCheatButton() {
@@ -452,10 +455,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void toggleCheatButton() {
         disableCheatButton(false);
         if (!areCheatsVisible) {
-            String cheatImagePath = "file://" + getFilesDir().getPath() + "/Downloaded/"
-                    + currentLevel + "_backBitmap.png";
 
-            Picasso.with(this).load(cheatImagePath).into(cheatButton);
+
+            Picasso.with(this).load(R.drawable.next_button).fit().into(cheatButton);
             areCheatsVisible = true;
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -463,10 +465,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 ((GameFragment) fragment).showCheats();
 
         } else {
-            String cheatImagePath = "file://" + getFilesDir().getPath() + "/Downloaded/"
-                    + currentLevel + "_cheatBitmap.png";
 
-            Picasso.with(this).load(cheatImagePath).into(cheatButton);
+
+            Picasso.with(this).load(R.drawable.cheat_button).fit().into(cheatButton);
             areCheatsVisible = false;
 
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);

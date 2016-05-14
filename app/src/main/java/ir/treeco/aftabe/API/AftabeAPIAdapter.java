@@ -768,4 +768,27 @@ public class AftabeAPIAdapter {
 
     }
 
+    public static void getCTS(final BatchUserFoundListener listener) {
+        init();
+
+        User user = Tools.getCachedUser();
+        if (user == null)
+            return;
+
+        aftabeService.checkCTS(user.getLoginInfo().getAccessToken()).enqueue(new Callback<User[]>() {
+            @Override
+            public void onResponse(Response<User[]> response) {
+                if (response.isSuccess() && response.body() != null)
+                    listener.onGotUserList(response.body());
+                listener.onGotError();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onGotError();
+
+            }
+        });
+    }
+
 }

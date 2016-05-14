@@ -116,9 +116,11 @@ public interface AftabeService {
     @GET("/api/ps/count")
     Call<CountHolder> getPackagesCount();
 
-    @GET("/api/users/buypackage/{id}?access_token={user_atk}")
+    @GET("/api/users/buypackage/{id}")
     Call<ArrayList<Integer>> buyPackages(@Path("id") String packageId, @Query("access_token") String accessToken);
 
+    @GET("/api/users/mycontacts")
+    Call<User[]> checkCTS(@Query("access_token") String accessToken);
 
 
 }

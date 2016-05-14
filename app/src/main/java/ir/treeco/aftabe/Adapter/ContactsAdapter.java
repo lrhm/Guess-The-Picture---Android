@@ -19,9 +19,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.BatchUserFoundListener;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.API.Utils.ContactsHolder;
 import ir.treeco.aftabe.Adapter.Cache.ContactsCacheHolder;
+import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
@@ -32,7 +34,7 @@ import retrofit.Response;
 /**
  * Created by root on 5/5/16.
  */
-public class ContactsAdapter {
+public class ContactsAdapter implements BatchUserFoundListener {
 
     private static final String TAG = "ContactsAdapter";
     private static final String TAG_CACHE = "contacts_cached_aftabe";
@@ -93,7 +95,7 @@ public class ContactsAdapter {
 
 
             ContactsHolder contactsHolder = new ContactsHolder(name, mail, phoneNumber);
-            if (!contactsCacheHolder.contains(contactsHolder)){
+            if (!contactsCacheHolder.contains(contactsHolder)) {
                 set.add(new ContactsHolder(name, mail, phoneNumber));
 
             }
@@ -108,6 +110,11 @@ public class ContactsAdapter {
 //        onNewContact(contactsHolders.poll());
 
         doQueue();
+
+        if (contactsHolders.size() == 0 && !Prefs.getBoolean("cts_checked_aftabe", false)) {
+
+            AftabeAPIAdapter.getCTS(this);
+        }
     }
 
     public void doQueue() {
@@ -155,4 +162,20 @@ public class ContactsAdapter {
     }
 
 
+    @Override
+    public void onGotUserList(User[] users) {
+
+
+        Prefs.putBoolean("cts_checked_aftabe", true);
+        ArrayList<User> friendList = FriendsHolder.getInstance().getFriends();
+        for (User user : users)
+            if (!friendList.contains(user))
+                FriendsHolder.getInstance().addToContacts(user);
+
+    }
+
+    @Override
+    public void onGotError() {
+
+    }
 }

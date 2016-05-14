@@ -22,7 +22,6 @@ public class MatchRequestCache {
 
     private static Object getInstanceLock = new Object();
 
-    @Expose
     ArrayList<MatchRequestDialog> dialogs;
 
 
