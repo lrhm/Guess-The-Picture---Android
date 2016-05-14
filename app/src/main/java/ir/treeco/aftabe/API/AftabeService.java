@@ -6,6 +6,7 @@ import java.util.HashMap;
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.ContactsHolder;
 import ir.treeco.aftabe.API.Utils.CountHolder;
+import ir.treeco.aftabe.API.Utils.ForceObject;
 import ir.treeco.aftabe.API.Utils.FriendRequestSent;
 import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
@@ -121,6 +122,9 @@ public interface AftabeService {
 
     @GET("/api/users/mycontacts")
     Call<User[]> checkCTS(@Query("access_token") String accessToken);
+
+    @GET("/api/versions")
+    Call<ForceObject> checkForceUpdate();
 
 
 }

@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.ContactsHolder;
 import ir.treeco.aftabe.API.Utils.CountHolder;
+import ir.treeco.aftabe.API.Utils.ForceObject;
 import ir.treeco.aftabe.API.Utils.FriendRequestSent;
 import ir.treeco.aftabe.API.Utils.GCMTokenHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
@@ -789,6 +790,13 @@ public class AftabeAPIAdapter {
 
             }
         });
+    }
+
+    public static void getLastVersion(Callback<ForceObject> callback) {
+
+        init();
+
+        aftabeService.checkForceUpdate().enqueue(callback);
     }
 
 }
