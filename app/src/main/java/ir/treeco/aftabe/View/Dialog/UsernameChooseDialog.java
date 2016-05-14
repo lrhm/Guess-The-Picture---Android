@@ -184,15 +184,23 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         mProgressBar.setVisibility(View.GONE);
         mStatusImageView.setVisibility(View.VISIBLE);
         if (!status || !mEditText.getText().toString().equals(username)) {
-            mStatusImageView.setImageResource(R.drawable.yes);
+            mStatusImageView.setImageResource(R.drawable.no);
             return;
         }
-        mStatusImageView.setImageResource(R.drawable.no);
+        mStatusImageView.setImageResource(R.drawable.yes);
         mAcceptButton.setEnabled(true);
     }
 
     @Override
     public void onClick(View v) {
+
+        String s = mEditText.getText().toString();
+        if (s.length() < 6 || Tools.isAEmail(s.toString())
+                || Tools.isAPhoneNumber(s.toString())
+                || !Tools.isNameValid(s.toString())
+                || s.length() > 12)
+            return;
+
         if (v.getId() == R.id.dialog_username_choose_accept_btn) {
             AftabeAPIAdapter.checkUsername(mEditText.getText().toString(), new UsernameCheckListener() {
                 @Override

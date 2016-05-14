@@ -170,8 +170,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         askForContactPermission();
 
 
-
-
     }
 
 
@@ -528,7 +526,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onProductPurchased(String productId, TransactionDetails details) {
 
 
-
         Integer price = StoreItemHolder.getInstnce().getPrice(productId);
         if (price == null)
             price = 500;
@@ -625,12 +622,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Prefs.remove(Tools.SHARED_PREFS_TOKEN);
         Prefs.remove(Tools.USER_SAVED_DATA);
+        Prefs.remove(Tools.USER_SAVED_DATA);
 
     }
 
 
     @Override
     public void onMatchRequest(final MatchRequestSFHolder request) {
+
+        if (coinAdapter.getCoinsCount() < 100) {
+            SocketAdapter.responseToMatchRequest(request.getFriend().getId(), false);
+
+            return;
+        }
 
         if (!isInOnlineGame && !isFinishing()) {
 
@@ -639,6 +643,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 public void run() {
 
                     if (!isFinishing()) {
+
+
                         MatchRequestDialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
                         MatchRequestCache.getInstance().add(dialog);
                         dialog.show();
@@ -1065,8 +1071,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
 
 
-                // other 'case' lines to check for other
-                // permissions this app might request
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 

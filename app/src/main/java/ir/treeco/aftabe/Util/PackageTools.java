@@ -162,6 +162,12 @@ public class PackageTools {
                         int count = response.body().getCount();
                         Log.d(TAG, "new packages " + count + " my packages " + myLastPackageCheckd);
 
+                        Prefs.putString(
+                                context.getResources()
+                                        .getString(R.string.updated_time_shared_preference),
+                                new SimpleDateFormat("dd-MM-yyyy")
+                                        .format(Calendar.getInstance().getTime()));
+
                         if (count > myLastPackageCheckd) {
                             for (int i = myLastPackageCheckd; i < count; i++) {
                                 newPackageFound(i, listener);
@@ -200,11 +206,7 @@ public class PackageTools {
                         packageObject.setPurchased(packageObject.getPrice() == 0);
 
                         downloadPicture(packageObject, listener);
-                        Prefs.putString(
-                                context.getResources()
-                                        .getString(R.string.updated_time_shared_preference),
-                                new SimpleDateFormat("dd-MM-yyyy")
-                                        .format(Calendar.getInstance().getTime()));
+
 
 
                     }

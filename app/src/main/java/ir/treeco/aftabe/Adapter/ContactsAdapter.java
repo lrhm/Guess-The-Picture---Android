@@ -1,16 +1,26 @@
 package ir.treeco.aftabe.Adapter;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -25,6 +35,7 @@ import ir.treeco.aftabe.API.Utils.ContactsHolder;
 import ir.treeco.aftabe.Adapter.Cache.ContactsCacheHolder;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Object.User;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
@@ -58,8 +69,9 @@ public class ContactsAdapter implements BatchUserFoundListener {
 
     public void getContacts() {
 
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) && !Prefs.getBoolean(MainActivity.CONTACTS_PERMISSION, false)) {
-            return;
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+                return;
             // failed to get
         }
         if (!Tools.isUserRegistered() || Tools.getCachedUser() == null) {
@@ -111,10 +123,28 @@ public class ContactsAdapter implements BatchUserFoundListener {
 
         doQueue();
 
-        if (contactsHolders.size() == 0 && !Prefs.getBoolean("cts_checked_aftabe", false)) {
+        if(contactsHolders.size() != 0)
+            return;
 
-            AftabeAPIAdapter.getCTS(this);
+        Date now = Calendar.getInstance().getTime();
+        try {
+            String pastString = Prefs.getString("cts_check_date", "");
+            if (pastString.equals("")) {
+                AftabeAPIAdapter.getCTS(this);
+                return;
+            }
+            Date past = new SimpleDateFormat("dd-MM-yyyy").
+                    parse(Prefs.getString(
+                            "cts_check_date", new SimpleDateFormat("dd-MM-yyyy").format(now)));
+            int days = Days.daysBetween(new DateTime(past), new DateTime(now)).getDays();
+            if (days >= 1) {
+                AftabeAPIAdapter.getCTS(this);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
     }
 
     public void doQueue() {
@@ -166,11 +196,14 @@ public class ContactsAdapter implements BatchUserFoundListener {
     public void onGotUserList(User[] users) {
 
 
-        Prefs.putBoolean("cts_checked_aftabe", true);
         ArrayList<User> friendList = FriendsHolder.getInstance().getFriends();
         for (User user : users)
             if (!friendList.contains(user))
                 FriendsHolder.getInstance().addToContacts(user);
+
+        Prefs.putString("cts_check_date",
+                new SimpleDateFormat("dd-MM-yyyy")
+                        .format(Calendar.getInstance().getTime()));
 
     }
 

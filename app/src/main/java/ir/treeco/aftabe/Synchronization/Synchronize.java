@@ -47,11 +47,7 @@ public class Synchronize extends BroadcastReceiver {
                     manager.showNewPackageNotification(packageObject);
                 }
             });
-        } else {
-            Prefs.putString(context.getResources().
-                            getString(R.string.updated_time_shared_preference),
-                    new SimpleDateFormat("dd-MM-yyyy")
-                            .format(past));
         }
+
     }
 }

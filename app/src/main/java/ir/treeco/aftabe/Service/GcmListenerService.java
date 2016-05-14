@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Util.NotificationManager;
 
@@ -30,7 +31,14 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
         if (notif != null) {
             NotifHolder notifHolder = new Gson().fromJson(notif, NotifHolder.class);
+
+
             Log.d(TAG, "got gcm " + notif);
+            DBAdapter dbAdapter = DBAdapter.getInstance(getApplicationContext());
+
+            if (notifHolder.isMatchRequest()
+                    && dbAdapter.getCoins() < 100)
+                return;
             ir.treeco.aftabe.Util.NotificationManager manager = new NotificationManager(getApplicationContext());
             manager.createNotification(notifHolder);
         }

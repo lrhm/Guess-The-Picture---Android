@@ -63,7 +63,7 @@ public class PackageObject {
     }
 
     public String getImageUrl() {
-        return "https://aftabe2.com:2020/api/files/p/download/" + image.name;
+        return "https://aftabe2.com:2020/api/pictures/p/download/" + image.name;
     }
 
     public Boolean getPurchased() {
