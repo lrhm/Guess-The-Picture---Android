@@ -1,6 +1,8 @@
 package ir.treeco.aftabe.Adapter;
 
 import android.app.Activity;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +50,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PackageTools.OnDownloadSuccessListener {
         ImageView imageView;
         private long lastTimeClicked = 0;
         private long timeStamp = 1000;
@@ -60,7 +62,10 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             imageView.getLayoutParams().height = packageSize;
             imageView.getLayoutParams().width = packageSize;
 
+
             v.setOnClickListener(this);
+
+
         }
 
         @Override
@@ -68,6 +73,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
             if (System.currentTimeMillis() - lastTimeClicked < timeStamp)
                 return;
+
             lastTimeClicked = System.currentTimeMillis();
 
             int id = packageObjects.get(getAdapterPosition()).getId();
@@ -80,12 +86,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 if (myUser == null)
                     myUser = Tools.getCachedUser();
 
-                if (packageObjects.get(getAdapterPosition()).getPrice() == 0 ||  (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))){
+                if (packageObjects.get(getAdapterPosition()).getPrice() == 0 || (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))) {
                     ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
-                    PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()));
+                    PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()), this);
 
-                }
-                else {
+                } else {
                     final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
                     if (coinAdapter.spendCoins(packageObjects.get(getAdapterPosition()).getPrice())) {
                         AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
@@ -99,7 +104,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
                             }
                         });
-                        PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()));
+                        PackageTools.getInstance(context).downloadPackage(packageObjects.get(getAdapterPosition()), this);
                         ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
 
                     }
@@ -117,6 +122,20 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
+        }
+
+        @Override
+        public void onDownload(PackageObject packageObject) {
+
+            ToastMaker.show(context, "دانلود شد", Toast.LENGTH_SHORT);
+
+
+            ColorMatrix matrix = new ColorMatrix();
+
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            imageView.setColorFilter(filter);
+
+
         }
     }
 
@@ -136,6 +155,19 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         int id = packageObjects.get(i).getId();
         String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
+
+
+        File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
+        if (!file.exists()) {
+
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+            viewHolder.imageView.setColorFilter(filter);
+
+        }
+
     }
 
     @Override
@@ -145,7 +177,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         return packageObjects.size();
     }
 
-    public void addPackage(PackageObject packageObject){
+    public void addPackage(PackageObject packageObject) {
         packageObjects.add(packageObject);
         notifyDataSetChanged();
 

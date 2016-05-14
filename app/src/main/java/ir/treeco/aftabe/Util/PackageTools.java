@@ -221,8 +221,6 @@ public class PackageTools {
 
     public void downloadPicture(final PackageObject object, final OnNewPackageFoundListener listener) {
         String url = object.getImageUrl();
-        if (url == null)
-            url = "http://8pic.ir/images/5n3gllw1feumq4zhmjli.png";
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
@@ -247,7 +245,7 @@ public class PackageTools {
     }
 
 
-    public void downloadPackage(final PackageObject packageObject) {
+    public void downloadPackage(final PackageObject packageObject , final OnDownloadSuccessListener listener) {
 
         Boolean isDling = isDownloadInProgress.get(packageObject.getId());
         if (isDling != null) {
@@ -259,14 +257,11 @@ public class PackageTools {
         final String name = packageObject.getName();
         String url = packageObject.getUrl();
         final int id = packageObject.getId();
-        final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, name);
         final String path = context.getFilesDir().getPath();
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
-                if (progress % 10 == 0) {
-                    notificationAdapter.notifyDownload(progress, id, name);
-                }
+
             }
 
             @Override
@@ -293,14 +288,13 @@ public class PackageTools {
                 if (db.getLevels(id) == null) {
                     db.insertLevels(packageObject.getLevels() , packageObject.getId());
 
-                    notificationAdapter.finalDownload(id, name);
 
                 }
+                listener.onDownload(packageObject);
             }
 
             @Override
             public void onDownloadError(String error) {
-                notificationAdapter.faildDownload(id, name);
                 isDownloadInProgress.put(packageObject.getId(), false);
 
             }
@@ -377,6 +371,11 @@ public class PackageTools {
 
     public interface OnNewPackageFoundListener {
         void onNewPackage(PackageObject packageObject);
+    }
+
+    public interface OnDownloadSuccessListener{
+
+        void onDownload(PackageObject packageObject);
     }
 
     private class PackageObjectListHolder {

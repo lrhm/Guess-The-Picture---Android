@@ -33,7 +33,7 @@ public class PackageObject {
     Boolean isPurchased;
 
     @Expose
-    String imageUrl;
+    URLHolder image;
 
     private ArrayList<Level> levels;
 
@@ -63,7 +63,7 @@ public class PackageObject {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return "https://aftabe2.com:2020/api/files/p/download/" + image.name;
     }
 
     public Boolean getPurchased() {

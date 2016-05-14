@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
@@ -184,4 +186,6 @@ public class ImageManager {
         options.inScaled = false;
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
+
+
 }
