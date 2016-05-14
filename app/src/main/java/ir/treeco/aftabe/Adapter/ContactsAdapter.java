@@ -196,6 +196,7 @@ public class ContactsAdapter implements BatchUserFoundListener {
     public void onGotUserList(User[] users) {
 
 
+        Log.d(TAG, "checked contacts");
         ArrayList<User> friendList = FriendsHolder.getInstance().getFriends();
         for (User user : users)
             if (!friendList.contains(user))

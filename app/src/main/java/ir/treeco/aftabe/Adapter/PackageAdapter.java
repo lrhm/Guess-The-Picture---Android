@@ -59,7 +59,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
-            int packageSize = (int) (SizeManager.getScreenWidth() * 0.45);
+            int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
             imageView.getLayoutParams().height = packageSize;
             imageView.getLayoutParams().width = packageSize;
 
@@ -155,10 +155,15 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public PackageAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_package, viewGroup, false);
-        int packageSize = (int) (SizeManager.getScreenWidth() * 0.45);
+        int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
         v.setLayoutParams(new RecyclerView.LayoutParams(
                 packageSize,
                 packageSize));
+
+//        int padding = (int) (SizeManager.getScreenWidth() * 0.01 );
+//
+//        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) v.getLayoutParams();
+//        params.leftMargin = padding * 2;
         return new ViewHolder(v);
     }
 
