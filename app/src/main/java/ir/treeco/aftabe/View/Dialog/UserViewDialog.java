@@ -45,7 +45,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
     User mUser;
     ImageView mCancelImageView;
     ImageManager imageManager;
-    public static final String[] titles = new String[]{"رتبه", "تعداد برد", "تعداد باخت"};
+    public static final String[] titles = new String[]{"رتبه", "برد/باخت", "تعداد دوستان"};
     User myUser;
 
 
@@ -129,7 +129,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         int[] textLeftIds = new int[]{R.id.dialog_user_view_first_right, R.id.dialog_user_view_2nd_right, R.id.dialog_user_view_3rd_right};
         int[] parentIds = new int[]{R.id.dialog_user_view_parent_1, R.id.dialog_user_view_parent_2, R.id.dialog_user_view_parent_3};
 
-        String[] textRights = new String[]{mUser.getRank() + "", mUser.getWins() + "", mUser.getLoses() + ""};
+        String[] textRights = new String[]{mUser.getRank() + "", mUser.getLoses() + "/" + mUser.getWins() , mUser.getFriendCount()+""};
         Integer leftMargin = null;
 
         for (int i = 0; i < 3; i++) {

@@ -35,7 +35,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 public class UserInfoFragment extends Fragment implements UserFoundListener {
 
 
-    public static final String[] titles = new String[]{"رتبه", "تعداد برد", "تعداد باخت"};
+    public static final String[] titles = new String[]{"رتبه", "برد/باخت", "تعداد دوستان"};
     TextView[] lefts;
     TextView[] rights;
     UserLevelView userLevelView;
@@ -96,7 +96,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
     public void initTextViews(User user) {
 
-        String[] textRights = new String[]{user.getRank() + "", user.getWins() + "", user.getLoses() + ""};
+        String[] textRights = new String[]{user.getRank() + "", user.getLoses() + "/" + user.getWins(), user.getFriendCount() + ""};
 
         for (int i = 0; i < 3; i++) {
             TextView left = lefts[i];

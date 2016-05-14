@@ -67,6 +67,10 @@ public class User {
     @Expose
     private int loses;
 
+
+    @Expose
+    private Integer friendCount;
+
     private ArrayList<Integer> packages;
 
     @Expose
@@ -85,7 +89,7 @@ public class User {
         guest = false;
     }
 
-    public void setRank(int rank){
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
@@ -234,6 +238,10 @@ public class User {
         return levelCalculator.getExp();
     }
 
+    public int getFriendCount() {
+        return (this.friendCount == null) ? access.friendCount : this.friendCount;
+    }
+
     public boolean isMe() {
 
         return (getId() == null || Tools.getCachedUser() == null || Tools.getCachedUser().getId() == null) ?
@@ -252,7 +260,6 @@ public class User {
         access = new Access();
         access.friend = isFriend;
     }
-
 
 
     @Override
@@ -280,6 +287,9 @@ public class User {
 
         @Expose
         boolean FRto;
+
+        @Expose
+        int friendCount;
     }
 
 
