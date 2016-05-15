@@ -25,9 +25,8 @@
         android:name=".MainApplication"
         android:icon="@drawable/aftabe_icon"
         android:label="@string/app_name"
-        android:theme="@style/fullScreenTheme"
         android:screenOrientation="portrait"
-        >
+        android:theme="@style/fullScreenTheme">
         <receiver
             android:name=".Synchronization.Synchronize"
             android:label="NetChangeReceiver">
@@ -45,26 +44,15 @@
 
         </activity>
 
-        <activity android:name=".View.Activity.LoadingActivity"
-            android:screenOrientation="portrait"
-            >
+        <activity
+            android:name=".View.Activity.LoadingActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="ir.tapsell.tapsellvideosdk.VideoPage"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-        <activity
-            android:name="ir.tapsell.tapsellvideosdk.DirectAdMiddleActivity"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-
-        <service android:name="ir.tapsell.tapsellvideosdk.services.asynchservices.core.HttpService"></service>
 
 
         <receiver
@@ -110,6 +98,20 @@
             android:name="io.fabric.ApiKey"
             android:value="4150c278d5e47ac44513db398d88c074d628b50e" />
 
+
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.ShowVideoPage"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.WebViewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.DirectAdMiddleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+
+        <service android:name="ir.tapsell.tapselldevelopersdk.services.asynchservices.core.HttpService"></service>
 
     </application>
 

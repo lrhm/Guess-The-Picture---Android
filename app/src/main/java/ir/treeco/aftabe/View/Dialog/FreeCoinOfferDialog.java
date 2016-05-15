@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
+import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.SizeManager;
@@ -60,13 +60,14 @@ public class FreeCoinOfferDialog extends Dialog implements View.OnClickListener 
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         button.setOnClickListener(this);
 
+
 //      TODO add button from fragment store
     }
 
     @Override
     public void onClick(View v) {
-        DeveloperInterface.getInstance(mActivity).showNewVideo(mActivity,
-                DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE, null, DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+        DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE, null, mActivity);
+
 
     }
 }

@@ -49,7 +49,9 @@ import com.squareup.picasso.Picasso;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
+
+import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
+import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.FriendRequestListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
@@ -247,8 +249,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
-        DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
+        TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey , this);
 
 //        Intent intent = new Intent(this, RegistrationIntentService.class);
 //        startService(intent);
@@ -497,21 +499,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     protected void onActivityResultOfTapsell(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode != DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE)
+        if (requestCode != DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE)
             return;
 
 
         if (data == null
-                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
-                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
-                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
+                || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
+                || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
+                || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
             // User didn’t open ad
             return;
 
 
-        boolean connected = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
-        boolean available = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
-        int award = data.getIntExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
+        boolean connected = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
+        boolean available = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
+        int award = data.getIntExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
         if (award == 0)
             return;
         if (!connected) {
@@ -622,7 +624,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
 //        if (mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
 //            coinAdapter.setCoinsCount(mUser.getCoins());
-        }
+//        }
 
     }
 
