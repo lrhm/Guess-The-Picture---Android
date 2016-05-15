@@ -84,7 +84,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     AnswerObject answerObject;
     MainActivity mainActivity;
-    String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -372,7 +371,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         if (state == 1)
             return;
 
-        new CustomAlertDialog(getContext(), "مطمپنی میخوای رد شی ؟" + "\n" + "دیگه نمیتونی برگردی!", "باشه", new View.OnClickListener() {
+        new CustomAlertDialog(getContext(), "مطمئنی می خوای رد شی؟" + "\n" + "دیگه نمیتونی برگردی!", "باشه", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doSkip();

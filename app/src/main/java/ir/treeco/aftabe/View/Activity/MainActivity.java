@@ -764,6 +764,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 @Override
                 public void run() {
                     mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+                    mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_REQUEST);
 
                 }
             });

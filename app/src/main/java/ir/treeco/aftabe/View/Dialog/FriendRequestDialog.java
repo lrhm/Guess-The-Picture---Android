@@ -131,6 +131,11 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
 
     }
 
+    @Override
+    public void dismiss() {
 
+
+        super.dismiss();
+    }
 }
 

@@ -441,6 +441,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                                 user1.setIsFriend(true);
                             }
                             mFriendsAdapter.addUser(user1, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+                            mFriendsAdapter.removeUser(user1 , FriendsAdapter.TYPE_FRIEND);
 
                         }
                     });
@@ -466,6 +467,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 @Override
                 public void run() {
                     mFriendsAdapter.removeUser(finalU, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+                    mFriendsAdapter.addUser(finalU, FriendsAdapter.TYPE_FRIEND);
 
 
                 }

@@ -208,7 +208,6 @@ public class PackageTools {
                         downloadPicture(packageObject, listener);
 
 
-
                     }
             }
 
@@ -247,7 +246,7 @@ public class PackageTools {
     }
 
 
-    public void downloadPackage(final PackageObject packageObject , final OnDownloadSuccessListener listener) {
+    public void downloadPackage(final PackageObject packageObject, final OnDownloadSuccessListener listener) {
 
         Boolean isDling = isDownloadInProgress.get(packageObject.getId());
         if (isDling != null) {
@@ -260,9 +259,11 @@ public class PackageTools {
         String url = packageObject.getUrl();
         final int id = packageObject.getId();
         final String path = context.getFilesDir().getPath();
+        final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, packageObject.getName());
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
+                notificationAdapter.notifyDownload(progress, id, packageObject.getName());
 
             }
 
@@ -288,16 +289,19 @@ public class PackageTools {
                 addLevelListToPackage(packageObject, id);
                 DBAdapter db = DBAdapter.getInstance(context);
                 if (db.getLevels(id) == null) {
-                    db.insertLevels(packageObject.getLevels() , packageObject.getId());
+                    db.insertLevels(packageObject.getLevels(), packageObject.getId());
 
 
                 }
                 listener.onDownload(packageObject);
+
+                NotificationManager.dismissNotification(context, id);
             }
 
             @Override
             public void onDownloadError(String error) {
                 isDownloadInProgress.put(packageObject.getId(), false);
+                notificationAdapter.faildDownload(id, packageObject.getName());
 
             }
         }).execute(url, path, "p_" + packageObject.getId() + ".zip");
@@ -325,11 +329,9 @@ public class PackageTools {
             in.close();
 
 
-
-
             String md = new BigInteger(1, md5.digest()).toString(16);
-            while ( md.length() < 32 ) {
-                md = "0"+md;
+            while (md.length() < 32) {
+                md = "0" + md;
             }
             Log.d(TAG, "md5 is " + md + " api md5 is " + md5Sum);
             return md.equals(md5Sum);
@@ -355,7 +357,6 @@ public class PackageTools {
     }
 
 
-
     public void checkLocalPackages() {
         DBAdapter dbAdapter = DBAdapter.getInstance(context);
         PackageObject[] objects = dbAdapter.getPackages();
@@ -375,7 +376,7 @@ public class PackageTools {
         void onNewPackage(PackageObject packageObject);
     }
 
-    public interface OnDownloadSuccessListener{
+    public interface OnDownloadSuccessListener {
 
         void onDownload(PackageObject packageObject);
     }

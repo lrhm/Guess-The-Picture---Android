@@ -1,6 +1,7 @@
 package ir.treeco.aftabe.View.Custom;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class NotificationCountView extends FrameLayout {
 
         mBadgeView = new BadgeView(context, mImageView);
 
+        mBadgeView.setTextSize(TypedValue.COMPLEX_UNIT_PX , SizeManager.getScreenWidth() * 0.04f);
 
 
 
