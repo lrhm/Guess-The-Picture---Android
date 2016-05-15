@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,14 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.treeco.aftabe.API.Socket.NotifListener;
 import ir.treeco.aftabe.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -28,6 +31,7 @@ import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.NotificationCountView;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
@@ -44,6 +48,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     private UserLevelView mUserLevelView;
     private NotificationCountView msgCountView;
     private NotificationCountView frndReqCountView;
+    private ImageView specialOffer;
     private CoinAdapter coinAdapter;
 
 
@@ -71,8 +76,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         int topMargin = (int) (SizeManager.getScreenHeight() * 0.0375 * (SizeManager.getScreenHeight() / (double) (SizeManager.getScreenWidth())));
 
         ((LinearLayout.LayoutParams) mUserLevelView.getLayoutParams()).topMargin = topMargin;
-        ((LinearLayout.LayoutParams) startOnlineView.getLayoutParams()).topMargin = topMargin;
-
+//        ((LinearLayout.LayoutParams) startOnlineView.getLayoutParams()).topMargin = topMargin;
+        UiUtil.setTopMargin(view.findViewById(R.id.play_buttons_containers), topMargin);
 
         ((MainActivity) getActivity()).addUserFoundListener(this);
 
@@ -116,6 +121,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         }
 
 
+        SizeConverter offerConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.7f, 911, 137);
+
         topMargin = (int) (SizeManager.getScreenHeight()
                 - SizeManager.getScreenHeight() * 0.08 // height of tab bar
                 - lengthManager.getHeaderHeight() // header
@@ -123,9 +130,21 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
                 - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
                 - mUserLevelView.getHeightPlusTextView() // userLevelView
                 - SizeManager.getScreenHeight() * 0.02
+//                - ((OnlineOfferAdapter.getInstance().isThereOfflineOffer()) ? offerConverter.getHeight() : 0)
         ) / 2;
         ((LinearLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = topMargin;
 
+
+        specialOffer = (ImageView) view.findViewById(R.id.fragment_online_primary_special_offer);
+
+
+        if (coinAdapter.getCoinsCount() < 100 && OnlineOfferAdapter.getInstance().isThereOfflineOffer()) {
+            specialOffer.setVisibility(View.VISIBLE);
+            specialOffer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.randomplayoffer,
+                    offerConverter.mWidth, offerConverter.mHeight));
+            specialOffer.setOnClickListener(this);
+            UiUtil.setTopMargin(specialOffer, (int) (randplayconverter.getHeight() * 0.89));
+        }
 
         return view;
     }
@@ -168,6 +187,13 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (v.getId() == R.id.multiplay_image_button) {
             ((MainActivity) getActivity()).requestRandomGame();
+        }
+
+        if (v.getId() == R.id.fragment_online_primary_special_offer) {
+
+            OnlineOfferAdapter.getInstance().setRequestTime();
+            DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY, null, getActivity());
+
         }
     }
 

@@ -74,6 +74,7 @@ import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
+import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
@@ -250,7 +251,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
 
-        TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey , this);
+        TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
 
 //        Intent intent = new Intent(this, RegistrationIntentService.class);
 //        startService(intent);
@@ -522,7 +523,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // No such Ad was avaialbe
         } else {
             // user got {award} tomans. pay him!!!!
-            coinAdapter.earnCoins(20);
+            coinAdapter.earnCoins(OnlineOfferAdapter.getInstance().isRequestForPlay() ? 100 : 20);
+            if (OnlineOfferAdapter.getInstance().isRequestForPlay()) {
+                OnlineOfferAdapter.getInstance().useOffer();
+            }
         }
     }
 

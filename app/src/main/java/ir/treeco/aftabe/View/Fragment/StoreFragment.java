@@ -115,7 +115,7 @@ public class StoreFragment extends Fragment {
 //                CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
 
-                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE, null, getActivity());
+                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY, null, getActivity());
             }
         });
 
