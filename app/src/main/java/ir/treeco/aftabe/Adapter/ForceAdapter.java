@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.view.View;
+
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,6 +16,8 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Utils.ForceObject;
 import ir.treeco.aftabe.BuildConfig;
 import ir.treeco.aftabe.Util.DownloadTask;
+import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import retrofit.Callback;
 import retrofit.Response;
 
@@ -23,6 +28,7 @@ import retrofit.Response;
 public class ForceAdapter {
 
 
+    private static String PREF_KEY_BASE = "aftabe_showed_version_";
     private static ForceAdapter instance;
     private static Object lock = new Object();
 
@@ -87,7 +93,37 @@ public class ForceAdapter {
                 listener.onForceDownload();
             downloadAPK(object);
 
+        } else {
+            showNewVersionPopup(object);
         }
+    }
+
+    public void showNewVersionPopup(final ForceObject object) {
+
+        if (Prefs.getBoolean(PREF_KEY_BASE + object.getVersionId(), false)) {
+            return;
+        }
+
+        String msg = "اپدیت جدید اومده";
+
+        String yes = "اپدیت کن";
+
+        String no = "اپدیت نکن";
+
+        new CustomAlertDialog(context, msg, yes, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCafeBazzarAppPage((MainActivity) context);
+
+            }
+        }, no, null).setOnDismissListener(new CustomAlertDialog.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Prefs.putBoolean(PREF_KEY_BASE + object.getVersionId(), true);
+            }
+        }).show();
+
+
     }
 
     private void deleteDownloadedFiles() {
@@ -158,5 +194,6 @@ public class ForceAdapter {
         void onForceUpdate();
 
         void onForceDownload();
+
     }
 }

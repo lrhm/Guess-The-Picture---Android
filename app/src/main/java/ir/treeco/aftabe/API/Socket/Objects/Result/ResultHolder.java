@@ -26,6 +26,12 @@ public class ResultHolder {
         return scores[1].getScore();
     }
 
+    public boolean amIWinner(User myUser){
+        if(myUser.getId().equals(scores[0].getUserId()))
+            return scores[0].isWinner();
+        return scores[1].isWinner();
+    }
+
     public int getOpponentScoreResult(User myUser){
         if(myUser.getId().equals(scores[1].getUserId()))
             return scores[0].getScore();

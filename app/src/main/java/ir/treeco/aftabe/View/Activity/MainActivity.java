@@ -63,6 +63,7 @@ import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
@@ -90,6 +91,7 @@ import ir.treeco.aftabe.View.Custom.StarView;
 import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.ForceUpdateDialog;
 import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
@@ -615,6 +617,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
+//        Log.d(TAG, "my user coins " + mUser.getCoins());
+//        Log.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
+//        Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
+//        if (mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
+//            coinAdapter.setCoinsCount(mUser.getCoins());
+        }
+
     }
 
     @Override
@@ -883,6 +892,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             myUser.setScore(myUser.getScore() + resultHolder.getMyScoreResult(myUser));
             onGetMyUser(myUser);
+
+            int coin = 160;
+            if (resultHolder.getScores()[0].isWinner() && resultHolder.getScores()[1].isWinner()) {
+                // draw
+                coin = 80;
+            }
+            if (!resultHolder.amIWinner(myUser))
+                coin = 0;
+            if (coin != 0)
+                coinAdapter.earnCoins(coin);
+
         }
 
 //        if(resultHolder.getStatus().)

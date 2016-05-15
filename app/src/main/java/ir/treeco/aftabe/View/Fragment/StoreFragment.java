@@ -98,7 +98,6 @@ public class StoreFragment extends Fragment {
                     db.updateReviewed(true);
 
                     CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
-                    coinAdapter.earnCoins(300);
 
                     Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
                     startActivity(browserIntent);
@@ -113,8 +112,12 @@ public class StoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
-                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE, null, DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+                CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
+
+                coinAdapter.earnCoins(300);
+
+//                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
+//                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE, null, DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
             }
         });
 

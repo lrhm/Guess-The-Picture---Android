@@ -1,16 +1,13 @@
 package ir.treeco.aftabe.View.Dialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +27,7 @@ public class CustomAlertDialog extends Dialog {
     TextView.OnClickListener okListener;
     TextView.OnClickListener cancelListener;
     Context context;
+    private OnDismissListener onDismissListener;
 
     public CustomAlertDialog(Context context, String msg, String okMsg, TextView.OnClickListener okListener,
                              String cancelMsg, TextView.OnClickListener cancelListener) {
@@ -90,5 +88,22 @@ public class CustomAlertDialog extends Dialog {
         textView.setTextColor(Color.WHITE);
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
+    }
+
+
+    @Override
+    public void dismiss() {
+        if (onDismissListener != null) onDismissListener.onDismiss();
+        super.dismiss();
+    }
+
+    public CustomAlertDialog setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+        return this;
+    }
+
+
+    public interface OnDismissListener {
+        void onDismiss();
     }
 }

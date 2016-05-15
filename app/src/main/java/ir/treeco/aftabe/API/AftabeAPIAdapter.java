@@ -461,15 +461,13 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
-                if (response.isSuccess())
-                    return;
-                Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
-
+                if (response.isSuccess() && response.body() != null) {
+                        Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
 
             }
         });
