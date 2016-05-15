@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -43,6 +44,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
  */
 public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener {
 
+    private static final String TAG = "OnlinePrimaryPage";
     private ImageManager imageManager;
     private LengthManager lengthManager;
     private UserLevelView mUserLevelView;
@@ -75,9 +77,6 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         int topMargin = (int) (SizeManager.getScreenHeight() * 0.0375 * (SizeManager.getScreenHeight() / (double) (SizeManager.getScreenWidth())));
 
-        ((LinearLayout.LayoutParams) mUserLevelView.getLayoutParams()).topMargin = topMargin;
-//        ((LinearLayout.LayoutParams) startOnlineView.getLayoutParams()).topMargin = topMargin;
-        UiUtil.setTopMargin(view.findViewById(R.id.play_buttons_containers), topMargin);
 
         ((MainActivity) getActivity()).addUserFoundListener(this);
 
@@ -123,16 +122,32 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         SizeConverter offerConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.7f, 911, 137);
 
-        topMargin = (int) (SizeManager.getScreenHeight()
+        int notifsTopMargin = (int) ((int) (SizeManager.getScreenHeight()
                 - SizeManager.getScreenHeight() * 0.08 // height of tab bar
                 - lengthManager.getHeaderHeight() // header
                 - 2 * topMargin - randplayconverter.mHeight // margins and random play
                 - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
                 - mUserLevelView.getHeightPlusTextView() // userLevelView
-                - SizeManager.getScreenHeight() * 0.02
-//                - ((OnlineOfferAdapter.getInstance().isThereOfflineOffer()) ? offerConverter.getHeight() : 0)
-        ) / 2;
-        ((LinearLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = topMargin;
+                - offerConverter.getHeight()
+        ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.01);
+
+
+        while (notifsTopMargin + SizeManager.getScreenHeight() * 0.01 < offerConverter.mHeight + randplayconverter.mHeight) {
+            topMargin -= 2;
+
+            notifsTopMargin = (int) ((int) (SizeManager.getScreenHeight()
+                    - SizeManager.getScreenHeight() * 0.08 // height of tab bar
+                    - lengthManager.getHeaderHeight() // header
+                    - 2 * topMargin - randplayconverter.mHeight // margins and random play
+                    - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
+                    - mUserLevelView.getHeightPlusTextView() // userLevelView
+                    - offerConverter.getHeight()
+            ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.02);
+        }
+
+        ((LinearLayout.LayoutParams) mUserLevelView.getLayoutParams()).topMargin = topMargin;
+        UiUtil.setTopMargin(view.findViewById(R.id.play_buttons_containers), topMargin);
+        ((RelativeLayout.LayoutParams) notifContainer.getLayoutParams()).topMargin = notifsTopMargin;
 
 
         specialOffer = (ImageView) view.findViewById(R.id.fragment_online_primary_special_offer);
@@ -143,7 +158,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
             specialOffer.setImageBitmap(imageManager.loadImageFromResource(R.drawable.randomplayoffer,
                     offerConverter.mWidth, offerConverter.mHeight));
             specialOffer.setOnClickListener(this);
-            UiUtil.setTopMargin(specialOffer, (int) (randplayconverter.getHeight() * 0.89));
+            UiUtil.setTopMargin(specialOffer, (int) (randplayconverter.getHeight() * 0.87));
         }
 
         return view;
