@@ -51,8 +51,6 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-import cn.aigestudio.downloader.bizs.DLManager;
-import cn.aigestudio.downloader.interfaces.DLTaskListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.NotificationAdapter;

@@ -15,9 +15,6 @@ import android.widget.ImageView;
 
 import java.io.File;
 
-import cn.aigestudio.downloader.bizs.DLManager;
-import cn.aigestudio.downloader.interfaces.DLTaskListener;
-import cn.aigestudio.downloader.interfaces.IDListener;
 import io.socket.client.Socket;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
