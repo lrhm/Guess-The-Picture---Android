@@ -1,16 +1,19 @@
 package ir.treeco.aftabe.Adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -26,11 +29,13 @@ import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.PackageTools;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
@@ -38,6 +43,7 @@ import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
+    private static final String TAG = "PackageAdapter";
     private ArrayList<PackageObject> packageObjects;
     private Activity context;
     private Tools tools;
@@ -53,16 +59,25 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PackageTools.OnDownloadSuccessListener {
         ImageView imageView;
+        TextView textView;
+
         private long lastTimeClicked = 0;
         private long timeStamp = 1000;
 
         public ViewHolder(View v) {
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
+            textView = (TextView) itemView.findViewById(R.id.package_progress_dl);
+
+            if (SizeManager.getScreenWidth() < 800)
+                textView.setShadowLayer(0.5f, 1, 1, Color.BLACK);
+            textView.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
+            UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenWidth() * 0.3), 0.4f);
+
+
             int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
             imageView.getLayoutParams().height = packageSize;
             imageView.getLayoutParams().width = packageSize;
-
 
             v.setOnClickListener(this);
 
@@ -106,7 +121,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                                 AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
                                     @Override
                                     public void onPurchasedBefore() {
-                              //          coinAdapter.earnCoins(packageObject.getPrice());
+                                        //          coinAdapter.earnCoins(packageObject.getPrice());
                                     }
 
                                     @Override
@@ -133,7 +148,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, packageFragment, "LevelsActivityNew1");
                 transaction.addToBackStack(null);
-                transaction.commit();
+                transaction.commitAllowingStateLoss();
             }
         }
 
@@ -148,6 +163,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
             imageView.setColorFilter(filter);
 
+            textView.setVisibility(View.GONE);
+
+        }
+
+        @Override
+        public void onProgress(PackageObject packageObject, int progress) {
+            if (textView.getVisibility() == View.GONE)
+                textView.setVisibility(View.VISIBLE);
+            int i = getAdapterPosition();
+            Log.d(TAG, "on progress" + progress);
+            textView.setText(Tools.numeralStringToPersianDigits(progress + "") + "%");
 
         }
     }
@@ -155,7 +181,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     @Override
     public PackageAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_package, viewGroup, false);
-        int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
+        int packageSize = (int) (SizeManager.getScreenWidth() * 0.5);
         v.setLayoutParams(new RecyclerView.LayoutParams(
                 packageSize,
                 packageSize));
@@ -169,6 +195,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
+
+
+        int onePercent = (int) (SizeManager.getScreenHeight() * 0.01);
+
+        if (i % 2 == 0) {
+            viewHolder.imageView.setPadding(onePercent, 0, 0, 0);
+        } else {
+
+            viewHolder.imageView.setPadding(0, 0, onePercent, 0);
+        }
+
 
         int id = packageObjects.get(i).getId();
         String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";

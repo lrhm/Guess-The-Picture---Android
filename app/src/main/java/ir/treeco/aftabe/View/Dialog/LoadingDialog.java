@@ -312,7 +312,7 @@ public class LoadingDialog extends Dialog implements Runnable,
                         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
                         transaction.addToBackStack(null);
-                        transaction.commit();
+                        transaction.commitAllowingStateLoss();
                     }
 
                 }

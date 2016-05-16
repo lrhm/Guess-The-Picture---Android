@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
@@ -35,6 +36,7 @@ public class NotificationCountView extends FrameLayout {
         mBadgeView = new BadgeView(context, mImageView);
 
         mBadgeView.setTextSize(TypedValue.COMPLEX_UNIT_PX , SizeManager.getScreenWidth() * 0.04f);
+        mBadgeView.setTypeface(FontsHolder.getNumeralSansMedium(context));
 
 
 

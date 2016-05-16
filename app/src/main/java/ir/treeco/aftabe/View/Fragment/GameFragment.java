@@ -368,7 +368,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container, gameFragment, "GameFragment");
-                        transaction.commit();
+                        transaction.commitAllowingStateLoss();
                     }
 
                     @Override

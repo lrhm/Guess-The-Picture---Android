@@ -263,7 +263,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     FragmentTransaction transaction = (getActivity()).getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, gameResultFragment);
                     transaction.addToBackStack(null);
-                    transaction.commit();
+                    transaction.commitAllowingStateLoss();
                 }
 
             }
@@ -326,7 +326,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
             transaction.addToBackStack(null);
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         }
 
     }
@@ -364,7 +364,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
         transaction.addToBackStack(null);
 
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
     public void skip() {

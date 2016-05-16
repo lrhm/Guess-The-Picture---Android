@@ -3,6 +3,7 @@ package ir.treeco.aftabe.Util;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.PowerManager;
+import android.util.Log;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.net.URL;
  */
 public class DownloadTask extends AsyncTask<String, Integer, String> {
 
+    private static final String TAG = "DownloadTask";
     private Context context;
     private PowerManager.WakeLock mWakeLock;
     private DownloadTaskListener mDownloadTaskListener;
@@ -83,6 +85,9 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             byte data[] = new byte[4096];
             long total = 0;
             int count;
+
+            Log.d(TAG, "file length is " + fileLength);
+
             while ((count = input.read(data)) != -1) {
                 // allow canceling with back button
                 if (isCancelled()) {

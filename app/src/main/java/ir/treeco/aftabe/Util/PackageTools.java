@@ -3,6 +3,7 @@ package ir.treeco.aftabe.Util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,6 +35,7 @@ import ir.treeco.aftabe.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import retrofit.Callback;
 import retrofit.Response;
 
@@ -264,6 +266,8 @@ public class PackageTools {
             @Override
             public void onProgress(int progress) {
                 notificationAdapter.notifyDownload(progress, id, packageObject.getName());
+                listener.onProgress(packageObject, progress);
+                Log.d(TAG, "on progress " + progress);
 
             }
 
@@ -295,13 +299,14 @@ public class PackageTools {
                 }
                 listener.onDownload(packageObject);
 
-                NotificationManager.dismissNotification(context, id);
+                notificationAdapter.dissmiss(id, packageObject.getName());
             }
 
             @Override
             public void onDownloadError(String error) {
                 isDownloadInProgress.put(packageObject.getId(), false);
                 notificationAdapter.faildDownload(id, packageObject.getName());
+                ToastMaker.show(context, "لطفا بعدا امتحان کنید", Toast.LENGTH_SHORT);
 
             }
         }).execute(url, path, "p_" + packageObject.getId() + ".zip");
@@ -379,6 +384,8 @@ public class PackageTools {
     public interface OnDownloadSuccessListener {
 
         void onDownload(PackageObject packageObject);
+
+        void onProgress(PackageObject packageObject, int progress);
     }
 
     private class PackageObjectListHolder {

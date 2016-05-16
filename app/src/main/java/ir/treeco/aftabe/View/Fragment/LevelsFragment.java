@@ -51,7 +51,7 @@ public class LevelsFragment extends Fragment {
 
         if (getActivity().getSupportFragmentManager().findFragmentByTag("GameFragment") != null) {
             GameFragment gameFragment = (GameFragment) getActivity().getSupportFragmentManager().findFragmentByTag("GameFragment");
-            getActivity().getSupportFragmentManager().beginTransaction().remove(gameFragment).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(gameFragment).commitAllowingStateLoss();
         }
     }
 }

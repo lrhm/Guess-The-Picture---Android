@@ -70,7 +70,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
                 FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, gameFragment);
                 transaction.addToBackStack(null);
-                transaction.commit();
+                transaction.commitAllowingStateLoss();
             }
         }
     }

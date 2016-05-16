@@ -64,6 +64,12 @@ public class NotificationAdapter {
         }
     }
 
+    public void dissmiss(int id, String tag) {
+        if (notify) {
+            notificationManager.cancel(tag, id);
+        }
+    }
+
     public void finalDownload(int id, String tag) {
         if (notify) {
             nBuilder.setContentText("آب گیری تمام شد")

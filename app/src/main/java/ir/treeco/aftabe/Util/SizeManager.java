@@ -30,8 +30,15 @@ public class SizeManager {
 
     static int screenWidth = 0;
 
+    private static boolean initilized = false;
+
 
     public static void initSizes(Activity context) {
+
+        if (initilized)
+            return;
+        initilized = true;
+
         int screenWidth = 0;
         int screenHeight = 0;
         if (Build.VERSION.SDK_INT >= 13) {

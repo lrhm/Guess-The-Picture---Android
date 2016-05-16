@@ -159,7 +159,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         setContentView(R.layout.activity_main);
-        coinAdapter = new CoinAdapter(getApplicationContext(), this);
+        coinAdapter = new CoinAdapter(this, this);
+
+        SizeManager.initSizes(this );
 
         checkExtras(getIntent().getExtras());
 
@@ -229,7 +231,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mainFragment = new MainFragment();
 
         fragmentTransaction.replace(R.id.fragment_container, mainFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
 
         setUpCoinBox();
         setUpHeader();
@@ -253,14 +255,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
 
-//        Intent intent = new Intent(this, RegistrationIntentService.class);
-//        startService(intent);
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
 
-        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
+//        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
+//            Intent intent = new Intent(this, RegistrationIntentService.class);
+//            startService(intent);
+//        }
 
+//        coinAdapter.earnCoins(5000);
 
     }
 
@@ -430,7 +433,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, storeFragment);
                     transaction.addToBackStack(null);
-                    transaction.commit();
+                    transaction.commitAllowingStateLoss();
                 }
                 break;
         }
@@ -907,9 +910,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
             if (!resultHolder.amIWinner(myUser))
                 coin = 0;
-            if (coin != 0)
-                coinAdapter.earnCoins(coin);
+            if (coin != 0) {
+                final int finalCoin = coin;
+                new Handler(getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
 
+                        coinAdapter.earnCoins(finalCoin);
+                    }
+                });
+
+            }
         }
 
 //        if(resultHolder.getStatus().)
@@ -968,7 +979,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        new CustomAlertDialog(this, "بازی تمام خواهد شد . \n ایا مطمپن هستین ؟", "اره", new TextView.OnClickListener() {
+        new CustomAlertDialog(this, "بازی تمام خواهد شد . \n مطمئنی ؟", "اره", new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -1124,7 +1135,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (data == null)
             return;
 
-        ActionHolder actionHolder = new Gson().fromJson(data, ActionHolder.class);
+        final ActionHolder actionHolder = new Gson().fromJson(data, ActionHolder.class);
 
         NotificationManager.dismissNotification(this, actionHolder.getNotificationID());
 
@@ -1143,7 +1154,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     return;
                 }
 
-                SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), true);
+
+                    }
+                }, 600);
                 new LoadingDialog(this).show();
             } else {
 
