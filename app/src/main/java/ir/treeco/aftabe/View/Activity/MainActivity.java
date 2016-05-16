@@ -161,7 +161,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         coinAdapter = new CoinAdapter(this, this);
 
-        SizeManager.initSizes(this );
+        SizeManager.initSizes(this);
 
         checkExtras(getIntent().getExtras());
 
@@ -880,7 +880,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         Log.d(TAG, "got user action");
-        if (!actionHolder.getUserId().equals(Tools.getCachedUser().getId())) {
+        if (!actionHolder.getUserId().equals(Tools.getCachedUser(this).getId())) {
             UserActionCache.getInstance().addToOpponentList(actionHolder.getAction());
 
             runOnUiThread(new Runnable() {
@@ -902,6 +902,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             myUser.setScore(myUser.getScore() + resultHolder.getMyScoreResult(myUser));
             onGetMyUser(myUser);
+            Tools.cacheUser(myUser);
 
             int coin = 160;
             if (resultHolder.getScores()[0].isWinner() && resultHolder.getScores()[1].isWinner()) {

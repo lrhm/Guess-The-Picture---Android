@@ -244,8 +244,9 @@ public class User {
 
     public boolean isMe() {
 
-        return (getId() == null || Tools.getCachedUser() == null || Tools.getCachedUser().getId() == null) ?
-                isMe : Tools.getCachedUser().getId().equals(getId());
+        User cachedUser = Tools.getCachedUser(null);
+        return (getId() == null ||cachedUser == null || cachedUser.getId() == null) ?
+                isMe : cachedUser.getId().equals(getId());
     }
 
     public void setOwnerMe() {

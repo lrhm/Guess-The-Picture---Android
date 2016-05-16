@@ -58,7 +58,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         if (context instanceof MainActivity)
             myUser = ((MainActivity) context).getMyUser();
         if (myUser == null)
-            myUser = Tools.getCachedUser();
+            myUser = Tools.getCachedUser(context);
     }
 
 

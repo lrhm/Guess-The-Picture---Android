@@ -234,10 +234,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         dismiss();
 
         boolean win = false;
-        if (resultHolder.getScores()[0].getUserId().equals(Tools.getCachedUser().getId()))
+        if (resultHolder.getScores()[0].getUserId().equals(Tools.getCachedUser(context).getId()))
             win = resultHolder.getScores()[0].isWinner();
 
-        if (resultHolder.getScores()[1].getUserId().equals(Tools.getCachedUser().getId()))
+        if (resultHolder.getScores()[1].getUserId().equals(Tools.getCachedUser(context).getId()))
             win = resultHolder.getScores()[1].isWinner();
 
 //        TODO here or in gameResult we should call onGameEnd

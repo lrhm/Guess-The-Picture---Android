@@ -1,5 +1,6 @@
 package ir.treeco.aftabe.API;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -49,9 +50,15 @@ public class AftabeAPIAdapter {
     private static AftabeService aftabeService;
     private final static String baseUrl = "https://aftabe2.com:2020";
     private static final String TAG = "AftabeAPIAdapter";
+    private static Context context;
 
     public static boolean isNull() {
         return retrofit == null;
+    }
+
+    public static void setContext(Context context){
+        AftabeAPIAdapter.context = context;
+
     }
 
     private static void init() {
@@ -462,7 +469,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<User> response) {
                 if (response.isSuccess() && response.body() != null) {
-                        Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
                 }
             }
 
@@ -475,7 +482,7 @@ public class AftabeAPIAdapter {
 
     public static void updateGCMToken(String gcmToken) {
 
-        User myUser = Tools.getCachedUser();
+        User myUser = Tools.getCachedUser(context);
         if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
             return;
 
@@ -684,7 +691,7 @@ public class AftabeAPIAdapter {
 
         if (!Tools.isUserRegistered())
             return;
-        User user = Tools.getCachedUser();
+        User user = Tools.getCachedUser(context);
         if (user == null)
             return;
 
@@ -707,7 +714,7 @@ public class AftabeAPIAdapter {
     public static void updateContact(ContactsHolder contactsHolder, Callback<HashMap<String, String>> callback) {
         init();
 
-        User user = Tools.getCachedUser();
+        User user = Tools.getCachedUser(context);
 
         if (user == null)
             return;
@@ -744,7 +751,7 @@ public class AftabeAPIAdapter {
     public static void buyPackage(int packageId, final OnPackageBuyListener listener) {
         init();
 
-        User user = Tools.getCachedUser();
+        User user = Tools.getCachedUser(context);
         if (user == null)
             return;
         aftabeService.buyPackages(packageId + "", user.getLoginInfo().getAccessToken()).enqueue(new Callback<ArrayList<Integer>>() {
@@ -770,7 +777,7 @@ public class AftabeAPIAdapter {
     public static void getCTS(final BatchUserFoundListener listener) {
         init();
 
-        User user = Tools.getCachedUser();
+        User user = Tools.getCachedUser(context);
         if (user == null)
             return;
 

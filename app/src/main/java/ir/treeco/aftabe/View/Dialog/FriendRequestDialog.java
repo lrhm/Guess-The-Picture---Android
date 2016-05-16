@@ -118,7 +118,7 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         }
 
         if (v.getId() == R.id.uv_match_button) {
-            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mUser.getId(), null);
+            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(context), mUser.getId(), null);
 //            mUser.setIsFriend(true);
 //            ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
 

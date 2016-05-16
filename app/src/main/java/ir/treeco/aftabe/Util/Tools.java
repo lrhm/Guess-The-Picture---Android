@@ -60,6 +60,7 @@ import ir.treeco.aftabe.Object.SaveHolder;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 
 public class Tools {
@@ -554,7 +555,8 @@ public class Tools {
         Gson gson = new Gson();
         Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
         String oldKey = Prefs.getString(ENCRYPT_KEY, "");
-        if (!oldKey.equals(user.getKey()) || getCachedUser() == null || !getCachedUser().getId().equals(user.getId())) {
+        User cachedUser = getCachedUser(null);
+        if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())) {
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB();
@@ -616,13 +618,24 @@ public class Tools {
                 || VALID_PHONE_3.matcher(number).find() || VALID_PHONE_4.matcher(number).find();
     }
 
-    public static User getCachedUser() {
+    public static User getCachedUser(Context context) {
+
+        if (context != null && context instanceof MainActivity) {
+            User user = ((MainActivity) context).getMyUser();
+            if (user != null)
+                return user;
+        }
+
         if (Prefs.contains(Tools.USER_SAVED_DATA)) {
             String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
             Gson gson = new Gson();
             return gson.fromJson(jsonString, User.class);
         }
         return null;
+    }
+
+    public static void cacheUser(User user) {
+        Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));
     }
 
 

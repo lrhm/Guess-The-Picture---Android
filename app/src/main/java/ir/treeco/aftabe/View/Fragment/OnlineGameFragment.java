@@ -248,10 +248,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime).show();
                 } else {
                     boolean win = false;
-                    if (mGameResult.getScores()[0].getUserId().equals(Tools.getCachedUser().getId()))
+                    if (mGameResult.getScores()[0].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
                         win = mGameResult.getScores()[0].isWinner();
 
-                    if (mGameResult.getScores()[1].getUserId().equals(Tools.getCachedUser().getId()))
+                    if (mGameResult.getScores()[1].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
                         win = mGameResult.getScores()[1].isWinner();
 
 

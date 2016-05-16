@@ -45,7 +45,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
-        User user = Tools.getCachedUser();
+        User user = Tools.getCachedUser(getActivity());
         userLevelView = (UserLevelView) view.findViewById(R.id.fragment_user_info_user_view);
         userLevelView.setClick(false);
 

@@ -363,7 +363,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         User myUser = ((MainActivity) getActivity()).getMyUser();
 
-        User cachedUser = Tools.getCachedUser();
+        User cachedUser = Tools.getCachedUser(getActivity());
 
         if (cachedUser == null) {
             ToastMaker.show(getContext(), "برای جست و جو لطفا عضو شوید", Toast.LENGTH_SHORT);

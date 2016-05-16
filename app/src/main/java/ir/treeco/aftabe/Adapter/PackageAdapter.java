@@ -101,7 +101,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
                 User myUser = ((MainActivity) context).getMyUser();
                 if (myUser == null)
-                    myUser = Tools.getCachedUser();
+                    myUser = Tools.getCachedUser(context);
 
                 if (packageObject.getPrice() == 0 || (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))) {
                     ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);

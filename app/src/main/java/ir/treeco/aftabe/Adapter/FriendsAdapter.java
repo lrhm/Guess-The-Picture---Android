@@ -246,7 +246,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     @Override
                     public void onClick(View v) {
 
-                        final User myUser = Tools.getCachedUser();
+                        final User myUser = Tools.getCachedUser(context);
 
                         if (myUser == null || myUser.isGuest()) {
 
@@ -287,7 +287,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    final User myUser = Tools.getCachedUser();
+                    final User myUser = Tools.getCachedUser(context);
 
                     if (myUser == null || myUser.isGuest()) {
 
@@ -304,7 +304,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    final User myUser = Tools.getCachedUser();
+                    final User myUser = Tools.getCachedUser(context);
 
                     if (myUser == null || myUser.isGuest()) {
 
@@ -318,7 +318,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 //                    user.setIsFriend(true);
 //                    addUser(user, TYPE_FRIEND);
 //                    SocketAdapter.answerFriendRequest(user.getId(), true);
-                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), user.getId(), null);
+                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(context), user.getId(), null);
                 }
             });
         }

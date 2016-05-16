@@ -84,7 +84,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         ((MainActivity) getActivity()).setGameResult(true);
 
         View view = inflater.inflate(R.layout.fragment_game_result, container, false);
-        User myUser = Tools.getCachedUser();
+        User myUser = Tools.getCachedUser(getActivity());
 
         TextView coinTextView = (TextView) view.findViewById(R.id.fragment_result_coin_tv);
         TextView scoreTextView = (TextView) view.findViewById(R.id.fragment_result_score_tv);
@@ -102,12 +102,8 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         opponentLevelView.setOnlineStateClear();
 
         for (GameActionResult gameActionResult : UserActionCache.getInstance().getOpponentList()) {
-            opponentLevelView
-
-
-                    .
-                            setOnlineState(gameActionResult);
-            Log.d( TAG,"Enemys one");
+            opponentLevelView.setOnlineState(gameActionResult);
+            Log.d(TAG, "Enemys one");
         }
 
         mAddFriendImageView = (ImageView) view.findViewById(R.id.fragment_result_add_friend);
@@ -220,7 +216,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         if (v.getId() == R.id.fragment_result_add_friend) {
             if (!mOpponent.isFriend())
-                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), mOpponent.getId(), null);
+                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
 //            TODO chat here
         }
         if (v.getId() == R.id.fragment_result_chat) {

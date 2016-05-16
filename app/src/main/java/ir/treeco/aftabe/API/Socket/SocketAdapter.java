@@ -116,7 +116,7 @@ public class SocketAdapter {
         if (mSocket != null)
             return;
 
-        if (Tools.getCachedUser() == null)
+        if (Tools.getCachedUser(mContext) == null)
             return;
 
         Log.d(TAG, "initilizing socketa");
@@ -128,7 +128,7 @@ public class SocketAdapter {
         opts.forceNew = true;
         opts.reconnection = true;
 //        opts.timeout = 30000;
-        opts.query = "auth_token=" + Tools.getCachedUser().getLoginInfo().getAccessToken();
+        opts.query = "auth_token=" + Tools.getCachedUser(mContext).getLoginInfo().getAccessToken();
 
 
         try {

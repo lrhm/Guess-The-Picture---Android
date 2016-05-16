@@ -74,7 +74,7 @@ public class ContactsAdapter implements BatchUserFoundListener {
                 return;
             // failed to get
         }
-        if (!Tools.isUserRegistered() || Tools.getCachedUser() == null) {
+        if (!Tools.isUserRegistered() || Tools.getCachedUser(mContext) == null) {
             return;
         }
 

@@ -37,7 +37,7 @@ public class LeaderboardFragment extends Fragment implements BatchUserFoundListe
         mAdapter = new LeaderboardAdapter(null);
         recyclerView.setAdapter(mAdapter);
 
-        AftabeAPIAdapter.getLoaderboard(Tools.getCachedUser(), this);
+        AftabeAPIAdapter.getLoaderboard(Tools.getCachedUser(getActivity()), this);
 
         return recyclerView;
     }

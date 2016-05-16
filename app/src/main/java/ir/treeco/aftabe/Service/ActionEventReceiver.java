@@ -42,7 +42,7 @@ public class ActionEventReceiver extends BroadcastReceiver {
 
             boolean accepted = actionHolder.isFriendRequestAccepted();
             if (accepted)
-                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(), actionHolder.getNotifHolder().getFriendSF().getUser().getId(), null);
+                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(null), actionHolder.getNotifHolder().getFriendSF().getUser().getId(), null);
             else
                 SocketAdapter.answerFriendRequest(actionHolder.getNotifHolder().getFriendSF().getUser().getId(), accepted);
 
