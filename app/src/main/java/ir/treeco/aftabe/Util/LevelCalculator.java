@@ -17,8 +17,10 @@ public class LevelCalculator {
         scoreLevels.add(0);
         scoreLevels.add(8);
         int last = 8;
+        int i = 2;
         while (last <= mScore) {
-            last += 8;
+            last = 4 * (i) * (i + 1) - last;
+            i++;
             scoreLevels.add(last);
         }
     }

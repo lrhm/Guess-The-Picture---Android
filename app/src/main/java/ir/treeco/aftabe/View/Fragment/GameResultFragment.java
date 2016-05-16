@@ -32,7 +32,6 @@ import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 public class GameResultFragment extends Fragment implements View.OnClickListener {
 
-    private static final String ARG_WIN_OR_LOSE = "param_win_or_lose";
     private static final String ARG_PARAM2 = "param_game_result_holder";
     private static final String ARG_USER_OP = "param_user_oppoenent";
     private static final String TAG = "GameResultFragment";
@@ -51,10 +50,9 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         // Required empty public constructor
     }
 
-    public static GameResultFragment newInstance(Boolean win, ResultHolder gameResultHolder, User opponent) {
+    public static GameResultFragment newInstance( ResultHolder gameResultHolder, User opponent) {
         GameResultFragment fragment = new GameResultFragment();
         Bundle args = new Bundle();
-        args.putBoolean(ARG_WIN_OR_LOSE, win);
         args.putString(ARG_PARAM2, new Gson().toJson(gameResultHolder));
         args.putString(ARG_USER_OP, new Gson().toJson(opponent));
         fragment.setArguments(args);
@@ -65,9 +63,15 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mWin = getArguments().getBoolean(ARG_WIN_OR_LOSE);
             mGameResultHolder = new Gson().fromJson(getArguments().getString(ARG_PARAM2), ResultHolder.class);
             mOpponent = new Gson().fromJson(getArguments().getString(ARG_USER_OP), User.class);
+
+             mWin = false;
+            if (mGameResultHolder.getScores()[0].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
+                mWin = mGameResultHolder.getScores()[0].isWinner();
+
+            if (mGameResultHolder.getScores()[1].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
+                mWin = mGameResultHolder.getScores()[1].isWinner();
 
         }
     }

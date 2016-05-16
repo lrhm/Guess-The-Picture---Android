@@ -3,7 +3,6 @@ package ir.treeco.aftabe.View.Activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,8 +19,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,7 +62,6 @@ import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
 import ir.treeco.aftabe.API.Socket.SocketListener;
 import ir.treeco.aftabe.API.UserFoundListener;
-import ir.treeco.aftabe.API.Utils.CoinDiffHolder;
 import ir.treeco.aftabe.API.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
@@ -94,7 +90,6 @@ import ir.treeco.aftabe.View.Custom.StarView;
 import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
-import ir.treeco.aftabe.View.Dialog.ForceUpdateDialog;
 import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
@@ -102,6 +97,7 @@ import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
+import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
@@ -776,6 +772,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGameEnded() {
 
+
         for (FriendRequestDialog dialog : mCachedFriendRequestDialogs) {
             if (!isFinishing())
                 dialog.show();
@@ -923,6 +920,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             }
         }
+
 
 //        if(resultHolder.getStatus().)
 

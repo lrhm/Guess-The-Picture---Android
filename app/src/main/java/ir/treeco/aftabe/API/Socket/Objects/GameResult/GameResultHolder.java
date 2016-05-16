@@ -2,6 +2,8 @@ package ir.treeco.aftabe.API.Socket.Objects.GameResult;
 
 import com.google.gson.annotations.Expose;
 
+import ir.treeco.aftabe.Object.User;
+
 /**
  * Created by al on 3/15/16.
  */
@@ -11,10 +13,10 @@ public class GameResultHolder {
     OnlineLevel[] levels;
 
     @Expose
-    OpponentObject opponent;
+    User opponent;
 
 
-    public OpponentObject getOpponent() {
+    public User getOpponent() {
         return opponent;
     }
 

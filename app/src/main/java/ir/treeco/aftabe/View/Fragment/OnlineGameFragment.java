@@ -121,11 +121,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         setOnGameEndListener(mainActivity);
 
         ((MainActivity) getActivity()).setOnlineGame(true);
-        opponent = new User();
-        opponent.setName(mGameResultHolder.getOpponent().getName());
-        opponent.setId(mGameResultHolder.getOpponent().getId());
-        opponent.setScore(mGameResultHolder.getOpponent().getScore());
-        opponent.setAccess(mGameResultHolder.getOpponent().getAccess());
+        opponent = mGameResultHolder.getOpponent();
 
         ((MainActivity) getActivity()).setOnlineGameUser(opponent);
 
@@ -238,28 +234,22 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
 
 
-        if (state == 1 || state == 0 && mRemainingTime == 0 || lost) {
+        if (state == 1 || mRemainingTime == 0 || lost) {
             Log.d(TAG, "onDestroy , set online game false");
             ((MainActivity) getActivity()).setOnlineGame(false);
 
             synchronized (lock) {
                 if (mGameResult == null) {
                     super.onDestroy();
-                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime).show();
+                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime == 0 ? 10 : mRemainingTime + 3).show();
                 } else {
-                    boolean win = false;
-                    if (mGameResult.getScores()[0].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
-                        win = mGameResult.getScores()[0].isWinner();
-
-                    if (mGameResult.getScores()[1].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
-                        win = mGameResult.getScores()[1].isWinner();
 
 
                     super.onDestroy();
                     mOnGameEndListener.onGameEnded();
 
 //                    mainActivity.setOnlineGameVisibilityGone();
-                    GameResultFragment gameResultFragment = GameResultFragment.newInstance(win, mGameResult, opponent);
+                    GameResultFragment gameResultFragment = GameResultFragment.newInstance(mGameResult, opponent);
                     FragmentTransaction transaction = (getActivity()).getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, gameResultFragment);
                     transaction.addToBackStack(null);
