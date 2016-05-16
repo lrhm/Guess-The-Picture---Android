@@ -64,6 +64,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     private String imagePath;
     private KeyboardView keyboardView;
     private TimeStampAdapter timeStampAdapter;
+    private boolean skiped = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -235,7 +236,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         ((MainActivity) getActivity()).hideCheatButton();
         Answers.getInstance().logLevelEnd(new LevelEndEvent()
                 .putLevelName(solution)
@@ -244,6 +244,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 .putCustomAttribute("Package", packageId)
                 .putCustomAttribute("Package Name", "package " + packageId)
                 .putCustomAttribute("Time", timeStampAdapter.getTimeStamp(getActivity())));
+        super.onDestroy();
+
         Log.d(TAG, "onDestory");
     }
 
@@ -347,6 +349,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         if (level.isResolved()) {
             nextLevel();
         } else if (coinAdapter.spendCoins(CoinAdapter.SKIP_LEVEL_COST)) {
+            skiped = true;
             nextLevel();
         }
     }
@@ -354,7 +357,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     private void nextLevel() {
         db.resolveLevel(packageId, levelId);
 //        tools.backUpDB();
-        new FinishDailog(getActivity(), level, packageSize,
+        new FinishDailog(getActivity(), level, packageSize, skiped,
                 new FinishLevel() {
                     @Override
                     public void NextLevel() {

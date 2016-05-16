@@ -32,19 +32,21 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
     private FinishLevel finishLevel;
     private ImageManager imageManager;
     private LengthManager lengthManager;
+    private boolean skiped;
 
-    public FinishDailog(Context context, Level level, int packageSize, FinishLevel finishLevel) {
+    public FinishDailog(Context context, Level level, int packageSize, boolean skiped, FinishLevel finishLevel) {
         super(context);
         this.context = context;
         this.level = level;
         this.packageSize = packageSize;
         this.finishLevel = finishLevel;
+        this.skiped = skiped;
         imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCanceledOnTouchOutside(true);
@@ -67,7 +69,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
         contents.setPadding(padding, 0, padding, padding);
 
         TextView prize = (TextView) findViewById(R.id.prize);
-        if (!level.isResolved()) {
+        if (!level.isResolved() && !skiped) {
             String prizeString = "+۳۰";
             customizeTextView(prize, prizeString, lengthManager.getLevelAuthorTextSize());
 
@@ -103,7 +105,7 @@ public class FinishDailog extends Dialog implements View.OnClickListener {
         homeButton.setOnClickListener(this);
 
         TextView levelSolution = (TextView) findViewById(R.id.level_solution);
-        customizeTextView(levelSolution, tools.decodeBase64(level.getJavab()).replace("."," "), lengthManager.getLevelSolutionTextSize());
+        customizeTextView(levelSolution, tools.decodeBase64(level.getJavab()).replace(".", " "), lengthManager.getLevelSolutionTextSize());
     }
 
     @Override

@@ -115,7 +115,7 @@ public class StoreFragment extends Fragment {
 //                CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
 
-                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY, null, getActivity());
+                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY, 150, getActivity());
             }
         });
 
@@ -160,7 +160,6 @@ public class StoreFragment extends Fragment {
         textView.setText(label);
 
         textView.setTypeface(FontsHolder.getSansMedium(textView.getContext()));
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
 
         UiUtil.setTextViewSize(textView, lengthManager.getStoreItemHeight(), 0.275f);
         textView.setTextColor(Color.WHITE);

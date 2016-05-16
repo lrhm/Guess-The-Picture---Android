@@ -23,6 +23,7 @@ import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
@@ -38,6 +39,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
     public static final String[] titles = new String[]{"رتبه", "برد/باخت", "تعداد دوستان"};
     TextView[] lefts;
     TextView[] rights;
+    View[] parents;
     UserLevelView userLevelView;
 
     @Nullable
@@ -51,13 +53,16 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
         lefts = new TextView[3];
         rights = new TextView[3];
+        parents = new View[3];
 
         int[] textRightIds = new int[]{R.id.fragment_user_info_first_left, R.id.fragment_user_info_2nd_left, R.id.fragment_user_info_3rd_left};
         int[] textLeftIds = new int[]{R.id.fragment_user_info_first_right, R.id.fragment_user_info_2nd_right, R.id.fragment_user_info_3rd_right};
+        int[] parentIds = new int[]{R.id.fragment_user_info_parent_one, R.id.fragment_user_info_parent_two, R.id.fragment_user_info_parent_three};
 
         for (int i = 0; i < 3; i++) {
             lefts[i] = (TextView) view.findViewById(textLeftIds[i]);
             rights[i] = (TextView) view.findViewById(textRightIds[i]);
+            parents[i] = view.findViewById(parentIds[i]);
         }
 
         ((MainActivity) getActivity()).addUserFoundListener(this);
@@ -66,6 +71,9 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
             initTextViews(user);
 
         }
+
+        UiUtil.setBottomMargin(parents[2], (int) (SizeManager.getScreenHeight() * 0.02));
+
         if (user != null && user.isGuest()) {
 
             Log.d("TAG", "setting sing in image");
@@ -102,10 +110,23 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
             TextView left = lefts[i];
             left.setTypeface(FontsHolder.getSansBold(getContext()));
             left.setText(titles[i]);
+            int margin = (int) (SizeManager.getScreenWidth() * 0.15);
+
 
             TextView right = rights[i];
             right.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
             right.setText(textRights[i]);
+
+            UiUtil.setWidth(parents[i], (int) (SizeManager.getScreenWidth() * 0.7));
+
+            UiUtil.setTopMargin(parents[i], (int) (SizeManager.getScreenHeight() * 0.02));
+
+            UiUtil.setRightMargin(left, margin);
+            UiUtil.setLeftMargin(right, margin);
+
+
+            UiUtil.setTextViewSize(left, (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
+            UiUtil.setTextViewSize(right, (int) (SizeManager.getScreenHeight() * 0.1), 0.26f);
 
         }
 

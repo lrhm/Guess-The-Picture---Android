@@ -27,7 +27,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/dialog_match_request_text_view"
+                    android:id="@+id/dialog_match_request_title"
+                    android:gravity="center"
+                    android:text="درخواست بازی " />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@id/dialog_match_request_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dialog_match_request_content"
                     android:gravity="center"
                     android:text="درخواست بازی " />
 

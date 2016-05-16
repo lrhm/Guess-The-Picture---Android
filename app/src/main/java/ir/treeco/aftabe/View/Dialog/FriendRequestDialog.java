@@ -85,20 +85,30 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         mChatButton.setOnClickListener(this);
         mMatchButton.setOnClickListener(this);
 
-        TextView textView = (TextView) findViewById(R.id.dialog_match_request_text_view);
-        textView.setText("درخواست دوستی");
-        textView.setTypeface(FontsHolder.getSansMedium(context));
 
-        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenHeight() * 0.1), 0.3f);
-
-        leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(textView));
-        UiUtil.setLeftMargin(textView, leftMargin / 2);
+        String title = "درخواست دوستی";
+        setUpTextView(R.id.dialog_match_request_title, title, true);
+        findViewById(R.id.dialog_match_request_content).setVisibility(View.GONE);
 
 
         UiUtil.setTopMargin(findViewById(R.id.dialog_match_request_text_containers), (int) (UiUtil.getTextViewHeight(mUserLevelView.getUserNameTextView())
                 + SizeManager.getScreenHeight() * 0.03)
         );
 
+
+    }
+
+
+    private void setUpTextView(int id, String text, boolean bold) {
+        TextView titleTextView = (TextView) findViewById(id);
+
+        titleTextView.setTypeface(FontsHolder.getFont(context, bold ? FontsHolder.SANS_BOLD : FontsHolder.SANS_MEDIUM));
+        titleTextView.setText(text);
+
+        UiUtil.setTextViewSize(titleTextView, (int) (SizeManager.getScreenHeight() * 0.1), 0.3f);
+
+        int leftMargin = (int) (SizeManager.getScreenWidth() * 0.8 - UiUtil.getTextViewWidth(titleTextView));
+        UiUtil.setLeftMargin(titleTextView, leftMargin / 2);
 
     }
 
