@@ -26,6 +26,7 @@ import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
+import ir.treeco.aftabe.View.Activity.MainActivity;
 
 public class MainFragment extends Fragment {
 
@@ -61,8 +62,6 @@ public class MainFragment extends Fragment {
         mSmartTabLayout.setViewPager(viewPager);
 
         mSmartTabLayout.getLayoutParams().height = (int) (SizeManager.getScreenHeight() * 0.08);
-
-
 
 
         shaderImageView = (ImageView) view.findViewById(R.id.shadeview);

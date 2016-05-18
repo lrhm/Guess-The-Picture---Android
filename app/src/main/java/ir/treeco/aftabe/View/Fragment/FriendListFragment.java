@@ -73,7 +73,7 @@ import ir.treeco.aftabe.View.Custom.ToastMaker;
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
         MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener, View.OnFocusChangeListener {
 
-    private static final String TAG = "FriendListFragmetn";
+    public static final String TAG = "FriendListFragmetn";
     ArrayAdapter<String> searchBarAdapter;
     ImageManager imageManager;
     RecyclerView mFriendsRecyclerView;

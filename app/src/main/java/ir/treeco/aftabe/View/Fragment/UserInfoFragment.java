@@ -1,10 +1,14 @@
 package ir.treeco.aftabe.View.Fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,16 +110,39 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
         String[] textRights = new String[]{user.getRank() + "", user.getLoses() + "/" + user.getWins(), user.getFriendCount() + ""};
 
+        for(int i =0 ;i <3 ; i++){
+            textRights[i] = Tools.numeralStringToPersianDigits(textRights[i]);
+        }
+
         for (int i = 0; i < 3; i++) {
+
+
             TextView left = lefts[i];
             left.setTypeface(FontsHolder.getSansBold(getContext()));
-            left.setText(titles[i]);
+            if (i != 1)
+                left.setText(titles[i]);
+            else {
+
+                Spannable wordtoSpan = new SpannableString(titles[i]);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), 4, titles[1].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                left.setText(wordtoSpan);
+
+            }
             int margin = (int) (SizeManager.getScreenWidth() * 0.15);
 
 
             TextView right = rights[i];
-            right.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
             right.setText(textRights[i]);
+
+            if (i== 1){
+                Spannable wordtoSpan = new SpannableString(textRights[i]);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED),0 ,  (user.getLoses()+"/").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                right.setText(wordtoSpan);
+
+
+            }
+
+            right.setTypeface(FontsHolder.getNumeralSansBold(getContext()));
 
             UiUtil.setWidth(parents[i], (int) (SizeManager.getScreenWidth() * 0.7));
 

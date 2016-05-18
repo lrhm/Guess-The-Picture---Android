@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ogaclejapan.smarttablayout.MySmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -25,7 +26,7 @@ import ir.treeco.aftabe.View.Custom.VerticalViewPager;
 /**
  * Created by al on 12/24/15.
  */
-public class OnlineMenuFragment extends Fragment  {
+public class OnlineMenuFragment extends Fragment implements MySmartTabLayout.OnTabClickListener {
 
 
     MainFragment mainFragment;
@@ -44,6 +45,7 @@ public class OnlineMenuFragment extends Fragment  {
         fragmentPagerItemsCreator.add("", OnlinePrimaryPageFragment.class);
         fragmentPagerItemsCreator.add("", FriendListFragment.class);
 
+
         FragmentPagerItems fragmentPagerItems = fragmentPagerItemsCreator.create();
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), fragmentPagerItems);
@@ -51,10 +53,9 @@ public class OnlineMenuFragment extends Fragment  {
         mainFragment =
                 ((MainActivity) getActivity()).mainFragment;
 
+        mainFragment.mSmartTabLayout.setOnTabClickListener(this);
 
         verticalViewPager.setDegreeOfFreedom(4);
-
-
 
 
         return view;
@@ -62,4 +63,12 @@ public class OnlineMenuFragment extends Fragment  {
     }
 
 
+    @Override
+    public void onTabClicked(int position) {
+
+        if (position == 1 && verticalViewPager.getCurrentItem() == 1) {
+            verticalViewPager.setCurrentItem(0,true);
+        }
+
+    }
 }

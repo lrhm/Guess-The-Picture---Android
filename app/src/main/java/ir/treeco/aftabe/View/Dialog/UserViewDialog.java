@@ -2,10 +2,14 @@ package ir.treeco.aftabe.View.Dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -129,8 +133,13 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         int[] textLeftIds = new int[]{R.id.dialog_user_view_first_right, R.id.dialog_user_view_2nd_right, R.id.dialog_user_view_3rd_right};
         int[] parentIds = new int[]{R.id.dialog_user_view_parent_1, R.id.dialog_user_view_parent_2, R.id.dialog_user_view_parent_3};
 
-        String[] textRights = new String[]{mUser.getRank() + "", mUser.getLoses() + "/" + mUser.getWins() , mUser.getFriendCount()+""};
+        String[] textRights = new String[]{mUser.getRank() + "", mUser.getLoses() + "/" + mUser.getWins(), mUser.getFriendCount() + ""};
         Integer leftMargin = null;
+
+        for(int i =0 ;i <3 ; i++){
+            textRights[i] = Tools.numeralStringToPersianDigits(textRights[i]);
+        }
+
 
         for (int i = 0; i < 3; i++) {
             TextView left = (TextView) findViewById(textLeftIds[i]);
@@ -138,9 +147,27 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             left.setText(titles[i]);
             int margin = (int) (SizeManager.getScreenWidth() * 0.2);
 
+            if (i == 1) {
+
+                Spannable wordtoSpan = new SpannableString(titles[i]);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), 4, titles[1].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                left.setText(wordtoSpan);
+
+            }
+
             TextView right = (TextView) findViewById(textRightIds[i]);
             right.setTypeface(FontsHolder.getNumeralSansBold(context));
             right.setText(textRights[i]);
+
+
+            if (i== 1){
+                Spannable wordtoSpan = new SpannableString(textRights[i]);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED),0 ,  (mUser.getLoses()+"/").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                right.setText(wordtoSpan);
+
+
+            }
+
             UiUtil.setLeftMargin(right, margin);
 
             UiUtil.setTopMargin(findViewById(parentIds[i]), (int) (SizeManager.getScreenHeight() * 0.02));
