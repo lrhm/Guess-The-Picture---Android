@@ -66,6 +66,10 @@ public class PackageObject {
         return "https://aftabe2.com:2020/api/pictures/p/download/" + image.name;
     }
 
+    public int getPackageSize() {
+        return file.size;
+    }
+
     public Boolean getPurchased() {
         return isPurchased;
     }
@@ -103,6 +107,9 @@ public class PackageObject {
 
         @Expose
         String name;
+
+        @Expose
+        int size;
     }
 
 

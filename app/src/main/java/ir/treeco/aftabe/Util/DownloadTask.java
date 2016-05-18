@@ -21,12 +21,17 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
     private Context context;
     private PowerManager.WakeLock mWakeLock;
     private DownloadTaskListener mDownloadTaskListener;
+    private int mFileLength = -1;
 
     public DownloadTask(Context context, DownloadTaskListener downloadTaskListener) {
         this.context = context;
         mDownloadTaskListener = downloadTaskListener;
     }
 
+    public DownloadTask setFileLength(int fileLength) {
+        this.mFileLength = fileLength;
+        return this;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -37,6 +42,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 getClass().getName());
         mWakeLock.acquire();
+
+        mDownloadTaskListener.onProgress(0);
 
     }
 
@@ -49,9 +56,10 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             mDownloadTaskListener.onDownloadSuccess();
     }
 
-    /** first param is url , second is path without last /
-     param object is fileName if needed
-        **/
+    /**
+     * first param is url , second is path without last /
+     * param object is fileName if needed
+     **/
     @Override
     protected String doInBackground(String... sUrl) {
         InputStream input = null;
@@ -77,6 +85,9 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             // this will be useful to display download percentage
             // might be -1: server did not report the length
             int fileLength = connection.getContentLength();
+            if (fileLength < 1) {
+                fileLength = mFileLength;
+            }
 
             // download the file
             input = connection.getInputStream();

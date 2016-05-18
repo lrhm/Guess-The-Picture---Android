@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +31,7 @@ import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.PackageTools;
@@ -57,7 +60,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PackageTools.OnDownloadSuccessListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DownloadTask.DownloadTaskListener {
         ImageView imageView;
         TextView textView;
 
@@ -152,28 +155,51 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             }
         }
 
+
         @Override
-        public void onDownload(PackageObject packageObject) {
+        public void onProgress(final int progress) {
+            Log.d(TAG, "on progress" + progress);
 
-            ToastMaker.show(context, "دانلود شد", Toast.LENGTH_SHORT);
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (textView.getVisibility() != View.VISIBLE)
+                        textView.setVisibility(View.VISIBLE);
+                    textView.setText(Tools.numeralStringToPersianDigits(progress + "") + "%");
+
+                }
+            });
+        }
+
+        @Override
+        public void onDownloadSuccess() {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ToastMaker.show(context, "دانلود شد", Toast.LENGTH_SHORT);
 
 
-            ColorMatrix matrix = new ColorMatrix();
+                    ColorMatrix matrix = new ColorMatrix();
 
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-            imageView.setColorFilter(filter);
+                    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                    imageView.setColorFilter(filter);
 
-            textView.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                }
+            });
 
         }
 
         @Override
-        public void onProgress(PackageObject packageObject, int progress) {
-            if (textView.getVisibility() == View.GONE)
-                textView.setVisibility(View.VISIBLE);
-            int i = getAdapterPosition();
-            Log.d(TAG, "on progress" + progress);
-            textView.setText(Tools.numeralStringToPersianDigits(progress + "") + "%");
+        public void onDownloadError(String error) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ToastMaker.show(context, "لطفا بعدا امتحان کنید", Toast.LENGTH_SHORT);
+
+                    textView.setVisibility(View.GONE);
+                }
+            });
 
         }
     }

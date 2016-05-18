@@ -248,7 +248,7 @@ public class PackageTools {
     }
 
 
-    public void downloadPackage(final PackageObject packageObject, final OnDownloadSuccessListener listener) {
+    public void downloadPackage(final PackageObject packageObject, final DownloadTask.DownloadTaskListener listener) {
 
         Boolean isDling = isDownloadInProgress.get(packageObject.getId());
         if (isDling != null) {
@@ -262,11 +262,13 @@ public class PackageTools {
         final int id = packageObject.getId();
         final String path = context.getFilesDir().getPath();
         final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, packageObject.getName());
+
+        Log.d(TAG, "file length is " + packageObject.getPackageSize());
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
                 notificationAdapter.notifyDownload(progress, id, packageObject.getName());
-                listener.onProgress(packageObject, progress);
+                listener.onProgress( progress);
                 Log.d(TAG, "on progress " + progress);
 
             }
@@ -297,7 +299,7 @@ public class PackageTools {
 
 
                 }
-                listener.onDownload(packageObject);
+                listener.onDownloadSuccess();
 
                 notificationAdapter.dissmiss(id, packageObject.getName());
             }
@@ -306,10 +308,12 @@ public class PackageTools {
             public void onDownloadError(String error) {
                 isDownloadInProgress.put(packageObject.getId(), false);
                 notificationAdapter.faildDownload(id, packageObject.getName());
-                ToastMaker.show(context, "لطفا بعدا امتحان کنید", Toast.LENGTH_SHORT);
+
+                listener.onDownloadError(error);
+
 
             }
-        }).execute(url, path, "p_" + packageObject.getId() + ".zip");
+        }).setFileLength(packageObject.getPackageSize()).execute(url, path, "p_" + packageObject.getId() + ".zip");
 
 
     }
