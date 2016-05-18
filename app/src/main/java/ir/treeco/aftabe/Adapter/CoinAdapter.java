@@ -2,6 +2,7 @@ package ir.treeco.aftabe.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.widget.Toast;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -10,7 +11,8 @@ import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Dialog.FreeCoinOfferDialog;
+import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
+import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 
 public class CoinAdapter {
     public static final int LEVEL_COMPELETED_PRIZE = 30;
@@ -38,7 +40,12 @@ public class CoinAdapter {
         int nextAmount = getCoinsCount() - amount;
         if (nextAmount < 0) {
 //            ToastMaker.show(context, context.getString(R.string.not_enought_coins), Toast.LENGTH_SHORT);
-            new FreeCoinOfferDialog(context, mActivity).show();
+            new SkipAlertDialog(context, "یک ویدیو ببینید ۲۰ سکه بگیرید" + "\n" + "سکه کافی ندارید", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    TODO add a link to video ad
+                }
+            }, null).show();
 
             return false;
         }
@@ -57,7 +64,7 @@ public class CoinAdapter {
         return Prefs.getInt(SHARED_PREF_COIN_DIFF, 0);
     }
 
-    private void addCoinDiff(int diff){
+    private void addCoinDiff(int diff) {
         Prefs.putInt(SHARED_PREF_COIN_DIFF, getCoinDiff() + diff);
     }
 

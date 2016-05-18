@@ -64,7 +64,7 @@ public class IntroActivity extends FragmentActivity implements IntroFragment.OnF
 
         Prefs.putBoolean(INTRO_SHOWN, true);
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoadingActivity.class);
 
         startActivity(intent);
 

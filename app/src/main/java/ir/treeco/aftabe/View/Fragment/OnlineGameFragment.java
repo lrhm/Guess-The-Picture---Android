@@ -47,6 +47,7 @@ import ir.treeco.aftabe.View.Custom.KeyboardView;
 import ir.treeco.aftabe.View.Dialog.ImageFullScreenDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
+import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 
 
 public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
@@ -361,12 +362,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         if (state == 1)
             return;
 
-        new CustomAlertDialog(getContext(), "مطمئنی می خوای رد شی؟" + "\n" + "دیگه نمیتونی برگردی!", "باشه", new View.OnClickListener() {
+        new SkipAlertDialog(getContext(), "مطمئنی می خوای رد شی؟" + "\n" + "دیگه نمیتونی برگردی!", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doSkip();
             }
-        }, "نه", null).show();
+        }, null).show();
 
 
     }

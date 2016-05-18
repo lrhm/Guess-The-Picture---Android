@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -28,7 +29,7 @@ import ir.treeco.aftabe.View.Custom.DialogDrawable;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 
-public class MatchRequestDialog extends Dialog implements View.OnClickListener {
+public class MatchRequestDialog extends Dialog implements View.OnClickListener, Runnable {
     Context context;
     RelativeLayout mDataContainer;
     Tools tools;
@@ -109,6 +110,9 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
                 + SizeManager.getScreenHeight() * 0.03)
         );
 
+
+        new Handler().postDelayed(this, 30000);
+
     }
 
     private void setUpTextView(int id, String text, boolean bold) {
@@ -173,5 +177,12 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener {
 
     }
 
+    @Override
+    public void run() {
+
+        if (isShowing())
+            dismiss();
+
+    }
 }
 

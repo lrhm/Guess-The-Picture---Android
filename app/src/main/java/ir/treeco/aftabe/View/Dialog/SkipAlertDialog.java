@@ -8,35 +8,32 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeManager;
-import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 
 /**
  * Created by root on 5/2/16.
  */
-public class CustomAlertDialog extends Dialog {
+public class SkipAlertDialog extends Dialog {
 
     String message;
-    String okMsg;
-    String cancelMsg;
     TextView.OnClickListener okListener;
     TextView.OnClickListener cancelListener;
     Context context;
     private OnDismissListener onDismissListener;
 
-    public CustomAlertDialog(Context context, String msg, String okMsg, TextView.OnClickListener okListener,
-                             String cancelMsg, TextView.OnClickListener cancelListener) {
+    public SkipAlertDialog(Context context, String msg, TextView.OnClickListener okListener,
+                           TextView.OnClickListener cancelListener) {
         super(context);
         this.context = context;
         message = msg;
-        this.okMsg = okMsg;
         this.okListener = okListener;
-        this.cancelMsg = cancelMsg;
         this.cancelListener = cancelListener;
 
 
@@ -48,26 +45,29 @@ public class CustomAlertDialog extends Dialog {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        setContentView(R.layout.dialog_alert);
+        setContentView(R.layout.dialog_skip);
 
+        ImageManager imageManager = new ImageManager(context);
 
         TextView mainTextView = (TextView) findViewById(R.id.skip_dialog_main_text);
-        TextView cancelTextView = (TextView) findViewById(R.id.dialog_skip_cancel);
-        TextView okTextView = (TextView) findViewById(R.id.dialog_skip_ok);
+
+        ImageView yesImageView = (ImageView) findViewById(R.id.dialog_skip_ok_image);
+        ImageView noImageView = (ImageView) findViewById(R.id.dialog_skip_cancel_image);
+
+        UiUtil.setWidth(findViewById(R.id.dialog_skip_image_container), SizeManager.getScreenWidth());
 
         setWidth(mainTextView, 0.7, message);
-        setWidth(cancelTextView, 0.3, cancelMsg);
-        setWidth(okTextView, 0.3, okMsg);
-        cancelTextView.getLayoutParams().height = (int) (SizeManager.getScreenHeight() * 0.07);
-        cancelTextView.setOnClickListener((cancelListener == null) ? new View.OnClickListener() {
+        UiUtil.setBottomMargin(mainTextView, (int) (SizeManager.getScreenHeight() * 0.04));
+
+
+        noImageView.setOnClickListener((cancelListener == null) ? new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         } : cancelListener);
 
-        okTextView.getLayoutParams().height = (int) (SizeManager.getScreenHeight() * 0.07);
-        okTextView.setOnClickListener(new View.OnClickListener() {
+        yesImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (okListener != null)
@@ -76,9 +76,15 @@ public class CustomAlertDialog extends Dialog {
             }
         });
 
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) cancelTextView.getLayoutParams();
-        layoutParams.leftMargin = Tools.convertDPtoPixel(20, getContext());
+        int size = (int) (SizeManager.getScreenWidth() * 0.12);
 
+        yesImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.yes, size, size));
+        noImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no, size, size));
+
+        int space = (int) (SizeManager.getScreenWidth() * 0.05);
+        int leftMargin = (int) (SizeManager.getScreenWidth() * 0.5 - size -space/2 );
+        UiUtil.setLeftMargin(noImageView, leftMargin);
+        UiUtil.setLeftMargin(yesImageView, space);
 
     }
 
@@ -88,6 +94,8 @@ public class CustomAlertDialog extends Dialog {
         textView.setTextColor(Color.WHITE);
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
+
+        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenWidth() * percent), 0.08f);
     }
 
 
@@ -97,7 +105,7 @@ public class CustomAlertDialog extends Dialog {
         super.dismiss();
     }
 
-    public CustomAlertDialog setOnDismissListener(OnDismissListener onDismissListener) {
+    public SkipAlertDialog setOnDismissListener(OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
         return this;
     }

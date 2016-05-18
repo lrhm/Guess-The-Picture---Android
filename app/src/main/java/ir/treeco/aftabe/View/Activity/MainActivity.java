@@ -99,6 +99,7 @@ import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
+import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
 import ir.treeco.aftabe.View.Fragment.GameResultFragment;
@@ -1054,7 +1055,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        new CustomAlertDialog(this, "بازی تمام خواهد شد . \n مطمئنی ؟", "اره", new TextView.OnClickListener() {
+        new SkipAlertDialog(this, "بازی تمام خواهد شد . \n مطمئنی ؟", new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -1062,7 +1063,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 MainActivity.this.setOnlineGame(false);
                 MainActivity.this.getSupportFragmentManager().popBackStack();
             }
-        }, "نه", null).show();
+        }, null).show();
     }
 
 
