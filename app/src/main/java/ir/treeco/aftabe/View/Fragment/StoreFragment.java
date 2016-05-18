@@ -132,8 +132,8 @@ public class StoreFragment extends Fragment {
     }
 
     private void setupItemsList() {
-        int[] revenues = new int[]{500, 1000, 2000, 15000, 300, 20};
-        int[] prices = new int[]{450, 800, 1500, 5000, -1, -1};
+        int[] revenues = new int[]{1000, 4000, 8000, 25000, 300, 20};
+        int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);
 
