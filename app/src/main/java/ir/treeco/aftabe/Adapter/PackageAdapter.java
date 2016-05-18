@@ -63,6 +63,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DownloadTask.DownloadTaskListener {
         ImageView imageView;
         TextView textView;
+        ImageView packagePrice;
+        TextView price;
 
         private long lastTimeClicked = 0;
         private long timeStamp = 1000;
@@ -71,17 +73,37 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             super(v);
             imageView = (ImageView) itemView.findViewById(R.id.itemPackage);
             textView = (TextView) itemView.findViewById(R.id.package_progress_dl);
+            price = (TextView) itemView.findViewById(R.id.package_coin_text);
+            packagePrice = (ImageView) itemView.findViewById(R.id.package_coin_image);
 
             if (SizeManager.getScreenWidth() < 800)
                 textView.setShadowLayer(0.5f, 1, 1, Color.BLACK);
             textView.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
             UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenWidth() * 0.3), 0.4f);
 
+            if (SizeManager.getScreenWidth() < 800)
+                price.setShadowLayer(0.5f, 1, 1, Color.BLACK);
+            price.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
+            UiUtil.setTextViewSize(price, (int) (SizeManager.getScreenWidth() * 0.3), 0.15f);
+
 
             int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
             imageView.getLayoutParams().height = packageSize;
             imageView.getLayoutParams().width = packageSize;
 
+            UiUtil.setWidth(packagePrice, packageSize);
+            UiUtil.setHeight(packagePrice, packageSize);
+
+            int textSize = (int) (packageSize * 0.11);
+            UiUtil.setLeftMargin(price, textSize);
+            UiUtil.setTopMargin(price, (int) (packageSize * 0.09));
+            UiUtil.setWidth(price, (int) (packageSize * 0.22));
+            UiUtil.setHeight(price, (int) (packageSize * 0.22));
+
+
+            Picasso.with(context).load(R.drawable.package_price).fit().into(packagePrice);
+
+            price.setText(Tools.numeralStringToPersianDigits("200"));
             v.setOnClickListener(this);
 
 
@@ -102,12 +124,14 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
             if (!file.exists()) {
 
+
                 User myUser = ((MainActivity) context).getMyUser();
                 if (myUser == null)
                     myUser = Tools.getCachedUser(context);
 
                 if (packageObject.getPrice() == 0 || (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))) {
                     ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
+
                     PackageTools.getInstance(context).downloadPackage(packageObject, this);
 
                 } else {
@@ -178,7 +202,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 public void run() {
                     ToastMaker.show(context, "دانلود شد", Toast.LENGTH_SHORT);
 
-
+                    packagePrice.setVisibility(View.GONE);
+                    price.setVisibility(View.GONE);
                     ColorMatrix matrix = new ColorMatrix();
 
                     ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
@@ -227,9 +252,15 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         if (i % 2 == 0) {
             viewHolder.imageView.setPadding(onePercent, 0, 0, 0);
+            viewHolder.packagePrice.setPadding(onePercent, 0, 0, 0);
+            viewHolder.price.setPadding(onePercent, 0, 0, 0);
+
         } else {
 
             viewHolder.imageView.setPadding(0, 0, onePercent, 0);
+            viewHolder.price.setPadding(0, 0, onePercent, 0);
+            viewHolder.packagePrice.setPadding(0, 0, onePercent, 0);
+
         }
 
 
@@ -240,7 +271,15 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
         if (!file.exists()) {
+            viewHolder.packagePrice.setVisibility(View.VISIBLE);
+            viewHolder.price.setVisibility(View.VISIBLE);
+            viewHolder.price.setText(Tools.numeralStringToPersianDigits(packageObjects.get(i).getPrice() + ""));
 
+            User myUser = ((MainActivity) context).getMyUser();
+            if((myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))){
+                viewHolder.price.setText(Tools.numeralStringToPersianDigits("0"));
+
+            }
             ColorMatrix matrix = new ColorMatrix();
             matrix.setSaturation(0);
 

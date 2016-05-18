@@ -259,13 +259,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
 
-        Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
+//        Intent intent = new Intent(this, RegistrationIntentService.class);
+//        startService(intent);
 
-//        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
-//            Intent intent = new Intent(this, RegistrationIntentService.class);
-//            startService(intent);
-//        }
+        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
 
 //        coinAdapter.earnCoins(5000);
 
