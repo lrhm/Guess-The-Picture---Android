@@ -45,6 +45,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener {
 
     private static final String TAG = "OnlinePrimaryPage";
+    private static final String TOP_MARGIN_CACHED = TAG + "_CACHE";
     private ImageManager imageManager;
     private LengthManager lengthManager;
     private UserLevelView mUserLevelView;
@@ -122,6 +123,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         SizeConverter offerConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.7f, 911, 137);
 
+
         int notifsTopMargin = (int) ((int) (SizeManager.getScreenHeight()
                 - SizeManager.getScreenHeight() * 0.08 // height of tab bar
                 - lengthManager.getHeaderHeight() // header
@@ -133,6 +135,11 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
 
         while (notifsTopMargin + SizeManager.getScreenHeight() * 0.01 < offerConverter.mHeight + randplayconverter.mHeight) {
+
+            if (Prefs.contains(TOP_MARGIN_CACHED)) {
+                topMargin = Prefs.getInt(TOP_MARGIN_CACHED, topMargin) + 2;
+            }
+
             topMargin -= 2;
 
             notifsTopMargin = (int) ((int) (SizeManager.getScreenHeight()
@@ -144,6 +151,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
                     - offerConverter.getHeight()
             ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.02);
         }
+        Prefs.putInt(TOP_MARGIN_CACHED, topMargin);
 
         ((LinearLayout.LayoutParams) mUserLevelView.getLayoutParams()).topMargin = topMargin;
         UiUtil.setTopMargin(view.findViewById(R.id.play_buttons_containers), topMargin);

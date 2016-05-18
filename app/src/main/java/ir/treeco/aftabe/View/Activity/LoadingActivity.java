@@ -67,13 +67,17 @@ public class LoadingActivity extends Activity implements Runnable {
             }
             intent.putExtras(getIntent().getExtras());
         }
+
+//        if (!Prefs.getBoolean(IntroActivity.INTRO_SHOWN, false)) {
+            intent = new Intent(this, IntroActivity.class);
+//        }
+
         startActivity(intent);
         finish();
     }
 
 
     private void initUtils() {
-
 
 
         Tools tools = new Tools(this);

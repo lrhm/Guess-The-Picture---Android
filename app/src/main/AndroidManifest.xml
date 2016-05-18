@@ -54,6 +54,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".View.Activity.IntroActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".View.Activity.CreditsActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -98,13 +109,34 @@
             android:name="io.fabric.ApiKey"
             android:value="4150c278d5e47ac44513db398d88c074d628b50e" />
 
-        <activity android:name="ir.tapsell.tapselldevelopersdk.FirstPage" android:screenOrientation="portrait" android:theme="@style/AppTheme" ></activity>
-        <activity android:name="ir.tapsell.tapselldevelopersdk.CtaDescription" android:screenOrientation="portrait" android:theme="@style/AppTheme" ></activity>
-        <activity android:name="ir.tapsell.tapselldevelopersdk.MessagesList" android:screenOrientation="portrait" android:theme="@style/AppTheme" ></activity>
-        <activity android:name="ir.tapsell.tapselldevelopersdk.ReportPage" android:screenOrientation="portrait" android:theme="@style/AppTheme" ></activity>
-        <activity android:name="ir.tapsell.tapselldevelopersdk.ShowVideoPage" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" ></activity>
-        <activity android:name="ir.tapsell.tapselldevelopersdk.WebViewActivity" android:screenOrientation="portrait" ></activity>
-        <activity android:name="ir.tapsell.tapselldevelopersdk.DirectAdMiddleActivity" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" ></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.FirstPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.CtaDescription"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.MessagesList"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.ReportPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.ShowVideoPage"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.WebViewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="ir.tapsell.tapselldevelopersdk.DirectAdMiddleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+
         <service android:name="ir.tapsell.tapselldevelopersdk.services.asynchservices.core.HttpService"></service>
 
     </application>

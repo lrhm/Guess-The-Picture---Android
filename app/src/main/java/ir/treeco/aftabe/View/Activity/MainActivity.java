@@ -19,6 +19,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -152,6 +153,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private long matchResultTime = 0;
     LoadingForGameResultDialog mLoadingForGameResultDialog = null;
     LoadingForGameResultDialog mLoadingForRegister = null;
+    private Button creditsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -325,6 +327,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         logo.setVisibility(headerViewsVisibility);
+        creditsButton.setVisibility(headerViewsVisibility);
         coinBox.setVisibility(headerViewsVisibility);
         digits.setVisibility(headerViewsVisibility);
 
@@ -353,6 +356,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void setHeaderVisiblity(boolean visible) {
         int headerViewsVisibility = (!visible ? View.GONE : View.VISIBLE);
         logo.setVisibility(headerViewsVisibility);
+        creditsButton.setVisibility(headerViewsVisibility);
         coinBox.setVisibility(headerViewsVisibility);
         digits.setVisibility(headerViewsVisibility);
 
@@ -408,6 +412,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 R.drawable.header, lengthManager.getScreenWidth(),
                 lengthManager.getScreenWidth() / 4
         ));
+
+        creditsButton = (Button) findViewById(R.id.activity_main_credits_button);
+
+        UiUtil.setLeftMargin(creditsButton, (int) (lengthManager.getScreenWidth() * 0.55));
+        UiUtil.setWidth(creditsButton, (int) (SizeManager.getScreenWidth() * 0.4));
+        UiUtil.setHeight(creditsButton, lengthManager.getScreenWidth() / 4);
+
+        creditsButton.setOnClickListener(this);
+
     }
 
     private void setOriginalBackgroundColor() {
@@ -419,8 +432,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }));
     }
 
+    private final static long THRESH_HOLD = 1000;
+    private long lastTimeClicked = 0;
+
     @Override
     public void onClick(View v) {
+
+        long current = System.currentTimeMillis();
+        if (current - lastTimeClicked < THRESH_HOLD)
+            return;
+        lastTimeClicked = current;
+
         switch (v.getId()) {
             case R.id.cheat_button:
                 toggleCheatButton();
@@ -436,6 +458,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     transaction.commitAllowingStateLoss();
                 }
                 break;
+
+            case R.id.activity_main_credits_button:
+
+                Intent intent = new Intent(this, CreditsActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -446,6 +474,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void setupCheatButton(int id) {
         cheatButton.setVisibility(View.VISIBLE);
         logo.setVisibility(View.INVISIBLE);
+        creditsButton.setVisibility(View.INVISIBLE);
         areCheatsVisible = false;
         currentLevel = id;
 
@@ -456,6 +485,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void hideCheatButton() {
         cheatButton.setVisibility(View.INVISIBLE);
         logo.setVisibility(View.VISIBLE);
+        creditsButton.setVisibility(View.VISIBLE);
     }
 
     public void toggleCheatButton() {

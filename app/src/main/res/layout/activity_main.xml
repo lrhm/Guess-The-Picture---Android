@@ -48,6 +48,12 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/logo" />
 
+            <Button
+                android:id="@+id/activity_main_credits_button"
+                android:background="@android:color/transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <ImageView
                 android:id="@+id/cheat_button"
                 android:layout_width="wrap_content"
