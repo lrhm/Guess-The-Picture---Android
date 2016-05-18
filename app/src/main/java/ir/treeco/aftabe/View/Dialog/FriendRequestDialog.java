@@ -4,14 +4,18 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Adapter.DBAdapter;
@@ -26,10 +30,11 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 
-public class FriendRequestDialog extends Dialog implements View.OnClickListener {
+public class FriendRequestDialog extends Dialog implements View.OnClickListener, OnFriendRequest {
     Context context;
     RelativeLayout mDataContainer;
     Tools tools;
@@ -128,9 +133,8 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
         }
 
         if (v.getId() == R.id.uv_match_button) {
-            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(context), mUser.getId(), null);
-//            mUser.setIsFriend(true);
-//            ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
+            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(context), mUser.getId(), this);
+
 
             FriendsHolder friendsHolder = FriendsHolder.getInstance();
             friendsHolder.addFriendToList(mUser);
@@ -146,6 +150,32 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener 
 
 
         super.dismiss();
+    }
+
+    @Override
+    public void onFriendRequestSent() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mUser.setIsFriend(true);
+                ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
+
+            }
+        });
+    }
+
+    @Override
+    public void onFriendRequestFailedToSend() {
+
+        new Handler(Looper.myLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+
+                ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_REQUEST);
+                ToastMaker.show(context, "لطفا اتصال به اینترنت را چک کنید", Toast.LENGTH_SHORT);
+
+            }
+        });
     }
 }
 

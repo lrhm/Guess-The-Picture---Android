@@ -3,6 +3,8 @@ package ir.treeco.aftabe.Adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.IllegalFieldValueException;
 
@@ -32,6 +35,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
@@ -318,7 +322,25 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 //                    user.setIsFriend(true);
 //                    addUser(user, TYPE_FRIEND);
 //                    SocketAdapter.answerFriendRequest(user.getId(), true);
-                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(context), user.getId(), null);
+                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(context), user.getId(), new OnFriendRequest() {
+                        @Override
+                        public void onFriendRequestSent() {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    user.setIsFriend(true);
+                                    addUser(user, TYPE_FRIEND);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFriendRequestFailedToSend() {
+
+                            ToastMaker.show(context, "لطفا اتصال به اینترنت را چک کنید", Toast.LENGTH_SHORT);
+                            addUser(user, type);
+                        }
+                    });
                 }
             });
         }
