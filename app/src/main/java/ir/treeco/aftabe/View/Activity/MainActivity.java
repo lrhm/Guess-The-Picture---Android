@@ -113,6 +113,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         SocketFriendMatchListener, FriendRequestListener, OnlineGameFragment.OnGameEndListener {
 
 
+    private static final String MAIN_FRAGMENT_TAG = "FRAGMENT_MAIN_TAG";
     private ArrayList<FriendRequestDialog> mCachedFriendRequestDialogs = new ArrayList<>();
     LoadingDialog loadingDialogMatchReq = null;
     private boolean isInOnlineGame = false;
@@ -232,7 +233,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         mainFragment = new MainFragment();
 
-        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
+        fragmentTransaction.replace(R.id.fragment_container, mainFragment, MAIN_FRAGMENT_TAG);
         fragmentTransaction.commitAllowingStateLoss();
 
         setUpCoinBox();
@@ -1023,6 +1024,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mLoadingForGameResultDialog = loadingForGameResultDialog;
     }
 
+    int backPressedCount = 0;
+    long backPressedTime = 0;
 
     @Override
     public void onBackPressed() {
@@ -1030,6 +1033,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         final OnlineGameFragment fragment = (OnlineGameFragment) getSupportFragmentManager().findFragmentByTag("FRAGMENT_ONLINE_GAME");
         if (fragment == null) {
+            Fragment main = getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
+            if (main.isVisible()) {
+
+                if (System.currentTimeMillis() - backPressedTime > 2000) {
+                    backPressedCount = 0;
+                }
+                backPressedTime = System.currentTimeMillis();
+
+                backPressedCount++;
+                if (backPressedCount == 2) {
+                    finish();
+                } else {
+
+                    ToastMaker.show(this, "برای خروج یک بار دیگر بازگشت را زده", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
             super.onBackPressed();
             return;
         }
