@@ -26,6 +26,7 @@ import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
+import ir.treeco.aftabe.API.Utils.Veryfier;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Object.PackageObject;
@@ -56,7 +57,7 @@ public class AftabeAPIAdapter {
         return retrofit == null;
     }
 
-    public static void setContext(Context context){
+    public static void setContext(Context context) {
         AftabeAPIAdapter.context = context;
 
     }
@@ -802,6 +803,27 @@ public class AftabeAPIAdapter {
         init();
 
         aftabeService.checkForceUpdate().enqueue(callback);
+    }
+
+
+    public static void isOldUser(GoogleToken googleToken, final OldUserListener listener) {
+        init();
+
+        aftabeService.verifyGCMOldUser(googleToken).enqueue(new Callback<Veryfier>() {
+            @Override
+            public void onResponse(Response<Veryfier> response) {
+                if (response.isSuccess())
+                    if (response.body() != null) {
+                        listener.isOldUser(response.body().isOldUser());
+                    }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
     }
 
 }

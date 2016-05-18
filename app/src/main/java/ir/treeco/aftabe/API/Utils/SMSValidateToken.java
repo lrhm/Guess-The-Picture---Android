@@ -16,6 +16,13 @@ public class SMSValidateToken {
     @Expose
     String id;
 
+    @Expose
+    boolean olduser;
+
+    public boolean isOlduser() {
+        return olduser;
+    }
+
     public String getPhone() {
         return phone;
     }

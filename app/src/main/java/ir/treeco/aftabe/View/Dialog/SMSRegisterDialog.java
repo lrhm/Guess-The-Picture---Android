@@ -31,6 +31,7 @@ import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
@@ -200,6 +201,8 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
         isInPhoneReqState = false;
         mSmsValidateToken = smsToken;
+
+
     }
 
     @Override
@@ -238,7 +241,11 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
         isSMSValidated = true;
         dismiss();
-        new UsernameChooseDialog(getContext(), smsValidateToken, mActivity).show();
+        if (!smsValidateToken.isOlduser())
+            new UsernameChooseDialog(getContext(), smsValidateToken, mActivity).show();
+        else {
+            AftabeAPIAdapter.submitSMSActivationCode(smsValidateToken, RandomString.nextString(), mActivity);
+        }
 
 
     }

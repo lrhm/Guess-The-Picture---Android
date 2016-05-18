@@ -52,6 +52,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     private Timer mTimer;
     TimerView mTimerView;
     int mTimerStep = 0;
+    private boolean forRegister = false;
 
     public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener, User opponent, int timerStep) {
         super(context);
@@ -61,6 +62,24 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         mOnGameEndListener = onGameEndListener;
         imageManager = new ImageManager(context);
         ((MainActivity) context).setLoadingForGameResultDialog(this);
+        initImageLoading();
+        mTimer = new Timer();
+        mTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runTimer();
+            }
+        }, 0, 1000);
+
+    }
+
+    public LoadingForGameResultDialog(Context context, int timerStep) {
+        super(context);
+        this.context = context;
+
+        forRegister = true;
+
+        imageManager = new ImageManager(context);
         initImageLoading();
         mTimer = new Timer();
         mTimer.scheduleAtFixedRate(new TimerTask() {
@@ -84,8 +103,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         mLoadingImageView = (ImageView) findViewById(R.id.activity_main_loading_image_view);
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
+
         new Handler().postDelayed(this, 20);
-        SocketAdapter.addSocketListener(this);
+        if (!forRegister)
+            SocketAdapter.addSocketListener(this);
 
         mTimerView = new TimerView(context);
         mTimerView.setDoOnlyBlue(true);
@@ -96,7 +117,6 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         timerLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.2f);
         timerLP.leftMargin = (SizeManager.getScreenWidth() - mTimerView.getRealWidth()) / 2;
         container.addView(mTimerView, timerLP);
-
 
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -238,7 +258,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         if (mOnGameEndListener != null)
             mOnGameEndListener.onGameEnded();
 
-        GameResultFragment gameResultFragment = GameResultFragment.newInstance( resultHolder, mOpponent);
+        GameResultFragment gameResultFragment = GameResultFragment.newInstance(resultHolder, mOpponent);
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, gameResultFragment);
         transaction.addToBackStack(null);
@@ -248,8 +268,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
     @Override
     public void onDetachedFromWindow() {
-        SocketAdapter.removeSocketListener(this);
-        ((MainActivity) context).setLoadingForGameResultDialog(null);
+        if (!forRegister) {
+            SocketAdapter.removeSocketListener(this);
+            ((MainActivity) context).setLoadingForGameResultDialog(null);
+        }
         super.onDetachedFromWindow();
     }
 }

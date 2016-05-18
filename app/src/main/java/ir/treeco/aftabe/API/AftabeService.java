@@ -18,6 +18,7 @@ import ir.treeco.aftabe.API.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Utils.SMSToken;
 import ir.treeco.aftabe.API.Utils.SMSValidateToken;
 import ir.treeco.aftabe.API.Utils.UsernameCheck;
+import ir.treeco.aftabe.API.Utils.Veryfier;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.API.Utils.LoginInfo;
@@ -46,6 +47,9 @@ public interface AftabeService {
 
     @POST("/api/users/login")
     Call<LoginInfo> getSMSUserLogin(@Body SMSToken smsToken);
+
+    @POST("/api/users/verifygtk")
+    Call<Veryfier> verifyGCMOldUser(@Body GoogleToken googleToken);
 
     @GET("/api/users/me")
     Call<User> getMyUser(@Query("access_token") String accessToken);

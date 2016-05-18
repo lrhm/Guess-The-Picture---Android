@@ -45,11 +45,13 @@ import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
 import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.OldUserListener;
 import ir.treeco.aftabe.API.Socket.FriendRequestListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
@@ -82,6 +84,7 @@ import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.NotificationManager;
+import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
@@ -148,6 +151,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public FriendsAdapter mFriendsAdapter;
     private long matchResultTime = 0;
     LoadingForGameResultDialog mLoadingForGameResultDialog = null;
+    LoadingForGameResultDialog mLoadingForRegister = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -619,6 +623,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 for (UserFoundListener userFoundListener : mUserFoundListeners)
                     userFoundListener.onGetMyUser(MainActivity.this.myUser);
 
+                if (mLoadingForRegister != null)
+                    mLoadingForRegister.dismiss();
+
             }
         });
 
@@ -824,9 +831,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            GoogleToken googleToken = new GoogleToken(acct.getIdToken());
+            final GoogleToken googleToken = new GoogleToken(acct.getIdToken());
 
-            new UsernameChooseDialog(this, googleToken, this).show();
+
+            AftabeAPIAdapter.isOldUser(googleToken, new OldUserListener() {
+                @Override
+                public void isOldUser(boolean oldUser) {
+                    if (oldUser) {
+
+                        mLoadingForRegister = new LoadingForGameResultDialog(MainActivity.this, 10);
+
+                        mLoadingForRegister.show();
+
+                        googleToken.setUsername(RandomString.nextString());
+                        AftabeAPIAdapter.getMyUserByGoogle(googleToken, MainActivity.this);
+
+                        return;
+                    }
+                    new UsernameChooseDialog(MainActivity.this, googleToken, MainActivity.this).show();
+
+
+                }
+            });
 
 
         } else {
