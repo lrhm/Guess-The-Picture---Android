@@ -4,20 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import com.google.android.gms.common.SignInButton;
-
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.UserFoundListener;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
@@ -27,7 +21,6 @@ import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
-import ir.treeco.aftabe.View.Custom.DialogDrawable;
 
 public class RegistrationDialog extends Dialog {
     Context context;

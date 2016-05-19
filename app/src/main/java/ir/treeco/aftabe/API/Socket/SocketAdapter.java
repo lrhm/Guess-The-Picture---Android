@@ -13,6 +13,11 @@ import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import ir.treeco.aftabe.API.Socket.Interfaces.FriendRequestListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.NotifListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketFriendMatchListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.TimeLefTListener;
 import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.FriendRequestResultHolder;
@@ -26,6 +31,7 @@ import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
+import ir.treeco.aftabe.API.Socket.Objects.TimeLeftHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.Util.Tools;
 
@@ -38,6 +44,7 @@ public class SocketAdapter {
     private static ArrayList<SocketFriendMatchListener> friendsListeners = new ArrayList<>();
     private static ArrayList<FriendRequestListener> requestLiseners = new ArrayList<>();
     private static ArrayList<NotifListener> notifListeners = new ArrayList<>();
+    private static TimeLefTListener timeLefTListener;
 
     private static final Object lock = new Object();
     private static final Object friendsLock = new Object();
@@ -225,14 +232,25 @@ public class SocketAdapter {
                     NotifCountHolder countHolder = gson.fromJson(msg, NotifCountHolder.class);
                     callNotifListners(countHolder);
                 }
+            }).on("timerUpdate", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    String msg = args[0].toString();
+                    Log.d(TAG, "timerUpdate is : " + msg);
+                    TimeLeftHolder timeLeftHolder = gson.fromJson(msg, TimeLeftHolder.class);
+                    if (timeLefTListener != null)
+                        timeLefTListener.onTime(timeLeftHolder.left);
+
+
+                }
             }).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-                        @Override
-                        public void call(Object... args) {
+                @Override
+                public void call(Object... args) {
 
-                            Log.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
+                    Log.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
 
-                        }
-                    }).on(Socket.EVENT_PING, new Emitter.Listener() {
+                }
+            }).on(Socket.EVENT_PING, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
 //                    Log.d(TAG, "ping " + ((args.length != 0) ? args[0].toString() : ""));
@@ -552,4 +570,11 @@ public class SocketAdapter {
         mSocket.connect();
     }
 
+    public static TimeLefTListener getTimeLefTListener() {
+        return timeLefTListener;
+    }
+
+    public static void setTimeLefTListener(TimeLefTListener timeLefTListener) {
+        SocketAdapter.timeLefTListener = timeLefTListener;
+    }
 }

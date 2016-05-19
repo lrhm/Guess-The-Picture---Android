@@ -11,14 +11,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.BatchUserFoundListener;
-import ir.treeco.aftabe.API.UserFoundListener;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
-import ir.treeco.aftabe.Object.User;
 
 public class DBAdapter {
     private static DBAdapter ourInstance;

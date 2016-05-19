@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,11 @@ import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
-import ir.treeco.aftabe.API.Socket.NotifListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.NotifListener;
 import ir.treeco.aftabe.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
-import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.API.Rest.Interfaces.UserFoundListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
-import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -36,7 +34,6 @@ import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.NotificationCountView;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
-import ir.treeco.aftabe.View.Custom.VerticalViewPager;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 
 /**

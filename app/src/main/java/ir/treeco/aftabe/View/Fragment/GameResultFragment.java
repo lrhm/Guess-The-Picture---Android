@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;

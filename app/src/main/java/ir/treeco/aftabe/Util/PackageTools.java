@@ -3,7 +3,6 @@ package ir.treeco.aftabe.Util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,16 +25,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Random;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.Utils.CountHolder;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Utils.CountHolder;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.NotificationAdapter;
 import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
+import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Custom.ToastMaker;
 import retrofit.Callback;
 import retrofit.Response;
 
@@ -258,7 +256,7 @@ public class PackageTools {
         isDownloadInProgress.put(packageObject.getId(), true);
 
         final String name = packageObject.getName();
-        String url = packageObject.getUrl();
+        final String url = packageObject.getUrl();
         final int id = packageObject.getId();
         final String path = context.getFilesDir().getPath();
         final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, packageObject.getName());
@@ -268,7 +266,7 @@ public class PackageTools {
             @Override
             public void onProgress(int progress) {
                 notificationAdapter.notifyDownload(progress, id, packageObject.getName());
-                listener.onProgress( progress);
+                listener.onProgress(progress);
                 Log.d(TAG, "on progress " + progress);
 
             }
@@ -293,12 +291,25 @@ public class PackageTools {
                 Zip zip = new Zip();
                 zip.unpackZip(path + "/p_" + packageObject.getId() + ".zip", id, context);
                 addLevelListToPackage(packageObject, id);
+
+
                 DBAdapter db = DBAdapter.getInstance(context);
                 if (db.getLevels(id) == null) {
                     db.insertLevels(packageObject.getLevels(), packageObject.getId());
 
 
                 }
+
+                User user = Tools.getCachedUser(context);
+
+                if (user != null && user.isPackagePurchased(id)) {
+                    int index = user.getPackageLastSolved(id);
+                    for (int i = 0; i < index; i++)
+                        db.resolveLevel(id, i);
+
+
+                }
+
                 listener.onDownloadSuccess();
 
                 notificationAdapter.dissmiss(id, packageObject.getName());

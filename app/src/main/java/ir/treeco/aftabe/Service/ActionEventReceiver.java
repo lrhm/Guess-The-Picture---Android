@@ -1,7 +1,5 @@
 package ir.treeco.aftabe.Service;
 
-import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +7,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Service.NotifObjects.ActionHolder;
-import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe.Util.NotificationManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.LoadingActivity;

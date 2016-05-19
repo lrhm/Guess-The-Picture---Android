@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ir.treeco.aftabe.API.Socket.Interfaces.TimeLefTListener;
 import ir.treeco.aftabe.API.Socket.Objects.Answer.AnswerObject;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.GameResult.OnlineLevel;
@@ -32,7 +33,7 @@ import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
-import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketListener;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
@@ -50,7 +51,7 @@ import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 
 
-public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener {
+public class OnlineGameFragment extends Fragment implements View.OnClickListener, KeyboardView.OnKeyboardEvent, SocketListener, TimeLefTListener {
 
 
     private boolean lost = false;
@@ -94,6 +95,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             mRemainingTime = 120;
             UserActionCache.getInstance().clearCache();
         }
+        SocketAdapter.setTimeLefTListener(this);
         SocketAdapter.addSocketListener(this);
         view = inflater.inflate(R.layout.fragment_game, container, false);
         gameFragment = this;
@@ -504,6 +506,11 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             }
         });
 
+    }
+
+    @Override
+    public void onTime(int milies) {
+        mRemainingTime = milies / 1000;
     }
 
 

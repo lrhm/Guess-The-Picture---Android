@@ -1,8 +1,6 @@
 package ir.treeco.aftabe.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
@@ -21,12 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.OnFriendRequest;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
-import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
@@ -38,11 +35,9 @@ import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.DialogAdapter;
-import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForMatchRequestResult;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Fragment.ChatFragment;
-import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 /**
  * Created by al on 12/26/15.

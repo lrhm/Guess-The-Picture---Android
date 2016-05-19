@@ -7,12 +7,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.pixplicity.easyprefs.library.Prefs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import ir.treeco.aftabe.API.Utils.ContactsHolder;
-import ir.treeco.aftabe.Object.User;
+import ir.treeco.aftabe.API.Rest.Utils.ContactsHolder;
 
 /**
  * Created by root on 5/9/16.

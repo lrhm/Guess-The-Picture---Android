@@ -1,7 +1,6 @@
 package ir.treeco.aftabe.Adapter;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -10,7 +9,6 @@ import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import org.joda.time.DateTime;
@@ -28,17 +26,13 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.BatchUserFoundListener;
-import ir.treeco.aftabe.API.UserFoundListener;
-import ir.treeco.aftabe.API.Utils.ContactsHolder;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.BatchUserFoundListener;
+import ir.treeco.aftabe.API.Rest.Utils.ContactsHolder;
 import ir.treeco.aftabe.Adapter.Cache.ContactsCacheHolder;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Object.User;
-import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.Util.RandomString;
 import ir.treeco.aftabe.Util.Tools;
-import ir.treeco.aftabe.View.Activity.MainActivity;
 import retrofit.Callback;
 import retrofit.Response;
 

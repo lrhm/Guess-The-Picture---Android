@@ -1,28 +1,21 @@
 package ir.treeco.aftabe.View.Fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Contacts;
-import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -33,22 +26,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.pixplicity.easyprefs.library.Prefs;
 
-import java.net.Socket;
 import java.util.ArrayList;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.BatchUserFoundListener;
-import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.BatchUserFoundListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
-import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
-import ir.treeco.aftabe.API.UserFoundListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketFriendMatchListener;
+import ir.treeco.aftabe.API.Rest.Interfaces.UserFoundListener;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
-import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;

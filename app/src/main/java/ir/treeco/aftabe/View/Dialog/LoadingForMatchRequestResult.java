@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,29 +17,20 @@ import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
-import ir.treeco.aftabe.API.Socket.Objects.GameResult.GameResultHolder;
-import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
-import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
-import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
-import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
-import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketFriendMatchListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
-import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
-import ir.treeco.aftabe.View.Fragment.GameResultFragment;
-import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 
 /**

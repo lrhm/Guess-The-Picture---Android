@@ -12,8 +12,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.io.File;
 import java.util.ArrayList;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.Utils.ForceObject;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Utils.ForceObject;
 import ir.treeco.aftabe.BuildConfig;
 import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.View.Activity.MainActivity;

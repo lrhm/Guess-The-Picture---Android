@@ -10,15 +10,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
 
-import io.socket.client.Socket;
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -27,8 +23,8 @@ import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
-import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
-import ir.treeco.aftabe.API.Socket.SocketListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketFriendMatchListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketListener;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.DownloadTask;

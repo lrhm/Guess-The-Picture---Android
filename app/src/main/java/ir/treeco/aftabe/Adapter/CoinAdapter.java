@@ -3,15 +3,10 @@ package ir.treeco.aftabe.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.widget.Toast;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
 import ir.treeco.aftabe.Util.Tools;
-import ir.treeco.aftabe.View.Custom.ToastMaker;
-import ir.treeco.aftabe.R;
-import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 
 public class CoinAdapter {

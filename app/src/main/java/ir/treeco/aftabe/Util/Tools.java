@@ -551,16 +551,27 @@ public class Tools {
 
     }
 
-    public static void updateSharedPrefsToken(User user, TokenHolder tokenHolder) {
+    public static void updateSharedPrefsToken(Context context, User user, TokenHolder tokenHolder) {
         Gson gson = new Gson();
         Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
         String oldKey = Prefs.getString(ENCRYPT_KEY, "");
         User cachedUser = getCachedUser(null);
-        if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())) {
+        if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())) { // first login
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB();
             backUpDBJournal();
+            DBAdapter dbAdapter = DBAdapter.getInstance(context);
+
+            for (User.PackageInfo info : user.getPackageInfos()) {
+                File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + info.getId() + "/");
+                if (file.exists()) {
+                    for (int i = 0; i < info.getIndex(); i++)
+                        dbAdapter.resolveLevel(info.getId(), i);
+                }
+
+            }
+
         }
         Prefs.putDouble(Tools.SHARED_PREFS_SEED, user.getSeed());
         Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));

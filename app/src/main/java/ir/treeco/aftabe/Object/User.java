@@ -1,15 +1,10 @@
 package ir.treeco.aftabe.Object;
 
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import ir.treeco.aftabe.API.Utils.LoginInfo;
+import ir.treeco.aftabe.API.Rest.Utils.LoginInfo;
 import ir.treeco.aftabe.Util.LevelCalculator;
 import ir.treeco.aftabe.Util.Tools;
 
@@ -71,7 +66,7 @@ public class User {
     @Expose
     private Integer friendCount;
 
-    private ArrayList<Integer> packages;
+    private ArrayList<PackageInfo> packages;
 
     @Expose
     Access access;
@@ -79,7 +74,22 @@ public class User {
     LevelCalculator levelCalculator;
 
 
-    public ArrayList<Integer> getPackages() {
+    public boolean isPackagePurchased(int id) {
+        for (PackageInfo packageInfo : packages)
+            if (packageInfo.id == id)
+                return true;
+        return false;
+    }
+
+    public int getPackageLastSolved(int id){
+        for (PackageInfo packageInfo : packages)
+            if (packageInfo.id == id)
+                return packageInfo.getIndex();
+        return 0;
+
+    }
+
+    public ArrayList<PackageInfo> getPackageInfos() {
         return packages;
     }
 
@@ -245,7 +255,7 @@ public class User {
     public boolean isMe() {
 
         User cachedUser = Tools.getCachedUser(null);
-        return (getId() == null ||cachedUser == null || cachedUser.getId() == null) ?
+        return (getId() == null || cachedUser == null || cachedUser.getId() == null) ?
                 isMe : cachedUser.getId().equals(getId());
     }
 
@@ -294,4 +304,18 @@ public class User {
     }
 
 
+    public class PackageInfo {
+
+        int id;
+        int index;
+
+        public int getIndex() {
+            return index;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+    }
 }

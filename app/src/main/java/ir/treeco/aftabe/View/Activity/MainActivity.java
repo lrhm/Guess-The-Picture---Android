@@ -46,14 +46,13 @@ import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Random;
 
 
 import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.OldUserListener;
-import ir.treeco.aftabe.API.Socket.FriendRequestListener;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.OldUserListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.FriendRequestListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
@@ -62,10 +61,10 @@ import ir.treeco.aftabe.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
-import ir.treeco.aftabe.API.Socket.SocketFriendMatchListener;
-import ir.treeco.aftabe.API.Socket.SocketListener;
-import ir.treeco.aftabe.API.UserFoundListener;
-import ir.treeco.aftabe.API.Utils.GoogleToken;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketFriendMatchListener;
+import ir.treeco.aftabe.API.Socket.Interfaces.SocketListener;
+import ir.treeco.aftabe.API.Rest.Interfaces.UserFoundListener;
+import ir.treeco.aftabe.API.Rest.Utils.GoogleToken;
 import ir.treeco.aftabe.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe.Adapter.Cache.MatchRequestCache;
@@ -98,11 +97,9 @@ import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
-import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
 import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
-import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.MainFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 import ir.treeco.aftabe.View.Fragment.StoreFragment;
@@ -667,7 +664,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onGetMyUser(User mUser) {
+    public void onGetMyUser(final User mUser) {
 
         Log.d("TAG", "on get my user main");
 
@@ -683,15 +680,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (mLoadingForRegister != null)
                     mLoadingForRegister.dismiss();
 
+                if (mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
+                    coinAdapter.setCoinsCount(mUser.getCoins());
+                }
             }
         });
 
-//        Log.d(TAG, "my user coins " + mUser.getCoins());
-//        Log.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
-//        Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
-//        if (mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
-//            coinAdapter.setCoinsCount(mUser.getCoins());
-//        }
+        Log.d(TAG, "my user coins " + mUser.getCoins());
+        Log.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
+        Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
 
     }
 

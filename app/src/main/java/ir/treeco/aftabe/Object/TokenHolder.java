@@ -1,16 +1,10 @@
 package ir.treeco.aftabe.Object;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import ir.treeco.aftabe.API.Utils.GoogleToken;
-import ir.treeco.aftabe.API.Utils.GuestCreateToken;
-import ir.treeco.aftabe.API.Utils.LoginInfo;
-import ir.treeco.aftabe.API.Utils.SMSToken;
+import ir.treeco.aftabe.API.Rest.Utils.LoginInfo;
 
 /**
  * Created by al on 3/5/16.

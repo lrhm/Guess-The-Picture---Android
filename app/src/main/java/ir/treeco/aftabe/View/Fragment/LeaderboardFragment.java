@@ -10,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.BatchUserFoundListener;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.BatchUserFoundListener;
 import ir.treeco.aftabe.Adapter.LeaderboardAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.Util.Tools;

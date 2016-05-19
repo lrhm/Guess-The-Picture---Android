@@ -10,7 +10,6 @@ import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,25 +23,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import ir.treeco.aftabe.API.AftabeAPIAdapter;
-import ir.treeco.aftabe.API.OnPackageBuyListener;
+import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe.API.Rest.Interfaces.OnPackageBuyListener;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.PackageObject;
-import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.PackageTools;
-import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
-import ir.treeco.aftabe.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
@@ -129,7 +125,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 if (myUser == null)
                     myUser = Tools.getCachedUser(context);
 
-                if (packageObject.getPrice() == 0 || (myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))) {
+                if (packageObject.getPrice() == 0 || (myUser != null && myUser.isPackagePurchased(id))) {
                     ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
 
                     PackageTools.getInstance(context).downloadPackage(packageObject, this);
@@ -275,7 +271,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             viewHolder.price.setText(Tools.numeralStringToPersianDigits(packageObjects.get(i).getPrice() + ""));
 
             User myUser = ((MainActivity) context).getMyUser();
-            if((myUser != null && myUser.getPackages() != null && myUser.getPackages().contains(id))){
+            if ((myUser != null && myUser.isPackagePurchased(id))) {
                 viewHolder.price.setText(Tools.numeralStringToPersianDigits("0"));
 
             }
