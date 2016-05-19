@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import ir.treeco.aftabe.Adapter.Cache.PackageSolvedCache;
+import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.Adapter.TimeStampAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
@@ -397,9 +398,12 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
         if ((guess.replace("آ", "ا")).equals((solution.replace(".",
                 "")).replace("آ", "ا"))) {
+            MediaAdapter.getInstance(getContext()).playCorrectSound();
+
             if (!level.isResolved()) {
                 coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
                 resulved = true;
+
                 PackageSolvedCache.getInstance().onNewLevelSolved(packageId, levelId);
                 PackageSolvedCache.getInstance().updateToServer();
             }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,6 +73,7 @@ import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
+import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.StoreItemHolder;
@@ -178,7 +180,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         initActivity();
 
 
-
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         askForContactPermission();
 
 
@@ -602,6 +604,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Answers.getInstance().logPurchase(new PurchaseEvent()
                 .putItemPrice(BigDecimal.valueOf(price))
                 .putItemId(productId));
+
+        MediaAdapter.getInstance(this).playPurchaseSound();
 
         if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN))
             coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
@@ -1243,7 +1247,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         if (actionHolder.isFriendRequest()) {
-//            TODO
             new FriendRequestDialog(this, actionHolder.getNotifHolder().getFriendSF().getUser()).show();
             return;
         }

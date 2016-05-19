@@ -35,6 +35,7 @@ import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
 import ir.treeco.aftabe.API.Socket.Interfaces.SocketListener;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
+import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
@@ -282,6 +283,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         if ((guess.replace("آ", "ا")).equals((solution.replace("/",
                 "")).replace("آ", "ا"))) {
 
+
+            MediaAdapter.getInstance(getContext()).playCorrectSound();
 
             getActivity().getSupportFragmentManager().popBackStack();
 

@@ -31,7 +31,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.UserViewDialog;
 
 /**
- * TODO: document your custom view class.
+ *
  */
 public class UserLevelView extends LinearLayout implements View.OnClickListener {
     private static final String TAG = "UserLevelView";

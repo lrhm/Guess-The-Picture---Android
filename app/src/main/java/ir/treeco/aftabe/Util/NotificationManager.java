@@ -84,7 +84,6 @@ public class NotificationManager {
         final int notifID = new Random(System.currentTimeMillis()).nextInt();
         NotificationCompat.Builder builder = null;
         if (notifHolder.isFriendRequest()) {
-            //TODO set style for accept and ignore buttons
 
             title = "درخواست دوستی";
             content = "از " + notifHolder.getFriendSF().getUser().getName();

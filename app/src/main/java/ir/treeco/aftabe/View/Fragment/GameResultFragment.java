@@ -19,6 +19,7 @@ import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
+import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
@@ -50,7 +51,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         // Required empty public constructor
     }
 
-    public static GameResultFragment newInstance( ResultHolder gameResultHolder, User opponent) {
+    public static GameResultFragment newInstance(ResultHolder gameResultHolder, User opponent) {
         GameResultFragment fragment = new GameResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM2, new Gson().toJson(gameResultHolder));
@@ -66,7 +67,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
             mGameResultHolder = new Gson().fromJson(getArguments().getString(ARG_PARAM2), ResultHolder.class);
             mOpponent = new Gson().fromJson(getArguments().getString(ARG_USER_OP), User.class);
 
-             mWin = false;
+            mWin = false;
             if (mGameResultHolder.getScores()[0].getUserId().equals(Tools.getCachedUser(getActivity()).getId()))
                 mWin = mGameResultHolder.getScores()[0].isWinner();
 
@@ -136,6 +137,9 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         if (mDraw)
             coin = 80;
 
+        if (!mWin) {
+            MediaAdapter.getInstance(getContext()).playLoseSound();
+        }
 
         String winText = Tools.numeralStringToPersianDigits(coin + "") + " " + "سکه" + " ";
         coinTextView.setTypeface(FontsHolder.getNumeralSansBold(getContext()));

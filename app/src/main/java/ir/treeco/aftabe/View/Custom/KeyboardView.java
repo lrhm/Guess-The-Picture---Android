@@ -966,7 +966,6 @@ public class KeyboardView extends RelativeLayout {
 
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        // TODO Auto-generated method stub
                         if (event.getAction() != event.ACTION_UP)
                             if (index == solution.replace("/", "").length() - 1
                                     || index == 0) {
