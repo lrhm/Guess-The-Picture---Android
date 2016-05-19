@@ -16,6 +16,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 import ir.treeco.aftabe.Adapter.ContactsAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.LocationAdapter;
+import ir.treeco.aftabe.Object.Level;
 import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Service.NotifObjects.NotifHolder;
@@ -25,6 +26,7 @@ import ir.treeco.aftabe.Util.Tools;
 
 public class LoadingActivity extends Activity implements Runnable {
 
+    private static final String TAG = "LoadingActivity";
     long startTime;
 
     @Override

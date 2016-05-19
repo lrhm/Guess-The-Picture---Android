@@ -421,7 +421,32 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         UiUtil.setWidth(creditsButton, (int) (SizeManager.getScreenWidth() * 0.4));
         UiUtil.setHeight(creditsButton, lengthManager.getScreenWidth() / 4);
 
-        creditsButton.setOnClickListener(this);
+        creditsButton.setOnClickListener(new View.OnClickListener() {
+
+            long lastTimeClicked = 0;
+            int counter = 2;
+
+            @Override
+            public void onClick(View v) {
+                Fragment main = getSupportFragmentManager().findFragmentByTag(MAIN_FRAGMENT_TAG);
+                if (!main.isVisible()) {
+                    return;
+                }
+                long current = System.currentTimeMillis();
+
+                if (current - lastTimeClicked > 1000) {
+                    counter = 2;
+                } else {
+                    counter--;
+                }
+                lastTimeClicked = current;
+                if (counter == 0) {
+
+                    Intent intent = new Intent(MainActivity.this, CreditsActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
 
@@ -461,11 +486,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
 
-            case R.id.activity_main_credits_button:
 
-                Intent intent = new Intent(this, CreditsActivity.class);
-                startActivity(intent);
-                break;
         }
     }
 
@@ -488,6 +509,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         cheatButton.setVisibility(View.INVISIBLE);
         logo.setVisibility(View.VISIBLE);
         creditsButton.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isCheatsVisible() {
+        return areCheatsVisible;
     }
 
     public void toggleCheatButton() {

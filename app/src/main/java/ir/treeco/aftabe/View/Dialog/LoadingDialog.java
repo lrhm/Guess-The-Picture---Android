@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -36,6 +37,7 @@ import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
 
@@ -198,6 +200,8 @@ public class LoadingDialog extends Dialog implements Runnable,
         if (mLoadingStep == mImageLoadingIds.length) { // the last image
             ((MainActivity) context).setIsInOnlineGame(false);
             coinAdapter.earnCoins(100);
+            ToastMaker.show(context, "یک بار دیگر تلاش کنید", Toast.LENGTH_SHORT);
+
             dismiss();
             return;
         }

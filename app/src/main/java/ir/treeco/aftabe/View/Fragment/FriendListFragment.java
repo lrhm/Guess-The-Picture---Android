@@ -19,6 +19,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -62,14 +63,8 @@ import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FriendListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FriendListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
+
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
         MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener, View.OnFocusChangeListener {
 
@@ -191,6 +186,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         UiUtil.setHeight(mProgressBar, size);
         UiUtil.setRightMargin(mProgressBar, (int) (SizeManager.getScreenWidth() * 0.02));
 
+        setUpForKeyboardOutsideTouch(view);
 
         return view;
     }
@@ -441,7 +437,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                                 user1.setIsFriend(true);
                             }
                             mFriendsAdapter.addUser(user1, FriendsAdapter.TYPE_ONLINE_FRIENDS);
-                            mFriendsAdapter.removeUser(user1 , FriendsAdapter.TYPE_FRIEND);
+                            mFriendsAdapter.removeUser(user1, FriendsAdapter.TYPE_FRIEND);
 
                         }
                     });
@@ -497,5 +493,33 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setPagingEnabled(!hasFocus);
 
+
+
+    }
+
+
+    private void setUpForKeyboardOutsideTouch(View view){
+        if(!(view instanceof MyAutoCompleteTextView)) {
+
+            view.setOnTouchListener(new View.OnTouchListener() {
+
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideKeyboard();
+                    return false;
+                }
+
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+                View innerView = ((ViewGroup) view).getChildAt(i);
+
+                setUpForKeyboardOutsideTouch(innerView);
+            }
+        }
     }
 }

@@ -38,6 +38,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.TimerView;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe.View.Fragment.OnlineGameFragment;
 
@@ -114,6 +115,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     private void runTimer() {
         if (mTimerStep == 33) {
             mTimer.cancel();
+            ToastMaker.show(context, "پاسخی دریافت نشد" , Toast.LENGTH_SHORT);
             dismiss();
         }
         mTimerStep++;

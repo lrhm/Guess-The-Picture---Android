@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -39,6 +40,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.CheatDrawable;
 import ir.treeco.aftabe.View.Custom.KeyboardView;
+import ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Dialog.FinishDailog;
 import ir.treeco.aftabe.R;
@@ -116,6 +118,9 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         imagePath = "file://" + getActivity().getFilesDir().getPath() + "/Packages/package_" + packageId + "/" + level.getResources();
 
         Picasso.with(getActivity()).load(imagePath).into(imageView);
+
+        setupForOutsideOfCheat(view);
+
         return view;
     }
 
@@ -429,5 +434,38 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         Log.d(TAG, "onResume");
         timeStampAdapter.onResume();
         super.onResume();
+    }
+
+
+    private void setupForOutsideOfCheat(View view) {
+
+        if (view.getId() == R.id.box)
+            return;
+
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (((MainActivity) getActivity()).isCheatsVisible()) {
+
+                    ((MainActivity) getActivity()).toggleCheatButton();
+
+                }
+                return false;
+            }
+
+        });
+
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+                View innerView = ((ViewGroup) view).getChildAt(i);
+
+                setupForOutsideOfCheat(innerView);
+            }
+        }
     }
 }

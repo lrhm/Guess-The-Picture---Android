@@ -91,7 +91,7 @@ public class KeyboardView extends RelativeLayout {
         buttonConvertor = SizeConverter.SizeConvertorFromWidth(baseWidth
                 * (10.6f / 100), 120, 132);
         answerConverter = SizeConverter.SizeConvertorFromWidth(baseWidth
-                * (6.f / 100), 77, 77);
+                * (8.3f / 100), 77, 77);
 
 
         swipeView = new SwipeView(context);
@@ -287,7 +287,7 @@ public class KeyboardView extends RelativeLayout {
 
         for (int i = 0; i < length / 2; i++) {
             middle = SizeManager.getScreenWidth() / 2;
-            offSet = answerConverter.mWidth / 30;
+            offSet = 0;//answerConverter.mWidth / 50;
             if (length % 2 == 1) {
                 offSet += (answer.charAt(length / 2) == ' ') ? answerConverter.mWidth / 4
                         : answerConverter.mWidth / 2;
@@ -555,9 +555,9 @@ public class KeyboardView extends RelativeLayout {
                 translateAnimation.setFillAfter(true);
                 translateAnimation.setDuration(400);
 
-                float scaleX = ((float) thisView.answerConverter.mWidth)
+                float scaleX = ((float) answerConverter.mWidth)
                         / buttonConvertor.mWidth;
-                float scaleY = ((float) thisView.answerConverter.mHeight)
+                float scaleY = ((float) answerConverter.mHeight)
                         / buttonConvertor.mHeight;
                 ScaleAnimation scaleAnimation = new ScaleAnimation(scaleX, 1,
                         scaleY, 1);
@@ -638,6 +638,8 @@ public class KeyboardView extends RelativeLayout {
     }
 
     public class KeyView extends RelativeLayout {
+
+
         public int x = -1, y = -1;
         public int otherIndex = -1;
         public int index;
@@ -678,7 +680,7 @@ public class KeyboardView extends RelativeLayout {
 
                     (type == TYPE_LEFT) ? R.drawable.button_left_touched
                             : R.drawable.button_right_touched,
-                    buttonConvertor.mHeight, buttonConvertor.mWidth,
+                    buttonConvertor.mWidth, buttonConvertor.mHeight,
                     ImageManager.ScalingLogic.FIT));
         }
 
@@ -706,14 +708,14 @@ public class KeyboardView extends RelativeLayout {
 
             answers[mIndex].imgView.setImageBitmap(imageManager
                     .loadImageFromResource(answerDrawable,
-                            answerConverter.mHeight, answerConverter.mWidth,
+                            answerConverter.mWidth, answerConverter.mHeight,
                             ImageManager.ScalingLogic.FIT));
 
             imgView.setImageBitmap(imageManager.loadImageFromResource(
 
                     (type == TYPE_LEFT) ? R.drawable.button_left_touched
                             : R.drawable.button_right_touched,
-                    buttonConvertor.mHeight, buttonConvertor.mWidth, ImageManager.ScalingLogic.FIT
+                    buttonConvertor.mWidth, buttonConvertor.mHeight, ImageManager.ScalingLogic.FIT
             ));
             this.charHolder.setVisibility(View.GONE);
 
@@ -753,7 +755,6 @@ public class KeyboardView extends RelativeLayout {
 
         }
 
-        SizeConverter answerConverter;
 
         // LAMP
         public KeyView(Context context) {
@@ -775,16 +776,7 @@ public class KeyboardView extends RelativeLayout {
             super(context);
             this.state = (state) ? STATE_EMPTY : STATE_NORMAL;
             if (state) {
-                SizeConverter yaroConvertor = SizeConverter
-                        .SizeConvertorFormHeight(
-                                SizeManager.getScreenHeight() * (0.75), 1200,
-                                1447);
 
-                int baseWidth = (yaroConvertor.mWidth > SizeManager
-                        .getScreenWidth()) ? SizeManager.getScreenWidth()
-                        : yaroConvertor.mWidth;
-                answerConverter = SizeConverter.SizeConvertorFromWidth(
-                        baseWidth * (6.f / 100), 77, 77);
                 setLayoutParams(new LayoutParams(
                         answerConverter.mWidth / 2, answerConverter.mHeight));
 
@@ -804,15 +796,8 @@ public class KeyboardView extends RelativeLayout {
             yaroConvertor = SizeConverter.SizeConvertorFormHeight(
                     SizeManager.getScreenHeight() * (0.75), 1200, 1447);
 
-            int baseWidth = (yaroConvertor.mWidth > SizeManager
-                    .getScreenWidth()) ? SizeManager.getScreenWidth()
-                    : yaroConvertor.mWidth;
 
-            buttonConvertor = SizeConverter.SizeConvertorFromWidth(baseWidth
-                    * (10.6f / 100), 120, 132);
-            answerConverter = SizeConverter.SizeConvertorFromWidth(baseWidth
-                    * (6.f / 100), 77, 77);
-            LayoutParams params;
+            Log.d(TAG, "answerconverter width is " + answerConverter.getWidth());
             if (mode == MODE_ANSWER) {
                 setLayoutParams(new LayoutParams(
                         answerConverter.mWidth, answerConverter.mHeight));
