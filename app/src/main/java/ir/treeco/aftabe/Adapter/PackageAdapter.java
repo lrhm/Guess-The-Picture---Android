@@ -103,7 +103,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
             Picasso.with(context).load(R.drawable.package_price).fit().into(packagePrice);
 
-            price.setText(Tools.numeralStringToPersianDigits("200"));
+            price.setText(Tools.numeralStringToPersianDigits("2000"));
             v.setOnClickListener(this);
 
 
@@ -248,18 +248,17 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public void onBindViewHolder(PackageAdapter.ViewHolder viewHolder, int i) {
 
 
-        int onePercent = (int) (SizeManager.getScreenHeight() * 0.01);
+        int onePercent = (int) (SizeManager.getScreenWidth() * 0.013);
 
         if (i % 2 == 0) {
             viewHolder.imageView.setPadding(onePercent, 0, 0, 0);
-            viewHolder.packagePrice.setPadding(onePercent, 0, 0, 0);
+            UiUtil.setLeftMargin(viewHolder.packagePrice, onePercent);
             viewHolder.price.setPadding(onePercent, 0, 0, 0);
 
         } else {
 
             viewHolder.imageView.setPadding(0, 0, onePercent, 0);
-            viewHolder.price.setPadding(0, 0, onePercent, 0);
-            viewHolder.packagePrice.setPadding(0, 0, onePercent, 0);
+
 
         }
 
