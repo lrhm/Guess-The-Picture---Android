@@ -12,6 +12,13 @@
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/text_registration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/gmail_registration_image_view"
             android:layout_width="wrap_content"
@@ -21,14 +28,12 @@
         <ImageView
             android:id="@+id/phone_registration_image_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:id="@+id/guest_register_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:visibility="gone" />
 
 

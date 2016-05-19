@@ -249,7 +249,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                         if (myUser == null || myUser.isGuest()) {
 
-                            new RegistrationDialog(context, false).show();
+                            new RegistrationDialog(context, false).setTextVisible().show();
                             return;
                         }
                         DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {

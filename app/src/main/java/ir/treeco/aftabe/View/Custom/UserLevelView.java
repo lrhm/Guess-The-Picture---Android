@@ -408,7 +408,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             return;
         }
 
-        new RegistrationDialog(getContext(), false).show();
+        new RegistrationDialog(getContext(), false).setTextVisible().show();
 
 
     }

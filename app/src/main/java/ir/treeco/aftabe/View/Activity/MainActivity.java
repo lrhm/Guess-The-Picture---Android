@@ -97,6 +97,7 @@ import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
+import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
 import ir.treeco.aftabe.View.Fragment.GameFragment;
@@ -175,6 +176,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         SocketAdapter.addFriendSocketListener(this);
 
         initActivity();
+
 
 
         askForContactPermission();

@@ -106,10 +106,10 @@ public class KeyboardView extends RelativeLayout {
 
         mReaminingLenght = SizeManager.getScreenHeight() - lengthManager.getHeaderHeight() - lengthManager.getLevelImageFrameHeight();
 
-        Log.d("TAG", "whole" + SizeManager.getScreenHeight());
-        Log.d("TAG", "reamaning " + mReaminingLenght);
-        Log.d("TAG", "header " + lengthManager.getHeaderHeight());
-        Log.d("TAG", "frame " + lengthManager.getLevelImageFrameHeight());
+//        Log.d("TAG", "whole" + SizeManager.getScreenHeight());
+//        Log.d("TAG", "reamaning " + mReaminingLenght);
+//        Log.d("TAG", "header " + lengthManager.getHeaderHeight());
+//        Log.d("TAG", "frame " + lengthManager.getLevelImageFrameHeight());
 
         double wholeButtonsLength = 3.2 * (buttonConvertor.getHeight());
         mMargin = (int) ((mReaminingLenght - (wholeButtonsLength + (answerConverter.getHeight()))) / 3.);
@@ -797,7 +797,7 @@ public class KeyboardView extends RelativeLayout {
                     SizeManager.getScreenHeight() * (0.75), 1200, 1447);
 
 
-            Log.d(TAG, "answerconverter width is " + answerConverter.getWidth());
+//            Log.d(TAG, "answerconverter width is " + answerConverter.getWidth());
             if (mode == MODE_ANSWER) {
                 setLayoutParams(new LayoutParams(
                         answerConverter.mWidth, answerConverter.mHeight));

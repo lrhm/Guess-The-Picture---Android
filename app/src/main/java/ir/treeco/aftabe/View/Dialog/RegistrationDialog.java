@@ -5,10 +5,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Rest.Interfaces.UserFoundListener;
@@ -16,10 +18,12 @@ import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.TokenHolder;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 
 public class RegistrationDialog extends Dialog {
@@ -27,16 +31,21 @@ public class RegistrationDialog extends Dialog {
     Tools tools;
     ImageManager imageManager;
     private boolean showGuest = false;
+    private boolean showText = false;
 
     public RegistrationDialog(Context context, boolean showGuest) {
         super(context);
         this.context = context;
         tools = new Tools(context);
         imageManager = ((MainApplication) getContext().getApplicationContext()).getImageManager();
-
         this.showGuest = showGuest;
+
     }
 
+    public RegistrationDialog setTextVisible(){
+        showText = true;
+        return this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +83,27 @@ public class RegistrationDialog extends Dialog {
             }
         });
 
+        UiUtil.setTopMargin(phoneImageView , (int) (SizeManager.getScreenHeight() * 0.03));
+
+        if(showText){
+            TextView regText = (TextView) findViewById(R.id.text_registration);
+            UiUtil.setTextViewSize(regText, (int) (SizeManager.getScreenWidth() * 0.2), 0.6f);
+            regText.setGravity(Gravity.CENTER);
+            regText.setVisibility(View.VISIBLE);
+            regText.setTypeface(FontsHolder.getSansBold(getContext()));
+            regText.setText("عضویت");
+            regText.setTextColor(Color.WHITE);
+            UiUtil.setBottomMargin(regText, (int) (SizeManager.getScreenHeight() * 0.1));
+
+        }
+
         if (showGuest) {
+
+
             ImageView guestImageView = (ImageView) findViewById(R.id.guest_register_image_view);
+
+            UiUtil.setTopMargin(guestImageView , (int) (SizeManager.getScreenHeight() * 0.03));
+
             guestImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.login_guest, sizeConverter.mWidth, sizeConverter.mHeight));
             guestImageView.setVisibility(View.VISIBLE);
             guestImageView.setOnClickListener(new View.OnClickListener() {
