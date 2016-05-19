@@ -103,11 +103,10 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         msgCountView.setCount(0);
         frndReqCountView.setCount(0);
 
+        User myUser = Tools.getCachedUser(getContext());
 
-        if (Prefs.contains(Tools.USER_SAVED_DATA)) {
-            String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
-            Gson gson = new Gson();
-            User myUser = gson.fromJson(jsonString, User.class);
+        if (myUser != null) {
+
             mUserLevelView.setUser(myUser);
 
         }

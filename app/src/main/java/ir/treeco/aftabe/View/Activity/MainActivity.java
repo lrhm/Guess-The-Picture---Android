@@ -162,6 +162,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         coinAdapter = new CoinAdapter(this, this);
 
+        AftabeAPIAdapter.setContext(this);
+
         SizeManager.initSizes(this);
 
         checkExtras(getIntent().getExtras());

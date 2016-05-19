@@ -95,7 +95,7 @@ public class RegistrationDialog extends Dialog {
                         @Override
                         public void onGetMyUser(User myUser) {
                             myUser.setGuest(true);
-                            Tools.updateSharedPrefsToken(myUser, new TokenHolder(myUser));
+                            Tools.updateSharedPrefsToken(context, myUser, new TokenHolder(myUser));
                             ((MainActivity) context).onGetMyUser(myUser);
                         }
 

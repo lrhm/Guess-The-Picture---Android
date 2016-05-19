@@ -304,6 +304,7 @@ public class PackageTools {
 
                 if (user != null && user.isPackagePurchased(id)) {
                     int index = user.getPackageLastSolved(id);
+                    Log.d(TAG, "resolving package");
                     for (int i = 0; i < index; i++)
                         db.resolveLevel(id, i);
 

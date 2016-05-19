@@ -566,8 +566,11 @@ public class Tools {
             for (User.PackageInfo info : user.getPackageInfos()) {
                 File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + info.getId() + "/");
                 if (file.exists()) {
-                    for (int i = 0; i < info.getIndex(); i++)
+                    Log.d(TAG, "package " + info.getId() + " exist");
+                    for (int i = 0; i < info.getIndex(); i++) {
                         dbAdapter.resolveLevel(info.getId(), i);
+                        Log.d(TAG, "resloving level " + i);
+                    }
                 }
 
             }
@@ -640,7 +643,14 @@ public class Tools {
         if (Prefs.contains(Tools.USER_SAVED_DATA)) {
             String jsonString = Prefs.getString(Tools.USER_SAVED_DATA, "");
             Gson gson = new Gson();
-            return gson.fromJson(jsonString, User.class);
+            try {
+                User user = gson.fromJson(jsonString, User.class);
+
+                return user;
+            }
+            catch (Exception e){
+                return null;
+            }
         }
         return null;
     }

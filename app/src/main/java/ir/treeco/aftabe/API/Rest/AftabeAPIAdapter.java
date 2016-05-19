@@ -856,12 +856,17 @@ public class AftabeAPIAdapter {
                         if (response.isSuccess()) {
                             PackageSolvedCache.getInstance().onPackageIndexSent(packageId);
 
+                            Log.d(TAG, "updatet package");
+                        } else {
+                            Log.d(TAG, "didnt update package package");
+
                         }
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
 
+                        Log.d(TAG, "didnt update package package");
                     }
                 });
     }
