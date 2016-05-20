@@ -65,9 +65,9 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
                 R.drawable.aminangry,
                 R.drawable.aminface,
                 R.drawable.amin,
-                R.drawable.aliangry,
                 R.drawable.aliface,
-                R.drawable.alinormal
+                R.drawable.alinormal,
+                R.drawable.aliangry
         };
 
         int[] imageIds = new int[]{
