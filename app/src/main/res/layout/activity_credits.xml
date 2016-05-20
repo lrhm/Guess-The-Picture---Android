@@ -13,4 +13,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <ImageView
+        android:id="@+id/credits_ala"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <ImageView
+        android:id="@+id/credits_ali"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <ImageView
+        android:id="@+id/credits_amin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </FrameLayout>

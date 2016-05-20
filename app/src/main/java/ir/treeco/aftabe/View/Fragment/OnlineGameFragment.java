@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -81,6 +83,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     private String gameType = null;
     private static final String[] types = {"Match", "Random"};
     User opponent;
+    RelativeLayout currectContainer;
 
     private ResultHolder mGameResult;
     private Object lock = new Object();
@@ -215,6 +218,15 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         FrameLayout box = (FrameLayout) view.findViewById(R.id.box);
         tools.resizeView(box, lengthManager.getLevelImageWidth(), lengthManager.getLevelImageHeight());
 
+        currectContainer = (RelativeLayout) view.findViewById(R.id.level_win_container);
+
+        tools.resizeView(currectContainer, lengthManager.getLevelImageWidth(), lengthManager.getLevelImageHeight());
+
+
+        ImageView lvlWinImage = (ImageView) view.findViewById(R.id.level_win_image_view);
+        SizeConverter winImageConverter = SizeConverter.SizeConvertorFormHeight(lengthManager.getLevelImageHeight() * 0.666, 450, 450);
+        lvlWinImage.setImageBitmap(imageManager.loadImageFromResource(R.drawable.levelwin, winImageConverter.mWidth, winImageConverter.mHeight));
+
         ImageView frame = (ImageView) view.findViewById(R.id.frame);
         frame.setImageBitmap(imageManager.loadImageFromResource(R.drawable.frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight(), ImageManager.ScalingLogic.FIT));
         tools.resizeView(frame, lengthManager.getLevelImageFrameWidth(), lengthManager.getLevelImageFrameHeight());
@@ -275,6 +287,54 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     }
 
+    private void startShowingAnimation() {
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+        alphaAnimation.setDuration(1000);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+        alphaAnimation.setRepeatCount(1);
+
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                Log.d(TAG, "Animation End");
+                currectContainer.setVisibility(View.GONE);
+                getActivity().getSupportFragmentManager().popBackStack();
+
+                if (state == 1)
+                    return;
+                Bundle bundle = new Bundle();
+                bundle.putInt("state", 1);
+
+                OnlineGameFragment gameFragment = new OnlineGameFragment();
+                gameFragment.mRemainingTime = mRemainingTime;
+                gameFragment.gameType = gameType;
+                gameFragment.setOnGameEndListener(mOnGameEndListener);
+                gameFragment.setGameResultHolder(mGameResultHolder);
+                gameFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
+                transaction.addToBackStack(null);
+                transaction.commitAllowingStateLoss();
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        currectContainer.startAnimation(alphaAnimation);
+        currectContainer.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onAllAnswered(String guess) {
 
@@ -286,8 +346,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             MediaAdapter.getInstance(getContext()).playCorrectSound();
 
-            getActivity().getSupportFragmentManager().popBackStack();
-
+            startShowingAnimation();
 
             mTimer.cancel();
 
@@ -302,27 +361,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             answerObject.setCorrect();
             SocketAdapter.setAnswerLevel(answerObject);
 
-            if (state == 1) {
 
-                getActivity().getSupportFragmentManager().popBackStack();
-
-
-                return;
-            }
-            Bundle bundle = new Bundle();
-            bundle.putInt("state", 1);
-
-            OnlineGameFragment gameFragment = new OnlineGameFragment();
-            gameFragment.mRemainingTime = mRemainingTime;
-            gameFragment.gameType = gameType;
-            gameFragment.setOnGameEndListener(mOnGameEndListener);
-            gameFragment.setGameResultHolder(mGameResultHolder);
-            gameFragment.setArguments(bundle);
-
-            FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, gameFragment, "FRAGMENT_ONLINE_GAME");
-            transaction.addToBackStack(null);
-            transaction.commitAllowingStateLoss();
         }
 
     }

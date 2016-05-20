@@ -75,6 +75,7 @@ import ir.treeco.aftabe.Adapter.DBAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
+import ir.treeco.aftabe.BuildConfig;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.StoreItemHolder;
 import ir.treeco.aftabe.Object.User;
@@ -182,6 +183,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         askForContactPermission();
+
+        ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE , Toast.LENGTH_SHORT);
 
 
     }

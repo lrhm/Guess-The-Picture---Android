@@ -13,6 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.MainApplication;
@@ -43,6 +45,8 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private static final int TEXT_ALIGN_LEFT = 0;
     private static final int TEXT_ALIGN_BELOW = 1;
     private static final int TEXT_ALIGN_CENTER = 2;
+
+    private HashMap<MagicTextView, Boolean> isShadowLayerSet;
 
 
     SizeConverter imageConverter;
@@ -78,6 +82,8 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
 
     private void mUserLevelMarkView(Context context) {
+        isShadowLayerSet = new HashMap<>();
+
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
         imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
 
@@ -196,7 +202,12 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         UiUtil.setTextViewSize(mUserNameTextView, (int) (SizeManager.getScreenHeight() * mDimension), 0.275f * size);
     }
 
+
     public void setShadowLayer(MagicTextView mLevelTextView) {
+
+        Boolean isSet = isShadowLayerSet.get(mLevelTextView);
+        if (isSet != null && isSet)
+            return;
 
         float dpi = getContext().getResources().getDisplayMetrics().density;
         if (SizeManager.getScreenWidth() < 800) {
@@ -206,6 +217,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
             mLevelTextView.addOuterShadow(0.3f, size, size, dropShadowColor);
             mLevelTextView.addInnerShadow(0.3f, size, size, dropShadowColor);
 
+            isShadowLayerSet.put(mLevelTextView, true);
             return;
         }
 
@@ -220,6 +232,9 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         if (!isOnlineTop)
             mLevelTextView.setStroke(strokeSize, Color.parseColor("#c9c9c9"));
+
+
+        isShadowLayerSet.put(mLevelTextView, true);
 
     }
 

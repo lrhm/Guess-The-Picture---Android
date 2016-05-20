@@ -57,6 +57,9 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             holder.mUserLevelView.setClick(false);
             holder.container.setBackgroundColor(Color.parseColor("#32000000"));
         }
+        else {
+            holder.container.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @Override

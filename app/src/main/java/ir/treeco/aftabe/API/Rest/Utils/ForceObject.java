@@ -14,22 +14,22 @@ public class ForceObject {
     boolean forceDownload;
 
     @Expose
-    int versionId;
+    int version;
 
     @Expose
-    String url;
+    URLHolder file;
 
 
     public int getVersionId() {
-        return versionId;
+        return version;
     }
 
     public String getUrl() {
-        return url;
+        return file.name;
     }
 
     public String getName(){
-        return url;
+        return file.name;
     }
 
     public boolean isForceDownload() {
@@ -38,6 +38,12 @@ public class ForceObject {
 
     public boolean isForceUpdate() {
         return forceUpdate;
+    }
+
+    public class URLHolder{
+
+        @Expose
+        String name;
     }
 
 }
