@@ -446,7 +446,12 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     private void setupForOutsideOfCheat(View view) {
 
-        if (view.getId() == R.id.box)
+        ArrayList<Integer> cheats = new ArrayList<>();
+        cheats.add(R.id.cheat_skip_level);
+        cheats.add(R.id.cheat_remove_some_letters);
+        cheats.add(R.id.cheat_reveal_a_letter);
+
+        if (view.getId() == R.id.level_view || cheats.contains(view.getId()))
             return;
 
 
