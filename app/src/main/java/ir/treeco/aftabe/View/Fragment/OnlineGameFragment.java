@@ -85,6 +85,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     User opponent;
     RelativeLayout currectContainer;
 
+    Long startAnimationTime;
     private ResultHolder mGameResult;
     private Object lock = new Object();
 
@@ -287,6 +288,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     }
 
+
     private void startShowingAnimation() {
 
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
@@ -298,13 +300,13 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             @Override
             public void onAnimationStart(Animation animation) {
 
+                startAnimationTime = System.currentTimeMillis();
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
 
                 Log.d(TAG, "Animation End");
-                currectContainer.setVisibility(View.GONE);
                 getActivity().getSupportFragmentManager().popBackStack();
 
                 if (state == 1)
@@ -539,14 +541,24 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         synchronized (lock) {
             mGameResult = resultHolder;
         }
-        doLose();
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+        long delay = 0;
+        if (resultHolder.amIWinner(Tools.getCachedUser(getContext()))) {
+            long current = System.currentTimeMillis();
+            if (startAnimationTime != null && current - startAnimationTime < 2000) {
+                delay = 2000 - (current - startAnimationTime);
+            }
+        }
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                doLose();
                 mainActivity.getSupportFragmentManager().popBackStack();
 
             }
-        });
+        }, delay);
 
     }
 

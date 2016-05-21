@@ -88,7 +88,7 @@ public class DBAdapter {
             FRIEND_ID + TEXT_TYPE + PRIMARY_KEY + COMMA_SEP +
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
-    private Integer coin = 0;
+    private Integer coin = null;
     private Object coinLock = new Object();
 
     private static Object lock = new Object();
@@ -261,6 +261,7 @@ public class DBAdapter {
 
     public int getCoins() {
 
+        Log.d(TAG, "coin is " + ((coin == null) ? "null" : coin));
         synchronized (coinLock) {
 
             if (coin != null)

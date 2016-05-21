@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -773,9 +774,8 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<ArrayList<Integer>> response) {
 
                 if (response.isSuccess())
-                    listener.onPurchaseSuccess();
-                else
-                    listener.onPurchasedBefore();
+                    if (listener != null) listener.onPurchaseSuccess();
+                    else if (listener != null) listener.onPurchasedBefore();
 
             }
 
@@ -840,14 +840,14 @@ public class AftabeAPIAdapter {
     }
 
 
-    public static void updatePackageSolved(final int packageId, int index) {
+    public static void updatePackageSolved(final int packageId, final int index) {
         init();
 
-        User myUser = Tools.getCachedUser(context);
+        final User myUser = Tools.getCachedUser(context);
         if (myUser == null)
             return;
 
-        IndexHolder indexHolder = new IndexHolder(index);
+        IndexHolder indexHolder = new IndexHolder(index+1);
         aftabeService.updateLastLevelSolved(packageId + "", myUser.getLoginInfo().getAccessToken(), indexHolder)
                 .enqueue(new Callback<HashMap<String, Object>>() {
                     @Override
@@ -858,7 +858,14 @@ public class AftabeAPIAdapter {
 
                             Log.d(TAG, "updatet package");
                         } else {
-                            Log.d(TAG, "didnt update package package");
+                            Log.d(TAG, "didnt update package package , buy this shit nigga " + packageId +" " + index);
+                            try {
+                                Log.d(TAG, response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            buyPackage(packageId, null);
 
                         }
                     }

@@ -69,8 +69,9 @@
                 android:id="@+id/level_win_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#000000"
+                android:background="#80000000"
                 android:visibility="gone"
+                android:layout_gravity="center"
 
                 >
 
