@@ -13,6 +13,8 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
@@ -111,9 +113,17 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingImageHeight = converter.mHeight;
         mLoadingImageWidth = converter.mWidth;
 
+        UiUtil.setWidth(mLoadingImageView, mLoadingImageWidth);
+        UiUtil.setHeight(mLoadingImageView, mLoadingImageHeight);
+        UiUtil.setLeftMargin(mLoadingImageView, converter.getLeftOffset() / 2);
+        UiUtil.setTopMargin(mLoadingImageView, converter.getTopOffset() / 2);
+
+//        Picasso.with(context).load(R.drawable.search_sc_1).fit().into(mLoadingImageView);
+        mLoadingImageHeight /= 2;
+        mLoadingImageWidth /= 2;
 
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(R.drawable.search_sc_1,
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
 
 
         if (showCancel) {
@@ -203,7 +213,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         }
 
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.CROP));
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
 
 
         new Handler().postDelayed(this, 1000);

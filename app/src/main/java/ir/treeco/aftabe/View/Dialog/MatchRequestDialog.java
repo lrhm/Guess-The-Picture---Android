@@ -138,7 +138,6 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
 
         if (v.getId() == R.id.uv_match_button) {
             acceptOrDeclineMatch(true, v);
-            accepted = true;
         }
         dismiss();
 
@@ -167,6 +166,8 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
                     return;
                 }
                 SocketAdapter.responseToMatchRequest(mUser.getId(), accepted);
+                this.accepted = true;
+
                 new LoadingDialog(context).show();
 
             }
