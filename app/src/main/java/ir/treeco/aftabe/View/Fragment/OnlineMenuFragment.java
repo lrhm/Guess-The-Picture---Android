@@ -53,7 +53,8 @@ public class OnlineMenuFragment extends Fragment implements MySmartTabLayout.OnT
         mainFragment =
                 ((MainActivity) getActivity()).mainFragment;
 
-        mainFragment.mSmartTabLayout.setOnTabClickListener(this);
+        if (mainFragment != null && mainFragment.mSmartTabLayout != null)
+            mainFragment.mSmartTabLayout.setOnTabClickListener(this);
 
         verticalViewPager.setDegreeOfFreedom(4);
 
@@ -67,7 +68,7 @@ public class OnlineMenuFragment extends Fragment implements MySmartTabLayout.OnT
     public void onTabClicked(int position) {
 
         if (position == 1 && verticalViewPager.getCurrentItem() == 1) {
-            verticalViewPager.setCurrentItem(0,true);
+            verticalViewPager.setCurrentItem(0, true);
         }
 
     }

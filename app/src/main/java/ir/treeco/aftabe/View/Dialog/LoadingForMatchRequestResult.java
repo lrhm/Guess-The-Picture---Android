@@ -105,8 +105,14 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     private void runTimer() {
         if (mTimerStep == 33) {
             mTimer.cancel();
-            ToastMaker.show(context, "پاسخی دریافت نشد" , Toast.LENGTH_SHORT);
-            dismiss();
+            new Handler(Looper.myLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ToastMaker.show(context, "پاسخی دریافت نشد", Toast.LENGTH_SHORT);
+                    dismiss();
+
+                }
+            });
         }
         mTimerStep++;
 

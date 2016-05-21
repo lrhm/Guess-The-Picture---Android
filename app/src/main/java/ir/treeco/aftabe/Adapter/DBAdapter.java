@@ -88,6 +88,8 @@ public class DBAdapter {
             FRIEND_ID + TEXT_TYPE + PRIMARY_KEY + COMMA_SEP +
             FRIEND_USER_GSON + TEXT_TYPE + BRACKET_CLOSE_SEP + SEMICOLON;
 
+    private Integer coin = 0;
+    private Object coinLock = new Object();
 
     private static Object lock = new Object();
 
@@ -258,19 +260,27 @@ public class DBAdapter {
     }
 
     public int getCoins() {
-        open();
-        Cursor cursor = db.query(COINS,
-                new String[]{COINS_COUNT},
-                COINS_SQL_ID + " = 1",
-                null, null, null, null);
 
-        if (cursor != null && cursor.moveToFirst()) {
-            int count = cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
+        synchronized (coinLock) {
+
+            if (coin != null)
+                return coin;
+
+            open();
+            Cursor cursor = db.query(COINS,
+                    new String[]{COINS_COUNT},
+                    COINS_SQL_ID + " = 1",
+                    null, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                int count = cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
+                close();
+                coin = count;
+                return count;
+            }
             close();
-            return count;
+            return 0;
         }
-        close();
-        return 0;
     }
 
     public boolean getCoinsReviewed() {
@@ -290,20 +300,31 @@ public class DBAdapter {
     }
 
     public void insertCoins(int count) {
-        open();
-        ContentValues values = new ContentValues();
-        values.put(COINS_COUNT, count);
-        values.put(COINS_REVIEWED, false);
-        db.insert(COINS, null, values);
-        close();
+
+        synchronized (coinLock) {
+
+            coin = count;
+
+            open();
+            ContentValues values = new ContentValues();
+            values.put(COINS_COUNT, count);
+            values.put(COINS_REVIEWED, false);
+            db.insert(COINS, null, values);
+            close();
+        }
     }
 
     public void updateCoins(int count) {
-        open();
-        ContentValues values = new ContentValues();
-        values.put(COINS_COUNT, count);
-        db.update(COINS, values, COINS_SQL_ID + " = 1", null);
-        close();
+        synchronized (coinLock) {
+
+            coin = count;
+
+            open();
+            ContentValues values = new ContentValues();
+            values.put(COINS_COUNT, count);
+            db.update(COINS, values, COINS_SQL_ID + " = 1", null);
+            close();
+        }
     }
 
     public void updateReviewed(boolean reviewed) {
