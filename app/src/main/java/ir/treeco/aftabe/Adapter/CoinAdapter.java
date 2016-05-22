@@ -6,6 +6,8 @@ import android.view.View;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.util.ArrayList;
+
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 
@@ -71,14 +73,14 @@ public class CoinAdapter {
         db.updateCoins(nextAmount);
         tools.backUpDB();
 
-        if (listener != null)
+        for (CoinsChangedListener listener : listeners)
             listener.changed(nextAmount);
     }
 
-    private static CoinsChangedListener listener;
+    private static ArrayList<CoinsChangedListener> listeners = new ArrayList<>();
 
     public void setCoinsChangedListener(CoinsChangedListener listener) {
-        CoinAdapter.listener = listener;
+        listeners.add(listener);
         listener.changed(getCoinsCount());
     }
 }

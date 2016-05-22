@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe.MainApplication;
 import ir.treeco.aftabe.Object.User;
 import ir.treeco.aftabe.R;
+import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.LengthManager;
 import ir.treeco.aftabe.Util.SizeConverter;
@@ -32,6 +34,7 @@ import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
+import ir.treeco.aftabe.View.Custom.BadgeView;
 import ir.treeco.aftabe.View.Custom.NotificationCountView;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
@@ -39,7 +42,7 @@ import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 /**
  * Created by al on 12/25/15.
  */
-public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener {
+public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener, CoinAdapter.CoinsChangedListener {
 
     private static final String TAG = "OnlinePrimaryPage";
     private static final String TOP_MARGIN_CACHED = TAG + "_CACHE";
@@ -50,7 +53,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 //    private NotificationCountView frndReqCountView;
     private ImageView specialOffer;
     private CoinAdapter coinAdapter;
-
+    NotificationCountView notifView;
 
     @Nullable
     @Override
@@ -97,16 +100,18 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         SizeConverter arrowDownConverter = SizeConverter.SizeConvertorFromWidth((int) (SizeManager.getScreenWidth() * 0.14), 208, 190);
 
-        ImageView arrowDownImage = new ImageView(getContext());
-        arrowDownImage.setImageBitmap(imageManager.loadImageFromResource(R.drawable.downarrow, arrowDownConverter.mWidth, arrowDownConverter.mHeight));
-        notifContainer.addView(arrowDownImage);
-        arrowDownImage.setOnClickListener(new View.OnClickListener() {
+        notifView = new NotificationCountView(getContext(), R.drawable.downarrow, arrowDownConverter);
+        notifContainer.addView(notifView);
+
+        notifView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setCurrentItem(1, true);
 
             }
         });
+
+
 //
 //        notifContainer.addView(msgCountView);
 //        notifContainer.addView(view1, lp);
@@ -178,6 +183,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
             UiUtil.setTopMargin(specialOffer, (int) (randplayconverter.getHeight() * 0.87));
         }
 
+        coinAdapter.setCoinsChangedListener(this);
+
         return view;
     }
 
@@ -231,13 +238,21 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     @Override
     public void onNewNotification(final NotifCountHolder countHolder) {
-//        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//            @Override
-//            public void run() {
-//                msgCountView.setCount(countHolder.getChats());
-//                frndReqCountView.setCount(countHolder.getRequests());
-//            }
-//        });
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifView.setCount(countHolder.getRequests());
+            }
+        });
 
+    }
+
+    @Override
+    public void changed(int newAmount) {
+
+        if(newAmount < 100)
+            specialOffer.setVisibility(View.VISIBLE);
+        else
+            specialOffer.setVisibility(View.GONE);
     }
 }

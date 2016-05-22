@@ -53,12 +53,13 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         User user = mList.get(position);
         holder.mUserLevelView.setUser(user);
         holder.mTextView.setText("#" + Tools.numeralStringToPersianDigits(user.getRank() + ""));
-        if(user.isMe()) {
+        if (user.isMe()) {
             holder.mUserLevelView.setClick(false);
             holder.container.setBackgroundColor(Color.parseColor("#32000000"));
-        }
-        else {
+        } else {
             holder.container.setBackgroundColor(Color.TRANSPARENT);
+            holder.mUserLevelView.setClick(true);
+
         }
     }
 
@@ -105,7 +106,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         if (textNameSizePx != null)
             return textNameSizePx;
         textNameSizePx = UiUtil.getAdjustTextSize(holder.mUserLevelView.getUserNameTextView(),
-                (int) (SizeManager.getScreenWidth() * 0.33), (int) (holder.mUserLevelView.getRealHeight() * 2 / 3.), 12 , "LeaderBoardName");
+                (int) (SizeManager.getScreenWidth() * 0.33), (int) (holder.mUserLevelView.getRealHeight() * 2 / 3.), 12, "LeaderBoardName");
         return textNameSizePx;
     }
 
@@ -113,7 +114,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         if (textLevelSizePx != null)
             return textLevelSizePx;
         textLevelSizePx = UiUtil.getAdjustTextSize(holder.mUserLevelView.getUserNameTextView(),
-                (int) (holder.mUserLevelView.getRealWidth() * 0.4), (int) (holder.mUserLevelView.getRealHeight() * 2 / 3.), 2 , "LeaderBoardLevel");
+                (int) (holder.mUserLevelView.getRealWidth() * 0.4), (int) (holder.mUserLevelView.getRealHeight() * 2 / 3.), 2, "LeaderBoardLevel");
         return textLevelSizePx;
     }
 }
