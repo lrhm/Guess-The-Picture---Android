@@ -18,6 +18,7 @@ import ir.treeco.aftabe.BuildConfig;
 import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
+import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 import retrofit.Callback;
 import retrofit.Response;
 
@@ -110,13 +111,13 @@ public class ForceAdapter {
 
         String no = "اپدیت نکن";
 
-        new CustomAlertDialog(context, msg, yes, new View.OnClickListener() {
+        new SkipAlertDialog(context, msg, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openCafeBazzarAppPage((MainActivity) context);
 
             }
-        }, no, null).setOnDismissListener(new CustomAlertDialog.OnDismissListener() {
+        }, null).setOnDismissListener(new SkipAlertDialog.OnDismissListener() {
             @Override
             public void onDismiss() {
                 Prefs.putBoolean(PREF_KEY_BASE + object.getVersionId(), true);

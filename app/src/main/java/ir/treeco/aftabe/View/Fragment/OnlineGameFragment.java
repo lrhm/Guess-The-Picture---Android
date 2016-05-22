@@ -420,13 +420,13 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     public void forfeit() {
 
-        new CustomAlertDialog(getContext(), "میبازی ها !", "باشه", new View.OnClickListener() {
+        new SkipAlertDialog(getContext(), "میبازی ها !", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doLose();
                 getActivity().getSupportFragmentManager().popBackStack();
             }
-        }, "ادامه میدم", null).show();
+        }, null).show();
 
 
     }

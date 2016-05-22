@@ -14,14 +14,14 @@ public class DialogAdapter {
         String msg = "درخواست دوستی";
         String yes = "بفرست";
         String no = "نفرست";
-        new CustomAlertDialog(context, msg, yes, yesClick, no, null).show();
+        new SkipAlertDialog(context, msg, yesClick, null).show();
     }
 
     public static void makeFriendRemoveDialog(Context context, View.OnClickListener yesClick) {
         String msg = "حذف دوستی";
         String yes = "بکن";
         String no = "نکن";
-        new CustomAlertDialog(context, msg, yes, yesClick, no, null).show();
+        new SkipAlertDialog(context, msg, yesClick , null).show();
 
     }
 
