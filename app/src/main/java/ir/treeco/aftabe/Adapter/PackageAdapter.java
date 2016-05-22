@@ -125,7 +125,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
 
 
-
                 new PackagePurchaseDialog(context, packageObject).setYesClick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -249,15 +248,18 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         int id = packageObjects.get(i).getId();
         String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
+        User myUser = Tools.getCachedUser(context);
 
+        if ((myUser != null && myUser.isPackagePurchased(id))) {
+            viewHolder.price.setText(Tools.numeralStringToPersianDigits("0"));
 
+        }
         File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
         if (!file.exists()) {
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
             viewHolder.price.setVisibility(View.VISIBLE);
             viewHolder.price.setText(Tools.numeralStringToPersianDigits(packageObjects.get(i).getPrice() + ""));
 
-            User myUser = ((MainActivity) context).getMyUser();
             if ((myUser != null && myUser.isPackagePurchased(id))) {
                 viewHolder.price.setText(Tools.numeralStringToPersianDigits("0"));
 
@@ -268,6 +270,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
             viewHolder.imageView.setColorFilter(filter);
 
+        }
+
+        if (!(new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png").exists())) {
+            viewHolder.packagePrice.setVisibility(View.GONE);
+            viewHolder.price.setVisibility(View.GONE);
         }
 
     }

@@ -19,16 +19,27 @@ public class ForceObject {
     @Expose
     URLHolder file;
 
+    @Expose
+    boolean active;
+
+
+    public boolean isActive() {
+        return active;
+    }
 
     public int getVersionId() {
         return version;
     }
 
     public String getUrl() {
-        return file.name;
+        return "https://aftabe2.com:2020/api/files/version/download/" + file.name;
     }
 
-    public String getName(){
+    public int getSize() {
+        return file.size;
+    }
+
+    public String getName() {
         return file.name;
     }
 
@@ -40,10 +51,13 @@ public class ForceObject {
         return forceUpdate;
     }
 
-    public class URLHolder{
+    public class URLHolder {
 
         @Expose
         String name;
+
+        @Expose
+        int size;
     }
 
 }

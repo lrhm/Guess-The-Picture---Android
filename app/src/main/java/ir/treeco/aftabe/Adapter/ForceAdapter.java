@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Rest.Utils.ForceObject;
 import ir.treeco.aftabe.BuildConfig;
+import ir.treeco.aftabe.Object.PackageObject;
 import ir.treeco.aftabe.Util.DownloadTask;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
@@ -29,9 +31,12 @@ import retrofit.Response;
 public class ForceAdapter {
 
 
+    private static final String TAG = "ForceAdapter";
     private static String PREF_KEY_BASE = "aftabe_showed_version_";
     private static ForceAdapter instance;
     private static Object lock = new Object();
+
+    private DownloadTask.DownloadTaskListener listener;
 
     private static ArrayList<ForceListener> listeners;
 
@@ -42,7 +47,8 @@ public class ForceAdapter {
             if (instance == null) {
                 instance = new ForceAdapter(context);
                 listeners = new ArrayList<>();
-            }
+            } else if (instance.context == null)
+                instance.context = context;
             return instance;
         }
     }
@@ -62,9 +68,13 @@ public class ForceAdapter {
             public void onResponse(Response<ForceObject> response) {
                 if (response.isSuccess())
                     if (response.body() != null) {
+                        Log.d(TAG, "getLastVersion sucess");
                         checkVersion(response.body());
 
                     }
+
+                Log.d(TAG, "getLastVersion sucess " + response.isSuccess());
+
             }
 
             @Override
@@ -78,11 +88,16 @@ public class ForceAdapter {
 
         int version = BuildConfig.VERSION_CODE;
 
+        if (!object.isActive())
+            return;
+
         if (object.getVersionId() <= version) {
             deleteDownloadedFiles();
 
             return;
         }
+
+        Log.d(TAG, "new version is found");
         // new version found
 
         if (object.isForceUpdate()) {
@@ -95,34 +110,32 @@ public class ForceAdapter {
             downloadAPK(object);
 
         } else {
-            showNewVersionPopup(object);
+            for (ForceListener listener : listeners)
+                listener.onShowPopup(object);
         }
     }
 
-    public void showNewVersionPopup(final ForceObject object) {
+    public void showNewVersionPopup(final MainActivity mainActivity, final ForceObject object) {
 
-        if (Prefs.getBoolean(PREF_KEY_BASE + object.getVersionId(), false)) {
-            return;
-        }
+//        if (Prefs.getBoolean(PREF_KEY_BASE + object.getVersionId(), false)) {
+//            return;
+//        }
 
         String msg = "اپدیت جدید اومده";
 
-        String yes = "اپدیت کن";
+        if (!mainActivity.isFinishing())
+            new SkipAlertDialog(mainActivity, msg, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openCafeBazzarAppPage(mainActivity);
 
-        String no = "اپدیت نکن";
-
-        new SkipAlertDialog(context, msg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCafeBazzarAppPage((MainActivity) context);
-
-            }
-        }, null).setOnDismissListener(new SkipAlertDialog.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                Prefs.putBoolean(PREF_KEY_BASE + object.getVersionId(), true);
-            }
-        }).show();
+                }
+            }, null).setOnDismissListener(new SkipAlertDialog.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    Prefs.putBoolean(PREF_KEY_BASE + object.getVersionId(), true);
+                }
+            }).show();
 
 
     }
@@ -147,14 +160,23 @@ public class ForceAdapter {
         f.mkdirs();
 
 
+        Log.d(TAG, "download apk");
+
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
 
+                if (listener != null)
+                    listener.onProgress(progress);
+                Log.d(TAG, "download progress " + progress);
             }
 
             @Override
             public void onDownloadSuccess() {
+
+
+                if (listener != null)
+                    listener.onDownloadSuccess();
 
                 startInstallApkIntent(path + "/" + object.getName());
 
@@ -163,8 +185,12 @@ public class ForceAdapter {
             @Override
             public void onDownloadError(String error) {
 
+                if (listener != null)
+                    listener.onDownloadError(error);
+
+                Log.d(TAG, "download failed " + error);
             }
-        }).execute(path, object.getUrl());
+        }).setFileLength(object.getSize()).execute(object.getUrl(), path);
 
 
     }
@@ -190,11 +216,20 @@ public class ForceAdapter {
         this.context = context;
     }
 
+    public DownloadTask.DownloadTaskListener getListener() {
+        return listener;
+    }
+
+    public void setListener(DownloadTask.DownloadTaskListener listener) {
+        this.listener = listener;
+    }
+
     public interface ForceListener {
 
         void onForceUpdate();
 
         void onForceDownload();
 
+        void onShowPopup(ForceObject object);
     }
 }

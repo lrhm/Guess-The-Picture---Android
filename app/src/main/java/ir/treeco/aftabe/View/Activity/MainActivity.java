@@ -54,6 +54,7 @@ import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
 import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
 import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Rest.Interfaces.OldUserListener;
+import ir.treeco.aftabe.API.Rest.Utils.ForceObject;
 import ir.treeco.aftabe.API.Socket.Interfaces.FriendRequestListener;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Friends.MatchResultHolder;
@@ -73,6 +74,7 @@ import ir.treeco.aftabe.Adapter.Cache.MatchRequestCache;
 import ir.treeco.aftabe.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe.Adapter.CoinAdapter;
 import ir.treeco.aftabe.Adapter.DBAdapter;
+import ir.treeco.aftabe.Adapter.ForceAdapter;
 import ir.treeco.aftabe.Adapter.FriendsAdapter;
 import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.Adapter.OnlineOfferAdapter;
@@ -97,6 +99,7 @@ import ir.treeco.aftabe.View.Custom.StarView;
 import ir.treeco.aftabe.View.Custom.TimerView;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.ForceUpdateDialog;
 import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
@@ -114,7 +117,7 @@ import ir.treeco.aftabe.View.Fragment.StoreFragment;
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
         BillingProcessor.IBillingHandler, CoinAdapter.CoinsChangedListener,
         GoogleApiClient.OnConnectionFailedListener, UserFoundListener, SocketListener,
-        SocketFriendMatchListener, FriendRequestListener, OnlineGameFragment.OnGameEndListener {
+        SocketFriendMatchListener, FriendRequestListener, OnlineGameFragment.OnGameEndListener, ForceAdapter.ForceListener {
 
 
     private static final String MAIN_FRAGMENT_TAG = "FRAGMENT_MAIN_TAG";
@@ -188,6 +191,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE, Toast.LENGTH_SHORT);
 
+        checkForceUpdate();
     }
 
 
@@ -880,6 +884,52 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return isPaused;
     }
 
+    @Override
+    public void onForceUpdate() {
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if (!isFinishing())
+                    new ForceUpdateDialog(MainActivity.this, true).show();
+
+                else if (!isPaused)
+                    new Handler().postDelayed(this, 1000);
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void onForceDownload() {
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing())
+                    new ForceUpdateDialog(MainActivity.this, false).show();
+                else if (!isPaused)
+                    new Handler().postDelayed(this, 1000);
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void onShowPopup(final ForceObject object) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing())
+                    ForceAdapter.getInstance(MainActivity.this).showNewVersionPopup(MainActivity.this, object);
+                else if (!isPaused)
+                    new Handler().postDelayed(this, 1000);
+            }
+        }, 2000);
+
+    }
+
     public interface OnPackagePurchasedListener {
         void packagePurchased(String sku);
 
@@ -1301,6 +1351,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
 
+    }
+
+    private void checkForceUpdate() {
+        ForceAdapter.getInstance(this).addListener(this);
+        ForceAdapter.getInstance(this).check();
     }
 
 

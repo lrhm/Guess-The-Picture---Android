@@ -11,14 +11,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textColor="@android:color/white"
-        />
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/dialog_force_update_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_force_update_text"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/dialog_force_update_button"
         android:layout_width="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:layout_below="@id/dialog_force_update_text"
+        android:layout_centerHorizontal="true"
         android:visibility="gone" />
+
+
 </RelativeLayout>

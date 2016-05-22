@@ -62,6 +62,9 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
      **/
     @Override
     protected String doInBackground(String... sUrl) {
+
+        Log.d(TAG, "going to download " + sUrl[0]);
+
         InputStream input = null;
         OutputStream output = null;
         HttpURLConnection connection = null;
