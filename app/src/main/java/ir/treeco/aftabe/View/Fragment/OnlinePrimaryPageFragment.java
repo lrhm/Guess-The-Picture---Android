@@ -46,8 +46,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     private ImageManager imageManager;
     private LengthManager lengthManager;
     private UserLevelView mUserLevelView;
-    private NotificationCountView msgCountView;
-    private NotificationCountView frndReqCountView;
+    //    private NotificationCountView msgCountView;
+//    private NotificationCountView frndReqCountView;
     private ImageView specialOffer;
     private CoinAdapter coinAdapter;
 
@@ -79,29 +79,42 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         ((MainActivity) getActivity()).addUserFoundListener(this);
 
         LinearLayout notifContainer = (LinearLayout) view.findViewById(R.id.notification_count_container);
-        msgCountView = new NotificationCountView(getContext(), R.drawable.notifmsg);
-        frndReqCountView = new NotificationCountView(getContext(), R.drawable.notifreq);
+//        msgCountView = new NotificationCountView(getContext(), R.drawable.notifmsg);
+//        frndReqCountView = new NotificationCountView(getContext(), R.drawable.notifreq);
 
-        frndReqCountView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setCurrentItem(1, true);
-            }
-        });
+//        frndReqCountView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setCurrentItem(1, true);
+//            }
+//        });
 
         LengthManager lengthManager = new LengthManager(getContext());
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.01), 5);
-        View view1 = new View(getContext());
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (SizeManager.getScreenWidth() * 0.01), 5);
+//        View view1 = new View(getContext());
 
 
-        notifContainer.addView(msgCountView);
-        notifContainer.addView(view1, lp);
-        notifContainer.addView(frndReqCountView);
+        SizeConverter arrowDownConverter = SizeConverter.SizeConvertorFromWidth((int) (SizeManager.getScreenWidth() * 0.14), 208, 190);
+
+        ImageView arrowDownImage = new ImageView(getContext());
+        arrowDownImage.setImageBitmap(imageManager.loadImageFromResource(R.drawable.downarrow, arrowDownConverter.mWidth, arrowDownConverter.mHeight));
+        notifContainer.addView(arrowDownImage);
+        arrowDownImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setCurrentItem(1, true);
+
+            }
+        });
+//
+//        notifContainer.addView(msgCountView);
+//        notifContainer.addView(view1, lp);
+//        notifContainer.addView(frndReqCountView);
 
 
-        msgCountView.setCount(0);
-        frndReqCountView.setCount(0);
+//        msgCountView.setCount(0);
+//        frndReqCountView.setCount(0);
 
         User myUser = Tools.getCachedUser(getContext());
 
@@ -124,10 +137,10 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
                 - SizeManager.getScreenHeight() * 0.08 // height of tab bar
                 - lengthManager.getHeaderHeight() // header
                 - 2 * topMargin - randplayconverter.mHeight // margins and random play
-                - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
+                - (arrowDownConverter.mHeight) // notifs
                 - mUserLevelView.getHeightPlusTextView() // userLevelView
                 - offerConverter.getHeight()
-        ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.01);
+        ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.015);
 
 
         while (notifsTopMargin + SizeManager.getScreenHeight() * 0.01 < offerConverter.mHeight + randplayconverter.mHeight) {
@@ -142,10 +155,10 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
                     - SizeManager.getScreenHeight() * 0.08 // height of tab bar
                     - lengthManager.getHeaderHeight() // header
                     - 2 * topMargin - randplayconverter.mHeight // margins and random play
-                    - (int) (SizeManager.getScreenWidth() * 0.14) // notifs
+                    - (arrowDownConverter.mHeight)  // notifs
                     - mUserLevelView.getHeightPlusTextView() // userLevelView
                     - offerConverter.getHeight()
-            ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.02);
+            ) / 2 + randplayconverter.mHeight + SizeManager.getScreenHeight() * 0.015);
         }
         Prefs.putInt(TOP_MARGIN_CACHED, topMargin);
 
@@ -218,13 +231,13 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
     @Override
     public void onNewNotification(final NotifCountHolder countHolder) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                msgCountView.setCount(countHolder.getChats());
-                frndReqCountView.setCount(countHolder.getRequests());
-            }
-        });
+//        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//            @Override
+//            public void run() {
+//                msgCountView.setCount(countHolder.getChats());
+//                frndReqCountView.setCount(countHolder.getRequests());
+//            }
+//        });
 
     }
 }

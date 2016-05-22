@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import ir.treeco.aftabe.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe.API.Rest.Interfaces.OnFriendRequest;
 import ir.treeco.aftabe.API.Socket.SocketAdapter;
@@ -94,13 +97,23 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
 
         String desc = packageObject.getSku();
 
-        String price = String.format("%s %s %s", "ناقابل", Tools.numeralStringToPersianDigits(packageObject.getPrice() + ""), "سکه");
+        User myUser = Tools.getCachedUser(context);
+
+        int intPrice = ((myUser != null && myUser.isPackagePurchased(packageObject.getId()))) ? 0 : packageObject.getPrice();
+
+        String price = String.format("%s %s %s", "ناقابل", Tools.numeralStringToPersianDigits(intPrice + ""), "سکه");
 
         float packageSize = packageObject.getPackageSize() / 1000;
 
         Log.d(TAG, "package size " + packageObject.getPackageSize());
 
-        String size = String.format("%s %s %s", ":حجم", Tools.numeralStringToPersianDigits(packageSize + ""), "مگابایت");
+        String packageS = Tools.numeralStringToPersianDigits(packageSize + "");
+
+        String[] splits = packageS.replace(".", "/").split("/");
+        if(splits.length == 2)
+            packageS = splits[1] + "." + splits[0];
+
+        String size = String.format("%s %s %s", "حجم:", packageS, "مگابایت");
 
 
         setUpTextView(R.id.dialog_package_purchase_1, title, true, 0.4f);
@@ -111,12 +124,12 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
 
         setUpTextView(R.id.dialog_package_purchase_4, size, false, 0.3f);
 
-        setUpBuyButtons();
+        setUpBuyButtons(intPrice);
 
 
     }
 
-    void setUpBuyButtons() {
+    void setUpBuyButtons(int price) {
 
         ImageView packagePurchaseButton = (ImageView) findViewById(R.id.dialog_package_purchase_image);
         TextView packagePurcahseText = (TextView) findViewById(R.id.dialog_package_purchase_text);
@@ -130,7 +143,7 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
         packagePurcahseText.setTextColor(Color.WHITE);
 
         String text = "دانلود";
-        if (packageObject.getPrice() != 0)
+        if (price != 0)
             text = "خرید و دانلود";
         packagePurcahseText.setText(text);
 

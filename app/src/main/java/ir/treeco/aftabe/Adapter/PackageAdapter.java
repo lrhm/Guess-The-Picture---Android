@@ -122,46 +122,31 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             if (!file.exists()) {
 
 
-                User myUser = ((MainActivity) context).getMyUser();
-                if (myUser == null)
-                    myUser = Tools.getCachedUser(context);
-
-                if (packageObject.getPrice() == 0 || (myUser != null && myUser.isPackagePurchased(id))) {
-                    ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
-
-                    PackageTools.getInstance(context).downloadPackage(packageObject, this);
-
-                } else {
-                    final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
+                final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
 
 
-                    String firstLine = String.format("%s %s", "خرید پکیج", packageObject.getName());
-                    String secondLine = String.format("%s %s %s", "فقط", Tools.numeralStringToPersianDigits(packageObject.getPrice() + ""), "سکه");
-                    String msg = String.format("%s\n%s", firstLine, secondLine);
 
-                    new PackagePurchaseDialog(context, packageObject).setYesClick(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (coinAdapter.spendCoins(packageObject.getPrice())) {
-                                AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
-                                    @Override
-                                    public void onPurchasedBefore() {
-                                        //          coinAdapter.earnCoins(packageObject.getPrice());
-                                    }
+                new PackagePurchaseDialog(context, packageObject).setYesClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (coinAdapter.spendCoins(packageObject.getPrice())) {
+                            AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
+                                @Override
+                                public void onPurchasedBefore() {
+                                    //          coinAdapter.earnCoins(packageObject.getPrice());
+                                }
 
-                                    @Override
-                                    public void onPurchaseSuccess() {
+                                @Override
+                                public void onPurchaseSuccess() {
 
-                                    }
-                                });
-                                PackageTools.getInstance(context).downloadPackage(packageObject, ViewHolder.this);
-                                ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
-                            }
+                                }
+                            });
+                            PackageTools.getInstance(context).downloadPackage(packageObject, ViewHolder.this);
+                            ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
                         }
-                    }).show();
+                    }
+                }).show();
 
-
-                }
 
             } else {
                 Bundle bundle = new Bundle();
