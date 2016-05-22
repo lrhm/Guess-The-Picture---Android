@@ -135,7 +135,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         String[] textRights = new String[]{mUser.getRank() + "", mUser.getLoses() + "/" + mUser.getWins(), mUser.getFriendCount() + ""};
         Integer leftMargin = null;
 
-        for(int i =0 ;i <3 ; i++){
+        for (int i = 0; i < 3; i++) {
             textRights[i] = Tools.numeralStringToPersianDigits(textRights[i]);
         }
 
@@ -159,9 +159,9 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             right.setText(textRights[i]);
 
 
-            if (i== 1){
+            if (i == 1) {
                 Spannable wordtoSpan = new SpannableString(textRights[i]);
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED),0 ,  (mUser.getLoses()+"/").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), 0, (mUser.getLoses() + "/").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 right.setText(wordtoSpan);
 
 
@@ -259,7 +259,8 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                                             mChatButton.setImageBitmap(imageManager.loadImageFromResource(
                                                     R.drawable.notifreq, size, size));
 
-                                            Toast.makeText(getContext(), "friend request sent", Toast.LENGTH_SHORT).show();
+
+                                            ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
 
                                         }
                                     });
@@ -272,7 +273,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                                         @Override
                                         public void run() {
 
-                                            Toast.makeText(getContext(), "friend request failed to send", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "لطفا بعدن تلاش کنید", Toast.LENGTH_SHORT).show();
 
                                         }
                                     });

@@ -29,6 +29,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
+import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 
 
 public class GameResultFragment extends Fragment implements View.OnClickListener {
@@ -223,9 +224,15 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
 
         if (v.getId() == R.id.fragment_result_add_friend) {
-            if (!mOpponent.isFriend())
-                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
-//            TODO chat here
+            if (!mOpponent.isFriend()) {
+                new SkipAlertDialog(getActivity(), "درخواست دوستی", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!mOpponent.isBot())
+                            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
+                    }
+                }, null);
+            }
         }
         if (v.getId() == R.id.fragment_result_chat) {
             getActivity().getSupportFragmentManager().popBackStack();

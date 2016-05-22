@@ -185,7 +185,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         askForContactPermission();
 
-        ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE , Toast.LENGTH_SHORT);
+        ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE, Toast.LENGTH_SHORT);
 
     }
 
@@ -839,6 +839,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 }
             });
+        else if (!isPaused) {
+            new Handler(getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onFriendRequestAccept(user);
+                }
+            }, 1000);
+        }
     }
 
     @Override

@@ -256,16 +256,37 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                             @Override
                             public void onClick(View v) {
 
+
+                                removeUser(user, type);
+
                                 AftabeAPIAdapter.requestFriend(myUser, user.getId(), new OnFriendRequest() {
                                     @Override
                                     public void onFriendRequestSent() {
 
-                                        removeUser(user, type);
+                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                user.setIsFriend(true);
+                                                addUser(user, TYPE_FRIEND);
+                                            }
+                                        });
+
 
                                     }
 
                                     @Override
                                     public void onFriendRequestFailedToSend() {
+
+                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                addUser(user, type);
+                                                ToastMaker.show(context, "لطفا بعدن تلاش کنید", Toast.LENGTH_SHORT);
+
+                                            }
+                                        });
 
                                     }
                                 });

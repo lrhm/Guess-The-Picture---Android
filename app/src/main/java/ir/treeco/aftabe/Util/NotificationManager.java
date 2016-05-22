@@ -98,7 +98,7 @@ public class NotificationManager {
         } else if (notifHolder.isMatchRequest()) {
 
             title = "درخواست بازی";
-            content = "۱۰۰ سکه";
+            content = "از " + notifHolder.getFriendSF().getUser().getName();
             pendingIntent = getIntentForMatchRequest(notifHolder, notifID);
             builder = createBasicNotification(title, content, drawable);
             builder.addAction(R.drawable.notif_yes, "باشه", getAcceptPendingIntent(notifHolder, true, notifID));
