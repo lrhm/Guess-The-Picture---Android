@@ -191,7 +191,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         }
 
         final User user = getUser(type, realPosition);
-        int size = (int) (SizeManager.getScreenWidth() * 0.1);
+        final int size = (int) (SizeManager.getScreenWidth() * 0.1);
 
         if (user.isFriend()) {
             if (holder.mChatButton.getVisibility() == View.GONE)
@@ -237,13 +237,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mChatButton.setVisibility(View.GONE);
 
             holder.mMatchButton.setVisibility(View.VISIBLE);
-            int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(user)) ? R.drawable.addfriends : R.drawable.notifreq;
+            final int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(user)) ? R.drawable.addfriends : R.drawable.notifreq;
 
             holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(friendReqDrawable, size, size));
             if (FriendRequestState.getInstance().requestShallPASS(user))
                 holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        if (!FriendRequestState.getInstance().requestShallPASS(user)) {
+                            return;
+                        }
 
                         final User myUser = Tools.getCachedUser(context);
 
@@ -262,16 +266,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                                 AftabeAPIAdapter.requestFriend(myUser, user.getId(), new OnFriendRequest() {
                                     @Override
                                     public void onFriendRequestSent() {
-
-                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                user.setIsFriend(true);
-                                                addUser(user, TYPE_FRIEND);
-                                            }
-                                        });
-
+                                        holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.notifreq, size, size));
 
                                     }
 
@@ -282,7 +277,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                                             @Override
                                             public void run() {
 
-                                                addUser(user, type);
                                                 ToastMaker.show(context, "لطفا بعدن تلاش کنید", Toast.LENGTH_SHORT);
 
                                             }

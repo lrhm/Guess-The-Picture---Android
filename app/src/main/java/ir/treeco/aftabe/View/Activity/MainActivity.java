@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -813,9 +814,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onFriendRequestReject(User user) {
+    public void onFriendRequestReject(final User user) {
 
         FriendRequestState.getInstance().friendRequestEvent(user, true);
+
+        if (mFriendsAdapter.getFriendList().contains(user)) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (!isFinishing()) {
+                        mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_FRIEND);
+                        mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_ONLINE_FRIENDS);
+
+                    }
+                }
+            });
+        }
     }
 
     @Override

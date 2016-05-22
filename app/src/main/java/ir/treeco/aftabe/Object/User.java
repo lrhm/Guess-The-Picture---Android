@@ -301,6 +301,20 @@ public class User {
 
         @Expose
         int friendCount;
+
+        public boolean isFRfrom() {
+            return FRfrom;
+        }
+
+        public boolean isFRto() {
+            return FRto;
+        }
+
+        public boolean isFriend() {
+            return friend;
+        }
+
+
     }
 
 

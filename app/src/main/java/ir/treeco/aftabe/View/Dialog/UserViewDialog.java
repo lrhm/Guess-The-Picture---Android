@@ -260,7 +260,8 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                                                     R.drawable.notifreq, size, size));
 
 
-                                            ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
+                                            if (mUser.getAccess().isFRfrom())
+                                                ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_FRIEND);
 
                                         }
                                     });
