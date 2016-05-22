@@ -56,7 +56,7 @@ public class CheatDrawable extends Drawable {
         textPaint.setShadowLayer(1, 1, 1, Color.BLACK);
 
         centerTextAt(title, (int) (0.375 * background.getWidth()), (int) (background.getHeight() * 0.420), textPaint, titlePosition);
-        centerTextAt(price, (int) (0.863 * background.getWidth()), (int) (background.getHeight() * 0.500), textPaint, pricePosition);
+        centerTextAt(price, (int) (0.863 * background.getWidth()), (int) (background.getHeight() * 0.480), textPaint, pricePosition);
     }
 
     private void centerTextAt(String text, int x, int y, Paint paint, int[] textPosition) {

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,6 +25,7 @@ import ir.treeco.aftabe.API.Rest.Utils.SMSCodeHolder;
 import ir.treeco.aftabe.API.Rest.Utils.SMSRequestToken;
 import ir.treeco.aftabe.API.Rest.Utils.SMSToken;
 import ir.treeco.aftabe.API.Rest.Utils.SMSValidateToken;
+import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
 import ir.treeco.aftabe.Util.RandomString;
@@ -230,13 +233,23 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
     }
 
     @Override
-    public void onValidatedCode(SMSValidateToken smsValidateToken) {
+    public void onValidatedCode(final SMSValidateToken smsValidateToken) {
         Log.d("TAG", "valid code");
+
+
+        MediaAdapter.getInstance(context).playCorrectSound();
 
         isSMSValidated = true;
         dismiss();
         if (!smsValidateToken.isOlduser())
-            new UsernameChooseDialog(getContext(), smsValidateToken, mActivity).show();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    new UsernameChooseDialog(getContext(), smsValidateToken, mActivity).show();
+
+                }
+            });
+
         else {
             AftabeAPIAdapter.submitSMSActivationCode(smsValidateToken, RandomString.nextString(), mActivity);
         }
