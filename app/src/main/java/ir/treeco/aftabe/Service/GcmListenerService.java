@@ -39,6 +39,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             if (notifHolder.isMatchRequest()
                     && dbAdapter.getCoins() < 100)
                 return;
+
+//            (M)getApplication()
             ir.treeco.aftabe.Util.NotificationManager manager = new NotificationManager(getApplicationContext());
             manager.createNotification(notifHolder);
         }

@@ -152,10 +152,10 @@ public class KeyboardView extends RelativeLayout {
                     * buttonConvertor.mWidth;
             paramsRight.leftMargin = middle + offSet + i
                     * buttonConvertor.mWidth;
-            KeyView rightKey = new KeyView(context, KeyView.TYPE_RIGHT,
+            KeyView rightKey = new KeyView(context, (i != 3) ? KeyView.TYPE_CENTER : KeyView.TYPE_RIGHT,
                     KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
-            KeyView leftKey = new KeyView(context, KeyView.TYPE_LEFT,
+            KeyView leftKey = new KeyView(context, (i != 3) ? KeyView.TYPE_CENTER : KeyView.TYPE_LEFT,
                     KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
             rightKey.setXY(paramsRight.leftMargin, top);
@@ -184,10 +184,10 @@ public class KeyboardView extends RelativeLayout {
                     * buttonConvertor.mWidth;
             top = paramsLeft.topMargin + buttonContainerParams.topMargin;
 
-            KeyView rightKey = new KeyView(context, KeyView.TYPE_RIGHT,
+            KeyView rightKey = new KeyView(context, (i != 2) ? KeyView.TYPE_CENTER : KeyView.TYPE_RIGHT,
                     KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
-            KeyView leftKey = new KeyView(context, KeyView.TYPE_LEFT,
+            KeyView leftKey = new KeyView(context, (i != 2) ? KeyView.TYPE_CENTER : KeyView.TYPE_LEFT,
                     KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
             rightKey.setXY(paramsRight.leftMargin, top);
@@ -231,10 +231,10 @@ public class KeyboardView extends RelativeLayout {
             paramsRight.leftMargin = middle + offSet + i
                     * buttonConvertor.mWidth;
 
-            KeyView rightKey = new KeyView(context, KeyView.TYPE_RIGHT,
+            KeyView rightKey = new KeyView(context, (i != 2) ? KeyView.TYPE_CENTER : KeyView.TYPE_RIGHT,
                     KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
-            KeyView leftKey = new KeyView(context, KeyView.TYPE_LEFT,
+            KeyView leftKey = new KeyView(context, (i != 2) ? KeyView.TYPE_CENTER : KeyView.TYPE_LEFT,
                     KeyView.MODE_BUTTON, availableGuesses.get(k++));
 
             rightKey.setXY(paramsRight.leftMargin, top);
@@ -524,6 +524,19 @@ public class KeyboardView extends RelativeLayout {
         // return true;
     }
 
+    public int getUnTocuhDrawableForButton(int type) {
+        switch (type) {
+            case KeyView.TYPE_CENTER:
+                return R.drawable.keyboardcenterbutton;
+            case KeyView.TYPE_LEFT:
+                return R.drawable.button_left;
+            case KeyView.TYPE_RIGHT:
+                return R.drawable.button_right;
+        }
+        return 0;
+
+    }
+
     public void clearAnswers() {
         for (int i = 0; i < answers.length; i++) {
             KeyView thisView = answers[i];
@@ -536,12 +549,12 @@ public class KeyboardView extends RelativeLayout {
                 thisView.otherIndex = -1;
                 buttons[index].state = KeyView.STATE_NORMAL;
                 buttons[index].otherIndex = -1;
+
                 buttons[index].imgView
                         .setImageBitmap(imageManager
                                 .loadImageFromResource(
-
-                                        (buttons[index].type == KeyView.TYPE_LEFT) ? R.drawable.button_left
-                                                : R.drawable.button_right,
+                                        getUnTocuhDrawableForButton(buttons[index].type)
+                                        ,
                                         buttonConvertor.mHeight,
                                         buttonConvertor.mWidth,
                                         ImageManager.ScalingLogic.FIT));

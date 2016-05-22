@@ -100,6 +100,7 @@ import ir.treeco.aftabe.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingDialog;
 import ir.treeco.aftabe.View.Dialog.LoadingForGameResultDialog;
 import ir.treeco.aftabe.View.Dialog.MatchRequestDialog;
+import ir.treeco.aftabe.View.Dialog.PackagePurchaseDialog;
 import ir.treeco.aftabe.View.Dialog.RegistrationDialog;
 import ir.treeco.aftabe.View.Dialog.SkipAlertDialog;
 import ir.treeco.aftabe.View.Dialog.UsernameChooseDialog;
@@ -185,7 +186,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         askForContactPermission();
 
         ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE , Toast.LENGTH_SHORT);
-
 
     }
 

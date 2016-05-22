@@ -556,7 +556,9 @@ public class Tools {
         Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
         String oldKey = Prefs.getString(ENCRYPT_KEY, "");
         User cachedUser = getCachedUser(null);
-        if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())) { // first login
+        if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())
+                || !cachedUser.getLoginInfo().getAccessToken().equals(tokenHolder.getLoginInfo().accessToken)
+                ) { // first login
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB();
@@ -647,8 +649,7 @@ public class Tools {
                 User user = gson.fromJson(jsonString, User.class);
 
                 return user;
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 return null;
             }
         }

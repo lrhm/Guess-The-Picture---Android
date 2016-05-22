@@ -39,6 +39,7 @@ import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Dialog.CustomAlertDialog;
+import ir.treeco.aftabe.View.Dialog.PackagePurchaseDialog;
 import ir.treeco.aftabe.View.Fragment.PackageFragment;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
@@ -137,7 +138,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                     String firstLine = String.format("%s %s", "خرید پکیج", packageObject.getName());
                     String secondLine = String.format("%s %s %s", "فقط", Tools.numeralStringToPersianDigits(packageObject.getPrice() + ""), "سکه");
                     String msg = String.format("%s\n%s", firstLine, secondLine);
-                    new CustomAlertDialog(context, msg, "باشه", new View.OnClickListener() {
+
+                    new PackagePurchaseDialog(context, packageObject).setYesClick(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (coinAdapter.spendCoins(packageObject.getPrice())) {
@@ -154,10 +156,10 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                                 });
                                 PackageTools.getInstance(context).downloadPackage(packageObject, ViewHolder.this);
                                 ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
-
                             }
                         }
-                    }, "نمیخرم", null).show();
+                    }).show();
+
 
                 }
 
