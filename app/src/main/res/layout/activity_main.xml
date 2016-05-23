@@ -77,7 +77,7 @@
                 android:visibility="gone"
                 />
 
-            <ir.treeco.aftabe.View.Custom.UserLevelView
+            <ir.treeco.aftabe2.View.Custom.UserLevelView
                 android:id="@+id/player1_online_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 />
 
 
-            <ir.treeco.aftabe.View.Custom.UserLevelView
+            <ir.treeco.aftabe2.View.Custom.UserLevelView
                 android:id="@+id/player2_online_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

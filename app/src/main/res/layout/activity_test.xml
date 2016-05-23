@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/test_activity_main_layout"
-    tools:context="ir.treeco.aftabe.View.Activity.TestActivity"
+    tools:context="ir.treeco.aftabe2.View.Activity.TestActivity"
 
     >
 

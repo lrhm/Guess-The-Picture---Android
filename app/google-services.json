@@ -1,18 +1,14 @@
 {
   "project_info": {
-    "project_id": "aftabeplus",
     "project_number": "294812968005",
-    "name": "AftabePlus"
+    "project_id": "aftabeplus"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:294812968005:android:68e8ec53917756ab",
-        "client_id": "android:ir.treeco.aftabe",
-        "client_type": 1,
         "android_client_info": {
-          "package_name": "ir.treeco.aftabe",
-          "certificate_hash": []
+          "package_name": "ir.treeco.aftabe"
         }
       },
       "oauth_client": [
@@ -37,21 +33,96 @@
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmwTIlNJ2vq5FwnDUPfVopPEt71qoCsQY"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {
-          "status": 2
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294812968005:android:9485e2c8fdf13736",
+        "android_client_info": {
+          "package_name": "ir.beep.aftabe2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "294812968005-23um4uskcm04alrcv6mvcspsunqa31d8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ir.beep.aftabe2",
+            "certificate_hash": "22D4C244E460AABE5B0ADD3500F8B4D10F3E214F"
+          }
+        },
+        {
+          "client_id": "294812968005-linmhc2bh29ckjv0o40c4ndl7h5l8tnq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmwTIlNJ2vq5FwnDUPfVopPEt71qoCsQY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294812968005:android:571f31b1a52334e6",
+        "android_client_info": {
+          "package_name": "ir.treeco.aftabe2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "294812968005-dsv6e653hmht65ncnqlko9ajq7fm0q6q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ir.treeco.aftabe2",
+            "certificate_hash": "41A02D57AE616BD6D31E2C2CF389255F9388D015"
+          }
+        },
+        {
+          "client_id": "294812968005-linmhc2bh29ckjv0o40c4ndl7h5l8tnq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmwTIlNJ2vq5FwnDUPfVopPEt71qoCsQY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 1
@@ -59,6 +130,5 @@
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

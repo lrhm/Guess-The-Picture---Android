@@ -16,7 +16,7 @@
         android:background="@drawable/chat_me_style"
         />
 
-    <ir.treeco.aftabe.View.Custom.UserLevelView
+    <ir.treeco.aftabe2.View.Custom.UserLevelView
         android:id="@+id/avatar_chat_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

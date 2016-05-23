@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <ir.treeco.aftabe.View.Custom.UserLevelView
+            <ir.treeco.aftabe2.View.Custom.UserLevelView
                 android:id="@+id/leaderboard_mark_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 app:textAlign="left">
 
 
-            </ir.treeco.aftabe.View.Custom.UserLevelView>
+            </ir.treeco.aftabe2.View.Custom.UserLevelView>
 
         </LinearLayout>
 

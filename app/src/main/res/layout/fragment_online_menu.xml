@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ir.treeco.aftabe.View.Custom.VerticalViewPager
+    <ir.treeco.aftabe2.View.Custom.VerticalViewPager
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_online_menu_vertical_view_pager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </ir.treeco.aftabe.View.Custom.VerticalViewPager>
+    </ir.treeco.aftabe2.View.Custom.VerticalViewPager>
 
 
 </LinearLayout>

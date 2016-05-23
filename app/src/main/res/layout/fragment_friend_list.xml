@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="ir.treeco.aftabe.View.Fragment.FriendListFragment">
+    tools:context="ir.treeco.aftabe2.View.Fragment.FriendListFragment">
 
 
     <RelativeLayout
@@ -45,7 +45,7 @@
 
             >
 
-            <ir.treeco.aftabe.View.Custom.MyAutoCompleteTextView
+            <ir.treeco.aftabe2.View.Custom.MyAutoCompleteTextView
                 android:id="@+id/search_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

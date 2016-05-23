@@ -23,13 +23,14 @@ android {
     buildToolsVersion '23.0.3'
     defaultPublishConfig "debug"
     defaultConfig {
-        applicationId "ir.treeco.aftabe"
+        applicationId "ir.treeco.aftabe2"
         minSdkVersion 9
         targetSdkVersion 23
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -47,7 +48,9 @@ dependencies {
     }
 
 
-    compile 'io.reactivex:rxjava:1.0.12'
+    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'com.artemzin.rxjava:proguard-rules:1.1.5.0'
+
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
@@ -61,6 +64,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.pixplicity.easyprefs:library:1.7'
     compile 'joda-time:joda-time:2.8.2'
+
+
     compile 'com.android.support:design:23.1.1'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-plus:8.4.0'

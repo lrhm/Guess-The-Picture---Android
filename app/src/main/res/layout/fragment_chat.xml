@@ -3,7 +3,7 @@
     android:id="@+id/chat_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ir.treeco.aftabe.View.Fragment.ChatFragment">
+    tools:context="ir.treeco.aftabe2.View.Fragment.ChatFragment">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

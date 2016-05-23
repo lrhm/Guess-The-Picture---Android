@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
 
-    <ir.treeco.aftabe.View.Custom.UserLevelView
+    <ir.treeco.aftabe2.View.Custom.UserLevelView
         android:id="@+id/fragment_user_info_user_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ir.treeco.aftabe"
+    package="ir.treeco.aftabe2"
     android:versionCode="1"
     android:versionName="1">
 
@@ -17,18 +17,18 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <permission
-        android:name="ir.treeco.aftabe.permission.C2D_MESSAGE"
+        android:name="ir.treeco.aftabe2.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="ir.treeco.aftabe.permission.C2D_MESSAGE" />
 
     <application
-        android:name=".MainApplication"
+        android:name="ir.treeco.aftabe2.MainApplication"
         android:icon="@drawable/aftabe_icon"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/fullScreenTheme">
         <receiver
-            android:name=".Synchronization.Synchronize"
+            android:name="ir.treeco.aftabe2.Synchronization.Synchronize"
             android:label="NetChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -37,7 +37,7 @@
         </receiver>
 
         <activity
-            android:name=".View.Activity.MainActivity"
+            android:name="ir.treeco.aftabe2.View.Activity.MainActivity"
             android:label="Aftabe"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-            android:name=".View.Activity.LoadingActivity"
+            android:name="ir.treeco.aftabe2.View.Activity.LoadingActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,13 +55,13 @@
         </activity>
 
         <activity
-            android:name=".View.Activity.IntroActivity"
+            android:name="ir.treeco.aftabe2.View.Activity.IntroActivity"
             android:screenOrientation="portrait">
 
         </activity>
 
         <activity
-            android:name=".View.Activity.CreditsActivity"
+            android:name="ir.treeco.aftabe2.View.Activity.CreditsActivity"
             android:screenOrientation="portrait">
 
         </activity>
@@ -74,36 +74,36 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="ir.treeco.aftabe" />
+                <category android:name="ir.treeco.aftab2e" />
 
             </intent-filter>
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="ir.treeco.aftabe" />
+                <category android:name="ir.treeco.aftabe2" />
 
             </intent-filter>
         </receiver>
 
         <service
-            android:name="ir.treeco.aftabe.Service.RegistrationIntentService"
+            android:name="ir.treeco.aftabe2.Service.RegistrationIntentService"
             android:exported="false"></service>
 
         <service
-            android:name="ir.treeco.aftabe.Service.GcmListenerService"
+            android:name="ir.treeco.aftabe2.Service.GcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="ir.treeco.aftabe.Service.InstanceIDListenerService"
+            android:name="ir.treeco.aftabe2.Service.InstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".Service.ActionEventReceiver" />
+        <receiver android:name="ir.treeco.aftabe2.Service.ActionEventReceiver" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
