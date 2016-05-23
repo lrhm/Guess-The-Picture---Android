@@ -219,7 +219,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
     @Override
     public void onSMSValidationFail() {
         Log.d("TAG", "valid fail");
-        Toast.makeText(getContext(), "دوباره تلاش کنید", Toast.LENGTH_SHORT).show();
+        ToastMaker.show(getContext(), "دوباره تلاش کنید", Toast.LENGTH_SHORT);
         dismiss();
 
 

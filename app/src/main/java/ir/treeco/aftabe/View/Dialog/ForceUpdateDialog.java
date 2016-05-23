@@ -115,7 +115,7 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                ToastMaker.show(context, "لطفا از اتصاد به اینرنت مطمین شوید", Toast.LENGTH_SHORT);
+                ToastMaker.show(context, context.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
 
             }
         });

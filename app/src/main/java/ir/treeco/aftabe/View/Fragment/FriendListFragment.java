@@ -387,7 +387,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         mProgressBar.setVisibility(View.GONE);
 
-        Toast.makeText(getActivity(), "user not found", Toast.LENGTH_SHORT).show();
+        ToastMaker.show(getActivity(), "کاربری پیدا نشد", Toast.LENGTH_SHORT);
     }
 
     @Override

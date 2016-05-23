@@ -277,7 +277,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                                             @Override
                                             public void run() {
 
-                                                ToastMaker.show(context, "لطفا بعدن تلاش کنید", Toast.LENGTH_SHORT);
+                                                ToastMaker.show(context, context.getResources().getString(R.string.try_later), Toast.LENGTH_SHORT);
 
                                             }
                                         });
@@ -347,7 +347,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                         @Override
                         public void onFriendRequestFailedToSend() {
 
-                            ToastMaker.show(context, "لطفا اتصال به اینترنت را چک کنید", Toast.LENGTH_SHORT);
+                            ToastMaker.show(context, context.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
                             addUser(user, type);
                         }
                     });

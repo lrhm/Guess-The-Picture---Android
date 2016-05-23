@@ -196,7 +196,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     public void startInstaIntent() {
         String appName = "com.instagram.android";
 
-        String parse = "http://instagram.com/_u/irpulse";
+        String parse = "http://instagram.com/_u/aftabe2";
 
         String name = "ایسنتا";
 
@@ -208,7 +208,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     public void startTelegramIntent() {
         String appName = "org.telegram.messenger";
 
-        String parse = "https://telegram.me/OfficialPersianTwitter";
+        String parse = "https://telegram.me/aftabe2";
 
         String name = "تلگرام";
 

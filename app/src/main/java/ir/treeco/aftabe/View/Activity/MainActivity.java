@@ -658,7 +658,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "failed to connect to google", Toast.LENGTH_SHORT).show();
+        ToastMaker.show(this, getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
 
     }
 
@@ -1094,7 +1094,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void requestRandomGame() {
 
         if (myUser == null) {
-            Toast.makeText(this, "not connected , try again ", Toast.LENGTH_SHORT).show();
+            ToastMaker.show(this, getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
             AftabeAPIAdapter.tryToLogin(this);
             return;
         }

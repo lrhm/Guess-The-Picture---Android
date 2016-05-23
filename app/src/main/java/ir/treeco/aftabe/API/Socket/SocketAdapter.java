@@ -33,7 +33,9 @@ import ir.treeco.aftabe.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe.API.Socket.Objects.TimeLeftHolder;
 import ir.treeco.aftabe.API.Socket.Objects.UserAction.UserActionHolder;
+import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.Tools;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 
 /**
  * Created by al on 3/14/16.
@@ -288,7 +290,7 @@ public class SocketAdapter {
         } catch (URISyntaxException e) {
             e.printStackTrace();
             mSocket = null;
-            Toast.makeText(mContext, "could not connect to server ", Toast.LENGTH_SHORT).show();
+            ToastMaker.show(mContext, mContext.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
         }
 
     }

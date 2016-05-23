@@ -130,7 +130,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(context, "باید صبر کنی", Toast.LENGTH_SHORT).show();
+        ToastMaker.show(context, "باید صبر کنی", Toast.LENGTH_SHORT);
 //        super.onBackPressed();
     }
 

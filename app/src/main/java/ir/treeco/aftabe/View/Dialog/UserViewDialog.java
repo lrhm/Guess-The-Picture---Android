@@ -35,6 +35,7 @@ import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.Util.UiUtil;
 import ir.treeco.aftabe.View.Activity.MainActivity;
 import ir.treeco.aftabe.View.Custom.DialogDrawable;
+import ir.treeco.aftabe.View.Custom.ToastMaker;
 import ir.treeco.aftabe.View.Custom.UserLevelView;
 
 public class UserViewDialog extends Dialog implements View.OnClickListener {
@@ -211,7 +212,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(context, "nashod", Toast.LENGTH_SHORT).show();
+                                    ToastMaker.show(context, context.getResources().getString(R.string.try_later), Toast.LENGTH_SHORT);
 
                                 }
                             });
@@ -274,7 +275,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                                         @Override
                                         public void run() {
 
-                                            Toast.makeText(getContext(), "لطفا بعدن تلاش کنید", Toast.LENGTH_SHORT).show();
+                                            ToastMaker.show(context, context.getResources().getString(R.string.try_later), Toast.LENGTH_SHORT);
 
                                         }
                                     });

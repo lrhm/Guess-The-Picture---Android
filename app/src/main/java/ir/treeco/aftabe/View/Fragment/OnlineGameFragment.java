@@ -352,7 +352,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             mTimer.cancel();
 
-            Toast.makeText(getContext(), "answer is right", Toast.LENGTH_LONG);
 
             GameActionResult gameActionResult = new GameActionResult("correct");
 

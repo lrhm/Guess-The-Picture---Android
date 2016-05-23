@@ -202,7 +202,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    ToastMaker.show(context, "لطفا بعدا امتحان کنید", Toast.LENGTH_SHORT);
+                    ToastMaker.show(context, context.getResources().getString(R.string.try_later), Toast.LENGTH_SHORT);
 
                     textView.setVisibility(View.GONE);
                 }

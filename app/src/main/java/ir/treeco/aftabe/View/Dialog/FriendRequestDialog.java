@@ -171,7 +171,7 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener,
             public void run() {
 
                 ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_REQUEST);
-                ToastMaker.show(context, "لطفا اتصال به اینترنت را چک کنید", Toast.LENGTH_SHORT);
+                ToastMaker.show(context, context.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
 
             }
         });

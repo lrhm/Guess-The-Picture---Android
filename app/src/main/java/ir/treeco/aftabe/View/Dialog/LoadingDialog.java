@@ -206,7 +206,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         if (mLoadingStep == mImageLoadingIds.length) { // the last image
             ((MainActivity) context).setIsInOnlineGame(false);
             coinAdapter.earnCoins(100);
-            ToastMaker.show(context, "یک بار دیگر تلاش کنید", Toast.LENGTH_SHORT);
+            ToastMaker.show(context, context.getString(R.string.try_later), Toast.LENGTH_SHORT);
 
             dismiss();
             return;

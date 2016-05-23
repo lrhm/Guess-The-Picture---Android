@@ -78,8 +78,8 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
         mProgressBar = (ProgressBar) findViewById(R.id.dialog_username_choose_progress_bar);
         mStatusImageView = (ImageView) findViewById(R.id.dialog_username_choose_image_view);
 
-        customizeTextView(firstTextView, "یه اسم انتخواب کن", 23, FontsHolder.SANS_MEDIUM);
-        customizeTextView(secondTextView, "دیگر قابل تغیر نیست" + "\n" + "حد اقل ۶ حرف", 18, FontsHolder.SANS_MEDIUM);
+        customizeTextView(firstTextView, "یه اسم انتخاب کن", 23, FontsHolder.SANS_MEDIUM);
+        customizeTextView(secondTextView, "دیگر قابل تغیر نیست" + "\n" + "حداقل ۶ حرف", 18, FontsHolder.SANS_MEDIUM);
         customizeTextView(upperSecondTextView, "توجه", 18, FontsHolder.SANS_BOLD);
 
         RelativeLayout.LayoutParams firstTextLp = (RelativeLayout.LayoutParams) firstTextView.getLayoutParams();
