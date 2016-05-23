@@ -115,6 +115,8 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
             TextView left = lefts[i];
             left.setTypeface(FontsHolder.getSansBold(getContext()));
+            left.setTextColor(Color.parseColor("#54460b"));
+
             if (i != 1)
                 left.setText(titles[i]);
             else {
@@ -129,6 +131,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
             TextView right = rights[i];
             right.setText(textRights[i]);
+            right.setTextColor(Color.parseColor("#54460b"));
 
             if (i== 1){
                 Spannable wordtoSpan = new SpannableString(textRights[i]);

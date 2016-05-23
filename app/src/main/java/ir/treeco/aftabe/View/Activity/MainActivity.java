@@ -1059,6 +1059,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
 
+
+        User myUser = Tools.getCachedUser(this);
+
         if (resultHolder.getMyScoreResult(myUser) != 0) {
 
             myUser.setScore(myUser.getScore() + resultHolder.getMyScoreResult(myUser));
@@ -1323,7 +1326,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         if (actionHolder.isFriendRequest()) {
-            new FriendRequestDialog(this, actionHolder.getNotifHolder().getFriendSF().getUser()).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new FriendRequestDialog(MainActivity.this, actionHolder.getNotifHolder().getFriendSF().getUser()).show();
+
+                }
+            }, 1000);
             return;
         }
         if (actionHolder.isMatchRequest()) {
@@ -1345,8 +1354,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }, 600);
                 new LoadingDialog(this).show();
             } else {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new MatchRequestDialog(MainActivity.this, actionHolder.getNotifHolder().getMatchSF().getFriend()).show();
 
-                new MatchRequestDialog(this, actionHolder.getNotifHolder().getMatchSF().getFriend()).show();
+                    }
+                }, 1000);
             }
         }
 
