@@ -132,7 +132,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
             if (i== 1){
                 Spannable wordtoSpan = new SpannableString(textRights[i]);
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED),0 ,  (user.getLoses()+"/").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED),0 ,  (user.getLoses()+"").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 right.setText(wordtoSpan);
 
 

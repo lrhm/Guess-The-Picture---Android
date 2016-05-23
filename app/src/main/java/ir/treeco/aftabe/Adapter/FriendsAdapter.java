@@ -232,7 +232,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 }
             });
 
-        } else if (type == TYPE_SEARCHED) {
+        } else if (type == TYPE_SEARCHED || type == TYPE_CONTACT) {
 
             holder.mChatButton.setVisibility(View.GONE);
 

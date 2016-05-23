@@ -161,7 +161,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
             if (i == 1) {
                 Spannable wordtoSpan = new SpannableString(textRights[i]);
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), 0, (mUser.getLoses() + "/").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), 0, (mUser.getLoses() + "").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 right.setText(wordtoSpan);
 
 

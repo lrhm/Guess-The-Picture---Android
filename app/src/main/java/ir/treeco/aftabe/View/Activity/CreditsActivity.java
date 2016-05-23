@@ -1,8 +1,12 @@
 package ir.treeco.aftabe.View.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -53,7 +57,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         credits.setScaleType(ImageView.ScaleType.FIT_XY);
 
-        SizeConverter creditsConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1080, 1800);
+        SizeConverter creditsConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1200, 2000);
 
         credits.setImageBitmap(imageManager.loadImageFromResourceNoCache(
                 R.drawable.credits, creditsConverter.mWidth, creditsConverter.mHeight,
@@ -80,18 +84,57 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 156, 234);
 
+        int facesHeight = creditsConverter.convertHeight(1550);
+        if(creditsConverter.getTopOffset() < 0)
+            facesHeight = creditsConverter.convertHeightCalcOffset(1550);
+        UiUtil.setTopMargin(findViewById(R.id.credits_faces_container), facesHeight);
+
+
         for (int i = 0; i < 3; i++) {
             faces[i] = (ImageView) findViewById(imageIds[i]);
             faces[i].setTag(i);
             faces[i].setOnClickListener(this);
-            UiUtil.setTopMargin(faces[i], creditsConverter.convertHeight(1266));
 
-            int leftMargin = (int) (i * imageConverter.mWidth * 1.05 + creditsConverter.convertWidth(240));
-            UiUtil.setLeftMargin(faces[i], leftMargin);
+            int leftMargin = (int) (imageConverter.mWidth * 0.05);
+            if (i != 0)
+                UiUtil.setLeftMargin(faces[i], leftMargin);
 
             setFace(i, MODE_NORMAL);
         }
+
+
+        setUpInstaAndTelegram(creditsConverter);
+
     }
+
+    void setUpInstaAndTelegram(SizeConverter creditsConverter) {
+
+        Button telegram = (Button) findViewById(R.id.credits_telegram);
+        Button insta = (Button) findViewById(R.id.credits_insta);
+
+        UiUtil.setWidth(telegram, creditsConverter.convertWidth(200));
+        UiUtil.setHeight(telegram, creditsConverter.convertHeight(65));
+
+
+        UiUtil.setWidth(insta, creditsConverter.convertWidth(200));
+        UiUtil.setHeight(insta, creditsConverter.convertHeight(65));
+
+
+        int buttonsHeight = creditsConverter.convertHeight(1080);
+        if(creditsConverter.getTopOffset() < 0)
+            buttonsHeight = creditsConverter.convertHeightCalcOffset(1080);
+
+        UiUtil.setLeftMargin(insta, creditsConverter.convertWidth(660));
+        UiUtil.setTopMargin(insta, buttonsHeight);
+
+        UiUtil.setLeftMargin(telegram, creditsConverter.convertWidth(895));
+        UiUtil.setTopMargin(telegram, buttonsHeight);
+
+
+        telegram.setOnClickListener(this);
+        insta.setOnClickListener(this);
+    }
+
 
     public void setFace(int index, int mode) {
 
@@ -102,6 +145,22 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+        if (v.getId() == R.id.credits_telegram) {
+            startTelegramIntent();
+
+            return;
+        }
+        if (v.getId() == R.id.credits_insta) {
+
+
+            startInstaIntent();
+
+            return;
+        }
+
+        // clicked on faces
+
 
         clickCount++;
 
@@ -120,5 +179,49 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         setFace(randIndx, randFace);
 
 
+    }
+
+    public void startViewPages(String appName, String name, String parse) {
+        boolean isAppInstalled = isAppAvailable(appName);
+        if (isAppInstalled) {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(parse));
+            myIntent.setPackage(appName);
+            startActivity(myIntent);
+        } else {
+
+            ToastMaker.show(this, "نصب نیست " + name, Toast.LENGTH_SHORT);
+        }
+    }
+
+    public void startInstaIntent() {
+        String appName = "com.instagram.android";
+
+        String parse = "http://instagram.com/_u/irpulse";
+
+        String name = "ایسنتا";
+
+        startViewPages(appName, name, parse);
+
+
+    }
+
+    public void startTelegramIntent() {
+        String appName = "org.telegram.messenger";
+
+        String parse = "https://telegram.me/OfficialPersianTwitter";
+
+        String name = "تلگرام";
+
+        startViewPages(appName, name, parse);
+    }
+
+    public boolean isAppAvailable(String appName) {
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(appName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

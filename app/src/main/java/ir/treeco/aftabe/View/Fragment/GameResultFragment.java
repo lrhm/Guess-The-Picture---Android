@@ -224,14 +224,14 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
 
         if (v.getId() == R.id.fragment_result_add_friend) {
-            if (!mOpponent.isFriend()) {
+            if (!mOpponent.isFriend() || mOpponent.isBot()) {
                 new SkipAlertDialog(getActivity(), "درخواست دوستی", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!mOpponent.isBot())
                             AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
                     }
-                }, null);
+                }, null).show();
             }
         }
         if (v.getId() == R.id.fragment_result_chat) {
