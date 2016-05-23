@@ -1,6 +1,7 @@
 package ir.treeco.aftabe2.API.Socket.Objects.Friends;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import ir.treeco.aftabe2.Object.User;
 
@@ -9,10 +10,10 @@ import ir.treeco.aftabe2.Object.User;
  */
 public class FriendRequestHolder {
 
-    @Expose
+    @Expose @SerializedName("friend")
     User friend;
 
-    @Expose
+    @Expose @SerializedName("status")
     String status;
 
     public User getUser() {

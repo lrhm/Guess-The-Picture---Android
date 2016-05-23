@@ -34,6 +34,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
 
             Log.d(TAG, "got gcm " + notif);
+            Log.d(TAG, "serilized is  " + new Gson().toJson(notifHolder));
             DBAdapter dbAdapter = DBAdapter.getInstance(getApplicationContext());
 
             if (notifHolder.isMatchRequest()

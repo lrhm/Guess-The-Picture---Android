@@ -97,6 +97,7 @@
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.google.gson.examples.android.model.** { *; }
 -keep class ir.treeco.aftabe2.API.Rest.Utils.** {*;}
+-keep class ir.treeco.aftabe2.API.Socket.Objects.Friends.** {*;}
 -keep class ir.treeco.aftabe2.API.Socket.Objects.** {*;}
 -keep class ir.treeco.aftabe2.Object.** { *;}
 -keep class ir.treeco.aftabe2.Util.PackageTool.PackageObjectListHolder { *;}
@@ -105,6 +106,8 @@
 -keep class ir.treeco.aftabe2.Adapter.Cache.** { *;}
 #-keepnames class * implements ir.treeco.aftabe2.Util.Savior { *;}
 #-keepattributes class * implements ir.treeco.aftabe2.Util.Savior { *;}
+-keep class ir.treeco.aftabe2.Service.NotifObjects.** {*;}
+
 -keep class * implements ir.treeco.aftabe2.Util.Savior { *;}
 
 ##---------------End: proguard configuration for Gson ----------

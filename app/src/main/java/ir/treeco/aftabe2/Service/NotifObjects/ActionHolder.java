@@ -2,10 +2,12 @@ package ir.treeco.aftabe2.Service.NotifObjects;
 
 import com.google.gson.annotations.Expose;
 
+import ir.treeco.aftabe2.Util.Savior;
+
 /**
  * Created by root on 5/6/16.
  */
-public class ActionHolder {
+public class ActionHolder{
 
 
     @Expose

@@ -1,6 +1,7 @@
 package ir.treeco.aftabe2.Service.NotifObjects;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import ir.treeco.aftabe2.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.Friends.MatchRequestSFHolder;
@@ -10,30 +11,30 @@ import ir.treeco.aftabe2.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
 /**
  * Created by al on 4/28/16.
  */
-public class NotifHolder {
+public class NotifHolder  {
 
-    @Expose
+    @Expose @SerializedName("online")
     OnlineFriendStatusHolder online;
 
-    @Expose
+    @Expose @SerializedName("matchSF")
     MatchRequestSFHolder matchSF;
 
-    @Expose
+    @Expose @SerializedName("matchResult")
     MatchResultHolder matchResult;
 
-    @Expose
+    @Expose @SerializedName("friendSF")
     FriendRequestHolder friendSF;
 
-    @Expose
+    @Expose @SerializedName("id")
     String id;
 
-    @Expose
+    @Expose @SerializedName("date")
     String date;
 
-    @Expose
+    @Expose @SerializedName("seen")
     boolean seen;
 
-    @Expose
+    @Expose @SerializedName("type")
     String type;
 
     public String getType() {
