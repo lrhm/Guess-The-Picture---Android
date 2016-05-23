@@ -13,8 +13,11 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +31,9 @@ import ir.treeco.aftabe.API.Rest.Utils.SMSValidateToken;
 import ir.treeco.aftabe.Adapter.MediaAdapter;
 import ir.treeco.aftabe.R;
 import ir.treeco.aftabe.Util.FontsHolder;
+import ir.treeco.aftabe.Util.ImageManager;
 import ir.treeco.aftabe.Util.RandomString;
+import ir.treeco.aftabe.Util.SizeConverter;
 import ir.treeco.aftabe.Util.SizeManager;
 import ir.treeco.aftabe.Util.Tools;
 import ir.treeco.aftabe.View.Activity.MainActivity;
@@ -65,10 +70,13 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
     MainActivity mActivity;
 
+    ImageManager imageManager;
+
     public SMSRegisterDialog(Context context, MainActivity mainActivity) {
         super(context);
         this.context = context;
         mActivity = mainActivity;
+        imageManager = new ImageManager(context);
     }
 
 
@@ -118,11 +126,17 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         lpTextInput.leftMargin = (int) (SizeManager.getScreenWidth() * 0.1);
 
 
+        ImageView correctImageView = (ImageView) findViewById(R.id.dialog_sms_register_correct);
+        SizeConverter winImageConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.4f, 450, 450);
+        correctImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.levelwin, winImageConverter.mWidth, winImageConverter.mHeight));
+
+
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
         lp.width = SizeManager.getScreenWidth();
         lp.height = SizeManager.getScreenHeight();
         getWindow().setAttributes(lp);
+
 
     }
 
@@ -240,20 +254,51 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         MediaAdapter.getInstance(context).playCorrectSound();
 
         isSMSValidated = true;
-        dismiss();
-        if (!smsValidateToken.isOlduser())
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
+
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+
+                startCorrectAnimation(smsValidateToken);
+            }
+        });
+
+    }
+
+    public void startCorrectAnimation(final SMSValidateToken smsValidateToken) {
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+        alphaAnimation.setRepeatCount(1);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+        alphaAnimation.setDuration(1000);
+
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+
+                dismiss();
+                if (!smsValidateToken.isOlduser())
                     new UsernameChooseDialog(getContext(), smsValidateToken, mActivity).show();
 
-                }
-            });
+            }
 
-        else {
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        findViewById(R.id.dialog_sms_reg_correct_container).setVisibility(View.VISIBLE);
+        findViewById(R.id.dialog_sms_reg_correct_container).startAnimation(alphaAnimation);
+
+        if (smsValidateToken.isOlduser())
             AftabeAPIAdapter.submitSMSActivationCode(smsValidateToken, RandomString.nextString(), mActivity);
-        }
-
 
     }
 

@@ -16,25 +16,24 @@
         android:id="@+id/dialog_username_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:imeOptions="actionDone"
-        android:singleLine="true"
         android:background="@drawable/username_input"
+        android:gravity="center"
+        android:imeOptions="actionDone"
         android:inputType="text"
-        android:gravity="center" />
+        android:singleLine="true" />
 
     <ProgressBar
-        android:layout_width="24dp"
-        android:layout_height="24dp"
         android:id="@+id/dialog_username_choose_progress_bar"
         style="@android:style/Widget.ProgressBar.Small"
-        android:visibility="gone"
-        />
-    <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/dialog_username_choose_image_view"
-        android:visibility="gone"
-        />
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/dialog_username_choose_upper_second_text"
@@ -42,12 +41,13 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textColor="#e10808" />
+
     <TextView
         android:id="@+id/dialog_username_choose_second_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_below="@id/dialog_username_choose_upper_second_text"
+        android:gravity="center_horizontal"
         android:textColor="@android:color/white" />
 
     <Button
@@ -58,5 +58,19 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/username_accept"
         android:gravity="center" />
+
+    <RelativeLayout
+        android:id="@+id/dialog_sms_reg_correct_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/dialog_sms_register_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

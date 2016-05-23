@@ -688,11 +688,10 @@ public class KeyboardView extends RelativeLayout {
 
             charHolder.startAnimation(animation2);
             charTemp.startAnimation(animation);
+            int drawable = getTocuhedDrawableForButton(type);
 
             imgView.setImageBitmap(imageManager.loadImageFromResource(
-
-                    (type == TYPE_LEFT) ? R.drawable.button_left_touched
-                            : R.drawable.button_right_touched,
+                    drawable,
                     buttonConvertor.mWidth, buttonConvertor.mHeight,
                     ImageManager.ScalingLogic.FIT));
         }
@@ -724,10 +723,9 @@ public class KeyboardView extends RelativeLayout {
                             answerConverter.mWidth, answerConverter.mHeight,
                             ImageManager.ScalingLogic.FIT));
 
+            int drawable = getTocuhedDrawableForButton(type);
             imgView.setImageBitmap(imageManager.loadImageFromResource(
-
-                    (type == TYPE_LEFT) ? R.drawable.button_left_touched
-                            : R.drawable.button_right_touched,
+                    drawable,
                     buttonConvertor.mWidth, buttonConvertor.mHeight, ImageManager.ScalingLogic.FIT
             ));
             this.charHolder.setVisibility(View.GONE);
@@ -1084,7 +1082,34 @@ public class KeyboardView extends RelativeLayout {
             this.x = x;
             this.y = y;
         }
+
+        public int getUnTocuhDrawableForButton(int type) {
+            switch (type) {
+                case KeyView.TYPE_CENTER:
+                    return R.drawable.keyboardcenterbutton;
+                case KeyView.TYPE_LEFT:
+                    return R.drawable.button_left;
+                case KeyView.TYPE_RIGHT:
+                    return R.drawable.button_right;
+            }
+            return 0;
+
+        }
+
+        public int getTocuhedDrawableForButton(int type) {
+            switch (type) {
+                case KeyView.TYPE_CENTER:
+                    return R.drawable.keyboardcenterbuttontouched;
+                case KeyView.TYPE_LEFT:
+                    return R.drawable.button_left_touched;
+                case KeyView.TYPE_RIGHT:
+                    return R.drawable.button_right_touched;
+            }
+            return 0;
+
+        }
     }
+
 
     public int getDrawable(Character s) {
 
