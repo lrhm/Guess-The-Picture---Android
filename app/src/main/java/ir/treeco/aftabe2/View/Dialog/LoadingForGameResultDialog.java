@@ -253,10 +253,6 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         dismiss();
 
 
-//        TODO here or in gameResult we should call onGameEnd
-        if (mOnGameEndListener != null)
-            mOnGameEndListener.onGameEnded();
-
         GameResultFragment gameResultFragment = GameResultFragment.newInstance(resultHolder, mOpponent);
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, gameResultFragment);
@@ -269,6 +265,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     public void onDetachedFromWindow() {
         if (!forRegister) {
             SocketAdapter.removeSocketListener(this);
+
+            if (mOnGameEndListener != null)
+                mOnGameEndListener.onGameEnded();
+
             ((MainActivity) context).setLoadingForGameResultDialog(null);
         }
         super.onDetachedFromWindow();

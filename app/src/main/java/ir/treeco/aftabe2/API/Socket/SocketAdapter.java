@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -42,10 +43,10 @@ import ir.treeco.aftabe2.View.Custom.ToastMaker;
  */
 public class SocketAdapter {
 
-    private static ArrayList<SocketListener> listeners = new ArrayList<>();
-    private static ArrayList<SocketFriendMatchListener> friendsListeners = new ArrayList<>();
-    private static ArrayList<FriendRequestListener> requestLiseners = new ArrayList<>();
-    private static ArrayList<NotifListener> notifListeners = new ArrayList<>();
+    private static HashSet<SocketListener> listeners = new HashSet<>();
+    private static HashSet<SocketFriendMatchListener> friendsListeners = new HashSet<>();
+    private static HashSet<FriendRequestListener> requestLiseners = new HashSet<>();
+    private static HashSet<NotifListener> notifListeners = new HashSet<>();
     private static TimeLefTListener timeLefTListener;
 
     private static final Object lock = new Object();

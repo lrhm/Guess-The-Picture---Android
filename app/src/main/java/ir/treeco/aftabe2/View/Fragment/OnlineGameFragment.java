@@ -256,7 +256,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             synchronized (lock) {
                 if (mGameResult == null) {
                     super.onDestroy();
-                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime == 0 ? 10 : mRemainingTime + 3).show();
+                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime + 8).show();
                 } else {
 
 

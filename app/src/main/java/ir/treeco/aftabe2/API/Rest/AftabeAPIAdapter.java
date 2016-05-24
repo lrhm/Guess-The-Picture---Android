@@ -487,7 +487,7 @@ public class AftabeAPIAdapter {
         }
 
         init();
-        int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+        final int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
 
         if (diff == 0)
             return;
@@ -505,7 +505,8 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User> response) {
                 if (response.isSuccess() && response.body() != null) {
                     Log.d(TAG, "new user coin is " + response.body().getCoins());
-                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+                    CoinAdapter.setCoinDiff(CoinAdapter.getCoinDiff() - diff);
+//                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, );
 
                 }
 

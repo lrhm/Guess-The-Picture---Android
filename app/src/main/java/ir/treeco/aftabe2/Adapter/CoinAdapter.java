@@ -62,15 +62,15 @@ public class CoinAdapter {
         setCoinsCount(nextAmount);
     }
 
-    public int getCoinDiff() {
+    public static int getCoinDiff() {
         return Prefs.getInt(SHARED_PREF_COIN_DIFF, 0);
     }
 
-    public void setCoinDiff(int coinDiff) {
+    public static void setCoinDiff(int coinDiff) {
         Prefs.putInt(SHARED_PREF_COIN_DIFF, coinDiff);
     }
 
-    private void addCoinDiff(int diff) {
+    private static void addCoinDiff(int diff) {
         Log.d(TAG, "add coin diff " + diff);
         Prefs.putInt(SHARED_PREF_COIN_DIFF, getCoinDiff() + diff);
     }
