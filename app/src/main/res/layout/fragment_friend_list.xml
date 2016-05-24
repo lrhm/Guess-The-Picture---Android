@@ -8,11 +8,18 @@
     tools:context="ir.treeco.aftabe2.View.Fragment.FriendListFragment">
 
 
+    <ImageView
+        android:id="@+id/fragment_friend_list_arrow_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
     <RelativeLayout
+        android:id="@+id/fragment_friend_list_text_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp">
+      >
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -28,13 +35,12 @@
 
             <ProgressBar
                 android:id="@+id/search_friend_progress_bar"
+                style="@android:style/Widget.ProgressBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@android:style/Widget.ProgressBar.Small"
-                android:visibility="gone"
-                android:layout_centerVertical="true"
                 android:layout_alignRight="@id/search_friend_image"
-                />
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

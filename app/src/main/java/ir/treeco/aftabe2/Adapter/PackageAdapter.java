@@ -235,7 +235,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         if (i % 2 == 0) {
             viewHolder.imageView.setPadding(onePercent, 0, 0, 0);
             UiUtil.setLeftMargin(viewHolder.packagePrice, onePercent);
-            UiUtil.setLeftMargin(viewHolder.packageDone, onePercent );
+            UiUtil.setLeftMargin(viewHolder.packageDone, onePercent);
 //            UiUtil.setLeftMargin(viewHolder.price, onePercent * 2);
 
             viewHolder.price.setPadding((int) (onePercent * 2), 0, 0, 0);
@@ -253,9 +253,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         DBAdapter dbAdapter = DBAdapter.getInstance(context);
 
 
-
-
-            String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
         User myUser = Tools.getCachedUser(context);
 
@@ -266,9 +264,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
 
 
-
         Level[] list = dbAdapter.getLevels(id);
-        if(list[list.length-1].isResolved()){
+        if (list != null && list[list.length - 1].isResolved()) {
             Picasso.with(context).load(R.drawable.package_win).into(viewHolder.packageDone);
             viewHolder.packageDone.setVisibility(View.VISIBLE);
         }

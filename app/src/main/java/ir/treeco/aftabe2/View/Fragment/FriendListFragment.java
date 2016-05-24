@@ -174,11 +174,24 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         UiUtil.setHeight(mProgressBar, size);
         UiUtil.setRightMargin(mProgressBar, (int) (SizeManager.getScreenWidth() * 0.02));
 
+        UiUtil.setTopMargin(view.findViewById(R.id.fragment_friend_list_text_container),(int) (SizeManager.getScreenHeight() * 0.05));
+
         setUpForKeyboardOutsideTouch(view);
+
+        initArrowUp(view);
 
         return view;
     }
 
+    public void initArrowUp(View parent) {
+        ImageView arrowUp = (ImageView) parent.findViewById(R.id.fragment_friend_list_arrow_up);
+        SizeConverter sizeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.14f, 155, 92);
+
+        arrowUp.setImageBitmap(imageManager.loadImageFromResource(R.drawable.uparrow, sizeConverter.mWidth, sizeConverter.mHeight));
+        arrowUp.setOnClickListener(this);
+        UiUtil.setTopMargin(arrowUp, (int) (SizeManager.getScreenHeight() * 0.05));
+
+    }
 
     public void setUpAdapters() {
 
@@ -244,6 +257,14 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
     @Override
     public void onClick(View v) {
+
+        if (v.getId() == R.id.fragment_friend_list_arrow_up) {
+
+            ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setPagingEnabled(true);
+            ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setCurrentItem(0, true);
+
+
+        }
 
         if (v.getId() == R.id.clear_button) {
             clear();
