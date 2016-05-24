@@ -26,6 +26,7 @@ import java.util.Collections;
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Rest.Interfaces.OnPackageBuyListener;
 import ir.treeco.aftabe2.MainApplication;
+import ir.treeco.aftabe2.Object.Level;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.R;
@@ -60,6 +61,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         ImageView imageView;
         TextView textView;
         ImageView packagePrice;
+        ImageView packageDone;
         TextView price;
 
         private long lastTimeClicked = 0;
@@ -71,6 +73,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             textView = (TextView) itemView.findViewById(R.id.package_progress_dl);
             price = (TextView) itemView.findViewById(R.id.package_coin_text);
             packagePrice = (ImageView) itemView.findViewById(R.id.package_coin_image);
+            packageDone = (ImageView) itemView.findViewById(R.id.package_done);
 
             if (SizeManager.getScreenWidth() < 800)
                 textView.setShadowLayer(0.5f, 1, 1, Color.BLACK);
@@ -96,8 +99,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             UiUtil.setWidth(price, (int) (packageSize * 0.22));
             UiUtil.setHeight(price, (int) (packageSize * 0.22));
 
-
-            Picasso.with(context).load(R.drawable.package_price).fit().into(packagePrice);
 
             price.setText(Tools.numeralStringToPersianDigits("2000"));
             v.setOnClickListener(this);
@@ -234,7 +235,10 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         if (i % 2 == 0) {
             viewHolder.imageView.setPadding(onePercent, 0, 0, 0);
             UiUtil.setLeftMargin(viewHolder.packagePrice, onePercent);
-            viewHolder.price.setPadding(onePercent, 0, 0, 0);
+            UiUtil.setLeftMargin(viewHolder.packageDone, onePercent );
+//            UiUtil.setLeftMargin(viewHolder.price, onePercent * 2);
+
+            viewHolder.price.setPadding((int) (onePercent * 2), 0, 0, 0);
 
         } else {
 
@@ -245,7 +249,13 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
 
         int id = packageObjects.get(i).getId();
-        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(context);
+
+
+
+
+            String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
         User myUser = Tools.getCachedUser(context);
 
@@ -254,7 +264,19 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         }
         File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
+
+
+
+        Level[] list = dbAdapter.getLevels(id);
+        if(list[list.length-1].isResolved()){
+            Picasso.with(context).load(R.drawable.package_win).into(viewHolder.packageDone);
+            viewHolder.packageDone.setVisibility(View.VISIBLE);
+        }
+
+
         if (!file.exists()) {
+
+            Picasso.with(context).load(R.drawable.package_price).fit().into(viewHolder.packagePrice);
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
             viewHolder.price.setVisibility(View.VISIBLE);
             viewHolder.price.setText(Tools.numeralStringToPersianDigits(packageObjects.get(i).getPrice() + ""));

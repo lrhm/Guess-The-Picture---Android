@@ -859,6 +859,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGameEnded() {
 
+        Log.d(TAG, "on game end");
         setIsInOnlineGame(false);
 
         for (FriendRequestDialog dialog : mCachedFriendRequestDialogs) {
