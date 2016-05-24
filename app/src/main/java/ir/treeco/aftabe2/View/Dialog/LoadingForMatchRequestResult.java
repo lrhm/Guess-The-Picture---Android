@@ -50,6 +50,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     TimerView mTimerView;
     int mTimerStep = 0;
     CoinAdapter coinAdapter;
+    private boolean earnedCoinBack = false;
 
     public LoadingForMatchRequestResult(Context context, User opponent) {
         super(context);
@@ -103,11 +104,15 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     }
 
     private void runTimer() {
-        if (mTimerStep == 33) {
+        if (mTimerStep == 33 && !mDismissed) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    ToastMaker.show(context, "پاسخی دریافت نشد", Toast.LENGTH_SHORT);
+                    if (!earnedCoinBack)
+                        coinAdapter.earnCoins(100);
+                    earnedCoinBack = true;
+                    if (!(((MainActivity) context).isPaused()))
+                        ToastMaker.show(context, "پاسخی دریافت نشد", Toast.LENGTH_SHORT);
                     dismiss();
 
                 }
@@ -233,6 +238,20 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
     @Override
     public void onMatchResultToSender(MatchResultHolder result) {
 
+        if (!result.isAccept() && !earnedCoinBack) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!((MainActivity) context).isFinishing() && !earnedCoinBack) {
+                        coinAdapter.earnCoins(100);
+                        earnedCoinBack = true;
+
+                    }
+                }
+            });
+        }
+
+        mTimer.cancel();
         dismiss();
 
     }

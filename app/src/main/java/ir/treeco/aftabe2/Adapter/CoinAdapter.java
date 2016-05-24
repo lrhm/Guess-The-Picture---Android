@@ -2,6 +2,7 @@ package ir.treeco.aftabe2.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -17,6 +18,7 @@ public class CoinAdapter {
     public static final int LETTER_REVEAL_COST = 50;
     public static final int SKIP_LEVEL_COST = 130;
     public static final String SHARED_PREF_COIN_DIFF = "aftabe_wc";
+    private static final String TAG = "CoinAdapter";
     private DBAdapter db;
     private Context context;
     private Tools tools;
@@ -46,12 +48,15 @@ public class CoinAdapter {
 
             return false;
         }
+
+        Log.d(TAG, "spend coin " + amount);
         addCoinDiff(-amount);
         setCoinsCount(nextAmount);
         return true;
     }
 
     public void earnCoins(int amount) {
+        Log.d(TAG, "earn coin " + amount);
         int nextAmount = getCoinsCount() + amount;
         addCoinDiff(amount);
         setCoinsCount(nextAmount);
@@ -61,9 +66,15 @@ public class CoinAdapter {
         return Prefs.getInt(SHARED_PREF_COIN_DIFF, 0);
     }
 
+    public void setCoinDiff(int coinDiff) {
+        Prefs.putInt(SHARED_PREF_COIN_DIFF, coinDiff);
+    }
+
     private void addCoinDiff(int diff) {
+        Log.d(TAG, "add coin diff " + diff);
         Prefs.putInt(SHARED_PREF_COIN_DIFF, getCoinDiff() + diff);
     }
+
 
     public int getCoinsCount() {
         return db.getCoins();

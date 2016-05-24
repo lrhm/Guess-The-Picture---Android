@@ -40,6 +40,7 @@ import ir.treeco.aftabe2.API.Rest.Utils.Veryfier;
 import ir.treeco.aftabe2.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
+import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.Object.TokenHolder;
 import ir.treeco.aftabe2.Object.User;
@@ -262,11 +263,14 @@ public class AftabeAPIAdapter {
                 response.body().setLoginInfo(loginInfo);
                 response.body().setOwnerMe();
 
+
+                Tools.updateSharedPrefsToken(context, response.body(), new TokenHolder(response.body()));
+
                 PackageSolvedCache.getInstance().updateToServer();
+
 
                 if (userFoundListener != null) userFoundListener.onGetUser(response.body());
                 if (userFoundListener != null) userFoundListener.onGetMyUser(response.body());
-                Tools.updateSharedPrefsToken(context, response.body(), new TokenHolder(response.body()));
             }
 
             @Override
@@ -471,12 +475,28 @@ public class AftabeAPIAdapter {
         });
     }
 
+    private static final Object updateCoinLock = new Object();
+    private static boolean isUpdateCoinInProgress = false;
+
     public static void updateCoin(User myUser) {
+
+        synchronized (updateCoinLock) {
+            if (isUpdateCoinInProgress)
+                return;
+            isUpdateCoinInProgress = true;
+        }
+
         init();
         int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
 
         if (diff == 0)
             return;
+
+        Log.d(TAG, "coin diff is " + diff);
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(context);
+        Log.d(TAG, dbAdapter.getCoins() + " is db coins");
+        Log.d(TAG, myUser.getCoins() + " is the user coins");
 
         CoinDiffHolder coinDiffHolder = new CoinDiffHolder(diff);
         Call<User> call = aftabeService.updateCoin(coinDiffHolder, myUser.getId(), myUser.getLoginInfo().getAccessToken());
@@ -484,13 +504,22 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<User> response) {
                 if (response.isSuccess() && response.body() != null) {
+                    Log.d(TAG, "new user coin is " + response.body().getCoins());
                     Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+
+                }
+
+
+                synchronized (updateCoinLock) {
+                    isUpdateCoinInProgress = false;
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                synchronized (updateCoinLock) {
+                    isUpdateCoinInProgress = false;
+                }
             }
         });
     }
@@ -847,7 +876,7 @@ public class AftabeAPIAdapter {
         if (myUser == null)
             return;
 
-        IndexHolder indexHolder = new IndexHolder(index+1);
+        IndexHolder indexHolder = new IndexHolder(index + 1);
         aftabeService.updateLastLevelSolved(packageId + "", myUser.getLoginInfo().getAccessToken(), indexHolder)
                 .enqueue(new Callback<HashMap<String, Object>>() {
                     @Override
@@ -858,7 +887,7 @@ public class AftabeAPIAdapter {
 
                             Log.d(TAG, "updatet package");
                         } else {
-                            Log.d(TAG, "didnt update package package , buy this shit nigga " + packageId +" " + index);
+                            Log.d(TAG, "didnt update package package , buy this shit nigga " + packageId + " " + index);
                             try {
                                 Log.d(TAG, response.errorBody().string());
                             } catch (IOException e) {

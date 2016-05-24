@@ -693,16 +693,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (mLoadingForRegister != null)
                     mLoadingForRegister.dismiss();
 
-                if (mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
+                if (mUser.isFromServer() && mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
                     coinAdapter.setCoinsCount(mUser.getCoins());
+                    coinAdapter.setCoinDiff(0);
+
                 }
             }
         });
 
-        Log.d(TAG, "my user coins " + mUser.getCoins());
-        Log.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
-        Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
-
+        if (mUser.isFromServer()) {
+            Log.d(TAG, "my user coins " + mUser.getCoins());
+            Log.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
+            Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
+        }
     }
 
     @Override
@@ -758,18 +761,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Answers.getInstance().logCustom(new CustomEvent("Match Request Result")
                 .putCustomAttribute("status", result.getStatus()));
 
-        if (!result.isAccept()) {
-            new Handler(getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-
-                        coinAdapter.earnCoins(100);
-
-                    }
-                }
-            });
-        }
 
         if (result.isAccept()) {
             new Handler(getMainLooper()).post(new Runnable() {
@@ -1057,20 +1048,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onFinishGame(ResultHolder resultHolder) {
 
 
-        User myUser = Tools.getCachedUser(this);
+        final User mUser = Tools.getCachedUser(this);
 
-        if (resultHolder.getMyScoreResult(myUser) != 0) {
+        if (resultHolder.getMyScoreResult(mUser) != 0) {
 
-            myUser.setScore(myUser.getScore() + resultHolder.getMyScoreResult(myUser));
-            onGetMyUser(myUser);
-            Tools.cacheUser(myUser);
+            mUser.setScore(mUser.getScore() + resultHolder.getMyScoreResult(mUser));
+            Tools.cacheUser(mUser);
 
             int coin = 160;
             if (resultHolder.getScores()[0].isWinner() && resultHolder.getScores()[1].isWinner()) {
                 // draw
                 coin = 80;
             }
-            if (!resultHolder.amIWinner(myUser))
+            if (!resultHolder.amIWinner(mUser))
                 coin = 0;
             if (coin != 0) {
                 final int finalCoin = coin;
@@ -1079,10 +1069,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     public void run() {
 
                         coinAdapter.earnCoins(finalCoin);
+                        mUser.setFromServer(false);
+                        onGetMyUser(mUser);
                     }
                 });
 
             }
+
+
         }
 
 

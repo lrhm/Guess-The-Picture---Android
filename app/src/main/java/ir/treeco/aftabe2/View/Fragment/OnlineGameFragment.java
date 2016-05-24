@@ -305,10 +305,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             public void onAnimationEnd(Animation animation) {
 
                 Log.d(TAG, "Animation End");
-                getActivity().getSupportFragmentManager().popBackStack();
 
                 if (state == 1)
                     return;
+
+                getActivity().getSupportFragmentManager().popBackStack();
+
                 Bundle bundle = new Bundle();
                 bundle.putInt("state", 1);
 

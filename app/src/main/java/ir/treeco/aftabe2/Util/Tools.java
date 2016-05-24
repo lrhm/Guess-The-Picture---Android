@@ -36,6 +36,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import ir.treeco.aftabe2.API.Socket.SocketAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.Object.SaveHolder;
@@ -171,10 +172,10 @@ public class Tools {
     }
 
     public void checkDB(Context context) {
-        Log.e("db", "check");
+//        Log.e("db", "check");
         String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db";
         File data = Environment.getDataDirectory();
-        File currentDB = new File( currentDBPath);
+        File currentDB = new File(currentDBPath);
 
         if (!currentDB.exists()) {
             restore();
@@ -183,17 +184,17 @@ public class Tools {
     }
 
     public void restore() {
-        Log.e("db", "Restore1");
+//        Log.e("db", "Restore1");
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
 //        File data = Environment.getDataDirectory();
         FileChannel source;
         FileChannel destination;
         String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/a.mk";
-        File currentDB = new File( currentDBPath);
+        File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
-        Log.e("aa", currentDB.getPath());
-        Log.e("bb", backupDB.getPath());
+//        Log.e("aa", currentDB.getPath());
+//        Log.e("bb", backupDB.getPath());
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
@@ -217,7 +218,7 @@ public class Tools {
             fos.close();
             cis.close();
             fis.close();
-            Log.e("db", "Restore");
+//            Log.e("db", "Restore");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -230,7 +231,7 @@ public class Tools {
     }
 
     public void restoreDBJournal() {
-        Log.e("db", "Restore1");
+//        Log.e("db", "Restore1");
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
 //        File data = Environment.getDataDirectory();
         FileChannel source;
@@ -239,8 +240,8 @@ public class Tools {
         String backupDBPath = "Android/b.mk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
-        Log.e("aa", currentDB.getPath());
-        Log.e("bb", backupDB.getPath());
+//        Log.e("aa", currentDB.getPath());
+//        Log.e("bb", backupDB.getPath());
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
@@ -266,7 +267,7 @@ public class Tools {
             cis.close();
             fis.close();
 
-            Log.e("db", "Restore blocks " + i);
+//            Log.e("db", "Restore blocks " + i);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -311,10 +312,10 @@ public class Tools {
         FileChannel destination;
         String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/a.mk";
-        File currentDB = new File( currentDBPath);
+        File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
-        Log.e("cc", currentDB.getPath());
-        Log.e("dd", backupDB.getPath());
+//        Log.e("cc", currentDB.getPath());
+//        Log.e("dd", backupDB.getPath());
         try {
             byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
@@ -337,7 +338,7 @@ public class Tools {
             fis.close();
             fos.close();
 
-            Log.e("db", "backup ");
+//            Log.e("db", "backup ");
             backUpDBJournal(context);
         } catch (IOException e) {
             e.printStackTrace();
@@ -381,12 +382,12 @@ public class Tools {
         FileChannel destination;
         String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db-journal";
         String backupDBPath = "Android/b.mk";
-        File currentDB = new File( currentDBPath);
+        File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
 
 
-        Log.e("cc", currentDB.getPath());
-        Log.e("dd", backupDB.getPath());
+//        Log.e("cc", currentDB.getPath());
+//        Log.e("dd", backupDB.getPath());
         try {
 
             byte[] keyBytes = getAESKey();
@@ -410,7 +411,7 @@ public class Tools {
             fis.close();
             fos.close();
 
-            Log.e("db", "backup blocks " + i);
+//            Log.e("db", "backup blocks " + i);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -538,7 +539,7 @@ public class Tools {
         User cachedUser = getCachedUser(null);
         if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())
                 || !cachedUser.getLoginInfo().getAccessToken().equals(tokenHolder.getLoginInfo().accessToken)
-                ) { // first login
+                || !cachedUser.getName().equals(user.getName())) { // first login
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB(context);
@@ -548,18 +549,21 @@ public class Tools {
             for (User.PackageInfo info : user.getPackageInfos()) {
                 File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + info.getId() + "/");
                 if (file.exists()) {
-                    Log.d(TAG, "package " + info.getId() + " exist");
+//                    Log.d(TAG, "package " + info.getId() + " exist");
                     for (int i = 0; i < info.getIndex(); i++) {
                         dbAdapter.resolveLevel(info.getId(), i);
-                        Log.d(TAG, "resloving level " + i);
+//                        Log.d(TAG, "resloving level " + i);
                     }
                 }
 
             }
 
+            SocketAdapter.requestOnlineFriendsStatus();
+
         }
         Prefs.putDouble(Tools.SHARED_PREFS_SEED, user.getSeed());
         Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));
+
 
     }
 

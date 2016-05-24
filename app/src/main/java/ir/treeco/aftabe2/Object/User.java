@@ -62,6 +62,7 @@ public class User {
     @Expose
     private int loses;
 
+    private boolean fromServer = true;
 
     @Expose
     private Integer friendCount;
@@ -287,6 +288,14 @@ public class User {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public boolean isFromServer() {
+        return fromServer;
+    }
+
+    public void setFromServer(boolean fromServer) {
+        this.fromServer = fromServer;
     }
 
     public class Access {

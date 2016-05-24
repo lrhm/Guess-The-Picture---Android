@@ -171,7 +171,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
 
         mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(
-                (mOpponent.isFriend()) ? R.drawable.chatbutton : R.drawable.addfriends, width, width));
+                (mOpponent.isFriend() || mOpponent.isGuest() || myUser.isGuest()) ? R.drawable.notifreq : R.drawable.addfriends, width, width));
         mAddFriendImageView.setOnClickListener(this);
         mBackImageView.setOnClickListener(this);
         mBackImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.continuebutton, width, width));
@@ -223,16 +223,18 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
 
+        User myUser = Tools.getCachedUser(getActivity());
         if (v.getId() == R.id.fragment_result_add_friend) {
-            if (!mOpponent.isFriend() || mOpponent.isBot()) {
-                new SkipAlertDialog(getActivity(), "درخواست دوستی", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!mOpponent.isBot())
-                            AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
-                    }
-                }, null).show();
-            }
+            if (!mOpponent.isGuest() && !myUser.isGuest())
+                if (!mOpponent.isFriend() || mOpponent.isBot()) {
+                    new SkipAlertDialog(getActivity(), "درخواست دوستی", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!mOpponent.isBot())
+                                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
+                        }
+                    }, null).show();
+                }
         }
         if (v.getId() == R.id.fragment_result_chat) {
             getActivity().getSupportFragmentManager().popBackStack();
