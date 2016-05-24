@@ -1068,6 +1068,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     @Override
                     public void run() {
 
+                        Log.d(TAG, "earn coin on finish " + finalCoin);
                         coinAdapter.earnCoins(finalCoin);
                         mUser.setFromServer(false);
                         onGetMyUser(mUser);

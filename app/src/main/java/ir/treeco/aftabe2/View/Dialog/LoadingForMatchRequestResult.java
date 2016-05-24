@@ -243,6 +243,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
                 @Override
                 public void run() {
                     if (!((MainActivity) context).isFinishing() && !earnedCoinBack) {
+
                         coinAdapter.earnCoins(100);
                         earnedCoinBack = true;
 
