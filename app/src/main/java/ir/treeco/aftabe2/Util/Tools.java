@@ -36,6 +36,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Socket.SocketAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.MainApplication;
@@ -537,6 +538,11 @@ public class Tools {
         Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(tokenHolder));
         String oldKey = Prefs.getString(ENCRYPT_KEY, "");
         User cachedUser = getCachedUser(null);
+
+
+        Prefs.putDouble(Tools.SHARED_PREFS_SEED, user.getSeed());
+        Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));
+
         if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())
                 || !cachedUser.getLoginInfo().getAccessToken().equals(tokenHolder.getLoginInfo().accessToken)
                 || !cachedUser.getName().equals(user.getName())) { // first login
@@ -558,12 +564,12 @@ public class Tools {
 
             }
 
-            SocketAdapter.requestOnlineFriendsStatus();
-
+            if(!user.isGuest()) {
+                SocketAdapter.reInitiSocket();
+                AftabeAPIAdapter.getListOfMyFriends(user, ((MainActivity) context).mainFragment.getFriendListFragment());
+                SocketAdapter.requestOnlineFriendsStatus();
+            }
         }
-        Prefs.putDouble(Tools.SHARED_PREFS_SEED, user.getSeed());
-        Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));
-
 
     }
 

@@ -22,7 +22,8 @@ public class OnlineMenuFragment extends Fragment implements MySmartTabLayout.OnT
 
 
     MainFragment mainFragment;
-    VerticalViewPager verticalViewPager;
+    public VerticalViewPager verticalViewPager;
+    FragmentPagerItemAdapter adapter;
 
     @Nullable
     @Override
@@ -39,7 +40,7 @@ public class OnlineMenuFragment extends Fragment implements MySmartTabLayout.OnT
 
 
         FragmentPagerItems fragmentPagerItems = fragmentPagerItemsCreator.create();
-        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+        adapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), fragmentPagerItems);
         verticalViewPager.setAdapter(adapter);
         mainFragment =
@@ -53,6 +54,11 @@ public class OnlineMenuFragment extends Fragment implements MySmartTabLayout.OnT
 
         return view;
 
+    }
+
+    public FriendListFragment getFriendListFragment() {
+        FriendListFragment friendListFragment = (FriendListFragment) adapter.getPage(1);
+        return friendListFragment;
     }
 
 

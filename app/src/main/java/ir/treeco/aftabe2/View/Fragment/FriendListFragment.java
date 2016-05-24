@@ -53,9 +53,8 @@ import ir.treeco.aftabe2.View.Custom.MyAutoCompleteTextView;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
 
 
-
 public class FriendListFragment extends Fragment implements TextWatcher, View.OnClickListener,
-        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener, View.OnFocusChangeListener {
+        MyAutoCompleteTextView.OnKeyboardDismiss, TextView.OnEditorActionListener, UserFoundListener, SocketFriendMatchListener, View.OnFocusChangeListener, BatchUserFoundListener {
 
     public static final String TAG = "FriendListFragmetn";
     ArrayAdapter<String> searchBarAdapter;
@@ -212,39 +211,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         Log.d(TAG, "will request friend list");
 
-        AftabeAPIAdapter.getListOfMyFriends(myUser, new BatchUserFoundListener() {
-            @Override
-            public void onGotUserList(final User[] users) {
-
-
-                Log.d(TAG, "get friend list");
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        friends = users;
-                        friendsHolder.updateFriendsFromAPI(users);
-                        ArrayList<User> cachedUsers = friendsHolder.getFriends();
-                        for (User user : mFriendsAdapter.getFriendList()) {
-                            if (!cachedUsers.contains(user)) {
-                                mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_FRIEND);
-                            }
-                        }
-                        for (User user : users)
-                            if (!mFriendsAdapter.getFriendList().contains(user))
-                                mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
-
-
-                    }
-                });
-            }
-
-            @Override
-            public void onGotError() {
-
-                Log.d(TAG, "Dident get friend list");
-            }
-        });
+        AftabeAPIAdapter.getListOfMyFriends(myUser, this);
 
         AftabeAPIAdapter.getListOfFriendRequestsToMe(myUser, new BatchUserFoundListener() {
             @Override
@@ -483,12 +450,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         ((OnlineMenuFragment) getParentFragment()).verticalViewPager.setPagingEnabled(!hasFocus);
 
 
-
     }
 
 
-    private void setUpForKeyboardOutsideTouch(View view){
-        if(!(view instanceof MyAutoCompleteTextView)) {
+    private void setUpForKeyboardOutsideTouch(View view) {
+        if (!(view instanceof MyAutoCompleteTextView)) {
 
             view.setOnTouchListener(new View.OnTouchListener() {
 
@@ -510,5 +476,37 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 setUpForKeyboardOutsideTouch(innerView);
             }
         }
+    }
+
+    @Override
+    public void onGotUserList(final User[] users) {
+
+
+        final FriendsHolder friendsHolder = FriendsHolder.getInstance();
+        Log.d(TAG, "get friend list");
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+
+                friends = users;
+                friendsHolder.updateFriendsFromAPI(users);
+                ArrayList<User> cachedUsers = friendsHolder.getFriends();
+                for (User user : mFriendsAdapter.getFriendList()) {
+                    if (!cachedUsers.contains(user)) {
+                        mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_FRIEND);
+                    }
+                }
+                for (User user : users)
+                    if (!mFriendsAdapter.getFriendList().contains(user))
+                        mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+            }
+
+
+        });
+    }
+
+    @Override
+    public void onGotError() {
+
     }
 }

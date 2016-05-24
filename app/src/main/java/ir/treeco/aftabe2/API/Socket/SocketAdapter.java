@@ -120,6 +120,15 @@ public class SocketAdapter {
         }
     }
 
+    public static void reInitiSocket() {
+        if (mSocket != null) {
+            mSocket.disconnect();
+            mSocket.close();
+        }
+        mSocket = null;
+        initSocket();
+    }
+
     private static void initSocket() {
 
         if (mSocket != null)
@@ -129,6 +138,7 @@ public class SocketAdapter {
             return;
 
         Log.d(TAG, "initilizing socketa");
+        Log.d(TAG, "user name is " + Tools.getCachedUser(null).getId());
 
         String url = "https://aftabe2.com:2020";
 
@@ -137,7 +147,7 @@ public class SocketAdapter {
         opts.forceNew = true;
         opts.reconnection = true;
 //        opts.timeout = 30000;
-        opts.query = "auth_token=" + Tools.getCachedUser(mContext).getLoginInfo().getAccessToken();
+        opts.query = "auth_token=" + Tools.getCachedUser(null).getLoginInfo().getAccessToken();
 
 
         try {

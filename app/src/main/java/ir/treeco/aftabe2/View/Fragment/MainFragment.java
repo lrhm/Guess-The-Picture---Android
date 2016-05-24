@@ -24,8 +24,8 @@ import ir.treeco.aftabe2.Util.SizeManager;
 
 public class MainFragment extends Fragment {
 
-    private FragmentPagerItemAdapter fragmentPagerItemAdapter;
-    private ViewPager viewPager;
+    public FragmentPagerItemAdapter fragmentPagerItemAdapter;
+    public ViewPager viewPager;
     public final static String FRAGMENT_TYPE = "fragment_type";
     AdItemAdapter adItemAdapter;
     public AppBarLayout mAppBarLayout;
@@ -66,6 +66,11 @@ public class MainFragment extends Fragment {
 
 
         return view;
+    }
+
+    public FriendListFragment getFriendListFragment() {
+        OnlineMenuFragment onlineMenuFragment = (OnlineMenuFragment) fragmentPagerItemAdapter.getPage(1);
+        return onlineMenuFragment.getFriendListFragment();
     }
 
 
