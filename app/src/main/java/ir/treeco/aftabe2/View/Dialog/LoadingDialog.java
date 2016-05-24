@@ -67,7 +67,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         super(context);
         this.context = context;
         creationTime = System.currentTimeMillis();
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         coinAdapter = ((MainActivity) context).getCoinAdapter();
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendSocketListener(this);
@@ -82,7 +82,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         super(context);
         this.context = context;
         creationTime = System.currentTimeMillis();
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         coinAdapter = ((MainActivity) context).getCoinAdapter();
         SocketAdapter.addSocketListener(this);
         SocketAdapter.addFriendSocketListener(this);

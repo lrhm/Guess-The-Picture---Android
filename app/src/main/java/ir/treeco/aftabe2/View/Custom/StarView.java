@@ -31,7 +31,7 @@ public class StarView extends RelativeLayout {
 
     private void init(Context context) {
 
-        ImageManager imageManager = new ImageManager(context);
+        ImageManager imageManager = ImageManager.getInstance(context);
 
         mStarPlaceHolder = new ImageView(context);
         mStarView = new ImageView(context);

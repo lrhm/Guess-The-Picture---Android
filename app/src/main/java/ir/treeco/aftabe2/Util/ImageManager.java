@@ -19,21 +19,40 @@ public class ImageManager {
     private Context context;
     private LengthManager lengthManager;
 
-    public ImageManager(Context context) {
+    private static boolean cacheInited = false;
+    private static Object getLock = new Object();
+    private static ImageManager instance;
+
+    public static ImageManager getInstance(Context context) {
+        synchronized (getLock) {
+            if (instance == null)
+                instance = new ImageManager(context);
+            return instance;
+        }
+    }
+
+    private ImageManager(Context context) {
+
+
+        initCache(context);
         this.context = context;
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
 
     }
 
-    public static void initCache(Context context) {
+    private void initCache(Context context) {
+
+        if (cacheInited)
+            return;
+        cacheInited = true;
 
         ActivityManager am = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         int memoryClass = am.getMemoryClass();
 
-        int  max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.85
+        int max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.85
                 : (0.70))); // more than 50%
-        cache =  new LruCache<ImageKey, Bitmap>(max) {
+        cache = new LruCache<ImageKey, Bitmap>(max) {
             @Override
             protected int sizeOf(ImageKey key, Bitmap value) {
                 if (Build.VERSION.SDK_INT >= 12) {
@@ -47,7 +66,7 @@ public class ImageManager {
 
     }
 
-    static LruCache<ImageKey, Bitmap> cache ;
+    static LruCache<ImageKey, Bitmap> cache;
 
     public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
         if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);

@@ -72,7 +72,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public FriendsAdapter(Context context, ArrayList<User> friends, ArrayList<User> requests, ArrayList<User> contacts, ArrayList<User> searched) {
 
         this.context = context;
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         mFriends = friends == null ? new ArrayList<User>() : friends;
         mRequests = requests == null ? new ArrayList<User>() : requests;
         mContacts = contacts == null ? (FriendsHolder.getInstance().getContacts()) : contacts;

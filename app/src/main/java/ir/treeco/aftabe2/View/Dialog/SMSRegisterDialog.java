@@ -76,7 +76,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
         super(context);
         this.context = context;
         mActivity = mainActivity;
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
     }
 
 

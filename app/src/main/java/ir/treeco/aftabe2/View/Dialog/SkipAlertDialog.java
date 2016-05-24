@@ -47,7 +47,7 @@ public class SkipAlertDialog extends Dialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.dialog_skip);
 
-        ImageManager imageManager = new ImageManager(context);
+        ImageManager imageManager = ImageManager.getInstance(context);
 
         TextView mainTextView = (TextView) findViewById(R.id.skip_dialog_main_text);
 

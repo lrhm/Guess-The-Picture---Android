@@ -79,7 +79,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
             Log.d("TAG", "setting sing in image");
 
             SizeConverter converter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.2), 474, 192);
-            ImageManager imageManager = new ImageManager(getContext());
+            ImageManager imageManager = ImageManager.getInstance(getContext());
 
             ImageView button = (ImageView) view.findViewById(R.id.fragment_user_info_register_guest);
             button.setImageBitmap(imageManager.loadImageFromResource(R.drawable.register, converter.mWidth, converter.mHeight));

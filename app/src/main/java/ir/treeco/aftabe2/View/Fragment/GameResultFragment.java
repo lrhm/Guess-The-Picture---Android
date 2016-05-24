@@ -165,7 +165,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         ((MainActivity) getActivity()).setStarts(mGameResultHolder.getMyScoreResult(myUser));
 
-        ImageManager imageManager = new ImageManager(getContext());
+        ImageManager imageManager = ImageManager.getInstance(getContext());
 
         int width = (int) (SizeManager.getScreenWidth() * 0.16);
 
@@ -199,7 +199,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         int width = (int) (SizeManager.getScreenWidth() * 0.65);
         ((LinearLayout.LayoutParams) resultImageView.getLayoutParams()).leftMargin =
                 +(int) (SizeManager.getScreenWidth() * 0.17);
-        ImageManager imageManager = new ImageManager(getContext());
+        ImageManager imageManager = ImageManager.getInstance(getContext());
         resultImageView.setImageBitmap(imageManager.loadImageFromResource(imgId, width, width));
 
     }

@@ -45,7 +45,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         ImageView credits = (ImageView) findViewById(R.id.credits_image_view);
         ImageView aftabe = (ImageView) findViewById(R.id.credits_aftabe_image_view);
 
-        imageManager = new ImageManager(this);
+        imageManager = ImageManager.getInstance(this);
         LengthManager lengthManager = new LengthManager(this);
 
 

@@ -55,7 +55,7 @@ public class KeyboardView extends RelativeLayout {
 
         solution = solution.replace(".", "/");
         this.solution = solution;
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         levelAnswer = solution.replace(" ", "").replace("/", "");
 
         Random random = new Random(System.currentTimeMillis());

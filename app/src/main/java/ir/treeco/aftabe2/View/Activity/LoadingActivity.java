@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -12,7 +13,10 @@ import ir.treeco.aftabe2.Adapter.ContactsAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.Adapter.LocationAdapter;
 import ir.treeco.aftabe2.R;
+import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.PackageTools;
+import ir.treeco.aftabe2.Util.SizeConverter;
+import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.Tools;
 
 public class LoadingActivity extends Activity implements Runnable {
@@ -27,6 +31,14 @@ public class LoadingActivity extends Activity implements Runnable {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_loading);
+
+        ImageView imageView = (ImageView) findViewById(R.id.loading_logi);
+
+        SizeManager.initSizes(this);
+
+        SizeConverter logiConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.7f, 1000, 1000);
+
+        imageView.setImageBitmap(ImageManager.getInstance(this).loadImageFromResource(R.drawable.logi, logiConverter.mWidth, logiConverter.mHeight));
 
         startTime = System.currentTimeMillis();
 

@@ -50,7 +50,7 @@ public class TimerView extends FrameLayout {
     public void init(Context context) {
 
         mReamingTime = 120;
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         container = new ImageView(context);
         timer = new ImageView(context);
         mTextView = new TextView(context);

@@ -23,7 +23,7 @@ public class NotificationCountView extends FrameLayout {
         super(context);
 
 
-        ImageManager imageManager = new ImageManager(context);
+        ImageManager imageManager = ImageManager.getInstance(context);
 
 
         mImageView = new ImageView(context);

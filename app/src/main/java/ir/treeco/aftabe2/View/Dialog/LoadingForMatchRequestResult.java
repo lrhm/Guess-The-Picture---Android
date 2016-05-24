@@ -57,7 +57,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
         this.context = context;
         coinAdapter = ((MainActivity) context).getCoinAdapter();
         mOpponent = opponent;
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         initImageLoading();
         mTimer = new Timer();
         mTimer.scheduleAtFixedRate(new TimerTask() {

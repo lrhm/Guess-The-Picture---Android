@@ -59,7 +59,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         mOpponent = opponent;
         this.mTimerStep = timerStep;
         mOnGameEndListener = onGameEndListener;
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         ((MainActivity) context).setLoadingForGameResultDialog(this);
         initImageLoading();
         mTimer = new Timer();
@@ -78,7 +78,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
         forRegister = true;
 
-        imageManager = new ImageManager(context);
+        imageManager = ImageManager.getInstance(context);
         initImageLoading();
         mTimer = new Timer();
         mTimer.scheduleAtFixedRate(new TimerTask() {

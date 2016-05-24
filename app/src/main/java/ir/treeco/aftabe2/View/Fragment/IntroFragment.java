@@ -54,7 +54,7 @@ public class IntroFragment extends Fragment implements View.OnClickListener {
 
         SizeConverter sizeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1080, 1920);
 
-        ImageManager imageManager = new ImageManager(getContext());
+        ImageManager imageManager = ImageManager.getInstance(getContext());
 
         relativeLayout.addView(imageView);
 
