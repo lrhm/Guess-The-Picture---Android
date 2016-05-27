@@ -549,11 +549,13 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             }
         }
 
+
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                doLose();
+                if (!mGameResult.amIWinner(Tools.getCachedUser(getContext())))
+                    doLose();
                 mainActivity.getSupportFragmentManager().popBackStack();
 
             }
