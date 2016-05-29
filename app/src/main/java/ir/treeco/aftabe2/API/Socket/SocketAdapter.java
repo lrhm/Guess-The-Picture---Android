@@ -2,6 +2,7 @@ package ir.treeco.aftabe2.API.Socket;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -263,7 +264,7 @@ public class SocketAdapter {
 
                     Log.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
 
-                    new Handler().postDelayed(new Runnable() {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             requestOnlineFriendsStatus();

@@ -567,7 +567,6 @@ public class Tools {
             if(!user.isGuest()) {
                 SocketAdapter.reInitiSocket();
                 AftabeAPIAdapter.getListOfMyFriends(user, ((MainActivity) context).mainFragment.getFriendListFragment());
-                SocketAdapter.requestOnlineFriendsStatus();
             }
         }
 

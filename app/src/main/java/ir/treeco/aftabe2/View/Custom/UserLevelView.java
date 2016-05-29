@@ -65,6 +65,13 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     private LengthManager lengthManager;
     private ImageManager imageManager;
 
+    public UserLevelView(Context context, float dimension) {
+
+        super(context);
+        init(context, null, 0);
+        mDimension = dimension;
+        mUserLevelMarkView(context);
+    }
 
     public UserLevelView(Context context) {
 

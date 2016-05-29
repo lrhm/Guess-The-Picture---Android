@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,16 +21,21 @@ import java.util.TimerTask;
 import ir.treeco.aftabe2.API.Socket.Objects.GameResult.GameResultHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.GameStart.GameStartObject;
 import ir.treeco.aftabe2.API.Socket.Objects.Result.ResultHolder;
+import ir.treeco.aftabe2.API.Socket.Objects.UserAction.GameActionResult;
 import ir.treeco.aftabe2.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe2.API.Socket.SocketAdapter;
 import ir.treeco.aftabe2.API.Socket.Interfaces.SocketListener;
+import ir.treeco.aftabe2.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.ImageManager;
+import ir.treeco.aftabe2.Util.LengthManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
+import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.TimerView;
+import ir.treeco.aftabe2.View.Custom.UserLevelView;
 import ir.treeco.aftabe2.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe2.View.Fragment.OnlineGameFragment;
 
@@ -52,6 +58,8 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     TimerView mTimerView;
     int mTimerStep = 0;
     private boolean forRegister = false;
+    private UserLevelView myUserLevelView;
+    private UserLevelView opponentLevelView;
 
     public LoadingForGameResultDialog(Context context, OnlineGameFragment.OnGameEndListener onGameEndListener, User opponent, int timerStep) {
         super(context);
@@ -104,8 +112,10 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
 
         new Handler().postDelayed(this, 20);
-        if (!forRegister)
+        if (!forRegister) {
             SocketAdapter.addSocketListener(this);
+
+        }
 
         mTimerView = new TimerView(context);
         mTimerView.setDoOnlyBlue(true);
@@ -117,6 +127,12 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         timerLP.leftMargin = (SizeManager.getScreenWidth() - mTimerView.getRealWidth()) / 2;
         container.addView(mTimerView, timerLP);
 
+        if (!forRegister) {
+
+            initializeLevelViews(container);
+
+        }
+
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
@@ -127,6 +143,42 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
     }
 
+
+    private void initializeLevelViews(FrameLayout parent) {
+
+        myUserLevelView = (UserLevelView) parent.findViewById(R.id.dialog_game_result_my_player);
+        opponentLevelView = (UserLevelView) parent.findViewById(R.id.dialog_game_result_op);
+
+
+        myUserLevelView.setUserNameTextSize(0.85f);
+        opponentLevelView.setUserNameTextSize(0.85f);
+
+        myUserLevelView.setUser(Tools.getCachedUser(context));
+        opponentLevelView.setUser(mOpponent);
+
+
+        myUserLevelView.setForOnlineGame(true);
+        opponentLevelView.setForOnlineGame(true);
+
+
+        for (GameActionResult gameActionResult : UserActionCache.getInstance().getMyList())
+            myUserLevelView.setOnlineState(gameActionResult);
+
+
+        for (GameActionResult gameActionResult : UserActionCache.getInstance().getOpponentList())
+            opponentLevelView.setOnlineState(gameActionResult);
+
+        LengthManager lengthManager = new LengthManager(context);
+
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) myUserLevelView.getLayoutParams();
+        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - myUserLevelView.getRealWidth() * 1.05f) / 2);
+        lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
+
+        RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) opponentLevelView.getLayoutParams();
+        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - opponentLevelView.getRealWidth() * 1.05f) / 2);
+        lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - opponentLevelView.getRealWidth());
+        ;
+    }
 
     private void runTimer() {
         if (mTimerStep == 0) {
@@ -242,8 +294,20 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
     }
 
     @Override
-    public void onGotUserAction(UserActionHolder actionHolder) {
+    public void onGotUserAction(final UserActionHolder actionHolder) {
 
+        if (!actionHolder.getUserId().equals(Tools.getCachedUser(context).getId())) {
+
+            if (opponentLevelView != null)
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        opponentLevelView.setOnlineState(actionHolder.getAction());
+
+                    }
+                });
+
+        }
     }
 
     @Override
