@@ -1194,14 +1194,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         isPaused = false;
         SocketAdapter.reconnect();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isPaused)
-                    SocketAdapter.requestOnlineFriendsStatus();
-
-            }
-        }, 3000);
 
         super.onResume();
 
@@ -1307,6 +1299,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         if (bundle == null)
             return;
+
 
         String data = bundle.getString(ServiceConstants.ACTION_DATA_INTENT);
 

@@ -79,6 +79,22 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         mSearched = searched == null ? new ArrayList<User>() : searched;
         mOnlineFriends = new ArrayList<>();
 
+
+        Collections.sort(mFriends, new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return Integer.valueOf(rhs.getScore()).compareTo(lhs.getScore());
+            }
+        });
+
+
+        Collections.sort(mContacts, new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return Integer.valueOf(rhs.getScore()).compareTo(lhs.getScore());
+            }
+        });
+
         arrayLists = new ArrayList<>();
         arrayLists.add(mSearched);
         arrayLists.add(mRequests);
@@ -145,7 +161,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         Collections.sort(mList, new Comparator<User>() {
             @Override
             public int compare(User lhs, User rhs) {
-                return Integer.valueOf(lhs.getScore()).compareTo(rhs.getScore());
+                return Integer.valueOf(rhs.getScore()).compareTo(lhs.getScore());
             }
         });
         notifyDataSetChanged();
@@ -159,11 +175,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             return;
         mList.remove(position);
 
-        int size = 0;
-        for (int i = 0; i < type; i++) {
-            ArrayList<User> list = arrayLists.get(i);
-            size += list.size() + (list.isEmpty() ? 0 : 1);
-        }
+        Collections.sort(mList, new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return Integer.valueOf(rhs.getScore()).compareTo(lhs.getScore());
+            }
+        });
 
         notifyDataSetChanged();
 //        if (mList.isEmpty())

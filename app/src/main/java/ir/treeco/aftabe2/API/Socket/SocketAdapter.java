@@ -1,6 +1,7 @@
 package ir.treeco.aftabe2.API.Socket;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -261,6 +262,13 @@ public class SocketAdapter {
                 public void call(Object... args) {
 
                     Log.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestOnlineFriendsStatus();
+                        }
+                    }, 1500);
 
                 }
             }).on(Socket.EVENT_PING, new Emitter.Listener() {
@@ -532,21 +540,14 @@ public class SocketAdapter {
         }).start();
     }
 
-    public static void requestOnlineFriendsStatus() {
+    private static void requestOnlineFriendsStatus() {
 
         initSocket();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                RequestHolder requestHolder = new RequestHolder();
-                Gson gson = new Gson();
-                Log.d(TAG, "emit onlineRequest : " + gson.toJson(requestHolder));
-                if (mSocket != null)
-                    mSocket.emit("onlineRequest", gson.toJson(requestHolder));
-
-            }
-        }).start();
+        RequestHolder requestHolder = new RequestHolder();
+        Gson gson = new Gson();
+        Log.d(TAG, "emit onlineRequest : " + gson.toJson(requestHolder));
+        if (mSocket != null)
+            mSocket.emit("onlineRequest", gson.toJson(requestHolder));
 
     }
 

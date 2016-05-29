@@ -174,7 +174,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
         UiUtil.setHeight(mProgressBar, size);
         UiUtil.setRightMargin(mProgressBar, (int) (SizeManager.getScreenWidth() * 0.02));
 
-        UiUtil.setTopMargin(view.findViewById(R.id.fragment_friend_list_text_container),(int) (SizeManager.getScreenHeight() * 0.05));
+        UiUtil.setTopMargin(view.findViewById(R.id.fragment_friend_list_text_container), (int) (SizeManager.getScreenHeight() * 0.01));
 
         setUpForKeyboardOutsideTouch(view);
 
@@ -189,7 +189,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
         arrowUp.setImageBitmap(imageManager.loadImageFromResource(R.drawable.uparrow, sizeConverter.mWidth, sizeConverter.mHeight));
         arrowUp.setOnClickListener(this);
-        UiUtil.setTopMargin(arrowUp, (int) (SizeManager.getScreenHeight() * 0.05));
+        UiUtil.setTopMargin(arrowUp, (int) (SizeManager.getScreenHeight() * 0.01) + Tools.convertDPtoPixel(13, getContext()));
 
     }
 

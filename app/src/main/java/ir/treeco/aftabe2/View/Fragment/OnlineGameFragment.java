@@ -56,6 +56,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
 
     private boolean lost = false;
+    private boolean endedGame = false;
 
     public interface OnGameEndListener {
         void onGameEnded();
@@ -249,7 +250,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
 
 
-        if (state == 1 || mRemainingTime == 0 || lost) {
+        if (state == 1 || mRemainingTime == 0 || lost || endedGame) {
             Log.d(TAG, "onDestroy , set online game false");
             ((MainActivity) getActivity()).setOnlineGame(false);
 
@@ -306,10 +307,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
                 Log.d(TAG, "Animation End");
 
+                getActivity().getSupportFragmentManager().popBackStack();
+
+
                 if (state == 1)
                     return;
 
-                getActivity().getSupportFragmentManager().popBackStack();
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("state", 1);
@@ -538,6 +541,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public void onFinishGame(ResultHolder resultHolder) {
 
         synchronized (lock) {
+            endedGame = true;
             mGameResult = resultHolder;
         }
 
@@ -556,6 +560,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
                 if (!mGameResult.amIWinner(Tools.getCachedUser(getContext())))
                     doLose();
+                endedGame = true;
                 mainActivity.getSupportFragmentManager().popBackStack();
 
             }
