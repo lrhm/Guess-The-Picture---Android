@@ -2,7 +2,9 @@ package ir.treeco.aftabe2.API.Rest.Utils;
 
 import com.google.gson.annotations.Expose;
 
+import ir.treeco.aftabe2.Adapter.HiddenAdapter;
 import ir.treeco.aftabe2.Object.TokenHolder;
+import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.Util.RandomString;
 import ir.treeco.aftabe2.Util.Tools;
 
@@ -29,7 +31,7 @@ public class SMSToken {
     @Expose
     public double seed;
 
-    public void update(SMSValidateToken smsValidateToken , String checkedUsername) {
+    public void update(SMSValidateToken smsValidateToken, String checkedUsername) {
         this.imei = RandomString.nextString();
         this.smsTokenId = smsValidateToken.getId();
         this.name = checkedUsername;
@@ -40,7 +42,13 @@ public class SMSToken {
 
     private void setGuestID() {
 
+
         if (!Tools.isUserRegistered()) {
+
+            User hdn = HiddenAdapter.getInstance().getHiddenUsr();
+            if (hdn != null)
+                guestID = hdn.getLoginInfo().getUserId();
+
             return;
         }
         TokenHolder tokenHolder = Tools.getTokenHolder();

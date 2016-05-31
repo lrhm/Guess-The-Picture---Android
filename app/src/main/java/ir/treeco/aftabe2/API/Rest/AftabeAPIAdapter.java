@@ -41,6 +41,7 @@ import ir.treeco.aftabe2.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
+import ir.treeco.aftabe2.Adapter.HiddenAdapter;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.Object.TokenHolder;
 import ir.treeco.aftabe2.Object.User;
@@ -93,16 +94,44 @@ public class AftabeAPIAdapter {
 
     public static void createGuestUser(final UserFoundListener userFoundListener) {
 
+        User hdnUser = HiddenAdapter.getInstance().getHiddenUsr();
+        if (hdnUser == null) {
+
+            init();
+
+            final GuestCreateToken guestCreateToken = new GuestCreateToken(RandomString.nextString());
+
+            getGuestUser(false, guestCreateToken, userFoundListener);
+
+            return;
+        }
+
+
+        Tools.updateSharedPrefsToken(context, hdnUser, new TokenHolder(hdnUser));
+
+        PackageSolvedCache.getInstance().updateToServer();
+
+
+        if (userFoundListener != null) userFoundListener.onGetUser(hdnUser);
+        if (userFoundListener != null) userFoundListener.onGetMyUser(hdnUser);
+
+
+    }
+
+    public static void createHdnUser(final UserFoundListener userFoundListener) {
+
         init();
 
         final GuestCreateToken guestCreateToken = new GuestCreateToken(RandomString.nextString());
 
-        getGuestUser(guestCreateToken, userFoundListener);
+        getGuestUser(true, guestCreateToken, userFoundListener);
 
     }
 
-    public static void getGuestUser(final GuestCreateToken guestCreateToken, final UserFoundListener userFoundListener) {
 
+    public static void getGuestUser(final boolean hidden, final GuestCreateToken guestCreateToken, final UserFoundListener userFoundListener) {
+
+        Log.d(TAG, "getGuestUser");
         Call<LoginInfo> call = aftabeService.getGuestUserLogin(guestCreateToken);
         call.enqueue(new Callback<LoginInfo>() {
             @Override
@@ -110,14 +139,17 @@ public class AftabeAPIAdapter {
 
 
                 if (!response.isSuccess()) {
+                    Log.d(TAG, "not getGuestUser succfessful");
                     userFoundListener.onGetError();
                     return;
                 }
 
                 final LoginInfo loginInfo = response.body();
 
-                getMyUserByAccessToken(loginInfo, userFoundListener);
-
+                if (!hidden)
+                    getMyUserByAccessToken(loginInfo, userFoundListener);
+                else
+                    getHdnUserByAccessToken(loginInfo, userFoundListener);
 
             }
 
@@ -283,6 +315,44 @@ public class AftabeAPIAdapter {
             }
         });
     }
+
+
+    private static void getHdnUserByAccessToken(final LoginInfo loginInfo,
+                                                final UserFoundListener userFoundListener) {
+
+        Log.d(TAG, "get hdn user by access token");
+        Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
+        c.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Response<User> response) {
+
+                if (response.isSuccess()) {
+
+                    Log.d(TAG, " is  sucess");
+                    Log.d(TAG, (userFoundListener == null) + " is null ?");
+
+                    response.body().setLoginInfo(loginInfo);
+                    response.body().setOwnerMe();
+
+                    HiddenAdapter.getInstance().setHiddenUsr(response.body());
+
+
+                    if (userFoundListener != null) userFoundListener.onGetUser(response.body());
+                    if (userFoundListener != null) userFoundListener.onGetMyUser(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d(TAG, "failure at get user by access token");
+                Log.d(TAG, t.toString());
+                t.printStackTrace();
+
+                if (userFoundListener != null) userFoundListener.onGetError();
+            }
+        });
+    }
+
 
     public static void getMyUserByGoogle(final GoogleToken googleToken, final UserFoundListener userFoundListener) {
 
@@ -529,6 +599,8 @@ public class AftabeAPIAdapter {
 
         User myUser = Tools.getCachedUser(context);
         if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
+            myUser = HiddenAdapter.getInstance().getHiddenUsr();
+        if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
             return;
 
         init();
@@ -738,6 +810,8 @@ public class AftabeAPIAdapter {
             return;
         User user = Tools.getCachedUser(context);
         if (user == null)
+            user = HiddenAdapter.getInstance().getHiddenUsr();
+        if (user == null)
             return;
 
         Call<HashMap<String, Object>> call = aftabeService.putLocation(user.getId(),
@@ -760,6 +834,9 @@ public class AftabeAPIAdapter {
         init();
 
         User user = Tools.getCachedUser(context);
+
+        if (user == null)
+            user = HiddenAdapter.getInstance().getHiddenUsr();
 
         if (user == null)
             return;
@@ -797,6 +874,9 @@ public class AftabeAPIAdapter {
         init();
 
         User user = Tools.getCachedUser(context);
+        if (user == null)
+            user = HiddenAdapter.getInstance().getHiddenUsr();
+
         if (user == null)
             return;
         aftabeService.buyPackages(packageId + "", user.getLoginInfo().getAccessToken()).enqueue(new Callback<ArrayList<Integer>>() {
@@ -873,7 +953,10 @@ public class AftabeAPIAdapter {
     public static void updatePackageSolved(final int packageId, final int index) {
         init();
 
-        final User myUser = Tools.getCachedUser(context);
+        User myUser = Tools.getCachedUser(context);
+        if (myUser == null)
+            myUser = HiddenAdapter.getInstance().getHiddenUsr();
+
         if (myUser == null)
             return;
 

@@ -55,7 +55,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:294812968005:android:9485e2c8fdf13736",
         "android_client_info": {
-          "package_name": "ir.beep.aftabe2"
+          "package_name": "ir.treeco.aftabe2"
         }
       },
       "oauth_client": [
@@ -63,7 +63,7 @@
           "client_id": "294812968005-23um4uskcm04alrcv6mvcspsunqa31d8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "ir.beep.aftabe2",
+            "package_name": "ir.treeco.aftabe2",
             "certificate_hash": "22D4C244E460AABE5B0ADD3500F8B4D10F3E214F"
           }
         },

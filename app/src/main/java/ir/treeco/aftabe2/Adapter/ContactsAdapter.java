@@ -68,9 +68,11 @@ public class ContactsAdapter implements BatchUserFoundListener {
                 return;
             // failed to get
         }
-        if (!Tools.isUserRegistered() || Tools.getCachedUser(mContext) == null) {
+        User user = Tools.getCachedUser(mContext);
+        if (user == null)
+            user = HiddenAdapter.getInstance().getHiddenUsr();
+        if (user == null)
             return;
-        }
 
 
         Cursor phones = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
@@ -117,7 +119,7 @@ public class ContactsAdapter implements BatchUserFoundListener {
 
         doQueue();
 
-        if(contactsHolders.size() != 0)
+        if (contactsHolders.size() != 0)
             return;
 
         Date now = Calendar.getInstance().getTime();
@@ -166,7 +168,6 @@ public class ContactsAdapter implements BatchUserFoundListener {
         if (contactsHolder == null)
             return;
 
-        Log.d(TAG, "updating a new contact");
         AftabeAPIAdapter.updateContact(contactsHolder, new Callback<HashMap<String, String>>() {
             @Override
             public void onResponse(Response<HashMap<String, String>> response) {

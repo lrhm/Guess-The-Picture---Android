@@ -76,6 +76,7 @@ import ir.treeco.aftabe2.Adapter.CoinAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.Adapter.ForceAdapter;
 import ir.treeco.aftabe2.Adapter.FriendsAdapter;
+import ir.treeco.aftabe2.Adapter.HiddenAdapter;
 import ir.treeco.aftabe2.Adapter.MediaAdapter;
 import ir.treeco.aftabe2.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe2.MainApplication;
@@ -189,6 +190,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE, Toast.LENGTH_SHORT);
 
         checkForceUpdate();
+
+        HiddenAdapter.getInstance().createHiddenUsr();
+
     }
 
 
