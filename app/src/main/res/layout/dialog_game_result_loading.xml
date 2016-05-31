@@ -14,6 +14,7 @@
             android:id="@+id/dialog_game_result_my_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:customDimension="0.16"
             app:isOnlineTop="true"
             app:textAlign="below" />
@@ -22,6 +23,7 @@
             android:id="@+id/dialog_game_result_op"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:customDimension="0.16"
             app:isOnlineTop="true"
 

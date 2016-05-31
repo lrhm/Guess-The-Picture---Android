@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -148,6 +149,9 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
         myUserLevelView = (UserLevelView) parent.findViewById(R.id.dialog_game_result_my_player);
         opponentLevelView = (UserLevelView) parent.findViewById(R.id.dialog_game_result_op);
+
+        myUserLevelView.setVisibility(View.VISIBLE);
+        opponentLevelView.setVisibility(View.VISIBLE);
 
 
         myUserLevelView.setUserNameTextSize(0.85f);

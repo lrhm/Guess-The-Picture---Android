@@ -57,6 +57,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     private boolean lost = false;
     private boolean endedGame = false;
+    private boolean answerd = false;
 
     public interface OnGameEndListener {
         void onGameEnded();
@@ -351,6 +352,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             MediaAdapter.getInstance(getContext()).playCorrectSound();
 
+            answerd = true;
+
             startShowingAnimation();
 
             mTimer.cancel();
@@ -558,7 +561,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             @Override
             public void run() {
 
-                if (!mGameResult.amIWinner(Tools.getCachedUser(getContext())))
+                if (!mGameResult.amIWinner(Tools.getCachedUser(getContext())) && !answerd)
                     doLose();
                 endedGame = true;
                 mainActivity.getSupportFragmentManager().popBackStack();

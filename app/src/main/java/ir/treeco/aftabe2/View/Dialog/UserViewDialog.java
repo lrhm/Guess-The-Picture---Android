@@ -119,7 +119,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         } else {
             mMatchButton.setVisibility(View.GONE);
-            int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(mUser)) ? R.drawable.addfriends : R.drawable.notifreq;
+            int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(mUser) && !mUser.isGuest()) ? R.drawable.addfriends : R.drawable.notifreq;
             mChatButton.setImageBitmap(imageManager.loadImageFromResource(
                     friendReqDrawable, size, size));
         }
@@ -159,7 +159,6 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             TextView right = (TextView) findViewById(textRightIds[i]);
             right.setTypeface(FontsHolder.getNumeralSansBold(context));
             right.setText(textRights[i]);
-
 
 
             right.setTextColor(Color.parseColor("#54460b"));
@@ -249,7 +248,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
         if (v.getId() == R.id.uv_start_chat_button) {
             if (!mUser.isFriend()) {
-                if (FriendRequestState.getInstance().requestShallPASS(mUser))
+                if (FriendRequestState.getInstance().requestShallPASS(mUser) && !mUser.isGuest())
                     DialogAdapter.makeFriendRequestDialog(context, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.UserAction.GameActionResult;
+import ir.treeco.aftabe2.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe2.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe2.Adapter.MediaAdapter;
 import ir.treeco.aftabe2.Object.User;
@@ -226,15 +227,16 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
         User myUser = Tools.getCachedUser(getActivity());
         if (v.getId() == R.id.fragment_result_add_friend) {
             if (!mOpponent.isGuest() && !myUser.isGuest())
-                if (!mOpponent.isFriend() || mOpponent.isBot()) {
-                    new SkipAlertDialog(getActivity(), "درخواست دوستی", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (!mOpponent.isBot())
-                                AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
-                        }
-                    }, null).show();
-                }
+                if (!mOpponent.isFriend() || mOpponent.isBot())
+                    if (FriendRequestState.getInstance().requestShallPASS(mOpponent)) {
+                        new SkipAlertDialog(getActivity(), "درخواست دوستی", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (!mOpponent.isBot())
+                                    AftabeAPIAdapter.requestFriend(Tools.getCachedUser(getActivity()), mOpponent.getId(), null);
+                            }
+                        }, null).show();
+                    }
         }
         if (v.getId() == R.id.fragment_result_chat) {
             getActivity().getSupportFragmentManager().popBackStack();

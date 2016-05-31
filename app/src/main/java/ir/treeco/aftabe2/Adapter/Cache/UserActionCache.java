@@ -53,12 +53,14 @@ public class UserActionCache {
     }
 
     public void addToOpponentList(GameActionResult actionHolder) {
-        opList.add(actionHolder);
+        if (opList.size() < 2)
+            opList.add(actionHolder);
 //        backupCache();
     }
 
     public void addToMyList(GameActionResult actionHolder) {
-        myList.add(actionHolder);
+        if (myList.size() < 2)
+            myList.add(actionHolder);
 //        backupCache();
     }
 
