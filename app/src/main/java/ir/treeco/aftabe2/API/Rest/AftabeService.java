@@ -79,6 +79,10 @@ public interface AftabeService {
     @PUT("/api/users/{user_id}")
     Call<User> updateCoin(@Body CoinDiffHolder coinDiffHolder, @Path("user_id") String userId, @Query("access_token") String accessToken);
 
+    @PUT("/api/users/{user_id}")
+    Call<HashMap<String, Object>> updatePackagesList(@Body ArrayList<String> list, @Path("user_id") String userId, @Query("access_token") String accessToken);
+
+
     @PUT("/api/users/{user_id}/requests/rel/{friend_id}")
     Call<FriendRequestSent> requestFriend(@Path("user_id") String userId, @Path("friend_id") String friendId,
                                           @Query("access_token") String accessToken);

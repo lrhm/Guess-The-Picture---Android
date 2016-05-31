@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import ir.treeco.aftabe2.Adapter.Cache.AppListAdapter;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.NotificationManager;
@@ -46,6 +47,8 @@ public class Synchronize extends BroadcastReceiver {
                 }
             });
         }
+
+        AppListAdapter.getInstance(context);
 
     }
 }

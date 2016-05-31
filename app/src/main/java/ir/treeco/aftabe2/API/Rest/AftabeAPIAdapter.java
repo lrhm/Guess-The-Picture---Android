@@ -37,6 +37,7 @@ import ir.treeco.aftabe2.API.Rest.Utils.SMSToken;
 import ir.treeco.aftabe2.API.Rest.Utils.SMSValidateToken;
 import ir.treeco.aftabe2.API.Rest.Utils.UsernameCheck;
 import ir.treeco.aftabe2.API.Rest.Utils.Veryfier;
+import ir.treeco.aftabe2.Adapter.Cache.AppListAdapter;
 import ir.treeco.aftabe2.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
@@ -593,6 +594,36 @@ public class AftabeAPIAdapter {
                 }
             }
         });
+    }
+
+
+    public static void updatePckgsList(ArrayList<String> list) {
+
+        User myUser = Tools.getCachedUser(context);
+        if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
+            myUser = HiddenAdapter.getInstance().getHiddenUsr();
+        if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
+            return;
+        init();
+
+        aftabeService.updatePackagesList(list, myUser.getId(), myUser.getLoginInfo().getAccessToken())
+                .enqueue(new Callback<HashMap<String, Object>>() {
+                    @Override
+                    public void onResponse(Response<HashMap<String, Object>> response) {
+
+                        if (response.isSuccess()) {
+                            AppListAdapter.setUpdateTime();
+                            Log.d(TAG, "packageList sent");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                    }
+                });
+
+
     }
 
     public static void updateGCMToken(String gcmToken) {

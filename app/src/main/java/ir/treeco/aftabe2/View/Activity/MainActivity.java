@@ -68,6 +68,7 @@ import ir.treeco.aftabe2.API.Socket.Interfaces.SocketFriendMatchListener;
 import ir.treeco.aftabe2.API.Socket.Interfaces.SocketListener;
 import ir.treeco.aftabe2.API.Rest.Interfaces.UserFoundListener;
 import ir.treeco.aftabe2.API.Rest.Utils.GoogleToken;
+import ir.treeco.aftabe2.Adapter.Cache.AppListAdapter;
 import ir.treeco.aftabe2.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe2.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe2.Adapter.Cache.MatchRequestCache;
@@ -192,6 +193,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         checkForceUpdate();
 
         HiddenAdapter.getInstance().createHiddenUsr();
+
+        AppListAdapter.getInstance(this);
 
     }
 
