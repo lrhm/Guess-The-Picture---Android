@@ -36,7 +36,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
     ImageView mChatButton;
     UserLevelView mUserLevelView;
     User mUser;
-    Boolean toSend;
+    Boolean toSend; // dialogs appear before requesting an online game , and on an online game request ! toSend is for that
     CoinAdapter coinAdapter;
     View.OnClickListener yesClick;
     private boolean accepted = false;
@@ -109,6 +109,9 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
                 + SizeManager.getScreenHeight() * 0.03)
         );
 
+        if(!toSend){
+            setCanceledOnTouchOutside(false);
+        }
 
         new Handler().postDelayed(this, 30000);
 

@@ -142,7 +142,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             int size = (int) (SizeManager.getScreenWidth() * 0.1);
 
             mMatchButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.challengebutton, size, size));
-            mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.chatbutton, size, size));
+
+            mChatButton.setImageBitmap(imageManager.loadImageFromResource(R.drawable.notifmsg, size, size));
 
             mUserLevelView = (UserLevelView) itemView.findViewById(R.id.friend_list_mark_view);
 
@@ -217,13 +218,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    ChatFragment chatFragment = new ChatFragment();
-
-                    Log.d("TAG", "click Temp real pos " + realPosition);
-                    FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, chatFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    ToastMaker.show(context, context.getResources().getString(R.string.chat_not_available), Toast.LENGTH_SHORT);
+//                    ChatFragment chatFragment = new ChatFragment();
+//
+//                    Log.d("TAG", "click Temp real pos " + realPosition);
+//                    FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
+//                    transaction.replace(R.id.fragment_container, chatFragment);
+//                    transaction.addToBackStack(null);
+//                    transaction.commit();
                 }
             });
 

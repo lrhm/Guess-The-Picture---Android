@@ -20,5 +20,6 @@
     <string name="server_client_id">294812968005-linmhc2bh29ckjv0o40c4ndl7h5l8tnq.apps.googleusercontent.com</string>
     <string name="connection_to_internet_sure">لطفا از اتصال به اینترنت مطمئن شوید</string>
     <string name="try_later">لطفا بعدن تلاش کنید</string>
+    <string name="chat_not_available">به زودی !</string>
 
 </resources>
