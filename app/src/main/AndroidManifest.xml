@@ -105,12 +105,6 @@
 
         <receiver android:name="ir.treeco.aftabe2.Service.ActionEventReceiver" />
 
-        <receiver android:name=".Synchronization.CSListener">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE"></action>
-            </intent-filter>
-        </receiver>
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4150c278d5e47ac44513db398d88c074d628b50e" />
