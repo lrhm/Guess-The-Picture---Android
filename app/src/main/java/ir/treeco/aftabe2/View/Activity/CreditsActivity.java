@@ -59,9 +59,12 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         SizeConverter creditsConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1200, 2000);
 
+        UiUtil.setWidth(credits, creditsConverter.mWidth);
+        UiUtil.setHeight(credits , creditsConverter.mHeight);
         credits.setImageBitmap(imageManager.loadImageFromResourceNoCache(
-                R.drawable.credits, creditsConverter.mWidth, creditsConverter.mHeight,
+                R.drawable.credits, creditsConverter.mWidth/2, creditsConverter.mHeight/2,
                 ImageManager.ScalingLogic.FIT));
+
 
         facesDrawables = new int[]{R.drawable.alaangry,
                 R.drawable.alaface,
@@ -82,7 +85,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         faces = new ImageView[imageIds.length];
 
-        imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 156, 234);
+        imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 180, 260);
 
         int facesHeight = creditsConverter.convertHeight(1550);
         if(creditsConverter.getTopOffset() < 0)

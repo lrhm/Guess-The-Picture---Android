@@ -256,7 +256,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             holder.mMatchButton.setVisibility(View.VISIBLE);
             final int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(user)) ? R.drawable.addfriends : R.drawable.notifreq;
 
-            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(friendReqDrawable, size, size));
+            holder.mMatchButton.setImageBitmap(imageManager.loadImageFromResource(friendReqDrawable, size, size , ImageManager.ScalingLogic.FIT));
             if (FriendRequestState.getInstance().requestShallPASS(user))
                 holder.mMatchButton.setOnClickListener(new View.OnClickListener() {
                     @Override

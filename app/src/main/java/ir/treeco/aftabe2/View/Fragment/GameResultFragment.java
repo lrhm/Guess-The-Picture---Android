@@ -172,7 +172,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
 
         mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(
-                (mOpponent.isFriend() || mOpponent.isGuest() || myUser.isGuest()) ? R.drawable.notifreq : R.drawable.addfriends, width, width));
+                (mOpponent.isFriend() || mOpponent.isGuest() || myUser.isGuest()) ? R.drawable.notifreq : R.drawable.addfriends, width, width , ImageManager.ScalingLogic.FIT));
         mAddFriendImageView.setOnClickListener(this);
         mBackImageView.setOnClickListener(this);
         mBackImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.continuebutton, width, width));

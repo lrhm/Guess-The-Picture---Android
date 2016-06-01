@@ -121,7 +121,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             mMatchButton.setVisibility(View.GONE);
             int friendReqDrawable = (FriendRequestState.getInstance().requestShallPASS(mUser) && !mUser.isGuest()) ? R.drawable.addfriends : R.drawable.notifreq;
             mChatButton.setImageBitmap(imageManager.loadImageFromResource(
-                    friendReqDrawable, size, size));
+                    friendReqDrawable, size, size , ImageManager.ScalingLogic.FIT));
         }
 
         if (FriendRequestState.getInstance().requestShallPASS(mUser))
@@ -228,7 +228,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
                                 public void run() {
                                     int size = (int) (SizeManager.getScreenWidth() * 0.1);
                                     mChatButton.setImageBitmap(imageManager.loadImageFromResource(
-                                            R.drawable.addfriends, size, size));
+                                            R.drawable.addfriends, size, size , ImageManager.ScalingLogic.FIT));
                                     mMatchButton.setVisibility(View.GONE);
                                     mCancelImageView.setVisibility(View.GONE);
 

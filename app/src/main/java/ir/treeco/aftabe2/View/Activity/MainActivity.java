@@ -323,11 +323,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void setUpPlayers() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) playerOne.getLayoutParams();
-        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 1.05f) / 2);
+        lp.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getHeightPlusTextView()) / 2);
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
-        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getRealWidth() * 1.05f) / 2);
+        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getHeightPlusTextView() ) / 2);
         lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
 
 
