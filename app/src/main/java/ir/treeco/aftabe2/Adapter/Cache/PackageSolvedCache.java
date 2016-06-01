@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
@@ -26,6 +27,9 @@ public class PackageSolvedCache {
     @Expose
     HashMap<Integer, Integer> map;
 
+    @Expose
+    ArrayList<Integer> bought;
+
     public static PackageSolvedCache getInstance() {
         synchronized (getInstanceLock) {
             if (instance != null)
@@ -35,12 +39,25 @@ public class PackageSolvedCache {
             if (cachedString.equals("")) {
                 instance = new PackageSolvedCache();
                 instance.map = new HashMap<>();
+                instance.bought = new ArrayList<>();
             } else {
                 instance = new Gson().fromJson(cachedString, PackageSolvedCache.class);
+                if(instance.bought == null)
+                    instance.bought = new ArrayList<>();
             }
 
             return instance;
         }
+    }
+
+    public void onBuyPackage(int id){
+        bought.add(id);
+        backupCache();
+
+    }
+
+    public boolean isPackagePurchased(int id){
+        return bought.contains(id);
     }
 
     public void onPackageIndexSent(int id) {

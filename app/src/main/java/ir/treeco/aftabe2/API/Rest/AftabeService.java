@@ -3,6 +3,7 @@ package ir.treeco.aftabe2.API.Rest;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ir.treeco.aftabe2.API.Rest.Utils.AppListHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.CoinDiffHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.ContactsHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.CountHolder;
@@ -80,7 +81,7 @@ public interface AftabeService {
     Call<User> updateCoin(@Body CoinDiffHolder coinDiffHolder, @Path("user_id") String userId, @Query("access_token") String accessToken);
 
     @PUT("/api/users/{user_id}")
-    Call<HashMap<String, Object>> updatePackagesList(@Body ArrayList<String> list, @Path("user_id") String userId, @Query("access_token") String accessToken);
+    Call<User> updatePackagesList(@Body AppListHolder apps, @Path("user_id") String userId, @Query("access_token") String accessToken);
 
 
     @PUT("/api/users/{user_id}/requests/rel/{friend_id}")

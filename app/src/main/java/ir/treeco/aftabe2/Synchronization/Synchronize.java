@@ -3,6 +3,7 @@ package ir.treeco.aftabe2.Synchronization;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 import ir.treeco.aftabe2.Adapter.Cache.AppListAdapter;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.R;
+import ir.treeco.aftabe2.Util.GlobalPrefs;
 import ir.treeco.aftabe2.Util.NotificationManager;
 import ir.treeco.aftabe2.Util.PackageTools;
 
@@ -26,8 +28,9 @@ public class Synchronize extends BroadcastReceiver {
         Date now = Calendar.getInstance().getTime();
         Date past = new Date();
         try {
+            SharedPreferences sp = GlobalPrefs.getInstance(context).getSharedPrefs();
             past = new SimpleDateFormat("dd-MM-yyyy").
-                    parse(Prefs.getString(
+                    parse(sp.getString(
                             context.getResources()
                                     .getString(R.string.updated_time_shared_preference)
                             , new SimpleDateFormat("dd-MM-yyyy").format(now)));

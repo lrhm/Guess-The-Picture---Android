@@ -20,6 +20,7 @@ import ir.treeco.aftabe2.API.Rest.Interfaces.OnPackageBuyListener;
 import ir.treeco.aftabe2.API.Rest.Interfaces.SMSValidationListener;
 import ir.treeco.aftabe2.API.Rest.Interfaces.UserFoundListener;
 import ir.treeco.aftabe2.API.Rest.Interfaces.UsernameCheckListener;
+import ir.treeco.aftabe2.API.Rest.Utils.AppListHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.CoinDiffHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.ContactsHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.CountHolder;
@@ -606,10 +607,12 @@ public class AftabeAPIAdapter {
             return;
         init();
 
-        aftabeService.updatePackagesList(list, myUser.getId(), myUser.getLoginInfo().getAccessToken())
-                .enqueue(new Callback<HashMap<String, Object>>() {
+        AppListHolder apps = new AppListHolder(list);
+
+        aftabeService.updatePackagesList(apps, myUser.getId(), myUser.getLoginInfo().getAccessToken())
+                .enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Response<HashMap<String, Object>> response) {
+                    public void onResponse(Response<User> response) {
 
                         if (response.isSuccess()) {
                             AppListAdapter.setUpdateTime();

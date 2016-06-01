@@ -54,7 +54,7 @@ public class HiddenAdapter {
 
         Log.d(KEY, "createHiddnUsr");
 
-        if (Tools.getCachedUser(null) != null) {
+        if (Tools.getCachedUser(null) != null || Tools.isThereOldUserToken()) {
             return;
         }
 

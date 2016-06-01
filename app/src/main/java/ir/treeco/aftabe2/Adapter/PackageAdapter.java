@@ -25,6 +25,7 @@ import java.util.Collections;
 
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Rest.Interfaces.OnPackageBuyListener;
+import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.Object.Level;
 import ir.treeco.aftabe2.Object.PackageObject;
@@ -140,6 +141,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
                                 }
                             });
+                            PackageSolvedCache.getInstance().onBuyPackage(packageObject.getId());
+
                             PackageTools.getInstance(context).downloadPackage(packageObject, ViewHolder.this);
                             ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
                         }

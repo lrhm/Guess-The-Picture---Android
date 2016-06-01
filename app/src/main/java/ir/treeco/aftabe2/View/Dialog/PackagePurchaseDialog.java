@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.Object.User;
@@ -86,6 +87,7 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
         User myUser = Tools.getCachedUser(context);
 
         int intPrice = ((myUser != null && myUser.isPackagePurchased(packageObject.getId()))) ? 0 : packageObject.getPrice();
+        intPrice = PackageSolvedCache.getInstance().isPackagePurchased(packageObject.getId()) ? 0 : intPrice;
 
         String price = String.format("%s %s %s", "ناقابل", Tools.numeralStringToPersianDigits(intPrice + ""), "سکه");
 
@@ -96,7 +98,7 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
         String packageS = Tools.numeralStringToPersianDigits(packageSize + "");
 
         String[] splits = packageS.replace(".", "/").split("/");
-        if(splits.length == 2)
+        if (splits.length == 2)
             packageS = splits[1] + "." + splits[0];
 
         String size = String.format("%s %s %s", "حجم:", packageS, "مگابایت");

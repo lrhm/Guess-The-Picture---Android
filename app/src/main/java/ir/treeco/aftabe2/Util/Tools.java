@@ -573,7 +573,7 @@ public class Tools {
     }
 
     public static TokenHolder getTokenHolder() {
-        String tkJson = Prefs.getString(SHARED_PREFS_TOKEN, "");
+        String tkJson = Prefs.getString(USER_SAVED_DATA, "");
         if (tkJson.compareTo("") == 0) {
             return null;
         }
@@ -587,11 +587,14 @@ public class Tools {
 
     public static boolean isUserRegistered() {
 
+        String tkJson = Prefs.getString(USER_SAVED_DATA, "");
+        return tkJson.compareTo("") != 0;
+    }
+
+    public static boolean isThereOldUserToken(){
         String tkJson = Prefs.getString(SHARED_PREFS_TOKEN, "");
-        if (tkJson.compareTo("") == 0) {
-            return false;
-        }
-        return true;
+        return tkJson.compareTo("") != 0;
+
     }
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =

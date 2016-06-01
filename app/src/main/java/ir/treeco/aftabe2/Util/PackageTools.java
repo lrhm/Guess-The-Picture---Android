@@ -1,6 +1,7 @@
 package ir.treeco.aftabe2.Util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -164,11 +165,13 @@ public class PackageTools {
                         int count = response.body().getCount();
                         Log.d(TAG, "new packages " + count + " my packages " + myLastPackageCheckd);
 
-                        Prefs.putString(
+                        SharedPreferences sp = GlobalPrefs.getInstance(context).getSharedPrefs();
+
+                        sp.edit().putString(
                                 context.getResources()
                                         .getString(R.string.updated_time_shared_preference),
                                 new SimpleDateFormat("dd-MM-yyyy")
-                                        .format(Calendar.getInstance().getTime()));
+                                        .format(Calendar.getInstance().getTime())).apply();
 
                         if (count > myLastPackageCheckd) {
                             for (int i = myLastPackageCheckd; i < count; i++) {
