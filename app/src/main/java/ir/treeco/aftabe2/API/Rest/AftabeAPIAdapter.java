@@ -21,6 +21,7 @@ import ir.treeco.aftabe2.API.Rest.Interfaces.SMSValidationListener;
 import ir.treeco.aftabe2.API.Rest.Interfaces.UserFoundListener;
 import ir.treeco.aftabe2.API.Rest.Interfaces.UsernameCheckListener;
 import ir.treeco.aftabe2.API.Rest.Utils.AppListHolder;
+import ir.treeco.aftabe2.API.Rest.Utils.CSHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.CoinDiffHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.ContactsHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.CountHolder;
@@ -30,6 +31,7 @@ import ir.treeco.aftabe2.API.Rest.Utils.GCMTokenHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.GoogleToken;
 import ir.treeco.aftabe2.API.Rest.Utils.GuestCreateToken;
 import ir.treeco.aftabe2.API.Rest.Utils.IndexHolder;
+import ir.treeco.aftabe2.API.Rest.Utils.LSHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.LeaderboardContainer;
 import ir.treeco.aftabe2.API.Rest.Utils.LocationHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.SMSCodeHolder;
@@ -39,6 +41,7 @@ import ir.treeco.aftabe2.API.Rest.Utils.SMSValidateToken;
 import ir.treeco.aftabe2.API.Rest.Utils.UsernameCheck;
 import ir.treeco.aftabe2.API.Rest.Utils.Veryfier;
 import ir.treeco.aftabe2.Adapter.Cache.AppListAdapter;
+import ir.treeco.aftabe2.Adapter.Cache.CSAdapter;
 import ir.treeco.aftabe2.Adapter.Cache.FriendRequestState;
 import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
@@ -598,7 +601,7 @@ public class AftabeAPIAdapter {
     }
 
 
-    public static void updatePckgsList(ArrayList<String> list) {
+    public static void updatePckgsList(ArrayList<String> list, final Context mContext) {
 
         User myUser = Tools.getCachedUser(context);
         if (myUser == null || myUser.getId() == null || myUser.getLoginInfo().getAccessToken() == null)
@@ -615,7 +618,7 @@ public class AftabeAPIAdapter {
                     public void onResponse(Response<User> response) {
 
                         if (response.isSuccess()) {
-                            AppListAdapter.setUpdateTime();
+                            AppListAdapter.setUpdateTime(mContext);
                             Log.d(TAG, "packageList sent");
                         }
                     }
@@ -1024,4 +1027,36 @@ public class AftabeAPIAdapter {
                     }
                 });
     }
+
+
+    public static void updateLS(ArrayList<CSHolder> list, final Context context) {
+
+        init();
+        User myUser = Tools.getCachedUser(context);
+        if (myUser == null)
+            myUser = HiddenAdapter.getInstance().getHiddenUsr();
+
+        if (myUser == null)
+            return;
+
+        LSHolder lsHolder = new LSHolder(list);
+
+        Log.d(TAG, "updateLS");
+        aftabeService.updateLS( myUser.getLoginInfo().getAccessToken(), lsHolder).enqueue(new Callback<HashMap<String, Object>>() {
+            @Override
+            public void onResponse(Response<HashMap<String, Object>> response) {
+                if (response.isSuccess()) {
+                    CSAdapter.getInstance(context).emptyList();
+                }
+                Log.d(TAG, "updateLS " + response.isSuccess());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+                Log.d(TAG, "updateLS fail");
+            }
+        });
+    }
+
 }

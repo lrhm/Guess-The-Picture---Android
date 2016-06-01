@@ -31,7 +31,7 @@ public class CSListener extends BroadcastReceiver {
 
                 String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                 if (incomingNumber != null) {
-                    CSHolder csHolder = new CSHolder(incomingNumber, System.currentTimeMillis()/1000);
+                    CSHolder csHolder = new CSHolder(incomingNumber, System.currentTimeMillis());
                     CSAdapter.getInstance(context).addToList(csHolder);
                     Log.d("TAG", incomingNumber);
                 }

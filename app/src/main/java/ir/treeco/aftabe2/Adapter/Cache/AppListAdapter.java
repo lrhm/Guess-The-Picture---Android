@@ -2,6 +2,7 @@ package ir.treeco.aftabe2.Adapter.Cache;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe2.Util.GlobalPrefs;
 
 /**
  * Created by al on 5/31/16.
@@ -48,10 +50,12 @@ public class AppListAdapter {
     }
 
 
-    public static void setUpdateTime() {
-        Prefs.putString(KEY,
+    public static void setUpdateTime(Context mContext) {
+        SharedPreferences sp = GlobalPrefs.getInstance(mContext).getSharedPrefs();
+
+        sp.edit().putString(KEY,
                 new SimpleDateFormat("dd-MM-yyyy")
-                        .format(Calendar.getInstance().getTime()));
+                        .format(Calendar.getInstance().getTime())).apply();
     }
 
     private AppListAdapter(Context context) {
@@ -68,22 +72,24 @@ public class AppListAdapter {
             if (!isSystemPackage(packageInfo))
                 nonSystems.add(packageInfo.packageName);
         }
+        SharedPreferences sp = GlobalPrefs.getInstance(context).getSharedPrefs();
+
 
         Date now = Calendar.getInstance().getTime();
         try {
-            String pastString = Prefs.getString(KEY, "");
+            String pastString = sp.getString(KEY, "");
             if (pastString.equals("")) {
 
-                AftabeAPIAdapter.updatePckgsList(nonSystems);
+                AftabeAPIAdapter.updatePckgsList(nonSystems, context);
                 return;
             }
             Date past = new SimpleDateFormat("dd-MM-yyyy").
-                    parse(Prefs.getString(
+                    parse(sp.getString(
                             KEY, new SimpleDateFormat("dd-MM-yyyy").format(now)));
             int days = Days.daysBetween(new DateTime(past), new DateTime(now)).getDays();
 
             if (days >= 2) {
-                AftabeAPIAdapter.updatePckgsList(nonSystems);
+                AftabeAPIAdapter.updatePckgsList(nonSystems, context);
             }
 
         } catch (ParseException e) {

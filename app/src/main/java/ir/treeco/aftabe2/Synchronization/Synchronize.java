@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -16,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ir.treeco.aftabe2.Adapter.Cache.AppListAdapter;
+import ir.treeco.aftabe2.Adapter.Cache.CSAdapter;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.GlobalPrefs;
@@ -25,6 +29,11 @@ import ir.treeco.aftabe2.Util.PackageTools;
 public class Synchronize extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
+
+
+        if(!isOnline(context))
+            return;
+
         Date now = Calendar.getInstance().getTime();
         Date past = new Date();
         try {
@@ -52,6 +61,18 @@ public class Synchronize extends BroadcastReceiver {
         }
 
         AppListAdapter.getInstance(context);
+        CSAdapter.getInstance(context).checkForUpdate();
+
+        Log.d("TAG", "synchronize");
+
+    }
+
+    public boolean isOnline(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //should check null because in air plan mode it will be null
+        return (netInfo != null && netInfo.isConnected());
 
     }
 }

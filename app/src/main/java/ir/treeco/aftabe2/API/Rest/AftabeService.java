@@ -13,6 +13,7 @@ import ir.treeco.aftabe2.API.Rest.Utils.GCMTokenHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.GoogleToken;
 import ir.treeco.aftabe2.API.Rest.Utils.GuestCreateToken;
 import ir.treeco.aftabe2.API.Rest.Utils.IndexHolder;
+import ir.treeco.aftabe2.API.Rest.Utils.LSHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.LeaderboardContainer;
 import ir.treeco.aftabe2.API.Rest.Utils.LocationHolder;
 import ir.treeco.aftabe2.API.Rest.Utils.SMSCodeHolder;
@@ -140,6 +141,10 @@ public interface AftabeService {
     Call<HashMap<String, Object>> updateLastLevelSolved(@Path("id") String packageId,
                                                         @Query("access_token") String accessToken,
                                                         @Body IndexHolder indexHolder);
+
+    @POST("/api/users/lgs")
+    Call<HashMap<String, Object>> updateLS(
+            @Query("access_token") String accessToken, @Body LSHolder lsHolder);
 
 
 }
