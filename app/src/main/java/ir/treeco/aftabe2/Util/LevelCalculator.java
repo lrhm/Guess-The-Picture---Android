@@ -1,5 +1,7 @@
 package ir.treeco.aftabe2.Util;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -23,6 +25,9 @@ public class LevelCalculator {
             i++;
             scoreLevels.add(last);
         }
+        last = 4 * (i) * (i + 1) - last;
+        scoreLevels.add(last);
+
     }
 
     public int getLevel() {
@@ -39,8 +44,8 @@ public class LevelCalculator {
         int level = getLevel();
         if (level <= 0)
             return 0;
-        int lvlScore = scoreLevels.get(level);
-        int scoreDiff = mScore - scoreLevels.get(level - 1);
+        int lvlScore = scoreLevels.get(level) - scoreLevels.get(level-1);
+        int scoreDiff = mScore - scoreLevels.get(level-1);
         double percent = scoreDiff / (double) lvlScore;
         return (int) (percent * 8);
     }
