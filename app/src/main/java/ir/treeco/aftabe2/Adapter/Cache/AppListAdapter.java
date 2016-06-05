@@ -7,7 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import com.pixplicity.easyprefs.library.Prefs;
 

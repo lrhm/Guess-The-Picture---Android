@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -93,7 +93,7 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
 
         float packageSize = packageObject.getPackageSize() / 1000;
 
-        Log.d(TAG, "package size " + packageObject.getPackageSize());
+        MyLog.d(TAG, "package size " + packageObject.getPackageSize());
 
         String packageS = Tools.numeralStringToPersianDigits(packageSize + "");
 

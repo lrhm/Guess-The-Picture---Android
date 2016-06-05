@@ -1,6 +1,6 @@
 package ir.treeco.aftabe2.Adapter.Cache;
 
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,7 +60,7 @@ public class ContactsCacheHolder {
     private void backupCache() {
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        Log.d(TAG, gson.toJson(friendsHolder));
+        MyLog.d(TAG, gson.toJson(friendsHolder));
         Prefs.putString(KEY_TAG, gson.toJson(friendsHolder));
     }
 }

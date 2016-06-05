@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,7 +167,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         @Override
         public void onProgress(final int progress) {
-            Log.d(TAG, "on progress" + progress);
+            MyLog.d(TAG, "on progress" + progress);
 
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override

@@ -3,7 +3,7 @@ package ir.treeco.aftabe2.Util;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.PowerManager;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,7 +63,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... sUrl) {
 
-        Log.d(TAG, "going to download " + sUrl[0]);
+        MyLog.d(TAG, "going to download " + sUrl[0]);
 
         InputStream input = null;
         OutputStream output = null;
@@ -100,7 +100,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             long total = 0;
             int count;
 
-            Log.d(TAG, "file length is " + fileLength);
+            MyLog.d(TAG, "file length is " + fileLength);
 
             while ((count = input.read(data)) != -1) {
                 // allow canceling with back button

@@ -1,7 +1,7 @@
 package ir.treeco.aftabe2.Adapter;
 
 import android.content.Context;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class TimeStampAdapter {
         }
 
         timeStamps /= 1000;
-        Log.d(TAG, "timeStamps is " + timeStamps);
+        MyLog.d(TAG, "timeStamps is " + timeStamps);
         return timeStamps ;
     }
 

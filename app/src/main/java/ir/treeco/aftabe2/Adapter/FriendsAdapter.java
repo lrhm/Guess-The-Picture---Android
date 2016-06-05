@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -221,7 +221,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     ToastMaker.show(context, context.getResources().getString(R.string.chat_not_available), Toast.LENGTH_SHORT);
 //                    ChatFragment chatFragment = new ChatFragment();
 //
-//                    Log.d("TAG", "click Temp real pos " + realPosition);
+//                    MyLog.d("TAG", "click Temp real pos " + realPosition);
 //                    FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
 //                    transaction.replace(R.id.fragment_container, chatFragment);
 //                    transaction.addToBackStack(null);
@@ -309,7 +309,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 });
         } else if (type == TYPE_REQUEST) {
 
-            Log.d(TAG, "binded to type request");
+            MyLog.d(TAG, "binded to type request");
             holder.mChatButton.setVisibility(View.VISIBLE);
             holder.mMatchButton.setVisibility(View.VISIBLE);
 
@@ -346,7 +346,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     }
 
 
-                    Log.d(TAG, "click on yes");
+                    MyLog.d(TAG, "click on yes");
                     removeUser(user, type);
 //                    user.setIsFriend(true);
 //                    addUser(user, TYPE_FRIEND);

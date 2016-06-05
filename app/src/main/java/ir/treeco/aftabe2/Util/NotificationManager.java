@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import com.google.gson.Gson;
 
@@ -115,7 +115,7 @@ public class NotificationManager {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "after 20 sec");
+                    MyLog.d(TAG, "after 20 sec");
                     NotificationManager.dismissNotification(getBaseContext(), notifID);
                 }
             }, 20000);

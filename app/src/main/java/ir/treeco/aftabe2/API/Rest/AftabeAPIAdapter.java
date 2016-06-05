@@ -1,7 +1,7 @@
 package ir.treeco.aftabe2.API.Rest;
 
 import android.content.Context;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -135,7 +135,7 @@ public class AftabeAPIAdapter {
 
     public static void getGuestUser(final boolean hidden, final GuestCreateToken guestCreateToken, final UserFoundListener userFoundListener) {
 
-        Log.d(TAG, "getGuestUser");
+        MyLog.d(TAG, "getGuestUser");
         Call<LoginInfo> call = aftabeService.getGuestUserLogin(guestCreateToken);
         call.enqueue(new Callback<LoginInfo>() {
             @Override
@@ -143,7 +143,7 @@ public class AftabeAPIAdapter {
 
 
                 if (!response.isSuccess()) {
-                    Log.d(TAG, "not getGuestUser succfessful");
+                    MyLog.d(TAG, "not getGuestUser succfessful");
                     userFoundListener.onGetError();
                     return;
                 }
@@ -253,7 +253,7 @@ public class AftabeAPIAdapter {
 
         init();
 
-        Log.d(TAG, "request sms activation");
+        MyLog.d(TAG, "request sms activation");
         Call<SMSValidateToken> smsTokenCall = aftabeService.getSMSToken(smsRequestToken);
         smsTokenCall.enqueue(new Callback<SMSValidateToken>() {
             @Override
@@ -264,7 +264,7 @@ public class AftabeAPIAdapter {
                 } else
                     smsValidationListener.onSMSValidateSent(response.body());
 
-                Log.d(TAG, "request sms activation on response " + response.isSuccess());
+                MyLog.d(TAG, "request sms activation on response " + response.isSuccess());
             }
 
             @Override
@@ -278,7 +278,7 @@ public class AftabeAPIAdapter {
     private static void getMyUserByAccessToken(final LoginInfo loginInfo,
                                                final UserFoundListener userFoundListener) {
 
-        Log.d(TAG, "get user by access token");
+        MyLog.d(TAG, "get user by access token");
         Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
         c.enqueue(new Callback<User>() {
             @Override
@@ -289,12 +289,12 @@ public class AftabeAPIAdapter {
 //                    FORCE LOGOUT !
 
                     userFoundListener.onForceLogout();
-                    Log.d(TAG, " is not sucess");
+                    MyLog.d(TAG, " is not sucess");
                     return;
                 }
 
-                Log.d(TAG, " is  sucess");
-                Log.d(TAG, (userFoundListener == null) + " is null ?");
+                MyLog.d(TAG, " is  sucess");
+                MyLog.d(TAG, (userFoundListener == null) + " is null ?");
 
                 response.body().setLoginInfo(loginInfo);
                 response.body().setOwnerMe();
@@ -311,8 +311,8 @@ public class AftabeAPIAdapter {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d(TAG, "failure at get user by access token");
-                Log.d(TAG, t.toString());
+                MyLog.d(TAG, "failure at get user by access token");
+                MyLog.d(TAG, t.toString());
                 t.printStackTrace();
 
                 if (userFoundListener != null) userFoundListener.onGetError();
@@ -324,7 +324,7 @@ public class AftabeAPIAdapter {
     private static void getHdnUserByAccessToken(final LoginInfo loginInfo,
                                                 final UserFoundListener userFoundListener) {
 
-        Log.d(TAG, "get hdn user by access token");
+        MyLog.d(TAG, "get hdn user by access token");
         Call<User> c = aftabeService.getMyUser(loginInfo.accessToken);
         c.enqueue(new Callback<User>() {
             @Override
@@ -332,8 +332,8 @@ public class AftabeAPIAdapter {
 
                 if (response.isSuccess()) {
 
-                    Log.d(TAG, " is  sucess");
-                    Log.d(TAG, (userFoundListener == null) + " is null ?");
+                    MyLog.d(TAG, " is  sucess");
+                    MyLog.d(TAG, (userFoundListener == null) + " is null ?");
 
                     response.body().setLoginInfo(loginInfo);
                     response.body().setOwnerMe();
@@ -348,8 +348,8 @@ public class AftabeAPIAdapter {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d(TAG, "failure at get user by access token");
-                Log.d(TAG, t.toString());
+                MyLog.d(TAG, "failure at get user by access token");
+                MyLog.d(TAG, t.toString());
                 t.printStackTrace();
 
                 if (userFoundListener != null) userFoundListener.onGetError();
@@ -366,9 +366,9 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<LoginInfo>() {
             @Override
             public void onResponse(Response<LoginInfo> response) {
-                Log.d(TAG, response.toString());
-                Log.d(TAG, response.body().toString());
-                Log.d(TAG, response.body().accessToken + " " + response.body().created);
+                MyLog.d(TAG, response.toString());
+                MyLog.d(TAG, response.body().toString());
+                MyLog.d(TAG, response.body().accessToken + " " + response.body().created);
                 final LoginInfo loginInfo = response.body();
                 getMyUserByAccessToken(loginInfo, userFoundListener);
             }
@@ -376,7 +376,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onFailure(Throwable t) {
                 if (userFoundListener != null) userFoundListener.onGetError();
-                Log.d("TAG", "Fail");
+                MyLog.d("TAG", "Fail");
             }
         });
     }
@@ -410,22 +410,22 @@ public class AftabeAPIAdapter {
     public static void tryToLogin(final UserFoundListener userFoundListener) {
 
         init();
-        Log.d("AftabeAPIAdapter", "try to login");
+        MyLog.d("AftabeAPIAdapter", "try to login");
         if (!Prefs.contains(Tools.ENCRYPT_KEY) || !Prefs.contains(Tools.SHARED_PREFS_TOKEN))
             return;
         try {
-            Log.d("AftabeAPIAdapter", "shared pref have some thing for you");
+            MyLog.d("AftabeAPIAdapter", "shared pref have some thing for you");
             Gson gson = new Gson();
             TokenHolder tokenHolder = gson.fromJson(Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""), TokenHolder.class);
             if (tokenHolder == null || tokenHolder.getLoginInfo() == null)
                 return;
-            Log.d(TAG, Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""));
+            MyLog.d(TAG, Prefs.getString(Tools.SHARED_PREFS_TOKEN, ""));
 
             getMyUserByAccessToken(tokenHolder.getLoginInfo(), userFoundListener);
 
         } catch (Exception e) {
             userFoundListener.onGetError();
-            Log.d("AftabeAPIAdapter", "exception accoured in try to login ");
+            MyLog.d("AftabeAPIAdapter", "exception accoured in try to login ");
             e.printStackTrace();
         }
     }
@@ -437,7 +437,7 @@ public class AftabeAPIAdapter {
             else if (search.length() == 13) search = search.substring(3);
             else if (search.length() == 14) search = search.substring(4);
 
-            Log.d(TAG, "clear number is " + search);
+            MyLog.d(TAG, "clear number is " + search);
 
 
             searchUserByNumber(myUser, search,
@@ -566,11 +566,11 @@ public class AftabeAPIAdapter {
         if (diff == 0)
             return;
 
-        Log.d(TAG, "coin diff is " + diff);
+        MyLog.d(TAG, "coin diff is " + diff);
 
         DBAdapter dbAdapter = DBAdapter.getInstance(context);
-        Log.d(TAG, dbAdapter.getCoins() + " is db coins");
-        Log.d(TAG, myUser.getCoins() + " is the user coins");
+        MyLog.d(TAG, dbAdapter.getCoins() + " is db coins");
+        MyLog.d(TAG, myUser.getCoins() + " is the user coins");
 
         CoinDiffHolder coinDiffHolder = new CoinDiffHolder(diff);
         Call<User> call = aftabeService.updateCoin(coinDiffHolder, myUser.getId(), myUser.getLoginInfo().getAccessToken());
@@ -578,7 +578,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<User> response) {
                 if (response.isSuccess() && response.body() != null) {
-                    Log.d(TAG, "new user coin is " + response.body().getCoins());
+                    MyLog.d(TAG, "new user coin is " + response.body().getCoins());
                     CoinAdapter.setCoinDiff(CoinAdapter.getCoinDiff() - diff);
 //                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, );
 
@@ -618,7 +618,7 @@ public class AftabeAPIAdapter {
 
                         if (response.isSuccess()) {
                             AppListAdapter.setUpdateTime(mContext);
-                            Log.d(TAG, "packageList sent");
+                            MyLog.d(TAG, "packageList sent");
                         }
                     }
 
@@ -795,7 +795,7 @@ public class AftabeAPIAdapter {
                 if (response.isSuccess()) {
                     if (response.body().length != 0) {
                         for (User user : response.body()) {
-                            Log.d(TAG, "friend is " + new Gson().toJson(user));
+                            MyLog.d(TAG, "friend is " + new Gson().toJson(user));
 
                         }
                     }
@@ -1005,11 +1005,11 @@ public class AftabeAPIAdapter {
                         if (response.isSuccess()) {
                             PackageSolvedCache.getInstance().onPackageIndexSent(packageId);
 
-                            Log.d(TAG, "updatet package");
+                            MyLog.d(TAG, "updatet package");
                         } else {
-                            Log.d(TAG, "didnt update package package , buy this shit nigga " + packageId + " " + index);
+                            MyLog.d(TAG, "didnt update package package , buy this shit nigga " + packageId + " " + index);
                             try {
-                                Log.d(TAG, response.errorBody().string());
+                                MyLog.d(TAG, response.errorBody().string());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -1022,7 +1022,7 @@ public class AftabeAPIAdapter {
                     @Override
                     public void onFailure(Throwable t) {
 
-                        Log.d(TAG, "didnt update package package");
+                        MyLog.d(TAG, "didnt update package package");
                     }
                 });
     }

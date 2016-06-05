@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -61,7 +61,7 @@ public class Synchronize extends BroadcastReceiver {
 
         AppListAdapter.getInstance(context);
 
-        Log.d("TAG", "synchronize");
+        MyLog.d("TAG", "synchronize");
 
     }
 

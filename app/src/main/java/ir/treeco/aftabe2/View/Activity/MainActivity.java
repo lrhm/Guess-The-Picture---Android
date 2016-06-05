@@ -17,7 +17,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -336,7 +336,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void setOnlineGame(boolean isOnline) {
 
-        Log.d(TAG, "set online game " + isOnline);
+        MyLog.d(TAG, "set online game " + isOnline);
 
         isInOnlineGame = isOnline;
 
@@ -406,7 +406,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digitsLayoutParams.width = (int) (0.98 * lengthManager.getScreenWidth() / 5);
 
 
-        Log.d(TAG, "density dpi is " + coinBoxHeight);
+        MyLog.d(TAG, "density dpi is " + coinBoxHeight);
 
         if (SizeManager.getScreenWidth() < 800)
             digits.setShadowLayer(0.5f, 1, 1, Color.BLACK);
@@ -643,12 +643,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-        Log.e("IAB", "Got error(" + errorCode + "):", error);
+        MyLog.e("IAB", "Got error(" + errorCode + "):");
     }
 
     @Override
     public void onBillingInitialized() {
-        Log.v("IAB", "Billing initialized.");
+        MyLog.d("IAB", "Billing initialized.");
     }
 
     public void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
@@ -671,7 +671,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onGetUser(User user) {
-        Log.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
+        MyLog.d(TAG, "got the user successfully " + (new Gson()).toJson(user));
 
         for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetUser(user);
@@ -680,7 +680,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onGetError() {
-        Log.d(TAG, "didnet get the user");
+        MyLog.d(TAG, "didnet get the user");
 
         for (UserFoundListener userFoundListener : mUserFoundListeners)
             userFoundListener.onGetError();
@@ -689,7 +689,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGetMyUser(final User mUser) {
 
-        Log.d("TAG", "on get my user main");
+        MyLog.d("TAG", "on get my user main");
 
 
         this.myUser = mUser;
@@ -712,9 +712,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
 
         if (mUser.isFromServer()) {
-            Log.d(TAG, "my user coins " + mUser.getCoins());
-            Log.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
-            Log.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
+            MyLog.d(TAG, "my user coins " + mUser.getCoins());
+            MyLog.d(TAG, "adapter coin " + coinAdapter.getCoinsCount());
+            MyLog.d(TAG, "coin diff" + coinAdapter.getCoinDiff());
         }
     }
 
@@ -769,7 +769,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         loadingDialogMatchReq = null;
         matchResultTime = System.currentTimeMillis();
 
-        Log.d(TAG, "result is " + new Gson().toJson(result));
+        MyLog.d(TAG, "result is " + new Gson().toJson(result));
 
         Answers.getInstance().logCustom(new CustomEvent("Match Request Result")
                 .putCustomAttribute("status", result.getStatus()));
@@ -872,7 +872,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onGameEnded() {
 
-        Log.d(TAG, "on game end");
+        MyLog.d(TAG, "on game end");
         setIsInOnlineGame(false);
 
         for (FriendRequestDialog dialog : mCachedFriendRequestDialogs) {
@@ -970,7 +970,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void handleSignInResult(GoogleSignInResult result) {
         String TAG = "GoogleSignInResult";
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        MyLog.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
@@ -1045,7 +1045,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onGotUserAction(final UserActionHolder actionHolder) {
 
 
-        Log.d(TAG, "got user action");
+        MyLog.d(TAG, "got user action");
         if (!actionHolder.getUserId().equals(Tools.getCachedUser(this).getId())) {
             UserActionCache.getInstance().addToOpponentList(actionHolder.getAction());
 
@@ -1092,7 +1092,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void run() {
 
-                Log.d(TAG, "earn coin on finish " + finalCoin);
+                MyLog.d(TAG, "earn coin on finish " + finalCoin);
                 if (finalCoin != 0)
                     coinAdapter.earnCoins(finalCoin);
                 mUser.setFromServer(false);
@@ -1218,7 +1218,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         AftabeAPIAdapter.tryToLogin(this);
 
 
-        Log.d(TAG, "super.onResume ended");
+        MyLog.d(TAG, "super.onResume ended");
     }
 
     public void askForContactPermission() {

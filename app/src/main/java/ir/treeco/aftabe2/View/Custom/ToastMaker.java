@@ -3,7 +3,7 @@ package ir.treeco.aftabe2.View.Custom;
 import android.content.Context;
 import android.graphics.Color;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -45,7 +45,7 @@ public class ToastMaker {
 
         int textSize = UiUtil.getTextViewHeight(textView);
         int rightPadding = toastBackgroundDrawable.getRightPadding(textSize + padding, UiUtil.getTextViewWidth(textView) + 2 * padding) -textSize;
-        Log.d("TEST", "right padding is " + rightPadding + " padding is + " + padding);
+        MyLog.d("TEST", "right padding is " + rightPadding + " padding is + " + padding);
         textView.setPadding(padding, rightPadding/2, padding, rightPadding/2);
 
 

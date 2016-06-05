@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.View;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -66,12 +66,12 @@ public class ForceAdapter {
             public void onResponse(Response<ForceObject> response) {
                 if (response.isSuccess())
                     if (response.body() != null) {
-                        Log.d(TAG, "getLastVersion sucess");
+                        MyLog.d(TAG, "getLastVersion sucess");
                         checkVersion(response.body());
 
                     }
 
-                Log.d(TAG, "getLastVersion sucess " + response.isSuccess());
+                MyLog.d(TAG, "getLastVersion sucess " + response.isSuccess());
 
             }
 
@@ -95,7 +95,7 @@ public class ForceAdapter {
             return;
         }
 
-        Log.d(TAG, "new version is found");
+        MyLog.d(TAG, "new version is found");
         // new version found
 
         if (object.isForceUpdate()) {
@@ -158,7 +158,7 @@ public class ForceAdapter {
         f.mkdirs();
 
 
-        Log.d(TAG, "download apk");
+        MyLog.d(TAG, "download apk");
 
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
@@ -166,7 +166,7 @@ public class ForceAdapter {
 
                 if (listener != null)
                     listener.onProgress(progress);
-                Log.d(TAG, "download progress " + progress);
+                MyLog.d(TAG, "download progress " + progress);
             }
 
             @Override
@@ -186,7 +186,7 @@ public class ForceAdapter {
                 if (listener != null)
                     listener.onDownloadError(error);
 
-                Log.d(TAG, "download failed " + error);
+                MyLog.d(TAG, "download failed " + error);
             }
         }).setFileLength(object.getSize()).execute(object.getUrl(), path);
 

@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +76,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
         if (user != null && user.isGuest()) {
 
-            Log.d("TAG", "setting sing in image");
+            MyLog.d("TAG", "setting sing in image");
 
             SizeConverter converter = SizeConverter.SizeConvertorFromWidth((float) (SizeManager.getScreenWidth() * 0.2), 474, 192);
             ImageManager imageManager = ImageManager.getInstance(getContext());

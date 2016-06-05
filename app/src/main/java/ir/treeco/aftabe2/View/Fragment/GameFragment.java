@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,7 +71,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                              @Nullable Bundle savedInstanceState) {
 
 
-        Log.d(TAG, "onCreateView");
+        MyLog.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_game, container, false);
 
         timeStampAdapter = new TimeStampAdapter();
@@ -210,8 +210,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         if (clickTime - lastTimeClicked < treshHold)
             return;
 
-        Log.d(TAG, "last time is " + lastTimeClicked);
-        Log.d(TAG, "current time is " + clickTime);
+        MyLog.d(TAG, "last time is " + lastTimeClicked);
+        MyLog.d(TAG, "current time is " + clickTime);
 
         lastTimeClicked = clickTime;
 
@@ -249,7 +249,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 .putCustomAttribute("Time", timeStampAdapter.getTimeStamp(getActivity())));
         super.onDestroy();
 
-        Log.d(TAG, "onDestory");
+        MyLog.d(TAG, "onDestory");
     }
 
     public void showCheats() {
@@ -413,13 +413,13 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     @Override
     public void onAttach(Context context) {
-        Log.d(TAG, "onAttach");
+        MyLog.d(TAG, "onAttach");
         super.onAttach(context);
     }
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause");
+        MyLog.d(TAG, "onPause");
 
         timeStampAdapter.onPause();
         super.onPause();
@@ -427,14 +427,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG, "onDestroyView");
+        MyLog.d(TAG, "onDestroyView");
         super.onDestroyView();
     }
 
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
+        MyLog.d(TAG, "onResume");
         timeStampAdapter.onResume();
         super.onResume();
     }

@@ -3,7 +3,7 @@ package ir.treeco.aftabe2.View.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +84,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
 
 
-        Log.d("TAG", "win is " + mWin);
+        MyLog.d("TAG", "win is " + mWin);
 
         mDraw = mGameResultHolder.getScores()[0].isWinner() && mGameResultHolder.getScores()[1].isWinner();
 
@@ -110,7 +110,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         for (GameActionResult gameActionResult : UserActionCache.getInstance().getOpponentList()) {
             opponentLevelView.setOnlineState(gameActionResult);
-            Log.d(TAG, "Enemys one");
+            MyLog.d(TAG, "Enemys one");
         }
 
         mAddFriendImageView = (ImageView) view.findViewById(R.id.fragment_result_add_friend);
@@ -130,7 +130,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         for (GameActionResult gameActionResult : UserActionCache.getInstance().getMyList()) {
             myUserLevelView.setOnlineState(gameActionResult);
-            Log.d(TAG, "my one");
+            MyLog.d(TAG, "my one");
         }
 
         int coin = 0;

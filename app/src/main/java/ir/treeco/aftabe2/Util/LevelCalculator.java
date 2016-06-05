@@ -1,6 +1,6 @@
 package ir.treeco.aftabe2.Util;
 
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import java.util.ArrayList;
 

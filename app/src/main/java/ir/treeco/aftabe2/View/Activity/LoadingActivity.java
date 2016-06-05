@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 import android.widget.ImageView;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -68,7 +68,7 @@ public class LoadingActivity extends Activity implements Runnable {
         if (getIntent() != null && getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
                 Object obj = getIntent().getExtras().get(key);   //later parse it as per your required type
-                Log.d("LoadingActivity", key + ":" + obj.toString());
+                MyLog.d("LoadingActivity", key + ":" + obj.toString());
             }
             intent.putExtras(getIntent().getExtras());
         }

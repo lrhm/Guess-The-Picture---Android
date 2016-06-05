@@ -3,7 +3,7 @@ package ir.treeco.aftabe2.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -85,7 +85,7 @@ public class PackageTools {
         }
         String jsonString = new String(b);
 
-        Log.d(TAG, jsonString);
+        MyLog.d(TAG, jsonString);
 
         PackageObject[] objects = new Gson().fromJson(jsonString, PackageObjectListHolder.class).objects;
 
@@ -153,7 +153,7 @@ public class PackageTools {
 
     public void checkForNewPackage(final OnNewPackageFoundListener listener) {
 
-        Log.d(TAG, "checkForNewPackage");
+        MyLog.d(TAG, "checkForNewPackage");
         AftabeAPIAdapter.getPackageCount(new Callback<CountHolder>() {
             @Override
             public void onResponse(Response<CountHolder> response) {
@@ -163,7 +163,7 @@ public class PackageTools {
                         PackageObject[] packages = dbAdapter.getPackages();
                         int myLastPackageCheckd = packages.length;
                         int count = response.body().getCount();
-                        Log.d(TAG, "new packages " + count + " my packages " + myLastPackageCheckd);
+                        MyLog.d(TAG, "new packages " + count + " my packages " + myLastPackageCheckd);
 
                         SharedPreferences sp = GlobalPrefs.getInstance(context).getSharedPrefs();
 
@@ -176,21 +176,21 @@ public class PackageTools {
                         if (count > myLastPackageCheckd) {
                             for (int i = myLastPackageCheckd; i < count; i++) {
                                 newPackageFound(i, listener);
-                                Log.d(TAG, "found new package " + i);
+                                MyLog.d(TAG, "found new package " + i);
                             }
 
                         }
                         checkLocalPackages();
                     }
                 } else {
-                    Log.d(TAG, "response is not cool");
+                    MyLog.d(TAG, "response is not cool");
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
 
-                Log.d(TAG, "YOU ARE A FAILURE AND I AM SCREAMING");
+                MyLog.d(TAG, "YOU ARE A FAILURE AND I AM SCREAMING");
             }
         });
 
@@ -205,7 +205,7 @@ public class PackageTools {
 
                 if (response.isSuccess())
                     if (response.body() != null) {
-                        Log.d(TAG, "got package object " + id);
+                        MyLog.d(TAG, "got package object " + id);
                         PackageObject packageObject = response.body();
                         packageObject.setDownloaded(false);
                         packageObject.setPurchased(packageObject.getPrice() == 0);
@@ -235,7 +235,7 @@ public class PackageTools {
 
             @Override
             public void onDownloadSuccess() {
-                Log.d(TAG, "downloaded picture");
+                MyLog.d(TAG, "downloaded picture");
                 DBAdapter dbAdapter = DBAdapter.getInstance(context);
                 dbAdapter.insertPackage(object);
 
@@ -245,7 +245,7 @@ public class PackageTools {
             @Override
             public void onDownloadError(String error) {
 
-                Log.d(TAG, "download error :( " + error);
+                MyLog.d(TAG, "download error :( " + error);
             }
         }).execute(url, context.getFilesDir().getPath(), "package_" + object.getId() + "_front.png");
     }
@@ -266,13 +266,13 @@ public class PackageTools {
         final String path = context.getFilesDir().getPath();
         final NotificationAdapter notificationAdapter = new NotificationAdapter(id, context, packageObject.getName());
 
-        Log.d(TAG, "file length is " + packageObject.getPackageSize());
+        MyLog.d(TAG, "file length is " + packageObject.getPackageSize());
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
             public void onProgress(int progress) {
                 notificationAdapter.notifyDownload(progress, id, packageObject.getName());
                 listener.onProgress(progress);
-                Log.d(TAG, "on progress " + progress);
+                MyLog.d(TAG, "on progress " + progress);
 
             }
 
@@ -309,7 +309,7 @@ public class PackageTools {
 
                 if (user != null && user.isPackagePurchased(id)) {
                     int index = user.getPackageLastSolved(id);
-                    Log.d(TAG, "resolving package");
+                    MyLog.d(TAG, "resolving package");
                     for (int i = 0; i < index; i++)
                         db.resolveLevel(id, i);
 
@@ -359,15 +359,15 @@ public class PackageTools {
             while (md.length() < 32) {
                 md = "0" + md;
             }
-            Log.d(TAG, "md5 is " + md + " api md5 is " + md5Sum);
+            MyLog.d(TAG, "md5 is " + md + " api md5 is " + md5Sum);
             return md.equals(md5Sum);
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "file not found");
+            MyLog.d(TAG, "file not found");
             e.printStackTrace();
             return false;
 
         } catch (NoSuchAlgorithmException e) {
-            Log.d(TAG, "no such algorighm");
+            MyLog.d(TAG, "no such algorighm");
 
             e.printStackTrace();
 

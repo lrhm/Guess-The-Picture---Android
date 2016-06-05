@@ -1,7 +1,7 @@
 package ir.treeco.aftabe2.Util;
 
 import android.content.Context;
-import android.util.Log;
+import ir.treeco.aftabe2.Util.MyLog;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -15,7 +15,7 @@ import java.util.zip.ZipInputStream;
 public class Zip {
     public boolean unpackZip(String path, int id, Context context) {
         String newPath = context.getFilesDir().getPath() + "/Packages/package_"+id+"/";
-        Log.e("path", "newPath: " + newPath);
+        MyLog.e("path", "newPath: " + newPath);
 
         File fmd1 = new File(newPath);
         fmd1.mkdirs();
