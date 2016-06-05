@@ -108,6 +108,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         if (state == 0) {
             mRemainingTime = 120;
             UserActionCache.getInstance().clearCache();
+            ((MainActivity) getActivity()).playerOne.setOnlineStateClear();
+            ((MainActivity) getActivity()).playerTwo.setOnlineStateClear();
+
             ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
         }
         if (gameType == null) {

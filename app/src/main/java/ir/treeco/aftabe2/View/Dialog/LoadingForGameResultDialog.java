@@ -164,6 +164,8 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         myUserLevelView.setForOnlineGame(true);
         opponentLevelView.setForOnlineGame(true);
 
+        myUserLevelView.setOnlineStateClear();
+        opponentLevelView.setOnlineStateClear();
 
         for (GameActionResult gameActionResult : UserActionCache.getInstance().getMyList())
             myUserLevelView.setOnlineState(gameActionResult);
