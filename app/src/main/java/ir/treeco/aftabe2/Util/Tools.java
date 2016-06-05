@@ -540,12 +540,15 @@ public class Tools {
         User cachedUser = getCachedUser(null);
 
 
+        Log.d(TAG, "updateSharedPrefsToken");
         Prefs.putDouble(Tools.SHARED_PREFS_SEED, user.getSeed());
         Prefs.putString(USER_SAVED_DATA, new Gson().toJson(user));
 
         if (!oldKey.equals(user.getKey()) || cachedUser == null || !cachedUser.getId().equals(user.getId())
                 || !cachedUser.getLoginInfo().getAccessToken().equals(tokenHolder.getLoginInfo().accessToken)
                 || !cachedUser.getName().equals(user.getName())) { // first login
+
+            Log.d(TAG, "updateSharedPrefsToken do it");
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB(context);

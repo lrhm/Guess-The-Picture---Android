@@ -82,7 +82,7 @@ public class User {
         return false;
     }
 
-    public int getPackageLastSolved(int id){
+    public int getPackageLastSolved(int id) {
         for (PackageInfo packageInfo : packages)
             if (packageInfo.id == id)
                 return packageInfo.getIndex();
@@ -110,6 +110,15 @@ public class User {
 
     public int getWins() {
         return wins;
+    }
+
+    public void increaseWins() {
+        wins++;
+    }
+
+    public void increaseLoses() {
+        loses++;
+
     }
 
     public int getLoses() {

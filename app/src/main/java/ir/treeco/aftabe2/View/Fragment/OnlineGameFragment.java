@@ -99,6 +99,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         if (mRemainingTime == null) {
             mRemainingTime = 120;
             UserActionCache.getInstance().clearCache();
+
+            ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
         }
         SocketAdapter.setTimeLefTListener(this);
         SocketAdapter.addSocketListener(this);

@@ -127,6 +127,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
     public static final String CONTACTS_ASKED_PERMISSION_COUNT = "shared_prefs_contacts_permission_asked_count";
 
+    ImageView background;
     private static final int PERMISSION_REQUEST_CONTACT = 80;
     private DBAdapter db;
     private Tools tools;
@@ -254,7 +255,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setUpCoinBox();
         setUpHeader();
-        setOriginalBackgroundColor();
+        setOriginalBackground(R.drawable.circles);
 
         billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.CAFE_BAZAAR);
 
@@ -327,7 +328,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         lp.leftMargin = (int) (lengthManager.getScreenWidth() * 0.07);
 
         RelativeLayout.LayoutParams lpTwo = (RelativeLayout.LayoutParams) playerTwo.getLayoutParams();
-        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getHeightPlusTextView() ) / 2);
+        lpTwo.topMargin = (int) ((lengthManager.getHeaderHeight() - playerOne.getHeightPlusTextView()) / 2);
         lpTwo.leftMargin = (int) (0.93 * lengthManager.getScreenWidth() - playerOne.getRealWidth());
 
 
@@ -465,13 +466,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    private void setOriginalBackgroundColor() {
-        ImageView background = (ImageView) findViewById(R.id.background);
+    public void setOriginalBackground(int drawable) {
+
+        if (background == null)
+            background = (ImageView) findViewById(R.id.background);
         background.setImageDrawable(new BackgroundDrawable(this, new int[]{
                 Color.parseColor("#F3C51C"),//F3c51c
                 Color.parseColor("#F3B91A"),
                 Color.parseColor("#F4A516")
-        }));
+        }, drawable));
     }
 
     private final static long THRESH_HOLD = 1000;
@@ -875,6 +878,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         mCachedFriendRequestDialogs.clear();
 
+        setOriginalBackground(R.drawable.circles);
+
     }
 
     public boolean isPaused() {
@@ -1069,22 +1074,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 // draw
                 coin = 80;
             }
-            if (!resultHolder.amIWinner(mUser))
+            if (!resultHolder.amIWinner(mUser)) {
+
+                mUser.increaseLoses();
                 coin = 0;
-            if (coin != 0) {
-                final int finalCoin = coin;
-                new Handler(getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Log.d(TAG, "earn coin on finish " + finalCoin);
-                        coinAdapter.earnCoins(finalCoin);
-                        mUser.setFromServer(false);
-                        onGetMyUser(mUser);
-                    }
-                });
-
             }
+
+            if (resultHolder.amIWinner(mUser)) {
+                mUser.increaseWins();
+            }
+
+
+            final int finalCoin = coin;
+            new Handler(getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+
+                    Log.d(TAG, "earn coin on finish " + finalCoin);
+                    if (finalCoin != 0)
+                        coinAdapter.earnCoins(finalCoin);
+                    mUser.setFromServer(false);
+                    onGetMyUser(mUser);
+                }
+            });
 
 
         }
