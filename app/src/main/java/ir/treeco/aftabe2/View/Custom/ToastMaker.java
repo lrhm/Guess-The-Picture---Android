@@ -12,6 +12,7 @@ import android.widget.Toast;
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.Util.FontsHolder;
 import ir.treeco.aftabe2.Util.LengthManager;
+import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.Tools;
 
 public class ToastMaker {
@@ -29,15 +30,15 @@ public class ToastMaker {
         tools.setViewBackground(textView, new ToastBackgroundDrawable(context));
         textView.setText(content);
         textView.setTypeface(FontsHolder.getSansMedium(context));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getToastFontSize());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, lengthManager.getToastFontSize() * 0.8f);
         textView.setShadowLayer(1, 1, 1, Color.BLACK);
         textView.setTextColor(Color.WHITE);
         textView.setGravity(Gravity.CENTER);
         textView.setLayoutParams(new ViewGroup.LayoutParams(lengthManager.getToastWidth(), ViewGroup.LayoutParams.WRAP_CONTENT));
-        int padding = lengthManager.getToastPadding();
-        textView.setPadding(padding, padding, padding, padding);
+        int padding = (int) (lengthManager.getToastPadding() * 0.7);
+        textView.setPadding(padding, padding/2, padding, padding/2);
         Toast toast = new Toast(context);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, (int) (SizeManager.getScreenHeight() * 0.05));
         toast.setDuration(duration);
         toast.setView(textView);
         toast.show();

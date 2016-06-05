@@ -50,6 +50,12 @@ public class FriendsHolder {
         }
     }
 
+    public void clearAll() {
+        contacts.clear();
+        friends.clear();
+        backupCache();
+    }
+
     public ArrayList<User> getContacts() {
         return new ArrayList<>(contacts);
     }

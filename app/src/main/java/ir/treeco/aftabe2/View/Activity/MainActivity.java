@@ -723,8 +723,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         Prefs.remove(Tools.SHARED_PREFS_TOKEN);
         Prefs.remove(Tools.USER_SAVED_DATA);
-        Prefs.remove(Tools.USER_SAVED_DATA);
 
+        SocketAdapter.closeSocket();
+
+        FriendsHolder.getInstance().clearAll();
+        mFriendsAdapter.clearAll();
     }
 
 

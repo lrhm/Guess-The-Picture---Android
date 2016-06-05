@@ -517,9 +517,13 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                         mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_FRIEND);
                     }
                 }
-                for (User user : users)
+                for (User user : users) {
                     if (!mFriendsAdapter.getFriendList().contains(user))
                         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_FRIEND);
+                    if (mFriendsAdapter.getList(FriendsAdapter.TYPE_REQUEST).contains(user))
+                        mFriendsAdapter.removeUser(user, FriendsAdapter.TYPE_REQUEST);
+
+                }
             }
 
 

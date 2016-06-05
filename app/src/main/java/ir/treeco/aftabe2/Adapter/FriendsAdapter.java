@@ -468,4 +468,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         return res;
     }
 
+    public ArrayList<User> getList(int type){
+        return arrayLists.get(type);
+    }
+
+    public void clearAll(){
+        for(ArrayList<User> users : arrayLists)
+            users.clear();
+        notifyDataSetChanged();
+
+    }
+
 }

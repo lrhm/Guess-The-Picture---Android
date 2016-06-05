@@ -132,6 +132,12 @@ public class SocketAdapter {
         initSocket();
     }
 
+    public static void closeSocket() {
+        if (mSocket != null)
+            mSocket.close();
+
+    }
+
     private static void initSocket() {
 
         if (mSocket != null)
