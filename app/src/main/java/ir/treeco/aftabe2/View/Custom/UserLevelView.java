@@ -374,18 +374,17 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     public void setOnlineState(GameActionResult gameActionResult) {
 
 
-        MyLog.d(this.getClass().getSimpleName(), "got user action " + mFirstState);
-        MyLog.d(this.getClass().getSimpleName(), "got user action " + gameActionResult.getResult().toString());
+        MyLog.d(this.getClass().getSimpleName(), "got user action " + mFirstState + " " +  gameActionResult.getResult().toString());
 
 
         if (mFirstState) {
-            expView.setVisibility(View.VISIBLE);
             expView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForRight(gameActionResult), imageConverter.mWidth, imageConverter.mHeight));
+            expView.setVisibility(View.VISIBLE);
             mFirstState = false;
             return;
         }
-        stateView.setVisibility(View.VISIBLE);
         stateView.setImageBitmap(imageManager.loadImageFromResource(getDrawableIdForLeft(gameActionResult), imageConverter.mWidth, imageConverter.mHeight));
+        stateView.setVisibility(View.VISIBLE);
 
 
     }

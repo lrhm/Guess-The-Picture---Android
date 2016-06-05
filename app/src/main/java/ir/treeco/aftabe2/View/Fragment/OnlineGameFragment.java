@@ -110,8 +110,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             UserActionCache.getInstance().clearCache();
             ((MainActivity) getActivity()).playerOne.setOnlineStateClear();
             ((MainActivity) getActivity()).playerTwo.setOnlineStateClear();
-
             ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
+
         }
         if (gameType == null) {
             boolean isMatch = getArguments().getBoolean("isMatch");
@@ -141,7 +141,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         ((MainActivity) getActivity()).setOnlineGameUser(opponent);
 
-        String solution = level.getAnswer();
+        String solution = level.getAnswer().replace("\\", "");
 
         skipButton = new ImageView(getContext());
 
@@ -352,7 +352,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAllAnswered(String guess) {
 
-        String solution = level.getAnswer();
+        String solution = level.getAnswer().replace("\\" ,"");
 
         if ((guess.replace("آ", "ا")).equals((solution.replace("/",
                 "")).replace("آ", "ا"))) {

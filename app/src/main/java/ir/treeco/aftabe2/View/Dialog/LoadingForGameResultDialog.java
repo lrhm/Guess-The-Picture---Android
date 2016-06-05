@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,6 +37,7 @@ import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.TimerView;
+import ir.treeco.aftabe2.View.Custom.ToastMaker;
 import ir.treeco.aftabe2.View.Custom.UserLevelView;
 import ir.treeco.aftabe2.View.Fragment.GameResultFragment;
 import ir.treeco.aftabe2.View.Fragment.OnlineGameFragment;
@@ -121,9 +123,9 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         mTimerView = new TimerView(context);
         mTimerView.setDoOnlyBlue(true);
 
-        FrameLayout container = (FrameLayout) findViewById(R.id.dialog_game_result_loading_container);
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.dialog_game_result_loading_container_relative_layout);
 
-        FrameLayout.LayoutParams timerLP = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams timerLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         timerLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.2f);
         timerLP.leftMargin = (SizeManager.getScreenWidth() - mTimerView.getRealWidth()) / 2;
         container.addView(mTimerView, timerLP);
@@ -144,8 +146,13 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
     }
 
+    @Override
+    public void onBackPressed() {
+        ToastMaker.show(context, "باید صبر کنی", Toast.LENGTH_SHORT);
+//        super.onBackPressed();
+    }
 
-    private void initializeLevelViews(FrameLayout parent) {
+    private void initializeLevelViews(RelativeLayout parent) {
 
         myUserLevelView = (UserLevelView) parent.findViewById(R.id.dialog_game_result_my_player);
         opponentLevelView = (UserLevelView) parent.findViewById(R.id.dialog_game_result_op);

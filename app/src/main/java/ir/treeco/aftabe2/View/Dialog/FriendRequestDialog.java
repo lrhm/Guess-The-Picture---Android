@@ -41,6 +41,7 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener,
     ImageView mChatButton;
     UserLevelView mUserLevelView;
     User mUser;
+    boolean isActed = false;
 
 
     public FriendRequestDialog(Context context, User user) {
@@ -117,15 +118,10 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener,
     }
 
     @Override
-    public void onBackPressed() {
-
-        ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_REQUEST);
-
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
+
+
+        isActed = true;
 
         if (v.getId() == R.id.uv_start_chat_button) {
             SocketAdapter.answerFriendRequest(mUser.getId(), false);
@@ -146,6 +142,8 @@ public class FriendRequestDialog extends Dialog implements View.OnClickListener,
 
     @Override
     public void dismiss() {
+        if (!isActed)
+            ((MainActivity) context).mFriendsAdapter.addUser(mUser, FriendsAdapter.TYPE_REQUEST);
 
 
         super.dismiss();

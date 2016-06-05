@@ -280,7 +280,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                             public void onClick(View v) {
 
 
-                                removeUser(user, type);
+//                                removeUser(user, type);
 
                                 AftabeAPIAdapter.requestFriend(myUser, user.getId(), new OnFriendRequest() {
                                     @Override

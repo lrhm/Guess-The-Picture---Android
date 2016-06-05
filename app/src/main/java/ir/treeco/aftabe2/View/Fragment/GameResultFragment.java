@@ -3,7 +3,9 @@ package ir.treeco.aftabe2.View.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
 import ir.treeco.aftabe2.Util.MyLog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,7 +112,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         for (GameActionResult gameActionResult : UserActionCache.getInstance().getOpponentList()) {
             opponentLevelView.setOnlineState(gameActionResult);
-            MyLog.d(TAG, "Enemys one");
+            MyLog.d(TAG, "Enemys one " + new Gson().toJson(gameActionResult));
         }
 
         mAddFriendImageView = (ImageView) view.findViewById(R.id.fragment_result_add_friend);
@@ -130,7 +132,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         for (GameActionResult gameActionResult : UserActionCache.getInstance().getMyList()) {
             myUserLevelView.setOnlineState(gameActionResult);
-            MyLog.d(TAG, "my one");
+            MyLog.d(TAG, "my one " + new Gson().toJson(gameActionResult));
         }
 
         int coin = 0;
@@ -172,7 +174,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
 
         mAddFriendImageView.setImageBitmap(imageManager.loadImageFromResource(
-                (mOpponent.isFriend() || mOpponent.isGuest() || myUser.isGuest()) ? R.drawable.notifreq : R.drawable.addfriends, width, width , ImageManager.ScalingLogic.FIT));
+                (mOpponent.isFriend() || mOpponent.isGuest() || myUser.isGuest()) ? R.drawable.notifreq : R.drawable.addfriends, width, width, ImageManager.ScalingLogic.FIT));
         mAddFriendImageView.setOnClickListener(this);
         mBackImageView.setOnClickListener(this);
         mBackImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.continuebutton, width, width));
