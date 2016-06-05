@@ -1067,42 +1067,38 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         final User mUser = Tools.getCachedUser(this);
 
-        if (resultHolder.getMyScoreResult(mUser) != 0) {
 
-            mUser.setScore(mUser.getScore() + resultHolder.getMyScoreResult(mUser));
-            Tools.cacheUser(mUser);
+        mUser.setScore(mUser.getScore() + resultHolder.getMyScoreResult(mUser));
+        Tools.cacheUser(mUser);
 
-            int coin = 160;
-            if (resultHolder.getScores()[0].isWinner() && resultHolder.getScores()[1].isWinner()) {
-                // draw
-                coin = 80;
-            }
-            if (!resultHolder.amIWinner(mUser)) {
-
-                mUser.increaseLoses();
-                coin = 0;
-            }
-
-            if (resultHolder.amIWinner(mUser)) {
-                mUser.increaseWins();
-            }
-
-
-            final int finalCoin = coin;
-            new Handler(getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-
-                    Log.d(TAG, "earn coin on finish " + finalCoin);
-                    if (finalCoin != 0)
-                        coinAdapter.earnCoins(finalCoin);
-                    mUser.setFromServer(false);
-                    onGetMyUser(mUser);
-                }
-            });
-
-
+        int coin = 160;
+        if (resultHolder.getScores()[0].isWinner() && resultHolder.getScores()[1].isWinner()) {
+            // draw
+            coin = 80;
         }
+        if (!resultHolder.amIWinner(mUser)) {
+
+            mUser.increaseLoses();
+            coin = 0;
+        }
+
+        if (resultHolder.amIWinner(mUser)) {
+            mUser.increaseWins();
+        }
+
+
+        final int finalCoin = coin;
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+
+                Log.d(TAG, "earn coin on finish " + finalCoin);
+                if (finalCoin != 0)
+                    coinAdapter.earnCoins(finalCoin);
+                mUser.setFromServer(false);
+                onGetMyUser(mUser);
+            }
+        });
 
 
 //        if(resultHolder.getStatus().)

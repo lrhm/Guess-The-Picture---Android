@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.R;
@@ -22,6 +23,7 @@ public class DialogDrawable extends Drawable {
     private int topHeight;
     private int bottomHeight;
     private int topPadding;
+    private int centerHeight;
     private boolean isDrawable;
     private ImageManager imageManager;
     private LengthManager lengthManager;
@@ -52,13 +54,15 @@ public class DialogDrawable extends Drawable {
         topHeight = lengthManager.getHeightWithFixedWidth(getTopResourceId(), bounds.width());
         dialogTop = imageManager.loadImageFromResource(getTopResourceId(), bounds.width(), topHeight);
 
-        int centerHeight = lengthManager.getHeightWithFixedWidth(getCenterResourceId(), bounds.width());
+        centerHeight = lengthManager.getHeightWithFixedWidth(getCenterResourceId(), bounds.width());
         dialogCenter = imageManager.loadImageFromResource(getCenterResourceId(), bounds.width(), centerHeight);
 
         bottomHeight = lengthManager.getHeightWithFixedWidth(getBottomResourceId(), bounds.width());
         dialogBottom = imageManager.loadImageFromResource(getBottomResourceId(), bounds.width(), bottomHeight);
 
+
         isDrawable = true;
+
     }
 
     @Override
@@ -66,10 +70,25 @@ public class DialogDrawable extends Drawable {
         if (!isDrawable)
             return;
 
+
         canvas.drawBitmap(dialogTop, 0, topPadding, mPaint);
         canvas.drawBitmap(dialogCenter, new Rect(0, 0, dialogCenter.getWidth(), dialogCenter.getHeight()), new Rect(0, topHeight + topPadding, getBounds().width(), getBounds().height() - bottomHeight), mPaint);
         canvas.drawBitmap(dialogBottom, 0, getBounds().height() - bottomHeight, mPaint);
     }
+
+    public int getRightPadding(int height, int width) {
+
+        bottomHeight = lengthManager.getHeightWithFixedWidth(getBottomResourceId(), width);
+        centerHeight = lengthManager.getHeightWithFixedWidth(getCenterResourceId(), width);
+        topHeight = lengthManager.getHeightWithFixedWidth(getTopResourceId(), width);
+
+        while (centerHeight + bottomHeight + topHeight + topPadding > height) {
+            height += 5;
+        }
+        return height;
+    }
+
+
 
     @Override
     public void setAlpha(int i) {
