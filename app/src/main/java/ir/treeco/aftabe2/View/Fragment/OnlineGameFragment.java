@@ -6,7 +6,9 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+
 import ir.treeco.aftabe2.Util.MyLog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,17 +98,18 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        if (mRemainingTime == null) {
-            mRemainingTime = 120;
-            UserActionCache.getInstance().clearCache();
-
-            ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
-        }
         SocketAdapter.setTimeLefTListener(this);
         SocketAdapter.addSocketListener(this);
         view = inflater.inflate(R.layout.fragment_game, container, false);
         gameFragment = this;
         state = getArguments().getInt("state");
+
+
+        if (state == 0) {
+            mRemainingTime = 120;
+            UserActionCache.getInstance().clearCache();
+            ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
+        }
         if (gameType == null) {
             boolean isMatch = getArguments().getBoolean("isMatch");
             gameType = types[1];

@@ -65,12 +65,6 @@ public class UserActionCache {
     }
 
 
-    private void backupCache() {
-
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        MyLog.d(TAG, gson.toJson(instance));
-        Prefs.putString(KEY_TAG, gson.toJson(instance));
-    }
 
     public void clearCache() {
 //        Prefs.putString(KEY_TAG, "");

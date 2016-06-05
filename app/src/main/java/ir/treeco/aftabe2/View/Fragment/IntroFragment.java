@@ -4,12 +4,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
@@ -46,41 +48,48 @@ public class IntroFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        FrameLayout relativeLayout = new FrameLayout(getContext());
-        relativeLayout.setLayoutParams(new FrameLayout.LayoutParams(SizeManager.getScreenWidth(), ViewGroup.LayoutParams.MATCH_PARENT));
+        FrameLayout frameLayout = new FrameLayout(getContext());
+        frameLayout.setLayoutParams(new FrameLayout.LayoutParams(SizeManager.getScreenWidth(), ViewGroup.LayoutParams.MATCH_PARENT));
 
-        relativeLayout.setBackgroundColor(Color.BLUE);
+        RelativeLayout buttonContainer = new RelativeLayout(getContext());
+
+        frameLayout.setBackgroundColor(Color.BLUE);
         ImageView imageView = new ImageView(getContext());
 
         SizeConverter sizeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1080, 1920);
 
         ImageManager imageManager = ImageManager.getInstance(getContext());
 
-        relativeLayout.addView(imageView);
+        frameLayout.addView(imageView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        frameLayout.addView(buttonContainer);
 
         imageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(picId, sizeConverter.mWidth, sizeConverter.mHeight, ImageManager.ScalingLogic.FIT));
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        UiUtil.setTopMargin(imageView, sizeConverter.getTopOffset() / 2);
+
+        UiUtil.setTopMargin(imageView , sizeConverter.getTopOffset()/2);
         UiUtil.setWidth(imageView, SizeManager.getScreenWidth());
+        UiUtil.setHeight(imageView , sizeConverter.mHeight);
 
         Button button = new Button(getContext());
 
-        button.setBackgroundColor(Color.TRANSPARENT);
+        button.setBackgroundColor(Color.GREEN);
 
-        relativeLayout.addView(button);
+        buttonContainer.addView(button);
 
         UiUtil.setWidth(button, sizeConverter.convertWidth(650));
-        UiUtil.setHeight(button, sizeConverter.convertHeightCalcOffset(230) );
+        UiUtil.setHeight(button, sizeConverter.convertHeight(230) );
 
-
-
-        UiUtil.setTopMargin(button, sizeConverter.convertHeightCalcOffset(1500) );
+//
+//        Log.d("TEST", sizeConverter.mHeight + " " + sizeConverter.convertHeight(1500) + " " + sizeConverter.getTopOffset()  );
+//        Log.d("TEST", SizeManager.getScreenWidth() + " " + SizeManager.getScreenHeight());
+        UiUtil.setTopMargin(button, sizeConverter.convertHeight(1500) +sizeConverter.getTopOffset()/2  );
         UiUtil.setLeftMargin(button, sizeConverter.convertWidth(225));
 
         button.setOnClickListener(this);
 
 
-        return relativeLayout;
+        return frameLayout;
 
     }
 
