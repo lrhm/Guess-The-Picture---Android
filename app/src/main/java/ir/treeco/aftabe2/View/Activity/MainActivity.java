@@ -17,7 +17,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+
 import ir.treeco.aftabe2.Util.MyLog;
+
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -705,7 +707,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 if (mUser.isFromServer() && mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
                     coinAdapter.setCoinsCount(mUser.getCoins());
-                    coinAdapter.setCoinDiff(0);
+                    CoinAdapter.addCoinDiff(-CoinAdapter.getCoinDiff());
 
                 }
             }
@@ -1061,10 +1063,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
+
+    private long lastOnFinish = 0;
+    private Object lock = new Object();
+
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
 
 
+        synchronized (lock) {
+            long curTime = System.currentTimeMillis();
+
+            if (curTime - lastOnFinish < 1000) {
+                return;
+            }
+
+            lastOnFinish = curTime;
+        }
         final User mUser = Tools.getCachedUser(this);
 
 

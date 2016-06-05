@@ -62,7 +62,7 @@ public class User {
     @Expose
     private int loses;
 
-    private boolean fromServer = true;
+    private boolean fromServer = false;
 
     @Expose
     private Integer friendCount;

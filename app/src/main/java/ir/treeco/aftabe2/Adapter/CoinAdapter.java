@@ -2,7 +2,9 @@ package ir.treeco.aftabe2.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+
 import ir.treeco.aftabe2.Util.MyLog;
+
 import android.view.View;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -23,6 +25,7 @@ public class CoinAdapter {
     private Context context;
     private Tools tools;
     private Activity mActivity;
+    private static Object coinLock = new Object();
 
     public CoinAdapter(Context context, Activity activity) {
         this.context = context;
@@ -63,16 +66,23 @@ public class CoinAdapter {
     }
 
     public static int getCoinDiff() {
-        return Prefs.getInt(SHARED_PREF_COIN_DIFF, 0);
+        synchronized (coinLock) {
+            return Prefs.getInt(SHARED_PREF_COIN_DIFF, 0);
+        }
     }
 
-    public static void setCoinDiff(int coinDiff) {
-        Prefs.putInt(SHARED_PREF_COIN_DIFF, coinDiff);
-    }
+//    public static void setCoinDiff(int coinDiff) {
+//        synchronized (coinLock) {
+//            Prefs.putInt(SHARED_PREF_COIN_DIFF, coinDiff);
+//
+//        }
+//    }
 
-    private static void addCoinDiff(int diff) {
+    public static void addCoinDiff(int diff) {
         MyLog.d(TAG, "add coin diff " + diff);
-        Prefs.putInt(SHARED_PREF_COIN_DIFF, getCoinDiff() + diff);
+        synchronized (coinLock) {
+            Prefs.putInt(SHARED_PREF_COIN_DIFF, getCoinDiff() + diff);
+        }
     }
 
 

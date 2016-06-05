@@ -1,6 +1,7 @@
 package ir.treeco.aftabe2.API.Rest;
 
 import android.content.Context;
+
 import ir.treeco.aftabe2.Util.MyLog;
 
 import com.google.gson.Gson;
@@ -304,6 +305,8 @@ public class AftabeAPIAdapter {
 
                 PackageSolvedCache.getInstance().updateToServer();
 
+                response.body().setFromServer(true);
+
 
                 if (userFoundListener != null) userFoundListener.onGetUser(response.body());
                 if (userFoundListener != null) userFoundListener.onGetMyUser(response.body());
@@ -579,7 +582,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User> response) {
                 if (response.isSuccess() && response.body() != null) {
                     MyLog.d(TAG, "new user coin is " + response.body().getCoins());
-                    CoinAdapter.setCoinDiff(CoinAdapter.getCoinDiff() - diff);
+                    CoinAdapter.addCoinDiff(-diff);
 //                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, );
 
                 }
@@ -1026,8 +1029,6 @@ public class AftabeAPIAdapter {
                     }
                 });
     }
-
-
 
 
 }
