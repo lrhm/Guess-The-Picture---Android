@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.ImageManager;
@@ -30,6 +33,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     SizeConverter imageConverter;
     ImageManager imageManager;
 
+    private Timer mTimer;
     private final static int MODE_ANGRY = 0;
     private final static int MODE_NORMAL = 2;
     private final static int MODE_FACE = 1;
@@ -41,6 +45,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_credits);
+
 
         ImageView credits = (ImageView) findViewById(R.id.credits_image_view);
         ImageView aftabe = (ImageView) findViewById(R.id.credits_aftabe_image_view);
@@ -60,9 +65,9 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         SizeConverter creditsConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 1200, 2000);
 
         UiUtil.setWidth(credits, creditsConverter.mWidth);
-        UiUtil.setHeight(credits , creditsConverter.mHeight);
+        UiUtil.setHeight(credits, creditsConverter.mHeight);
         credits.setImageBitmap(imageManager.loadImageFromResourceNoCache(
-                R.drawable.credits, creditsConverter.mWidth/2, creditsConverter.mHeight/2,
+                R.drawable.credits, creditsConverter.mWidth / 2, creditsConverter.mHeight / 2,
                 ImageManager.ScalingLogic.FIT));
 
 
@@ -74,13 +79,18 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
                 R.drawable.amin,
                 R.drawable.aliface,
                 R.drawable.alinormal,
-                R.drawable.aliangry
+                R.drawable.aliangry,
+                R.drawable.sina1,
+                R.drawable.sina2,
+                R.drawable.sinanormal,
+
         };
 
         int[] imageIds = new int[]{
                 R.id.credits_ala,
                 R.id.credits_amin,
-                R.id.credits_ali
+                R.id.credits_ali,
+                R.id.credits_sina
         };
 
         faces = new ImageView[imageIds.length];
@@ -88,12 +98,12 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 180, 260);
 
         int facesHeight = creditsConverter.convertHeight(1550);
-        if(creditsConverter.getTopOffset() < 0)
+        if (creditsConverter.getTopOffset() < 0)
             facesHeight = creditsConverter.convertHeightCalcOffset(1550);
         UiUtil.setTopMargin(findViewById(R.id.credits_faces_container), facesHeight);
 
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < imageIds.length; i++) {
             faces[i] = (ImageView) findViewById(imageIds[i]);
             faces[i].setTag(i);
             faces[i].setOnClickListener(this);
@@ -110,6 +120,22 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mTimer = new Timer();
+        mTimer.scheduleAtFixedRate(new CreditsTimerTask(), 2000, 2000);
+
+    }
+
+    @Override
+    protected void onPause() {
+        mTimer.cancel();
+        mTimer.purge();
+        super.onPause();
+    }
+
     void setUpInstaAndTelegram(SizeConverter creditsConverter) {
 
         Button telegram = (Button) findViewById(R.id.credits_telegram);
@@ -124,7 +150,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
 
         int buttonsHeight = creditsConverter.convertHeight(1080);
-        if(creditsConverter.getTopOffset() < 0)
+        if (creditsConverter.getTopOffset() < 0)
             buttonsHeight = creditsConverter.convertHeightCalcOffset(1080);
 
         UiUtil.setLeftMargin(insta, creditsConverter.convertWidth(660));
@@ -141,7 +167,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     public void setFace(int index, int mode) {
 
-        int faceDrawable = facesDrawables[index * (facesDrawables.length / 3) + mode];
+        int faceDrawable = facesDrawables[index * (facesDrawables.length / faces.length) + mode];
 
         faces[index].setImageBitmap(imageManager.loadImageFromResource(faceDrawable, imageConverter.mWidth, imageConverter.mHeight));
     }
@@ -169,7 +195,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         Random random = new Random(System.currentTimeMillis());
         int randFace = random.nextInt(3);
-        int randIndx = random.nextInt(3);
+        int randIndx = random.nextInt(4);
 
         if (clickCount % 10 == 0) {
 
@@ -179,7 +205,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
             return;
         }
 
-        setFace(randIndx, randFace);
+        setFace((Integer) v.getTag(), randFace);
 
 
     }
@@ -225,6 +251,30 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             return false;
+        }
+    }
+
+    void run() {
+
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Random random = new Random(System.currentTimeMillis());
+                int randFace = random.nextInt(3);
+                int randIndx = random.nextInt(4);
+
+                setFace(randIndx, randFace);
+
+            }
+        });
+    }
+
+    class CreditsTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+
+            CreditsActivity.this.run();
         }
     }
 }
