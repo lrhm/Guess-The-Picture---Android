@@ -73,7 +73,7 @@ public class IntroFragment extends Fragment implements View.OnClickListener {
 
         Button button = new Button(getContext());
 
-        button.setBackgroundColor(Color.GREEN);
+        button.setBackgroundColor(Color.TRANSPARENT);
 
         buttonContainer.addView(button);
 
