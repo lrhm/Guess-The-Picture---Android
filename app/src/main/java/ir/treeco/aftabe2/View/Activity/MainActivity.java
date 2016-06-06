@@ -307,10 +307,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    public void setStarts(int score) {
+    public void setStarsDeactive() {
 
         for (StarView starView : starViews)
             starView.setDeActivate();
+
+    }
+
+    public void setStarts(int score) {
+
+        setStarsDeactive();
 
         ArrayList<Integer> idxs = new ArrayList<>();
         if (score >= 1)

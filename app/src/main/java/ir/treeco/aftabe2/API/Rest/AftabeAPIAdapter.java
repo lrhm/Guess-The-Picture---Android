@@ -110,7 +110,7 @@ public class AftabeAPIAdapter {
         }
 
 
-        Tools.updateSharedPrefsToken(context, hdnUser, new TokenHolder(hdnUser));
+//        Tools.updateSharedPrefsToken(context, hdnUser, new TokenHolder(hdnUser));
 
         PackageSolvedCache.getInstance().updateToServer();
 
@@ -298,6 +298,7 @@ public class AftabeAPIAdapter {
                 response.body().setLoginInfo(loginInfo);
                 response.body().setOwnerMe();
 
+                Logger.d(TAG, new Gson().toJson(response.body()));
 
                 Tools.updateSharedPrefsToken(context, response.body(), new TokenHolder(response.body()));
 
@@ -363,6 +364,8 @@ public class AftabeAPIAdapter {
 
         init();
 
+        Logger.d(TAG, new Gson().toJson(googleToken));
+
         Call<LoginInfo> call = aftabeService.getMyUserLogin(googleToken);
         call.enqueue(new Callback<LoginInfo>() {
             @Override
@@ -370,6 +373,7 @@ public class AftabeAPIAdapter {
                 Logger.d(TAG, response.toString());
                 Logger.d(TAG, response.body().toString());
                 Logger.d(TAG, response.body().accessToken + " " + response.body().created);
+                Logger.d(TAG, new Gson().toJson(response.body()));
                 final LoginInfo loginInfo = response.body();
                 getMyUserByAccessToken(loginInfo, userFoundListener);
             }

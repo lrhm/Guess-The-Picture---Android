@@ -110,6 +110,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             UserActionCache.getInstance().clearCache();
             ((MainActivity) getActivity()).playerOne.setOnlineStateClear();
             ((MainActivity) getActivity()).playerTwo.setOnlineStateClear();
+            ((MainActivity) getActivity()).setStarsDeactive();
             ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
 
         }
@@ -266,7 +267,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             synchronized (lock) {
                 if (mGameResult == null) {
                     super.onDestroy();
-                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime + 8).show();
+                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime + 10).show();
                 } else {
 
 
@@ -362,7 +363,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             answerd = true;
 
-            startShowingAnimation();
 
             mTimer.cancel();
 
@@ -375,6 +375,9 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             answerObject.setCorrect();
             SocketAdapter.setAnswerLevel(answerObject);
+
+            startShowingAnimation();
+
 
 
         }
@@ -479,7 +482,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 public void run() {
                     mainActivity.playerOne.setOnlineState(gameActionResult);
                     answerObject.setSkip();
-                    SocketAdapter.setAnswerLevel(answerObject);
+//                    SocketAdapter.setAnswerLevel(answerObject);
 
                     if (!((MainActivity) getActivity()).isPaused())
                         getActivity().getSupportFragmentManager().popBackStack();
@@ -492,7 +495,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                         AnswerObject answerObject1 = new AnswerObject(mGameResultHolder.getLevels()[1].getId());
                         answerObject1.setSkip();
 
-                        SocketAdapter.setAnswerLevel(answerObject1);
+//                        SocketAdapter.setAnswerLevel(answerObject1);
                         UserActionCache.getInstance().addToMyList(gameActionResult);
 
 

@@ -13,6 +13,26 @@ import ir.treeco.aftabe2.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
  */
 public class NotifHolder  {
 
+    public NotifHolder(OnlineFriendStatusHolder online){
+        this.online = online;
+        type = "online";
+    }
+
+    public NotifHolder(MatchRequestSFHolder matchRequestSFHolder){
+        matchSF = matchRequestSFHolder;
+        type = "matchSF";
+    }
+
+    public NotifHolder(MatchResultHolder matchResult){
+        this.matchResult = matchResult;
+        type = "matchResult";
+    }
+
+    public NotifHolder(FriendRequestHolder friendRequestHolder){
+        friendSF = friendRequestHolder;
+        type = "friendSF";
+    }
+
     @Expose @SerializedName("online")
     OnlineFriendStatusHolder online;
 
