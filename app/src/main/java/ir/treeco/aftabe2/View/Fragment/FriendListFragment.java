@@ -10,7 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -196,7 +196,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     public void setUpAdapters() {
 
 
-        MyLog.d(TAG, "setting up adapter");
+        Logger.d(TAG, "setting up adapter");
 
         final FriendsHolder friendsHolder = FriendsHolder.getInstance();
         if (mFriendsAdapter == null)
@@ -222,7 +222,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
 //        getContacts();
 
-        MyLog.d(TAG, "will request friend list");
+        Logger.d(TAG, "will request friend list");
 
         AftabeAPIAdapter.getListOfMyFriends(myUser, this);
 
@@ -363,7 +363,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onGetUser(User user) {
 
-        MyLog.d(TAG, new Gson().toJson(user));
+        Logger.d(TAG, new Gson().toJson(user));
         mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_SEARCHED);
         mProgressBar.setVisibility(View.GONE);
 
@@ -418,7 +418,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
                         }
                     });
-//                    MyLog.d(TAG, "added online !");
+//                    Logger.d(TAG, "added online !");
                     return;
                 }
             }
@@ -431,11 +431,11 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
                 }
             }
             if (u == null) {
-//                MyLog.d(TAG, " friend not found in friend list !");
+//                Logger.d(TAG, " friend not found in friend list !");
                 return;
             }
             final User finalU = u;
-//            MyLog.d(TAG, "removing offline user");
+//            Logger.d(TAG, "removing offline user");
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -504,7 +504,7 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
 
 
         final FriendsHolder friendsHolder = FriendsHolder.getInstance();
-        MyLog.d(TAG, "get friend list");
+        Logger.d(TAG, "get friend list");
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

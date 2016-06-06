@@ -7,7 +7,8 @@ import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -111,7 +112,7 @@ public class ContactsAdapter implements BatchUserFoundListener {
         }
         phones.close();
 
-        MyLog.d(TAG, set.size() + " size of set");
+        Logger.d(TAG, set.size() + " size of set");
         for (ContactsHolder contactsHolder : set)
             contactsHolders.add(contactsHolder);
 
@@ -191,7 +192,7 @@ public class ContactsAdapter implements BatchUserFoundListener {
     public void onGotUserList(User[] users) {
 
 
-        MyLog.d(TAG, "checked contacts");
+        Logger.d(TAG, "checked contacts");
         ArrayList<User> friendList = FriendsHolder.getInstance().getFriends();
         for (User user : users)
             if (!friendList.contains(user))

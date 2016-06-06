@@ -7,7 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -205,7 +205,7 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
                             AftabeAPIAdapter.getMyUserByGoogle(googleToken, mActivity);
                         } else if (smsToken != null) {
 
-                            MyLog.d("TAG", "subimt sms activation code in dialog calling ");
+                            Logger.d("TAG", "subimt sms activation code in dialog calling ");
                             AftabeAPIAdapter.submitSMSActivationCode(smsToken, name, mActivity);
                         }
                         dismiss();

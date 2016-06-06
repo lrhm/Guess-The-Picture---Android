@@ -1,7 +1,9 @@
 package ir.treeco.aftabe2.View.Custom;
 
 import android.content.Context;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -104,10 +106,10 @@ public class KeyboardView extends RelativeLayout {
 
         mReaminingLenght = SizeManager.getScreenHeight() - lengthManager.getHeaderHeight() - lengthManager.getLevelImageFrameHeight();
 
-//        MyLog.d("TAG", "whole" + SizeManager.getScreenHeight());
-//        MyLog.d("TAG", "reamaning " + mReaminingLenght);
-//        MyLog.d("TAG", "header " + lengthManager.getHeaderHeight());
-//        MyLog.d("TAG", "frame " + lengthManager.getLevelImageFrameHeight());
+//        Logger.d("TAG", "whole" + SizeManager.getScreenHeight());
+//        Logger.d("TAG", "reamaning " + mReaminingLenght);
+//        Logger.d("TAG", "header " + lengthManager.getHeaderHeight());
+//        Logger.d("TAG", "frame " + lengthManager.getLevelImageFrameHeight());
 
         double wholeButtonsLength = 3.2 * (buttonConvertor.getHeight());
         mMargin = (int) ((mReaminingLenght - (wholeButtonsLength + (answerConverter.getHeight()))) / 3.);
@@ -267,12 +269,12 @@ public class KeyboardView extends RelativeLayout {
         if (isTwoLine) {
             if (lineNumber == 1) {
                 topMargin = mMargin;
-                MyLog.d(TAG, "line 1 and margin si " + mMargin);
+                Logger.d(TAG, "line 1 and margin si " + mMargin);
             }
             if (lineNumber == 2) {
                 topMargin = (int) (mMargin + answerConverter.getHeight() * 1.1d);
 
-                MyLog.d(TAG, "line 2 and margin si " + mMargin);
+                Logger.d(TAG, "line 2 and margin si " + mMargin);
             }
         } else {
             topMargin = mMargin;
@@ -451,7 +453,7 @@ public class KeyboardView extends RelativeLayout {
                 if (answers[i].otherIndex == -1
                         && answers[i].state != KeyView.STATE_EMPTY) {
                     // solution.replace("/", "").){
-                    // MyLog.d("keyboard" , "find it" + i);
+                    // Logger.d("keyboard" , "find it" + i);
 
                     String ans = solution;
                     if (ans.charAt(i) == character)
@@ -468,7 +470,7 @@ public class KeyboardView extends RelativeLayout {
                 if (answers[i].otherIndex == -1
                         && answers[i].state != KeyView.STATE_EMPTY) {
                     // solution.replace("/", "").){
-                    // MyLog.d("keyboard" , "find it" + i);
+                    // Logger.d("keyboard" , "find it" + i);
 
                     String ans = temp1[0];
                     if (i < ans.length())
@@ -806,7 +808,7 @@ public class KeyboardView extends RelativeLayout {
                     SizeManager.getScreenHeight() * (0.75), 1200, 1447);
 
 
-//            MyLog.d(TAG, "answerconverter width is " + answerConverter.getWidth());
+//            Logger.d(TAG, "answerconverter width is " + answerConverter.getWidth());
             if (mode == MODE_ANSWER) {
                 setLayoutParams(new LayoutParams(
                         answerConverter.mWidth, answerConverter.mHeight));

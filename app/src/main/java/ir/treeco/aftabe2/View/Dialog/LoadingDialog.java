@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -233,7 +235,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     public void clearFiles() {
         final String path = context.getFilesDir().getPath() + "/online_game";
-        MyLog.d("TAG", path);
+        Logger.d("TAG", path);
 
         File parent = new File(path);
         if (!parent.exists()) {
@@ -247,7 +249,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     public void downloadURL(final String url) {
         final String path = context.getFilesDir().getPath() + "/online_game";
-        MyLog.d("TAG", path);
+        Logger.d("TAG", path);
 
         File parent = new File(path);
         if (!parent.exists()) {
@@ -274,7 +276,7 @@ public class LoadingDialog extends Dialog implements Runnable,
             return;
         gotGame = true;
 
-        MyLog.d(TAG, "onGotGame in dialog");
+        Logger.d(TAG, "onGotGame in dialog");
         mGameResultHolder = gameHolder;
         clearFiles();
         String imagePath = baseUrl + gameHolder.getLevels()[0].getUrl();
@@ -340,12 +342,12 @@ public class LoadingDialog extends Dialog implements Runnable,
     @Override
     public void onGotUserAction(UserActionHolder actionHolder) {
 
-        MyLog.d(this.getClass().getName(), "should not happen");
+        Logger.d(this.getClass().getName(), "should not happen");
     }
 
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
-        MyLog.d(this.getClass().getName(), "should not happen");
+        Logger.d(this.getClass().getName(), "should not happen");
 
     }
 
@@ -357,7 +359,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     @Override
     public void onDownloadSuccess() {
         synchronized (lock) {
-            MyLog.d("TAG", "downloaded");
+            Logger.d("TAG", "downloaded");
 
             if (mDismissed)
                 return;
@@ -371,7 +373,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     @Override
     public void onDownloadError(String error) {
-        MyLog.d("TAG", "dodwnload error " + error);
+        Logger.d("TAG", "dodwnload error " + error);
 
     }
 

@@ -1,6 +1,6 @@
 package ir.treeco.aftabe2.Adapter.Cache;
 
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -78,7 +78,7 @@ public class FriendRequestState {
     private void backupCache() {
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        MyLog.d(TAG, gson.toJson(instance));
+        Logger.d(TAG, gson.toJson(instance));
         Prefs.putString(KEY_TAG, gson.toJson(instance));
     }
 

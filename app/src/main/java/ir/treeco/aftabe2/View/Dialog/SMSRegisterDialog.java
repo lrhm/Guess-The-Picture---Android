@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -161,19 +161,19 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
         if (v.getId() == R.id.dialog_username_choose_accept_btn) {
 
-            MyLog.d("TAG", "on click accept");
+            Logger.d("TAG", "on click accept");
             if (isInPhoneReqState) {
 
-                MyLog.d("TAG", "is in phone req stsat");
+                Logger.d("TAG", "is in phone req stsat");
 
                 if (!Tools.isAPhoneNumber(mEditText.getText().toString()))
                     return;
 
-                MyLog.d("TAG", "valid numbser");
+                Logger.d("TAG", "valid numbser");
 
                 String search = mEditText.getText().toString();
                 String phoneNumber = (search.length() == 10) ? search : search.substring(1);
-                MyLog.d("SMSRegisterDialog", phoneNumber + " is requested number to register");
+                Logger.d("SMSRegisterDialog", phoneNumber + " is requested number to register");
                 mSmsRequestToken = new SMSRequestToken(phoneNumber);
                 AftabeAPIAdapter.requestSMSActivation(mSmsRequestToken, this);
                 isInPhoneReqState = false;
@@ -207,7 +207,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
     @Override
     public void onSMSValidateSent(SMSValidateToken smsToken) {
-        MyLog.d("TAG", "valid sent");
+        Logger.d("TAG", "valid sent");
 
 
         isInPhoneReqState = false;
@@ -218,7 +218,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
     @Override
     public void onSMSValidationFail() {
-        MyLog.d("TAG", "valid fail");
+        Logger.d("TAG", "valid fail");
         ToastMaker.show(getContext(), "دوباره تلاش کنید", Toast.LENGTH_SHORT);
         dismiss();
 
@@ -248,7 +248,7 @@ public class SMSRegisterDialog extends Dialog implements SMSValidationListener, 
 
     @Override
     public void onValidatedCode(final SMSValidateToken smsValidateToken) {
-        MyLog.d("TAG", "valid code");
+        Logger.d("TAG", "valid code");
 
 
         MediaAdapter.getInstance(context).playCorrectSound();

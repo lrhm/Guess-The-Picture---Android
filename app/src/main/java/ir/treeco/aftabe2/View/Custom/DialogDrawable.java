@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import ir.treeco.aftabe2.Util.MyLog;
 
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.R;

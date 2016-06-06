@@ -3,7 +3,7 @@ package ir.treeco.aftabe2.Adapter;
 import android.app.Activity;
 import android.content.Context;
 
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.View;
 
@@ -52,14 +52,14 @@ public class CoinAdapter {
             return false;
         }
 
-        MyLog.d(TAG, "spend coin " + amount);
+        Logger.d(TAG, "spend coin " + amount);
         addCoinDiff(-amount);
         setCoinsCount(nextAmount);
         return true;
     }
 
     public void earnCoins(int amount) {
-        MyLog.d(TAG, "earn coin " + amount);
+        Logger.d(TAG, "earn coin " + amount);
         int nextAmount = getCoinsCount() + amount;
         addCoinDiff(amount);
         setCoinsCount(nextAmount);
@@ -79,7 +79,7 @@ public class CoinAdapter {
 //    }
 
     public static void addCoinDiff(int diff) {
-        MyLog.d(TAG, "add coin diff " + diff);
+        Logger.d(TAG, "add coin diff " + diff);
         synchronized (coinLock) {
             Prefs.putInt(SHARED_PREF_COIN_DIFF, getCoinDiff() + diff);
         }

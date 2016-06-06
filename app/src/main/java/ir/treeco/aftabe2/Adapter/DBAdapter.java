@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
 
@@ -127,7 +127,7 @@ public class DBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            MyLog.d(TAG, "Upgrading database from version" + oldVersion + "to" + newVersion + ", which will destroy all old data");
+            Logger.d(TAG, "Upgrading database from version" + oldVersion + "to" + newVersion + ", which will destroy all old data");
             db.execSQL(DROP_TABLE_IF_EXISTS + PACKAGES);
             db.execSQL(DROP_TABLE_IF_EXISTS + LEVELS);
             db.execSQL(DROP_TABLE_IF_EXISTS + COINS);
@@ -261,7 +261,7 @@ public class DBAdapter {
 
     public int getCoins() {
 
-        MyLog.d(TAG, "coin is " + ((coin == null) ? "null" : coin));
+        Logger.d(TAG, "coin is " + ((coin == null) ? "null" : coin));
         synchronized (coinLock) {
 
             if (coin != null)

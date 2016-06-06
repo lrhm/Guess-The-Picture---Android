@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import ir.treeco.aftabe2.Util.MyLog;
-
-import com.pixplicity.easyprefs.library.Prefs;
+import ir.treeco.aftabe2.Util.Logger;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -61,7 +59,7 @@ public class Synchronize extends BroadcastReceiver {
 
         AppListAdapter.getInstance(context);
 
-        MyLog.d("TAG", "synchronize");
+        Logger.d("TAG", "synchronize");
 
     }
 

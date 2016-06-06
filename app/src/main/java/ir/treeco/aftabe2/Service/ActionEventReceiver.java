@@ -3,7 +3,8 @@ package ir.treeco.aftabe2.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
 
@@ -33,7 +34,7 @@ public class ActionEventReceiver extends BroadcastReceiver {
         NotificationManager.dismissNotification(context, actionHolder.getNotificationID());
 
 
-        MyLog.d(TAG, data);
+        Logger.d(TAG, data);
 
         if (actionHolder.isFriendRequest()) {
 

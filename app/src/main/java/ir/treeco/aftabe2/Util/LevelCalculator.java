@@ -1,7 +1,5 @@
 package ir.treeco.aftabe2.Util;
 
-import ir.treeco.aftabe2.Util.MyLog;
-
 import java.util.ArrayList;
 
 /**

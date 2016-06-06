@@ -1,7 +1,9 @@
 package ir.treeco.aftabe2.Adapter;
 
 import android.support.v7.widget.RecyclerView;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,11 +102,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         ChatObject chatObject = mList.get(position);
         holder.mChatContent.setText(chatObject.getChatContent());
 
-        MyLog.d("ChatAdapter", mList.size() + " " + mList.get(position).getType() + " " + position + " " + mList.get(position).getChatContent());
+        Logger.d("ChatAdapter", mList.size() + " " + mList.get(position).getType() + " " + position + " " + mList.get(position).getChatContent());
 
         if (mList.size() > 1 && position != 1) {
             if (mList.get(1).getType() == chatObject.getType()) {
-                MyLog.d("ChatAdapter", "Types are Equal , Setting Visibility Gone");
+                Logger.d("ChatAdapter", "Types are Equal , Setting Visibility Gone");
                 holder.mUserLevelView.setVisibility(View.GONE);
             } else
                 holder.mUserLevelView.setVisibility(View.VISIBLE);

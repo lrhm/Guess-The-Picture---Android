@@ -1,15 +1,10 @@
 package ir.treeco.aftabe2.Adapter.Cache;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import ir.treeco.aftabe2.Util.MyLog;
-
-import com.pixplicity.easyprefs.library.Prefs;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;

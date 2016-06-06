@@ -2,7 +2,7 @@ package ir.treeco.aftabe2.Service;
 
 
 import android.os.Bundle;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
 
@@ -25,7 +25,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
 //        String message = data.getString("message");
 //        if (message != null)
-//            MyLog.d(TAG, message);
+//            Logger.d(TAG, message);
 
         String notif = data.getString("notif");
 
@@ -33,8 +33,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             NotifHolder notifHolder = new Gson().fromJson(notif, NotifHolder.class);
 
 
-            MyLog.d(TAG, "got gcm " + notif);
-            MyLog.d(TAG, "serilized is  " + new Gson().toJson(notifHolder));
+            Logger.d(TAG, "got gcm " + notif);
+            Logger.d(TAG, "serilized is  " + new Gson().toJson(notifHolder));
             DBAdapter dbAdapter = DBAdapter.getInstance(getApplicationContext());
 
             if (notifHolder.isMatchRequest()
@@ -48,7 +48,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
 //        for(String key :data .keySet()){
 //            Object obj = data.get(key);   //later parse it as per your required type
-//            MyLog.d(TAG, key + ":" + obj.toString());
+//            Logger.d(TAG, key + ":" + obj.toString());
 //        }
 
     }

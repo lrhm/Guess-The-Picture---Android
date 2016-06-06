@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,7 +125,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                             .putCustomAttribute("Type", gameType));
         }
 
-        MyLog.d(TAG, new Gson().toJson(mGameResultHolder));
+        Logger.d(TAG, new Gson().toJson(mGameResultHolder));
 
         level = mGameResultHolder.getLevels()[state];
 
@@ -188,12 +188,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         imageView.setOnClickListener(this);
 
         imagePath = "file://" + getContext().getFilesDir().getPath() + "/online_game/" + level.getUrl();
-        MyLog.d(TAG, imagePath);
+        Logger.d(TAG, imagePath);
 
         Picasso.with(getActivity()).load(imagePath).fit().centerCrop().into(imageView, new Callback() {
             @Override
             public void onSuccess() {
-                MyLog.d(TAG, "success on image load");
+                Logger.d(TAG, "success on image load");
 
                 mTimer = new Timer();
                 ((MainActivity) getActivity()).setTimer(mRemainingTime);
@@ -214,7 +214,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onError() {
-                MyLog.d(TAG, "on error image load");
+                Logger.d(TAG, "on error image load");
             }
         });
 
@@ -260,7 +260,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
 
         if (state == 1 || mRemainingTime == 0 || lost || endedGame) {
-            MyLog.d(TAG, "onDestroy , set online game false");
+            Logger.d(TAG, "onDestroy , set online game false");
             ((MainActivity) getActivity()).setOnlineGame(false);
 
             synchronized (lock) {
@@ -314,7 +314,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                MyLog.d(TAG, "Animation End");
+                Logger.d(TAG, "Animation End");
 
                 getActivity().getSupportFragmentManager().popBackStack();
 
@@ -470,7 +470,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         if (mRemainingTime == 0) {
 
-            MyLog.d(TAG, "state is " + state);
+            Logger.d(TAG, "state is " + state);
             mTimer.cancel();
             final GameActionResult gameActionResult = new GameActionResult("skip");
             UserActionCache.getInstance().addToMyList(gameActionResult);
@@ -485,7 +485,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                         getActivity().getSupportFragmentManager().popBackStack();
 
                     if (state == 1) {
-                        MyLog.d(TAG, "return mikonim dg ");
+                        Logger.d(TAG, "return mikonim dg ");
                         return;
                     } else {
 
@@ -524,7 +524,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     @Override
     public void onDestroyView() {
 
-        MyLog.d(TAG, "on destroy");
+        Logger.d(TAG, "on destroy");
         SocketAdapter.removeSocketListener(this);
         if (mTimer != null)
             mTimer.cancel();

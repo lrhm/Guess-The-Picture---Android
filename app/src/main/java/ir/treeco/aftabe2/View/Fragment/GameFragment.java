@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,7 +73,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                              @Nullable Bundle savedInstanceState) {
 
 
-        MyLog.d(TAG, "onCreateView");
+        Logger.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_game, container, false);
 
         timeStampAdapter = new TimeStampAdapter();
@@ -210,8 +212,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         if (clickTime - lastTimeClicked < treshHold)
             return;
 
-        MyLog.d(TAG, "last time is " + lastTimeClicked);
-        MyLog.d(TAG, "current time is " + clickTime);
+        Logger.d(TAG, "last time is " + lastTimeClicked);
+        Logger.d(TAG, "current time is " + clickTime);
 
         lastTimeClicked = clickTime;
 
@@ -249,7 +251,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 .putCustomAttribute("Time", timeStampAdapter.getTimeStamp(getActivity())));
         super.onDestroy();
 
-        MyLog.d(TAG, "onDestory");
+        Logger.d(TAG, "onDestory");
     }
 
     public void showCheats() {
@@ -413,13 +415,13 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     @Override
     public void onAttach(Context context) {
-        MyLog.d(TAG, "onAttach");
+        Logger.d(TAG, "onAttach");
         super.onAttach(context);
     }
 
     @Override
     public void onPause() {
-        MyLog.d(TAG, "onPause");
+        Logger.d(TAG, "onPause");
 
         timeStampAdapter.onPause();
         super.onPause();
@@ -427,14 +429,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     @Override
     public void onDestroyView() {
-        MyLog.d(TAG, "onDestroyView");
+        Logger.d(TAG, "onDestroyView");
         super.onDestroyView();
     }
 
 
     @Override
     public void onResume() {
-        MyLog.d(TAG, "onResume");
+        Logger.d(TAG, "onResume");
         timeStampAdapter.onResume();
         super.onResume();
     }

@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +45,7 @@ public class LeaderboardFragment extends Fragment implements BatchUserFoundListe
     @Override
     public void onGotUserList(User[] users) {
 
-        MyLog.d("TAG", "on got leaderboad size of " + users.length);
+        Logger.d("TAG", "on got leaderboad size of " + users.length);
         for (int i = 0; i < users.length; i++) {
             mAdapter.addUser(users[i]);
         }

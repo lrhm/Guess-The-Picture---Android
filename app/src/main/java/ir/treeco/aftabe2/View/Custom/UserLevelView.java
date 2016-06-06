@@ -5,7 +5,7 @@ import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -95,7 +95,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
 
         imageConverter = SizeConverter.SizeConvertorFromWidth(lengthManager.getScreenWidth() * mDimension, 824, 837);
 
-        MyLog.d(TAG, "width and height is " + imageConverter.mWidth + " " + imageConverter.mHeight);
+        Logger.d(TAG, "width and height is " + imageConverter.mWidth + " " + imageConverter.mHeight);
         FrameLayout imagesContainer = new FrameLayout(context);
 
 
@@ -228,7 +228,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
         }
 
 //        float shadowSize = (mDimension * 6 / (0.7f));
-//        MyLog.d("LevelUserVIew", shadowSize + " is the shadow size");
+//        Logger.d("LevelUserVIew", shadowSize + " is the shadow size");
         float shadowSize = (mDimension / 0.7f) * 6;
         int dropShadowColor = Color.parseColor("#393939");
         mLevelTextView.addOuterShadow(1, shadowSize, shadowSize, dropShadowColor);
@@ -374,7 +374,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     public void setOnlineState(GameActionResult gameActionResult) {
 
 
-        MyLog.d(this.getClass().getSimpleName(), "got user action " + mFirstState + " " +  gameActionResult.getResult().toString());
+        Logger.d(this.getClass().getSimpleName(), "got user action " + mFirstState + " " +  gameActionResult.getResult().toString());
 
 
         if (mFirstState) {
@@ -407,7 +407,7 @@ public class UserLevelView extends LinearLayout implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-        MyLog.d(this.getClass().getSimpleName(), "on click");
+        Logger.d(this.getClass().getSimpleName(), "on click");
 
         if (!mClick || System.currentTimeMillis() - lastTimeClicked < 1000)
             return;

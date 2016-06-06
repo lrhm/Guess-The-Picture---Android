@@ -3,13 +3,14 @@ package ir.treeco.aftabe2.API.Socket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import io.socket.client.Ack;
@@ -146,8 +147,8 @@ public class SocketAdapter {
         if (Tools.getCachedUser(mContext) == null)
             return;
 
-        MyLog.d(TAG, "initilizing socketa");
-        MyLog.d(TAG, "user name is " + Tools.getCachedUser(null).getId());
+        Logger.d(TAG, "initilizing socketa");
+        Logger.d(TAG, "user name is " + Tools.getCachedUser(null).getId());
 
         String url = "https://aftabe2.com:2020";
 
@@ -170,8 +171,8 @@ public class SocketAdapter {
                 @Override
                 public void call(final Object... args) {
 
-                    MyLog.d(TAG, "got");
-                    MyLog.d(TAG, "gameResult is " + args[0].toString());
+                    Logger.d(TAG, "got");
+                    Logger.d(TAG, "gameResult is " + args[0].toString());
                     GameResultHolder gameResultHolder = gson.fromJson(args[0].toString(), GameResultHolder.class);
                     callGameRequestResult(gameResultHolder);
 
@@ -181,7 +182,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "user action is " + msg);
+                    Logger.d(TAG, "user action is " + msg);
                     UserActionHolder userActionHolder = gson.fromJson(msg, UserActionHolder.class);
                     userActionHolder.update();
                     callGameActions(userActionHolder);
@@ -191,7 +192,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "result is " + msg);
+                    Logger.d(TAG, "result is " + msg);
                     ResultHolder resultHolder = gson.fromJson(msg, ResultHolder.class);
                     callGameResult(resultHolder);
 
@@ -200,7 +201,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "gameStart is " + msg);
+                    Logger.d(TAG, "gameStart is " + msg);
                     GameStartObject gameStartObject = gson.fromJson(msg, GameStartObject.class);
                     callGameStart(gameStartObject);
                 }
@@ -208,7 +209,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-//                    MyLog.d(TAG, "online is : " + msg);
+//                    Logger.d(TAG, "online is : " + msg);
                     OnlineFriendStatusHolder statusHolder = gson.fromJson(msg, OnlineFriendStatusHolder.class);
                     if (statusHolder.getStatus() != null)
                         callFriendStatusChanged(statusHolder);
@@ -219,7 +220,7 @@ public class SocketAdapter {
                 public void call(Object... args) {
 
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "matchReqSF is : " + msg);
+                    Logger.d(TAG, "matchReqSF is : " + msg);
                     MatchRequestSFHolder requestHolder = gson.fromJson(msg, MatchRequestSFHolder.class);
                     callMatchRequest(requestHolder);
 
@@ -230,7 +231,7 @@ public class SocketAdapter {
 
 
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "matchResult is : " + msg);
+                    Logger.d(TAG, "matchResult is : " + msg);
                     MatchResultHolder matchResultHolder = gson.fromJson(msg, MatchResultHolder.class);
                     callMatchResult(matchResultHolder);
 
@@ -240,7 +241,7 @@ public class SocketAdapter {
                 public void call(Object... args) {
 
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "friendSF is : " + msg);
+                    Logger.d(TAG, "friendSF is : " + msg);
                     FriendRequestHolder friendRequestHolder = gson.fromJson(msg, FriendRequestHolder.class);
                     callFriendRequestListeners(friendRequestHolder);
 
@@ -249,7 +250,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "notifWarn is : " + msg);
+                    Logger.d(TAG, "notifWarn is : " + msg);
                     NotifCountHolder countHolder = gson.fromJson(msg, NotifCountHolder.class);
                     callNotifListners(countHolder);
                 }
@@ -257,7 +258,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
                     String msg = args[0].toString();
-                    MyLog.d(TAG, "timerUpdate is : " + msg);
+                    Logger.d(TAG, "timerUpdate is : " + msg);
                     TimeLeftHolder timeLeftHolder = gson.fromJson(msg, TimeLeftHolder.class);
                     if (timeLefTListener != null)
                         timeLefTListener.onTime(timeLeftHolder.left);
@@ -268,7 +269,7 @@ public class SocketAdapter {
                 @Override
                 public void call(Object... args) {
 
-                    MyLog.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
+                    Logger.d(TAG, "connected " + ((args.length != 0) ? args[0].toString() : ""));
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
@@ -281,36 +282,36 @@ public class SocketAdapter {
             }).on(Socket.EVENT_PING, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-//                    MyLog.d(TAG, "ping " + ((args.length != 0) ? args[0].toString() : ""));
+//                    Logger.d(TAG, "ping " + ((args.length != 0) ? args[0].toString() : ""));
 
                 }
             }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    MyLog.d(TAG, "disconnected " + ((args.length != 0) ? args[0].toString() : ""));
+                    Logger.d(TAG, "disconnected " + ((args.length != 0) ? args[0].toString() : ""));
                 }
             }).on(Socket.EVENT_ERROR, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    MyLog.d(TAG, "error " + ((args.length != 0) ? args[0].toString() : ""));
+                    Logger.d(TAG, "error " + ((args.length != 0) ? args[0].toString() : ""));
 
                 }
             }).on(Socket.EVENT_PONG, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-//                    MyLog.d(TAG, "pong " + ((args.length != 0) ? args[0].toString() : ""));
+//                    Logger.d(TAG, "pong " + ((args.length != 0) ? args[0].toString() : ""));
 
                 }
             }).on("cancelResult", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    MyLog.d(TAG, "cancel result " + args[0].toString());
+                    Logger.d(TAG, "cancel result " + args[0].toString());
                 }
             });
             mSocket.connect();
 
 
-            MyLog.d(TAG, "try to connect");
+            Logger.d(TAG, "try to connect");
 
 
         } catch (URISyntaxException e) {
@@ -328,7 +329,7 @@ public class SocketAdapter {
         final Gson gson = new Gson();
         RequestHolder requestHolder = new RequestHolder();
         final String msg = gson.toJson(requestHolder);
-        MyLog.d(TAG, "emit:gameRequest " + msg);
+        Logger.d(TAG, "emit:gameRequest " + msg);
 
         new Thread(new Runnable() {
             @Override
@@ -338,7 +339,7 @@ public class SocketAdapter {
                     mSocket.emit("gameRequest", msg, new Ack() {
                         @Override
                         public void call(Object... args) {
-                            MyLog.d(TAG, " got ack in game requeset ");
+                            Logger.d(TAG, " got ack in game requeset ");
 
                         }
                     });
@@ -355,7 +356,7 @@ public class SocketAdapter {
         final Gson gson = new Gson();
         RequestHolder requestHolder = new RequestHolder();
         final String msg = gson.toJson(requestHolder);
-        MyLog.d(TAG, "emit:ping " + msg);
+        Logger.d(TAG, "emit:ping " + msg);
 
         new Thread(new Runnable() {
             @Override
@@ -365,7 +366,7 @@ public class SocketAdapter {
                     mSocket.emit(Socket.EVENT_PING, msg, new Ack() {
                         @Override
                         public void call(Object... args) {
-                            MyLog.d(TAG, " got ack in pong " + ((args.length != 0) ? args[0].toString() : ""));
+                            Logger.d(TAG, " got ack in pong " + ((args.length != 0) ? args[0].toString() : ""));
 
                         }
                     });
@@ -456,7 +457,7 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                MyLog.d(TAG, "emit:ready " + msg);
+                Logger.d(TAG, "emit:ready " + msg);
                 if (mSocket != null)
 
                     mSocket.emit("ready", msg);
@@ -476,13 +477,13 @@ public class SocketAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                MyLog.d(TAG, "answerLevel : " + msg);
+                Logger.d(TAG, "answerLevel : " + msg);
                 if (mSocket != null)
 
                     mSocket.emit("answerLevel", msg, new Ack() {
                         @Override
                         public void call(Object... args) {
-                            MyLog.d(TAG, "got asnwer level ack");
+                            Logger.d(TAG, "got asnwer level ack");
                         }
                     });
             }
@@ -518,7 +519,7 @@ public class SocketAdapter {
                 MatchRequestHolder requestHolder = new MatchRequestHolder(friendId);
                 Gson gson = new Gson();
 
-                MyLog.d(TAG, "emit matchUS : " + gson.toJson(requestHolder));
+                Logger.d(TAG, "emit matchUS : " + gson.toJson(requestHolder));
 
                 if (mSocket != null)
 
@@ -538,7 +539,7 @@ public class SocketAdapter {
 
                 MatchResponseHolder responseHolder = new MatchResponseHolder(friendId, accepted);
                 Gson gson = new Gson();
-                MyLog.d(TAG, "emit matchResponse : " + gson.toJson(responseHolder));
+                Logger.d(TAG, "emit matchResponse : " + gson.toJson(responseHolder));
                 if (mSocket != null)
 
                     mSocket.emit("matchResponse", gson.toJson(responseHolder));
@@ -552,7 +553,7 @@ public class SocketAdapter {
         initSocket();
         RequestHolder requestHolder = new RequestHolder();
         Gson gson = new Gson();
-        MyLog.d(TAG, "emit onlineRequest : " + gson.toJson(requestHolder));
+        Logger.d(TAG, "emit onlineRequest : " + gson.toJson(requestHolder));
         if (mSocket != null)
             mSocket.emit("onlineRequest", gson.toJson(requestHolder));
 
@@ -567,7 +568,7 @@ public class SocketAdapter {
 
                 FriendRequestResultHolder holder = new FriendRequestResultHolder(userId, accept);
                 Gson gson = new Gson();
-                MyLog.d(TAG, "emit friendUS : " + gson.toJson(holder));
+                Logger.d(TAG, "emit friendUS : " + gson.toJson(holder));
                 if (mSocket != null)
 
                     mSocket.emit("friendUS", gson.toJson(holder));

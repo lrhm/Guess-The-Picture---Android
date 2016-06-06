@@ -1,6 +1,6 @@
 package ir.treeco.aftabe2.Adapter;
 
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -47,12 +47,12 @@ public class HiddenAdapter {
         this.hiddenUsr = hiddenUsr;
         Prefs.putString(KEY, new Gson().toJson(hiddenUsr));
 
-        MyLog.d(KEY, "hiddn created");
+        Logger.d(KEY, "hiddn created");
     }
 
     public void createHiddenUsr() {
 
-        MyLog.d(KEY, "createHiddnUsr");
+        Logger.d(KEY, "createHiddnUsr");
 
         if (Tools.getCachedUser(null) != null || Tools.isThereOldUserToken()) {
             return;

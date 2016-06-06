@@ -52,8 +52,8 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v4.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
 
-import ir.treeco.aftabe2.Util.MyLog;
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.FocusFinder;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -633,13 +633,13 @@ public class VerticalViewPager extends ViewGroup {
                 mSetChildrenDrawingOrderEnabled = ViewGroup.class.getDeclaredMethod(
                         "setChildrenDrawingOrderEnabled", new Class[]{Boolean.TYPE});
             } catch (NoSuchMethodException e) {
-                MyLog.e(TAG, "Can't find setChildrenDrawingOrderEnabled", e);
+                Logger.e(TAG, "Can't find setChildrenDrawingOrderEnabled", e);
             }
         }
         try {
             mSetChildrenDrawingOrderEnabled.invoke(this, enable);
         } catch (Exception e) {
-            MyLog.e(TAG, "Error changing children drawing order", e);
+            Logger.e(TAG, "Error changing children drawing order", e);
         }
     }
 
@@ -692,7 +692,7 @@ public class VerticalViewPager extends ViewGroup {
      */
     public void setOffscreenPageLimit(int limit) {
         if (limit < DEFAULT_OFFSCREEN_PAGES) {
-            MyLog.w(TAG, "Requested offscreen page limit " + limit + " too small; defaulting to " +
+            Logger.w(TAG, "Requested offscreen page limit " + limit + " too small; defaulting to " +
                     DEFAULT_OFFSCREEN_PAGES);
             limit = DEFAULT_OFFSCREEN_PAGES;
         }
@@ -940,7 +940,7 @@ public class VerticalViewPager extends ViewGroup {
         // fling to a new position until we have finished the scroll to
         // that position, avoiding glitches from happening at that point.
         if (mPopulatePending) {
-            if (DEBUG) MyLog.i(TAG, "populate is pending, skipping for now...");
+            if (DEBUG) Logger.i(TAG, "populate is pending, skipping for now...");
             return;
         }
 
@@ -991,7 +991,7 @@ public class VerticalViewPager extends ViewGroup {
                         mItems.remove(itemIndex);
                         mAdapter.destroyItem(this, pos, ii.object);
                         if (DEBUG) {
-                            MyLog.i(TAG, "populate() - destroyItem() with pos: " + pos +
+                            Logger.i(TAG, "populate() - destroyItem() with pos: " + pos +
                                     " view: " + ((View) ii.object));
                         }
                         itemIndex--;
@@ -1023,7 +1023,7 @@ public class VerticalViewPager extends ViewGroup {
                             mItems.remove(itemIndex);
                             mAdapter.destroyItem(this, pos, ii.object);
                             if (DEBUG) {
-                                MyLog.i(TAG, "populate() - destroyItem() with pos: " + pos +
+                                Logger.i(TAG, "populate() - destroyItem() with pos: " + pos +
                                         " view: " + ((View) ii.object));
                             }
                             ii = itemIndex < mItems.size() ? mItems.get(itemIndex) : null;
@@ -1045,9 +1045,9 @@ public class VerticalViewPager extends ViewGroup {
         }
 
         if (DEBUG) {
-            MyLog.i(TAG, "Current page list:");
+            Logger.i(TAG, "Current page list:");
             for (int i = 0; i < mItems.size(); i++) {
-                MyLog.i(TAG, "#" + i + ": page " + mItems.get(i).position);
+                Logger.i(TAG, "#" + i + ": page " + mItems.get(i).position);
             }
         }
 
@@ -1338,7 +1338,7 @@ public class VerticalViewPager extends ViewGroup {
     @SuppressWarnings("deprecation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (DEBUG) MyLog.d(TAG, "onMeasure");
+        if (DEBUG) Logger.d(TAG, "onMeasure");
 
         // For simple implementation, or internal size is always 0.
         // We depend on the container to specify the layout size of
@@ -1425,7 +1425,7 @@ public class VerticalViewPager extends ViewGroup {
         for (int i = 0; i < size; ++i) {
             final View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
-                if (DEBUG) MyLog.v(TAG, "Measuring #" + i + " " + child
+                if (DEBUG) Logger.v(TAG, "Measuring #" + i + " " + child
                         + ": " + mChildWidthMeasureSpec);
                 if (child.getParent() instanceof FrameLayout)
                     continue;
@@ -1482,7 +1482,7 @@ public class VerticalViewPager extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (DEBUG) MyLog.d(TAG, "onLayout");
+        if (DEBUG) Logger.d(TAG, "onLayout");
 
         mInLayout = true;
         populate();
@@ -1578,7 +1578,7 @@ public class VerticalViewPager extends ViewGroup {
                                 MeasureSpec.EXACTLY);
                         child.measure(widthSpec, heightSpec);
                     }
-                    if (DEBUG) MyLog.v(TAG, "Positioning #" + i + " " + child + " f=" + ii.object
+                    if (DEBUG) Logger.v(TAG, "Positioning #" + i + " " + child + " f=" + ii.object
                             + ":" + childLeft + "," + childTop + " " + child.getMeasuredWidth()
                             + "x" + child.getMeasuredHeight());
                     child.layout(childLeft, childTop,
@@ -1739,10 +1739,10 @@ public class VerticalViewPager extends ViewGroup {
     private void completeScroll(boolean postEvents) {
         boolean needPopulate = mScrollState == SCROLL_STATE_SETTLING;
         if (DEBUG)
-            MyLog.d(TAG, "complete scroll");
+            Logger.d(TAG, "complete scroll");
         if (needPopulate) {
             if (DEBUG) {
-                MyLog.d(TAG, "need populate , done with scroll");
+                Logger.d(TAG, "need populate , done with scroll");
             }
             // Done with scroll, no longer want to cache view drawing.
             setScrollingCacheEnabled(false);
@@ -1762,17 +1762,17 @@ public class VerticalViewPager extends ViewGroup {
                 needPopulate = true;
                 ii.scrolling = false;
                 if (DEBUG) {
-                    MyLog.d(TAG, "item is not scrolling need populate " + i);
+                    Logger.d(TAG, "item is not scrolling need populate " + i);
                 }
             }
         }
         if (needPopulate) {
             if (DEBUG) {
-                MyLog.d(TAG, "still need populate");
+                Logger.d(TAG, "still need populate");
             }
             if (postEvents) {
                 if (DEBUG) {
-                    MyLog.d(TAG, "still need populate " + "post aon anim");
+                    Logger.d(TAG, "still need populate " + "post aon anim");
                 }
 
                 ViewCompat.postOnAnimation(this, mEndScrollRunnable);
@@ -1811,7 +1811,7 @@ public class VerticalViewPager extends ViewGroup {
         // Always take care of the touch gesture being complete.
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             // Release the drag.
-            if (DEBUG) MyLog.v(TAG, "Intercept done!");
+            if (DEBUG) Logger.v(TAG, "Intercept done!");
             mIsBeingDragged = false;
             mIsUnableToDrag = false;
             mActivePointerId = INVALID_POINTER;
@@ -1826,11 +1826,11 @@ public class VerticalViewPager extends ViewGroup {
         // are dragging.
         if (action != MotionEvent.ACTION_DOWN) {
             if (mIsBeingDragged) {
-                if (DEBUG) MyLog.v(TAG, "Intercept returning true!");
+                if (DEBUG) Logger.v(TAG, "Intercept returning true!");
                 return true;
             }
             if (mIsUnableToDrag) {
-                if (DEBUG) MyLog.v(TAG, "Intercept returning false!");
+                if (DEBUG) Logger.v(TAG, "Intercept returning false!");
                 return false;
             }
         }
@@ -1871,7 +1871,7 @@ public class VerticalViewPager extends ViewGroup {
                     return false;
                 }
                 if (yDiff > mTouchSlop && yDiff > xDiff) {
-                    if (DEBUG) MyLog.v(TAG, "Starting drag!");
+                    if (DEBUG) Logger.v(TAG, "Starting drag!");
                     mIsBeingDragged = true;
                     setScrollState(SCROLL_STATE_DRAGGING);
                     mLastMotionY = dy > 0 ? mInitialMotionY + mTouchSlop :
@@ -1883,7 +1883,7 @@ public class VerticalViewPager extends ViewGroup {
                         // direction to be counted as a drag...  abort
                         // any attempt to drag horizontally, to work correctly
                         // with children that have scrolling containers.
-                        if (DEBUG) MyLog.v(TAG, "Starting unable to drag!");
+                        if (DEBUG) Logger.v(TAG, "Starting unable to drag!");
                         mIsUnableToDrag = true;
                     }
                 }
@@ -1908,9 +1908,9 @@ public class VerticalViewPager extends ViewGroup {
 
                 mScroller.computeScrollOffset();
                 if (DEBUG) {
-                    MyLog.d(TAG, "scroll state " + mScrollState + " " + SCROLL_STATE_SETTLING);
-                    MyLog.d(TAG, Math.abs(mScroller.getFinalY() - mScroller.getCurrY()) + " " + mCloseEnough);
-                    MyLog.d(TAG, degreeOfFreedom + " d of f" + " " + (degreeOfFreedom == 0.1f));
+                    Logger.d(TAG, "scroll state " + mScrollState + " " + SCROLL_STATE_SETTLING);
+                    Logger.d(TAG, Math.abs(mScroller.getFinalY() - mScroller.getCurrY()) + " " + mCloseEnough);
+                    Logger.d(TAG, degreeOfFreedom + " d of f" + " " + (degreeOfFreedom == 0.1f));
                 }
                 if ((mScrollState == SCROLL_STATE_SETTLING &&
                         Math.abs(mScroller.getFinalY() - mScroller.getCurrY()) > mCloseEnough)) {
@@ -1925,7 +1925,7 @@ public class VerticalViewPager extends ViewGroup {
                     mIsBeingDragged = false;
                 }
 
-                if (DEBUG) MyLog.v(TAG, "Down at " + mLastMotionX + "," + mLastMotionY
+                if (DEBUG) Logger.v(TAG, "Down at " + mLastMotionX + "," + mLastMotionY
                         + " mIsBeingDragged=" + mIsBeingDragged
                         + "mIsUnableToDrag=" + mIsUnableToDrag);
                 break;
@@ -1938,11 +1938,11 @@ public class VerticalViewPager extends ViewGroup {
 
         if (mVelocityTracker == null) {
             if (DEBUG)
-                MyLog.d(TAG, "Velocity Tracker is null");
+                Logger.d(TAG, "Velocity Tracker is null");
             mVelocityTracker = VelocityTracker.obtain();
         }
         if (DEBUG)
-            MyLog.d(TAG, "Velocity Tracker is not null");
+            Logger.d(TAG, "Velocity Tracker is not null");
 
         mVelocityTracker.addMovement(ev);
 
@@ -2008,10 +2008,10 @@ public class VerticalViewPager extends ViewGroup {
 
 
                     if (DEBUG)
-                        MyLog.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
+                        Logger.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
 
                     if (yDiff > mTouchSlop && yDiff > xDiff) {
-                        if (DEBUG) MyLog.v(TAG, "Starting drag!");
+                        if (DEBUG) Logger.v(TAG, "Starting drag!");
                         mIsBeingDragged = true;
                         mLastMotionY = y - mInitialMotionY > 0 ? mInitialMotionY + mTouchSlop :
                                 mInitialMotionY - mTouchSlop;
@@ -2025,7 +2025,7 @@ public class VerticalViewPager extends ViewGroup {
                     final int activePointerIndex = MotionEventCompat.findPointerIndex(
                             ev, mActivePointerId);
                     final float y = MotionEventCompat.getY(ev, activePointerIndex);
-//                    MyLog.d(TAG, "perform y " + (y - mLastMotionY));
+//                    Logger.d(TAG, "perform y " + (y - mLastMotionY));
 
                         needsInvalidate |= performDrag(y);
                 }

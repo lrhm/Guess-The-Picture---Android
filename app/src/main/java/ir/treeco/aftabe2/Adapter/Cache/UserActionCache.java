@@ -1,11 +1,6 @@
 package ir.treeco.aftabe2.Adapter.Cache;
 
-import ir.treeco.aftabe2.Util.MyLog;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 

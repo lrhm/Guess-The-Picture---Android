@@ -3,9 +3,10 @@ package ir.treeco.aftabe2.Adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ import ir.treeco.aftabe2.View.Custom.UserLevelView;
 import ir.treeco.aftabe2.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe2.View.Dialog.LoadingForMatchRequestResult;
 import ir.treeco.aftabe2.View.Dialog.RegistrationDialog;
-import ir.treeco.aftabe2.View.Fragment.ChatFragment;
 
 /**
  * Created by al on 12/26/15.
@@ -221,7 +221,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     ToastMaker.show(context, context.getResources().getString(R.string.chat_not_available), Toast.LENGTH_SHORT);
 //                    ChatFragment chatFragment = new ChatFragment();
 //
-//                    MyLog.d("TAG", "click Temp real pos " + realPosition);
+//                    Logger.d("TAG", "click Temp real pos " + realPosition);
 //                    FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
 //                    transaction.replace(R.id.fragment_container, chatFragment);
 //                    transaction.addToBackStack(null);
@@ -309,7 +309,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 });
         } else if (type == TYPE_REQUEST) {
 
-            MyLog.d(TAG, "binded to type request");
+            Logger.d(TAG, "binded to type request");
             holder.mChatButton.setVisibility(View.VISIBLE);
             holder.mMatchButton.setVisibility(View.VISIBLE);
 
@@ -346,7 +346,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     }
 
 
-                    MyLog.d(TAG, "click on yes");
+                    Logger.d(TAG, "click on yes");
                     removeUser(user, type);
 //                    user.setIsFriend(true);
 //                    addUser(user, TYPE_FRIEND);

@@ -1,6 +1,6 @@
 package ir.treeco.aftabe2.Object;
 
-import ir.treeco.aftabe2.Util.MyLog;
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -61,7 +61,7 @@ public class SaveHolder {
             return key;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            MyLog.d("TAG", "unsopported encoding e");
+            Logger.d("TAG", "unsopported encoding e");
 
             return "1234567812345678".getBytes();
 

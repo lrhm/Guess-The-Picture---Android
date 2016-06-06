@@ -6,7 +6,8 @@ package ir.treeco.aftabe2.Service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import ir.treeco.aftabe2.Util.MyLog;
+
+import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -41,7 +42,7 @@ public class RegistrationIntentService extends IntentService {
         try {
             // request token that will be used by the server to send push notifications
             String token = instanceID.getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-            MyLog.d(TAG, "GCM Registration Token: " + token);
+            Logger.d(TAG, "GCM Registration Token: " + token);
 
 
             Prefs.putString(GCM_TOKEN, token);
