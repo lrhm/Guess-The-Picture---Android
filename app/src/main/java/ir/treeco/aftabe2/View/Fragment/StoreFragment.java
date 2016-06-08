@@ -38,9 +38,9 @@ public class StoreFragment extends Fragment {
     public static final String SKU_MEDIUM_COIN = "medium_coin";
     public static final String SKU_BIG_COIN = "big_coin";
     public static final int AMOUNT_VERY_SMALL_COIN = 500;
-    public static final int AMOUNT_SMALL_COIN = 1000;
-    public static final int AMOUNT_MEDIUM_COIN = 2000;
-    public static final int AMOUNT_BIG_COIN = 5000;
+    public static final int AMOUNT_SMALL_COIN = 2000;
+    public static final int AMOUNT_MEDIUM_COIN = 4000;
+    public static final int AMOUNT_BIG_COIN = 12500;
     static final int[] buttonIds = new int[]{
             R.id.very_small_coin,
             R.id.small_coin,
@@ -73,7 +73,7 @@ public class StoreFragment extends Fragment {
         int padding = lengthManager.getStoreDialogPadding();
         dialog.setPadding(padding, padding, padding, padding);
 
-        final int[] prices = new int[]{450, 800, 1500, 5000, -1, -1};
+        final int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
 
         for (int i = 0; i < SKUs.length; i++) {
             final int finalI = i;
@@ -96,7 +96,7 @@ public class StoreFragment extends Fragment {
 
                     CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
-                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.beep.aftabe/?l=fa"));
+                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
                     startActivity(browserIntent);
 
                     reviewBazaar.setVisibility(View.GONE);
@@ -129,7 +129,7 @@ public class StoreFragment extends Fragment {
     }
 
     private void setupItemsList() {
-        int[] revenues = new int[]{1000, 4000, 8000, 25000, 300, 20};
+        int[] revenues = new int[]{500, 2000, 4000, 12500, 300, 20};
         int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);

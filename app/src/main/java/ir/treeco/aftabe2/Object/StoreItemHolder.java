@@ -28,7 +28,7 @@ public class StoreItemHolder {
 
             instace = new StoreItemHolder();
             instace.skuPrice = new HashMap<>();
-            final int[] prices = new int[]{450, 800, 1500, 5000, -1, -1};
+            final int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
 
             for(int i = 0 ; i < SKUs.length ; i++){
                 skuPrice.put(SKUs[i], prices[i]);

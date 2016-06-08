@@ -36,7 +36,7 @@ public class StarView extends RelativeLayout {
         mStarPlaceHolder = new ImageView(context);
         mStarView = new ImageView(context);
 
-        SizeConverter sizeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * mSize, 357, 342);
+        SizeConverter sizeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * mSize, 193, 185);
         mStarView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.star, sizeConverter.mWidth, sizeConverter.mHeight, ImageManager.ScalingLogic.FIT));
         mStarPlaceHolder.setImageBitmap(imageManager.loadImageFromResource(R.drawable.starplace, sizeConverter.mWidth, sizeConverter.mHeight, ImageManager.ScalingLogic.FIT));
 

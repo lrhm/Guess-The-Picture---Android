@@ -977,6 +977,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
+
+        if(result == null)
+            return;
+
         String TAG = "GoogleSignInResult";
         Logger.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -1210,6 +1214,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     private boolean isPaused = false;
+    private long pauseTime = 0;
 
     @Override
     protected void onPause() {
@@ -1219,7 +1224,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (mLoadingDialog != null)
             mLoadingDialog.onBackPressed();
 
+        pauseTime = System.currentTimeMillis();
+
         SocketAdapter.disconnect();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (isPaused && System.currentTimeMillis() - pauseTime >= 2 * 55 * 1000)
+//                    SocketAdapter.disconnect();
+//
+//            }
+//        }, 2 * 60 * 1000);
 
         isPaused = true;
 
@@ -1231,6 +1246,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         isPaused = false;
+
+
         SocketAdapter.reconnect();
 
 

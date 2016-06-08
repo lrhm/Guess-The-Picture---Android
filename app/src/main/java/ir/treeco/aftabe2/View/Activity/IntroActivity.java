@@ -36,13 +36,15 @@ public class IntroActivity extends FragmentActivity implements IntroFragment.OnF
         pager = (ViewPager) findViewById(R.id.intro_activity_pager);
 
 
-        fragments = new IntroFragment[2];
+        fragments = new IntroFragment[3];
 
+        fragments[2] = IntroFragment.getInstance(R.drawable.intro_beta, 2);
         fragments[1] = IntroFragment.getInstance(R.drawable.intro_one, 1);
         fragments[0] = IntroFragment.getInstance(R.drawable.intro_two, 0);
 
         fragments[0].setOnFragmentButtonListner(this);
         fragments[1].setOnFragmentButtonListner(this);
+        fragments[2].setOnFragmentButtonListner(this);
 
         adapter = new FragmentAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
@@ -54,6 +56,10 @@ public class IntroActivity extends FragmentActivity implements IntroFragment.OnF
     public void onClick(int id) {
         if (id == 0) {
             pager.setCurrentItem(1, true);
+            return;
+        }
+        if (id == 1) {
+            pager.setCurrentItem(2, true);
             return;
         }
 

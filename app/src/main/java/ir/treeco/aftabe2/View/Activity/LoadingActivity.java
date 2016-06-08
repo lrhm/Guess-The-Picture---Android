@@ -100,7 +100,7 @@ public class LoadingActivity extends Activity implements Runnable {
 
         if (Prefs.getBoolean("firstAppRun", true)) {
 
-            db.insertCoins(399);
+            db.insertCoins(500);
             PackageTools.getInstance(this).copyLocalpackages();
 
 

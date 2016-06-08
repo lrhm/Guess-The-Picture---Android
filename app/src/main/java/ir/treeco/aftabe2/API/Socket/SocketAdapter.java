@@ -39,6 +39,7 @@ import ir.treeco.aftabe2.API.Socket.Objects.TimeLeftHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.Tools;
+import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
 
 /**
@@ -58,13 +59,12 @@ public class SocketAdapter {
     private static final Object notifLock = new Object();
 
     private static Socket mSocket;
-    private static Context mContext;
+    private static MainActivity mMainActivity;
 
     private static final String TAG = "SocketAdapter";
 
-    public static void setContext(Context context) {
-        if (mContext == null)
-            mContext = context;
+    public static void setContext(MainActivity mainActivity) {
+        mMainActivity = mainActivity;
     }
 
     public static void addNotifListener(NotifListener notifListener) {
@@ -144,11 +144,10 @@ public class SocketAdapter {
         if (mSocket != null)
             return;
 
-        if (Tools.getCachedUser(mContext) == null)
+        if (Tools.getCachedUser(mMainActivity) == null)
             return;
 
         Logger.d(TAG, "initilizing socketa");
-        Logger.d(TAG, "user name is " + Tools.getCachedUser(null).getId());
 
         String url = "https://aftabe2.com:2020";
 
@@ -157,7 +156,7 @@ public class SocketAdapter {
         opts.forceNew = true;
         opts.reconnection = true;
 //        opts.timeout = 30000;
-        opts.query = "auth_token=" + Tools.getCachedUser(null).getLoginInfo().getAccessToken();
+        opts.query = "auth_token=" + Tools.getCachedUser(mMainActivity).getLoginInfo().getAccessToken();
 
 
         try {
@@ -317,7 +316,8 @@ public class SocketAdapter {
         } catch (URISyntaxException e) {
             e.printStackTrace();
             mSocket = null;
-            ToastMaker.show(mContext, mContext.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
+            if (mMainActivity != null && !mMainActivity.isPaused())
+                ToastMaker.show(mMainActivity, mMainActivity.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
         }
 
     }
@@ -377,6 +377,8 @@ public class SocketAdapter {
     }
 
     private static void callFriendRequestListeners(FriendRequestHolder holder) {
+
+
         synchronized (requestLock) {
             for (FriendRequestListener listener : requestLiseners) {
                 if (holder.isRequest())
@@ -392,6 +394,16 @@ public class SocketAdapter {
     private static void callMatchRequest(MatchRequestSFHolder responseHolder) {
 
         synchronized (friendsLock) {
+
+
+//            if (mMainActivity == null) {
+//
+//                Logger.d(TAG, "callMatchReq  activity is null");
+//            } else {
+//                Logger.d(TAG, "callMatchReq activity is not null paused " + mMainActivity.isPaused());
+//
+//            }
+
             for (SocketFriendMatchListener socket : friendsListeners)
                 socket.onMatchRequest(responseHolder);
 
@@ -401,6 +413,7 @@ public class SocketAdapter {
 
     private static void callMatchResult(MatchResultHolder responseHolder) {
         synchronized (friendsLock) {
+
 
             for (SocketFriendMatchListener socket : friendsListeners)
                 socket.onMatchResultToSender(responseHolder);
@@ -427,6 +440,8 @@ public class SocketAdapter {
 
     private static void callGameRequestResult(GameResultHolder gameResultHolder) {
         synchronized (lock) {
+
+
             for (SocketListener socketListener : listeners)
                 socketListener.onGotGame(gameResultHolder);
         }
@@ -589,7 +604,8 @@ public class SocketAdapter {
             return;
         }
 
-        mSocket.connect();
+        if (!mSocket.connected())
+            mSocket.connect();
     }
 
     public static TimeLefTListener getTimeLefTListener() {
