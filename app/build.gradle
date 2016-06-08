@@ -40,7 +40,8 @@ dependencies {
    // compile files('libs/tapsell-video-sdk.jar')
  //   compile files('libs/universal-image-loader-1.9.5.jar')
 
-    compile project(':tapsell')
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
     compile('io.socket:socket.io-client:0.7.0') {
         // excluding org.json which is provided by Android

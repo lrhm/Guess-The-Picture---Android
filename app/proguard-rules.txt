@@ -75,10 +75,12 @@
 -keep class android.support.v4.app.** { *; }
 -keep interface android.support.v4.app.** { *; }
 
-
--keep interface ir.tapsell.tapselldevelopersdk.NoProguard
--keep class * implements ir.tapsell.tapselldevelopersdk.NoProguard { *; }
--keep interface * extends ir.tapsell.tapselldevelopersdk.NoProguard { *; }
+#Tapsell
+-keepattributes EnclosingMethod
+-keep class sun.misc.Unsafe { *; }
+-keep interface ir.tapsell.tapsellvideosdk.NoProguard
+-keep class * implements ir.tapsell.tapsellvideosdk.NoProguard { *; }
+-keep interface * extends ir.tapsell.tapsellvideosdk.NoProguard { *; }
 
 ##---------------Begin: proguard configuration for Gson ----------
 # Gson uses generic type information stored in a class file when working with

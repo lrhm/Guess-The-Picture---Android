@@ -1,1 +1,1 @@
-include ':app' ,':tapsell'
+include ':app'

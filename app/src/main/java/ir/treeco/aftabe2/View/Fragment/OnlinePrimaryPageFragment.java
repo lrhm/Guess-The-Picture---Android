@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
-import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.API.Socket.Interfaces.NotifListener;
 import ir.treeco.aftabe2.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe2.API.Socket.SocketAdapter;
@@ -227,8 +227,10 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         if (v.getId() == R.id.fragment_online_primary_special_offer) {
 
             OnlineOfferAdapter.getInstance().setRequestTime();
-            DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY, null, getActivity());
-
+            DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
+                    DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE,
+                    DeveloperInterface.DEFAULT_MIN_AWARD,
+                    DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
         }
     }
 
