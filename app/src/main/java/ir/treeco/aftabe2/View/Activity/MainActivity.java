@@ -189,7 +189,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        askForContactPermission();
 
 //        ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE, Toast.LENGTH_SHORT);
 
@@ -1257,88 +1256,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         Logger.d(TAG, "super.onResume ended");
-    }
-
-    public void askForContactPermission() {
-
-        int tryed = Prefs.getInt(CONTACTS_ASKED_PERMISSION_COUNT, 0);
-        if (tryed > 2)
-            return;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("دست رسی مخاطبان")
-                        .setMessage("برای پیدا کردن دوستان و ثبت اطلاعات کاربری ")
-                        .setPositiveButton("باشه", new DialogInterface.OnClickListener() {
-
-                            @TargetApi(Build.VERSION_CODES.M)
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                requestPermissions(
-                                        new String[]
-                                                {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION}
-                                        , PERMISSION_REQUEST_CONTACT);
-
-                            }
-                        }).setNegativeButton("نه", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-
-                    }
-                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        int tryed = Prefs.getInt(CONTACTS_ASKED_PERMISSION_COUNT, 0);
-                        Prefs.putInt(CONTACTS_ASKED_PERMISSION_COUNT, tryed + 1);
-                    }
-                });
-                builder.create().show();
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-
-            } else {
-            }
-        } else {
-
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CONTACT: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Prefs.putBoolean(CONTACTS_PERMISSION, true);
-
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                }
-                if (grantResults.length > 0) {
-                    Tools.checkKey();
-                    tools.checkDB(this);
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
     }
 
 

@@ -19,13 +19,13 @@ android {
 
 
 
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     defaultPublishConfig "debug"
     defaultConfig {
         applicationId "ir.treeco.aftabe2"
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 22
     }
     buildTypes {
         release {
@@ -54,11 +54,11 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'
-    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:support-v4:22.0.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.ogaclejapan.smarttablayout:library:1.4.1'
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.4.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -66,7 +66,7 @@ dependencies {
     compile 'joda-time:joda-time:2.8.2'
 
 
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:design:22.2.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-plus:8.4.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {

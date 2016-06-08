@@ -64,11 +64,11 @@ public class ContactsAdapter implements BatchUserFoundListener {
 
     public void getContacts() {
 
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-                return;
-            // failed to get
-        }
+//        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+//            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+//                return;
+//            // failed to get
+//        }
         User user = Tools.getCachedUser(mContext);
         if (user == null)
             user = HiddenAdapter.getInstance().getHiddenUsr();
