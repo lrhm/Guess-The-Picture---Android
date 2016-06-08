@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.util.TypedValue;
@@ -52,8 +53,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 
-import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
-import ir.tapsell.tapselldevelopersdk.developer.TapsellDeveloperInfo;
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Rest.Interfaces.OldUserListener;
 import ir.treeco.aftabe2.API.Rest.Utils.ForceObject;
@@ -274,7 +273,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         String tapsellKey = "rraernffrdhehkkmdtabokdtidjelnbktrnigiqnrgnsmtkjlibkcloprioabedacriasm";
 
-        TapsellDeveloperInfo.getInstance().setDeveloperKey(tapsellKey, this);
+        DeveloperInterface.getInstance(this).init(tapsellKey, this);
 
 //        Intent intent = new Intent(this, RegistrationIntentService.class);
 //        startService(intent);
@@ -576,6 +575,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+
         onActivityResultOfTapsell(requestCode, resultCode, data);
 
 
@@ -585,21 +585,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     protected void onActivityResultOfTapsell(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode != DeveloperCtaInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE)
+        if (requestCode != DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE)
             return;
 
 
         if (data == null
-                || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
-                || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
-                || !data.hasExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
             // User didn’t open ad
             return;
 
 
-        boolean connected = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
-        boolean available = data.getBooleanExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
-        int award = data.getIntExtra(DeveloperCtaInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
+        boolean connected = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
+        boolean available = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
+        int award = data.getIntExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
         if (award == 0)
             return;
         if (!connected) {

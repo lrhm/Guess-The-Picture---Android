@@ -20,5 +20,5 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/tapsell-developer-sdk.jar')
+    compile files('libs/tapsell-video-sdk.jar')
 }

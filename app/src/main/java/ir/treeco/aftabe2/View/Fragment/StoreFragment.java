@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import ir.tapsell.tapselldevelopersdk.developer.DeveloperCtaInterface;
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.MainApplication;
@@ -112,7 +112,10 @@ public class StoreFragment extends Fragment {
 //                CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
 
-                DeveloperCtaInterface.getInstance().showNewCta(DeveloperCtaInterface.VIDEO_PLAY, 150, getActivity());
+                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
+                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE,
+                        DeveloperInterface.DEFAULT_MIN_AWARD,
+                        DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
             }
         });
 
