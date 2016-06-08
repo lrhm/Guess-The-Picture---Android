@@ -23,6 +23,7 @@ import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.FontsHolder;
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
+import ir.treeco.aftabe2.Util.StoreItemHolder;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
@@ -37,21 +38,12 @@ public class StoreFragment extends Fragment {
     public static final String SKU_SMALL_COIN = "small_coin";
     public static final String SKU_MEDIUM_COIN = "medium_coin";
     public static final String SKU_BIG_COIN = "big_coin";
-    public static final int AMOUNT_VERY_SMALL_COIN = 500;
-    public static final int AMOUNT_SMALL_COIN = 2000;
-    public static final int AMOUNT_MEDIUM_COIN = 4000;
-    public static final int AMOUNT_BIG_COIN = 12500;
+
     static final int[] buttonIds = new int[]{
             R.id.very_small_coin,
             R.id.small_coin,
             R.id.medium_coin,
             R.id.big_coin
-    };
-    static final String[] SKUs = new String[]{
-            SKU_VERY_SMALL_COIN,
-            SKU_SMALL_COIN,
-            SKU_MEDIUM_COIN,
-            SKU_BIG_COIN
     };
 
 
@@ -73,14 +65,13 @@ public class StoreFragment extends Fragment {
         int padding = lengthManager.getStoreDialogPadding();
         dialog.setPadding(padding, padding, padding, padding);
 
-        final int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
 
-        for (int i = 0; i < SKUs.length; i++) {
+        for (int i = 0; i < StoreItemHolder.getSKUs().length; i++) {
             final int finalI = i;
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) getActivity()).purchase(SKUs[finalI], prices[finalI]);
+                    ((MainActivity) getActivity()).purchase(StoreItemHolder.getSKUs()[finalI], StoreItemHolder.getPrices()[finalI]);
                 }
             });
         }
@@ -109,7 +100,6 @@ public class StoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-//                CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
 
                 DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
@@ -132,8 +122,8 @@ public class StoreFragment extends Fragment {
     }
 
     private void setupItemsList() {
-        int[] revenues = new int[]{500, 2000, 4000, 12500, 300, 20};
-        int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
+        int[] revenues = StoreItemHolder.getRevenues();
+        int[] prices = StoreItemHolder.getPrices();
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);
 

@@ -1,4 +1,5 @@
-package ir.treeco.aftabe2.Adapter;
+package ir.treeco.aftabe2.Adapter.Cache;
+
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -11,9 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by al on 5/15/16.
- *
- *
+ * Created by al on 6/8/16.
  */
 public class OnlineOfferAdapter {
 
@@ -40,13 +39,6 @@ public class OnlineOfferAdapter {
 
     }
 
-    public void setRequestTime(){
-        requestTime = System.currentTimeMillis();
-    }
-
-    public boolean isRequestForPlay(){
-        return !(requestTime == null) && System.currentTimeMillis() - requestTime < 90 * 1000;
-    }
 
     public boolean isThereOfflineOffer() {
 
@@ -78,6 +70,7 @@ public class OnlineOfferAdapter {
     public void useOffer() {
         int counter = Prefs.getInt(countKey, 2);
         counter--;
+        Prefs.putInt(countKey, counter);
         if (counter == 0) {
             saveNow();
             Prefs.putInt(countKey, 2);

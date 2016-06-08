@@ -1,14 +1,8 @@
 package ir.treeco.aftabe2.View.Activity;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,9 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
+import ir.treeco.aftabe2.Adapter.Cache.OnlineOfferAdapter;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.util.TypedValue;
@@ -80,9 +74,8 @@ import ir.treeco.aftabe2.Adapter.ForceAdapter;
 import ir.treeco.aftabe2.Adapter.FriendsAdapter;
 import ir.treeco.aftabe2.Adapter.HiddenAdapter;
 import ir.treeco.aftabe2.Adapter.MediaAdapter;
-import ir.treeco.aftabe2.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe2.MainApplication;
-import ir.treeco.aftabe2.Object.StoreItemHolder;
+import ir.treeco.aftabe2.Util.StoreItemHolder;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Service.NotifObjects.ActionHolder;
@@ -125,11 +118,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     LoadingDialog loadingDialogMatchReq = null;
     private boolean isInOnlineGame = false;
     private Object matchRqResultLock = new Object();
-    public static final String CONTACTS_PERMISSION = "shared_prefs_contacts_permission";
-    public static final String CONTACTS_ASKED_PERMISSION_COUNT = "shared_prefs_contacts_permission_asked_count";
 
     ImageView background;
-    private static final int PERMISSION_REQUEST_CONTACT = 80;
     private DBAdapter db;
     private Tools tools;
     private ImageView cheatButton;
@@ -139,7 +129,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private BillingProcessor billingProcessor;
     private TextView digits;
     private CoinAdapter coinAdapter;
-    private OnPackagePurchasedListener mOnPackagePurchasedListener;
     private LengthManager lengthManager;
     private ImageManager imageManager;
     private boolean store = false;
@@ -577,7 +566,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         onActivityResultOfTapsell(requestCode, resultCode, data);
-
+        onActivityResultOfTapsellRandomPlay(requestCode, resultCode, data);
 
         if (billingProcessor == null || !billingProcessor.handleActivityResult(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data);
@@ -608,10 +597,40 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // No such Ad was avaialbe
         } else {
             // user got {award} tomans. pay him!!!!
-            coinAdapter.earnCoins(OnlineOfferAdapter.getInstance().isRequestForPlay() ? 100 : 20);
-            if (OnlineOfferAdapter.getInstance().isRequestForPlay()) {
-                OnlineOfferAdapter.getInstance().useOffer();
-            }
+            coinAdapter.earnCoins(20);
+
+        }
+    }
+
+
+    protected void onActivityResultOfTapsellRandomPlay(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode != DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + 1)
+            return;
+
+
+        if (data == null
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE)
+                || !data.hasExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE))
+            // User didn’t open ad
+            return;
+
+
+        boolean connected = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_CONNECTED_RESPONSE, false);
+        boolean available = data.getBooleanExtra(DeveloperInterface.TAPSELL_DIRECT_AVAILABLE_RESPONSE, false);
+        int award = data.getIntExtra(DeveloperInterface.TAPSELL_DIRECT_AWARD_RESPONSE, -1);
+        if (award == 0)
+            return;
+        if (!connected) {
+            // Couldn't connect to server
+        } else if (!available) {
+            // No such Ad was avaialbe
+        } else {
+            // user got {award} tomans. pay him!!!!
+            OnlineOfferAdapter.getInstance().useOffer();
+            coinAdapter.earnCoins(100);
+            requestRandomGame();
         }
     }
 
@@ -619,7 +638,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onProductPurchased(String productId, TransactionDetails details) {
 
 
-        Integer price = StoreItemHolder.getInstnce().getPrice(productId);
+        Integer price = StoreItemHolder.getPrice(productId);
         if (price == null)
             price = 500;
         //TODO check price is never null
@@ -629,18 +648,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         MediaAdapter.getInstance(this).playPurchaseSound();
 
-        if (productId.equals(StoreFragment.SKU_VERY_SMALL_COIN))
-            coinAdapter.earnCoins(StoreFragment.AMOUNT_VERY_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_SMALL_COIN))
-            coinAdapter.earnCoins(StoreFragment.AMOUNT_SMALL_COIN);
-        else if (productId.equals(StoreFragment.SKU_MEDIUM_COIN))
-            coinAdapter.earnCoins(StoreFragment.AMOUNT_MEDIUM_COIN);
-        else if (productId.equals(StoreFragment.SKU_BIG_COIN))
-            coinAdapter.earnCoins(StoreFragment.AMOUNT_BIG_COIN);
-        else if (mOnPackagePurchasedListener != null) {
-            mOnPackagePurchasedListener.packagePurchased(productId);
-            mOnPackagePurchasedListener = null;
-        }
+        Integer amount = StoreItemHolder.getSkuAmount(productId);
+        if(amount != null)
+            coinAdapter.earnCoins(amount);
+
         billingProcessor.consumePurchase(productId);
     }
 
@@ -658,9 +669,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Logger.d("IAB", "Billing initialized.");
     }
 
-    public void setOnPackagePurchasedListener(OnPackagePurchasedListener onPackagePurchasedListener) {
-        mOnPackagePurchasedListener = onPackagePurchasedListener;
-    }
 
     @Override
     public void changed(int newAmount) {
@@ -939,11 +947,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     new Handler().postDelayed(this, 1000);
             }
         }, 2000);
-
-    }
-
-    public interface OnPackagePurchasedListener {
-        void packagePurchased(String sku);
 
     }
 

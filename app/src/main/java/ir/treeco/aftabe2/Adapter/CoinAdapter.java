@@ -3,6 +3,7 @@ package ir.treeco.aftabe2.Adapter;
 import android.app.Activity;
 import android.content.Context;
 
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.View;
@@ -45,7 +46,13 @@ public class CoinAdapter {
             new SkipAlertDialog(context, "یک ویدیو ببینید ۲۰ سکه بگیرید" + "\n" + "سکه کافی ندارید", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    TODO add a link to video ad
+//
+
+                    DeveloperInterface.getInstance(mActivity).showNewVideo(mActivity,
+                            DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE,
+                            DeveloperInterface.DEFAULT_MIN_AWARD,
+                            DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+
                 }
             }, null).show();
 

@@ -19,8 +19,8 @@ import ir.treeco.aftabe2.API.Socket.Interfaces.NotifListener;
 import ir.treeco.aftabe2.API.Socket.Objects.Notifs.NotifCountHolder;
 import ir.treeco.aftabe2.API.Socket.SocketAdapter;
 import ir.treeco.aftabe2.API.Rest.Interfaces.UserFoundListener;
+import ir.treeco.aftabe2.Adapter.Cache.OnlineOfferAdapter;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
-import ir.treeco.aftabe2.Adapter.OnlineOfferAdapter;
 import ir.treeco.aftabe2.MainApplication;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.R;
@@ -226,9 +226,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (v.getId() == R.id.fragment_online_primary_special_offer) {
 
-            OnlineOfferAdapter.getInstance().setRequestTime();
             DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
-                    DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE,
+                    DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + 1,
                     DeveloperInterface.DEFAULT_MIN_AWARD,
                     DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
         }
