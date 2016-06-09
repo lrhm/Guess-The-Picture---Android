@@ -185,6 +185,17 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!OnlineOfferAdapter.getInstance().isThereOfflineOffer()) {
+            specialOffer.setVisibility(View.GONE);
+        } else {
+            specialOffer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onGetUser(User user) {
     }
 
@@ -221,10 +232,22 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
         }
 
         if (v.getId() == R.id.multiplay_image_button) {
+
+            if (coinAdapter.getCoinsCount() < 100 && OnlineOfferAdapter.getInstance().isThereOfflineOffer()) {
+
+                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
+                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + 1,
+                        DeveloperInterface.DEFAULT_MIN_AWARD,
+                        DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+
+                return;
+            }
+
             ((MainActivity) getActivity()).requestRandomGame();
         }
 
         if (v.getId() == R.id.fragment_online_primary_special_offer) {
+
 
             DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
                     DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + 1,
@@ -247,7 +270,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
     @Override
     public void changed(int newAmount) {
 
-        if(newAmount < 100)
+        if (newAmount < 100)
             specialOffer.setVisibility(View.VISIBLE);
         else
             specialOffer.setVisibility(View.GONE);

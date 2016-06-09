@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import ir.treeco.aftabe2.Util.Logger;
+
 /**
  * Created by al on 6/8/16.
  */
@@ -54,10 +56,12 @@ public class OnlineOfferAdapter {
 
 
             if (!Prefs.contains(dateKey) || days >= 1) {
+                Logger.d(TAG, "there is offer");
 
                 int counter = Prefs.getInt(countKey, 2);
                 return counter > 0;
             }
+            Logger.d(TAG, "there is not offer");
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -70,11 +74,14 @@ public class OnlineOfferAdapter {
     public void useOffer() {
         int counter = Prefs.getInt(countKey, 2);
         counter--;
-        Prefs.putInt(countKey, counter);
         if (counter == 0) {
             saveNow();
             Prefs.putInt(countKey, 2);
-        }
+        } else
+            Prefs.putInt(countKey, counter);
+        Logger.d(TAG , counter + " is the counter");
+
+
 
     }
 
