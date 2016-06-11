@@ -9,7 +9,9 @@ import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+
 import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +108,7 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
         String[] textRights = new String[]{user.getRank() + "", user.getLoses() + "/" + user.getWins(), user.getFriendCount() + ""};
 
-        for(int i =0 ;i <3 ; i++){
+        for (int i = 0; i < 3; i++) {
             textRights[i] = Tools.numeralStringToPersianDigits(textRights[i]);
         }
 
@@ -115,7 +117,8 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
             TextView left = lefts[i];
             left.setTypeface(FontsHolder.getSansBold(getContext()));
-            left.setTextColor(Color.parseColor("#54460b"));
+            if (getActivity() != null)
+                left.setTextColor(getActivity().getResources().getColor(R.color.text_default_color));
 
             if (i != 1)
                 left.setText(titles[i]);
@@ -131,11 +134,12 @@ public class UserInfoFragment extends Fragment implements UserFoundListener {
 
             TextView right = rights[i];
             right.setText(textRights[i]);
-            right.setTextColor(Color.parseColor("#54460b"));
+            if (getActivity() != null)
+                right.setTextColor(getActivity().getResources().getColor(R.color.text_default_color));
 
-            if (i== 1){
+            if (i == 1) {
                 Spannable wordtoSpan = new SpannableString(textRights[i]);
-                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED),0 ,  (user.getLoses()+"").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                wordtoSpan.setSpan(new ForegroundColorSpan(Color.RED), 0, (user.getLoses() + "").length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 right.setText(wordtoSpan);
 
 

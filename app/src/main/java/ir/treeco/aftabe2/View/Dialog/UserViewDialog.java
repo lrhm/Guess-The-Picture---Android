@@ -145,7 +145,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             left.setTypeface(FontsHolder.getSansBold(context));
             left.setText(titles[i]);
             int margin = (int) (SizeManager.getScreenWidth() * 0.2);
-            left.setTextColor(Color.parseColor("#54460b"));
+            left.setTextColor(context.getResources().getColor(R.color.text_default_color));
 
             if (i == 1) {
 
@@ -160,7 +160,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
             right.setText(textRights[i]);
 
 
-            right.setTextColor(Color.parseColor("#54460b"));
+            right.setTextColor(context.getResources().getColor(R.color.text_default_color));
 
             if (i == 1) {
                 Spannable wordtoSpan = new SpannableString(textRights[i]);

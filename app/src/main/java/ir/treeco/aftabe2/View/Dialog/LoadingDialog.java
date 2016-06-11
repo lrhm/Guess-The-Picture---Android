@@ -122,7 +122,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingImageHeight /= 2;
         mLoadingImageWidth /= 2;
 
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(R.drawable.search_sc_1,
+        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.search_sc_1,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
 
 

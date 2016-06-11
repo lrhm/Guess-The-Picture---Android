@@ -421,6 +421,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 lengthManager.getHeaderHeight()
         ));
 
+        if (logo == null) logo = (ImageView) findViewById(R.id.logo);
+
         logo.setImageBitmap(imageManager.loadImageFromResource(
                 R.drawable.header, lengthManager.getScreenWidth(),
                 lengthManager.getScreenWidth() / 4
@@ -649,7 +651,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         MediaAdapter.getInstance(this).playPurchaseSound();
 
         Integer amount = StoreItemHolder.getSkuAmount(productId);
-        if(amount != null)
+        if (amount != null)
             coinAdapter.earnCoins(amount);
 
         billingProcessor.consumePurchase(productId);
@@ -980,7 +982,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void handleSignInResult(GoogleSignInResult result) {
 
-        if(result == null)
+        if (result == null)
             return;
 
         String TAG = "GoogleSignInResult";
@@ -1195,7 +1197,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     finish();
                 } else {
 
-                    ToastMaker.show(this, "برای خروج یک بار دیگر بازگشت را زده", Toast.LENGTH_SHORT);
+                    ToastMaker.show(this, "برای خروج یک بار دیگر بازگشت را بزن", Toast.LENGTH_SHORT);
                 }
                 return;
             }

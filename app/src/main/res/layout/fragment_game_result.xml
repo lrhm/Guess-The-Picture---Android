@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:textColor="@color/text_default_color"
 
                 />
 
@@ -50,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center_vertical"
+                android:textColor="@color/text_default_color"
 
                 />
 

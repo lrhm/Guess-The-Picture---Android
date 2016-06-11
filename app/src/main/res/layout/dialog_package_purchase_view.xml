@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
 
                 android:layout_gravity="center_horizontal"
-                android:textColor="#54460b" />
+                android:textColor="@color/text_default_color"  />
 
             <TextView
                 android:id="@+id/dialog_package_purchase_2"
@@ -35,7 +35,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="درخواست بازی "
-                android:textColor="#54460b" />
+                android:textColor="@color/text_default_color" />
 
             <TextView
                 android:id="@+id/dialog_package_purchase_3"
@@ -45,7 +45,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:text="درخواست بازی "
-                android:textColor="#54460b" />
+                android:textColor="@color/text_default_color"  />
 
             <TextView
                 android:id="@+id/dialog_package_purchase_4"
@@ -55,7 +55,7 @@
 
                 android:layout_marginTop="10dp"
                 android:text="درخواست بازی "
-                android:textColor="#54460b" />
+                android:textColor="@color/text_default_color"  />
 
 
             <RelativeLayout

@@ -51,6 +51,8 @@ public class MainFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(fragmentPagerItemAdapter);
 
+        viewPager.setCurrentItem(1);
+
 
         mSmartTabLayout = (MySmartTabLayout) view.findViewById(R.id.viewpagertab);
         mSmartTabLayout.setViewPager(viewPager);

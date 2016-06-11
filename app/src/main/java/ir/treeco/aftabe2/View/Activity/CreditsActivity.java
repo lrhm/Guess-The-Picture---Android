@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,6 +48,10 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.activity_credits);
 
+        if (SizeManager.getScreenHeight() == 0 || SizeManager.getScreenHeight() == 0) {
+            SizeManager.initSizes(this);
+        }
+
 
         ImageView credits = (ImageView) findViewById(R.id.credits_image_view);
         ImageView aftabe = (ImageView) findViewById(R.id.credits_aftabe_image_view);
@@ -66,9 +72,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         UiUtil.setWidth(credits, creditsConverter.mWidth);
         UiUtil.setHeight(credits, creditsConverter.mHeight);
-        credits.setImageBitmap(imageManager.loadImageFromResourceNoCache(
-                R.drawable.credits, creditsConverter.mWidth / 2, creditsConverter.mHeight / 2,
-                ImageManager.ScalingLogic.FIT));
+        Picasso.with(this).load(R.drawable.credits).into(credits);
 
 
         facesDrawables = new int[]{R.drawable.alaangry,
