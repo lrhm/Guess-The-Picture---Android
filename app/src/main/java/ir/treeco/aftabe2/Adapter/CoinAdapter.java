@@ -84,7 +84,7 @@ public class CoinAdapter {
     }
 
     private void earnCoinsGeneric(int amount, boolean diffless) {
-        Logger.d(TAG, "earn coin " + amount);
+        Logger.d(TAG, "earn coin " + amount + " is diffless " + diffless);
         int nextAmount = getCoinsCount() + amount;
         if (!diffless)
             addCoinDiff(amount);

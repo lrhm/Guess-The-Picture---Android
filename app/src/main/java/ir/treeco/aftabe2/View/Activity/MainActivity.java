@@ -1088,7 +1088,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         synchronized (lock) {
             long curTime = System.currentTimeMillis();
 
-            if (curTime - lastOnFinish < 1000) {
+            if (curTime - lastOnFinish < 3000) {
                 return;
             }
 
@@ -1120,8 +1120,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void run() {
 
-                Logger.d(TAG, "earn coin on finish " + resultHolder.getCoin() + " " + CoinAdapter.getCoinDiff());
-                coinAdapter.setCoinsCount(resultHolder.getCoin() + CoinAdapter.getCoinDiff());
+                Logger.d(TAG, "earn coin on finish " + resultHolder.getMyCoin(mUser) + " " + CoinAdapter.getCoinDiff());
+                coinAdapter.setCoinsCount(resultHolder.getMyCoin(mUser) + CoinAdapter.getCoinDiff());
                 mUser.setFromServer(false);
                 onGetMyUser(mUser);
             }

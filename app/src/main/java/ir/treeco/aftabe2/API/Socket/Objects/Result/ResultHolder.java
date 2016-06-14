@@ -36,8 +36,12 @@ public class ResultHolder {
     }
 
 
-    public int getCoin() {
-        return coin;
+    public int getMyCoin(User myUser) {
+
+        if (myUser.getId().equals(scores[0].getUserId()))
+            return scores[0].getCoin();
+        return scores[1].getCoin();
+
     }
 
 

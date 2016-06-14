@@ -20,6 +20,7 @@ import ir.treeco.aftabe2.Util.PackageTools;
 import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.Tools;
+import ir.treeco.aftabe2.Util.UiUtil;
 
 public class LoadingActivity extends Activity implements Runnable {
 
@@ -35,12 +36,22 @@ public class LoadingActivity extends Activity implements Runnable {
         setContentView(R.layout.activity_loading);
 
         ImageView imageView = (ImageView) findViewById(R.id.loading_logi);
+        ImageView synegy = (ImageView) findViewById(R.id.loading_sinergy);
 
         SizeManager.initSizes(this);
 
         SizeConverter logiConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.7f, 1000, 1000);
+        SizeConverter synergyConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.3f, 357, 100);
 
         imageView.setImageBitmap(ImageManager.getInstance(this).loadImageFromResource(R.drawable.logi, logiConverter.mWidth, logiConverter.mHeight));
+        synegy.setImageBitmap(ImageManager.getInstance(this).loadImageFromResource(R.drawable.synergy, synergyConverter.mWidth, synergyConverter.mHeight));
+
+        int freeSize = (int) ((SizeManager.getScreenHeight() - logiConverter.mHeight) *0.6 - synergyConverter.mHeight);
+
+        UiUtil.setTopMargin(synegy, (int) (freeSize * 0.7));
+
+        int logiTop = (int) ((SizeManager.getScreenHeight() - logiConverter.mHeight) * 0.4);
+        UiUtil.setTopMargin(imageView , logiTop );
 
         startTime = System.currentTimeMillis();
 

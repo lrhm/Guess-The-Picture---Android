@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import io.socket.client.Socket;
+import ir.treeco.aftabe2.API.Socket.Interfaces.CancelRequestListener;
 import ir.treeco.aftabe2.Adapter.LevelsAdapter;
 import ir.treeco.aftabe2.Adapter.PackageAdapter;
 import ir.treeco.aftabe2.Util.Logger;
@@ -47,7 +49,7 @@ import ir.treeco.aftabe2.View.Fragment.OnlineGameFragment;
  * Created by al on 3/16/16.
  */
 public class LoadingDialog extends Dialog implements Runnable,
-        SocketListener, DownloadTask.DownloadTaskListener, SocketFriendMatchListener, View.OnClickListener {
+        SocketListener, DownloadTask.DownloadTaskListener, SocketFriendMatchListener, View.OnClickListener, CancelRequestListener {
 
     private static final String TAG = "LoadingDialog";
     Context context;
@@ -94,9 +96,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         SocketAdapter.addFriendSocketListener(this);
         this.showCancel = showCancel;
         initImageLoading();
-
-
-
+        SocketAdapter.setCancelRequestListener(this);
 
 
     }
@@ -158,6 +158,7 @@ public class LoadingDialog extends Dialog implements Runnable,
             cancelImageView.setVisibility(View.VISIBLE);
         }
 
+        mRequestCancel = false;
 
         new Handler().postDelayed(this, 1000);
 
@@ -243,15 +244,15 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     @Override
     public void onBackPressed() {
-        if (mDismissed)
-            return;
 
-        ((MainActivity) context).setIsInOnlineGame(false);
-        ((MainActivity) context).setOnlineGame(false);
-        coinAdapter.earnCoinDiffless(100);
+        if (mDismissed || mRequestCancel)
+            return;
+        mRequestCancel = true;
+
         SocketAdapter.cancelRequest();
 
-        super.onBackPressed();
+        return;
+
     }
 
     public void clearFiles() {
@@ -316,6 +317,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         SocketAdapter.removeFriendSocketListener(this);
         SocketAdapter.removeSocketListener(this);
+        SocketAdapter.setCancelRequestListener(null);
 
         super.onDetachedFromWindow();
     }
@@ -420,12 +422,24 @@ public class LoadingDialog extends Dialog implements Runnable,
     @Override
     public void onClick(View v) {
 
-
-        ((MainActivity) context).setIsInOnlineGame(false);
-        ((MainActivity) context).setOnlineGame(false);
-        coinAdapter.earnCoinDiffless(100);
         SocketAdapter.cancelRequest();
-        dismiss();
+
+    }
+
+
+    @Override
+    public void onCancelResult(boolean result) {
+
+        if (result)
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) context).setIsInOnlineGame(false);
+                    ((MainActivity) context).setOnlineGame(false);
+                    coinAdapter.earnCoinDiffless(100);
+                    dismiss();
+                }
+            });
 
     }
 }

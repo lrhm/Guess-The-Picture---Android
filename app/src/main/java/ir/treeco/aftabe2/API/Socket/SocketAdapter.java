@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import ir.treeco.aftabe2.API.Socket.Interfaces.CancelRequestListener;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -41,6 +44,7 @@ import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
+import ir.treeco.aftabe2.View.Dialog.LoadingDialog;
 
 /**
  * Created by al on 3/14/16.
@@ -51,6 +55,7 @@ public class SocketAdapter {
     private static HashSet<SocketFriendMatchListener> friendsListeners = new HashSet<>();
     private static HashSet<FriendRequestListener> requestLiseners = new HashSet<>();
     private static HashSet<NotifListener> notifListeners = new HashSet<>();
+    private static CancelRequestListener cancelRequestListener;
     private static TimeLefTListener timeLefTListener;
 
     private static final Object lock = new Object();
@@ -116,6 +121,10 @@ public class SocketAdapter {
         synchronized (lock) {
             listeners.add(socketListener);
         }
+    }
+
+    public static void setCancelRequestListener(CancelRequestListener cancelRequestListener) {
+        SocketAdapter.cancelRequestListener = cancelRequestListener;
     }
 
     public static void removeSocketListener(SocketListener socketListener) {
@@ -304,7 +313,12 @@ public class SocketAdapter {
             }).on("cancelResult", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    Logger.d(TAG, "cancel result " + args[0].toString());
+
+                    if (cancelRequestListener != null)
+                        cancelRequestListener.onCancelResult((new JsonParser().parse(args[0].toString()).getAsJsonObject()).get("success").getAsBoolean());
+
+                    Logger.d(TAG, "cancel result " + args[0].toString() + " " +
+                            (new JsonParser().parse(args[0].toString()).getAsJsonObject()).get("success").getAsBoolean());
                 }
             });
             mSocket.connect();
@@ -615,4 +629,6 @@ public class SocketAdapter {
     public static void setTimeLefTListener(TimeLefTListener timeLefTListener) {
         SocketAdapter.timeLefTListener = timeLefTListener;
     }
+
+
 }

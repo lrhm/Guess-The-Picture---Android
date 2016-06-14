@@ -3,33 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ir.treeco.aftabe2.View.Activity.LoadingActivity"
     android:background="#232323"
-    >
+    tools:context="ir.treeco.aftabe2.View.Activity.LoadingActivity">
 
 
     <ImageView
         android:id="@+id/loading_logi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-      />
+        android:layout_centerHorizontal="true" />
 
-    <FrameLayout
-        android:id="@+id/loading_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ImageView
+        android:id="@+id/loading_sinergy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/loading_logi"
-        android:background="@android:color/black"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Loading..."
-            android:textColor="@android:color/white"
-            android:textSize="40sp" />
-
-    </FrameLayout>
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -13,9 +13,14 @@ public class ScoreResult {
     @Expose
     int score;
 
+    int coin;
+
     @Expose
     boolean winner;
 
+    public int getCoin() {
+        return coin;
+    }
 
     public int getScore() {
         return score;
