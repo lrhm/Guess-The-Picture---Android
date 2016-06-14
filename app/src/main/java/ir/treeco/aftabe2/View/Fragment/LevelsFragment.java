@@ -46,5 +46,9 @@ public class LevelsFragment extends Fragment {
         super.onResume();
 
 
+        if (getActivity().getSupportFragmentManager().findFragmentByTag(LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG) != null) {
+            GameFragment gameFragment = (GameFragment) getActivity().getSupportFragmentManager().findFragmentByTag(LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(gameFragment).commitAllowingStateLoss();
+        }
     }
 }

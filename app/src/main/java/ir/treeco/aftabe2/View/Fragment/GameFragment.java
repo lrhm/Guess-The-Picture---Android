@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import ir.treeco.aftabe2.Adapter.LevelsAdapter;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.LayoutInflater;
@@ -366,6 +367,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 new FinishLevel() {
                     @Override
                     public void NextLevel() {
+
+
                         Bundle bundle = new Bundle();
                         int levelID = level.getId() + 1;
                         bundle.putInt("LevelId", levelID);
@@ -375,7 +378,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                         gameFragment.setArguments(bundle);
 
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, gameFragment, "GameFragment");
+                        transaction.replace(R.id.fragment_container, gameFragment, LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG);
                         transaction.commitAllowingStateLoss();
                     }
 

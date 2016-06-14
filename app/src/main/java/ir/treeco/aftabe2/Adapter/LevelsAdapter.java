@@ -60,6 +60,8 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
         public void onClick(View v) {
             int levelPosition = page * 16 + getAdapterPosition();
             if (levelPosition == 0 || levels[levelPosition].isResolved() || levels[levelPosition - 1].isResolved()) {
+
+
                 Bundle bundle = new Bundle();
                 int levelID = levels[page * 16 + getAdapterPosition()].getId();
                 bundle.putInt("LevelId", levelID);

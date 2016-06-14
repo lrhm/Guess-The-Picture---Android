@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import io.socket.client.Socket;
+import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Socket.Interfaces.CancelRequestListener;
 import ir.treeco.aftabe2.Adapter.LevelsAdapter;
 import ir.treeco.aftabe2.Adapter.PackageAdapter;
@@ -38,6 +39,7 @@ import ir.treeco.aftabe2.Util.DownloadTask;
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
+import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
@@ -97,6 +99,8 @@ public class LoadingDialog extends Dialog implements Runnable,
         this.showCancel = showCancel;
         initImageLoading();
         SocketAdapter.setCancelRequestListener(this);
+
+        AftabeAPIAdapter.updateCoin(Tools.getCachedUser(context));
 
 
     }
