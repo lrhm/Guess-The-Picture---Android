@@ -13,7 +13,7 @@ import com.android.vending.billing.IInAppBillingService;
 //import ir.tgbs.iranapps.billing.IranAppsIabService;
 
 public class BillingWrapper {
-    final private static String KEY_CAFE_BAZAAR = "MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwDMSVdcFg3nWIA42O4vJGpAAT55RwQht5RsjhguiIuS/yt9kfsZ2+fUbYyQT47VBxDaSWOZ/X7c1w0N+pwCaDp/TdtHnAN/dw7vJF0W8EhfNXV74mMMXKXzeA24v0jH/JOJ33LpDn6J7tIUmFTobBgFkx6asIEhWL+V6yeoyGHrDB2LCZMQSh6iXIyxEcBDzORCizBk10Ubw6K3d3W30vIx37s3x52tk9bgY1yExcMCAwEAAQ==";
+     public static String KEY_CAFE_BAZAAR = "MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwDMSVdcFg3nWIA42O4vJGpAAT55RwQht5RsjhguiIuS/yt9kfsZ2+fUbYyQT47VBxDaSWOZ/X7c1w0N+pwCaDp/TdtHnAN/dw7vJF0W8EhfNXV74mMMXKXzeA24v0jH/JOJ33LpDn6J7tIUmFTobBgFkx6asIEhWL+V6yeoyGHrDB2LCZMQSh6iXIyxEcBDzORCizBk10Ubw6K3d3W30vIx37s3x52tk9bgY1yExcMCAwEAAQ==";
     final private static String KEY_IRAN_APPS = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXRdP4anjGTnagxoN5ttZ/94H8fI+QArRXtO3ZLJ2MgedS6pVZfgEvt6+HHVIJlBtowqVNcd3rw87PZZ86zSDj+XWteonRGwYULdlJkuRpAqbu74M4CkKf2w2CWcTzuPXW/NpUAG7WJ6v0JFGkthJOQVbdfxtE+Dh2KmgjAZMR0QIDAQAB";
 
     private final Context context;

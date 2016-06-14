@@ -304,8 +304,6 @@ public class AftabeAPIAdapter {
 
                 PackageSolvedCache.getInstance().updateToServer();
 
-                AftabeAPIAdapter.updateCoin(response.body());
-
                 response.body().setFromServer(true);
 
 
@@ -559,7 +557,7 @@ public class AftabeAPIAdapter {
     private static final Object updateCoinLock = new Object();
     private static boolean isUpdateCoinInProgress = false;
 
-    public static void  updateCoin(User myUser) {
+    public static void updateCoin(User myUser) {
 
         synchronized (updateCoinLock) {
             if (isUpdateCoinInProgress)
@@ -568,7 +566,7 @@ public class AftabeAPIAdapter {
         }
 
         init();
-        final int diff = Prefs.getInt(CoinAdapter.SHARED_PREF_COIN_DIFF, 0);
+        final int diff = CoinAdapter.getCoinDiff();
 
         if (diff == 0)
             return;

@@ -40,6 +40,8 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     private final static int MODE_NORMAL = 2;
     private final static int MODE_FACE = 1;
 
+    int[] facesStatus;
+
     int clickCount = 0;
 
     @Override
@@ -97,6 +99,8 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
                 R.id.credits_sina
         };
 
+        facesStatus = new int[imageIds.length];
+
         faces = new ImageView[imageIds.length];
 
         imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 180, 260);
@@ -112,11 +116,14 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
             faces[i].setTag(i);
             faces[i].setOnClickListener(this);
 
+            facesStatus[i] = MODE_ANGRY;
+
             int leftMargin = (int) (imageConverter.mWidth * 0.05);
             if (i != 0)
                 UiUtil.setLeftMargin(faces[i], leftMargin);
 
             setFace(i, MODE_NORMAL);
+
         }
 
 
@@ -171,6 +178,10 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     public void setFace(int index, int mode) {
 
+        if (facesStatus[index] == mode)
+            mode = Math.abs(mode - 1);
+
+        facesStatus[index] = mode;
         int faceDrawable = facesDrawables[index * (facesDrawables.length / faces.length) + mode];
 
         faces[index].setImageBitmap(imageManager.loadImageFromResource(faceDrawable, imageConverter.mWidth, imageConverter.mHeight));
@@ -207,10 +218,9 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
                 setFace(i, MODE_ANGRY);
             ToastMaker.show(this, "نزن !", Toast.LENGTH_SHORT);
             return;
+        } else {
+            setFace((Integer) v.getTag(), randFace);
         }
-
-        setFace((Integer) v.getTag(), randFace);
-
 
     }
 

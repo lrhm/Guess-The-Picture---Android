@@ -41,7 +41,8 @@
             android:label="Aftabe"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
+
             >
 
         </activity>

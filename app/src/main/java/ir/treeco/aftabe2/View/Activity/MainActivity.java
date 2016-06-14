@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Adapter.Cache.OnlineOfferAdapter;
+import ir.treeco.aftabe2.Synchronization.Synchronize;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.util.TypedValue;
@@ -246,7 +247,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setUpHeader();
         setOriginalBackground(R.drawable.circles);
 
-        billingProcessor = new BillingProcessor(this, this, BillingWrapper.Service.CAFE_BAZAAR);
+        billingProcessor = new BillingProcessor(this, BillingWrapper.KEY_CAFE_BAZAAR, this);
 
         mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -723,8 +724,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (mUser.isFromServer() && mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
                     coinAdapter.setCoinsCount(mUser.getCoins());
                     CoinAdapter.addCoinDiff(-CoinAdapter.getCoinDiff());
-
                 }
+
+                if (mUser.isFromServer())
+                    AftabeAPIAdapter.updateCoin(mUser);
+
             }
         });
 
@@ -960,7 +964,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     .putCustomAttribute("sku", sku));
 
 
-            billingProcessor.purchase(sku);
+            billingProcessor.purchase(this, sku);
         } else {
             ToastMaker.show(this, "در حال برقراری ارتباط با کافه بازار، کمی دیگر تلاش کنید.", Toast.LENGTH_SHORT);
         }
@@ -1135,7 +1139,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void requestRandomGame() {
 
-        if (myUser == null) {
+        if (myUser == null || !Synchronize.isOnline(this)) {
             ToastMaker.show(this, getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
             AftabeAPIAdapter.tryToLogin(this);
             return;
@@ -1176,7 +1180,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
-
 
 
         final OnlineGameFragment fragment = (OnlineGameFragment) getSupportFragmentManager().findFragmentByTag("FRAGMENT_ONLINE_GAME");
@@ -1300,7 +1303,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (actionHolder.isMatchRequest()) {
             if (actionHolder.isActionSpecified()) {
 
-                if (!coinAdapter.spendCoins(100)) {
+                if (!coinAdapter.spendCoinDiffless(100)) {
 
                     SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), false);
                     return;

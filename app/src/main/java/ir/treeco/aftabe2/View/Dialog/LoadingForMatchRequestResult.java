@@ -109,7 +109,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
                 @Override
                 public void run() {
                     if (!earnedCoinBack)
-                        coinAdapter.earnCoins(100);
+                        coinAdapter.earnCoinDiffless(100);
                     earnedCoinBack = true;
                     if (!(((MainActivity) context).isPaused()))
                         ToastMaker.show(context, "پاسخی دریافت نشد", Toast.LENGTH_SHORT);
@@ -244,7 +244,7 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
                 public void run() {
                     if (!((MainActivity) context).isFinishing() && !earnedCoinBack) {
 
-                        coinAdapter.earnCoins(100);
+                        coinAdapter.earnCoinDiffless(100);
                         earnedCoinBack = true;
 
                     }
