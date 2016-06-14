@@ -6,8 +6,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import ir.treeco.aftabe2.Adapter.LevelsAdapter;
+import ir.treeco.aftabe2.Adapter.PackageAdapter;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.View;
@@ -36,6 +39,7 @@ import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
+import ir.treeco.aftabe2.View.Fragment.GameFragment;
 import ir.treeco.aftabe2.View.Fragment.OnlineGameFragment;
 
 
@@ -92,11 +96,28 @@ public class LoadingDialog extends Dialog implements Runnable,
         initImageLoading();
 
 
+
+
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MainActivity mainActivity = ((MainActivity) context);
+
+
+        String[] tags = new String[]{LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG, PackageAdapter.PACKAGE_LEVEL_LIST_TAG};
+        for (String tag : tags) {
+            Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragment != null) {
+                Logger.d(TAG, "fragment " + tag + " is not null");
+                mainActivity.getSupportFragmentManager().popBackStack();
+//                mainActivity.getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
+            }
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -227,7 +248,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         ((MainActivity) context).setIsInOnlineGame(false);
         ((MainActivity) context).setOnlineGame(false);
-        coinAdapter.earnCoins(100);
+        coinAdapter.earnCoinDiffless(100);
         SocketAdapter.cancelRequest();
 
         super.onBackPressed();
@@ -402,7 +423,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         ((MainActivity) context).setIsInOnlineGame(false);
         ((MainActivity) context).setOnlineGame(false);
-        coinAdapter.earnCoins(100);
+        coinAdapter.earnCoinDiffless(100);
         SocketAdapter.cancelRequest();
         dismiss();
 

@@ -163,7 +163,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
         if (!toSend) {
             if (accepted) {
 
-                if (!coinAdapter.spendCoins(100)) {
+                if (!coinAdapter.spendCoinDiffless(100)) {
                     SocketAdapter.responseToMatchRequest(mUser.getId(), false);
                     return;
                 }

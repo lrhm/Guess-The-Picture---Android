@@ -1082,7 +1082,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Object lock = new Object();
 
     @Override
-    public void onFinishGame(ResultHolder resultHolder) {
+    public void onFinishGame(final ResultHolder resultHolder) {
 
 
         synchronized (lock) {
@@ -1116,14 +1116,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
 
-        final int finalCoin = coin;
         new Handler(getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
 
-                Logger.d(TAG, "earn coin on finish " + finalCoin);
-                if (finalCoin != 0)
-                    coinAdapter.earnCoins(finalCoin);
+                Logger.d(TAG, "earn coin on finish " + resultHolder.getCoin() + " " + CoinAdapter.getCoinDiff());
+                coinAdapter.setCoinsCount(resultHolder.getCoin() + CoinAdapter.getCoinDiff());
                 mUser.setFromServer(false);
                 onGetMyUser(mUser);
             }
@@ -1143,9 +1141,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
 
-        if (!coinAdapter.spendCoins(100)) {
-
-
+        if (!coinAdapter.spendCoinDiffless(100)) {
             return;
         }
 
@@ -1180,6 +1176,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
+
 
 
         final OnlineGameFragment fragment = (OnlineGameFragment) getSupportFragmentManager().findFragmentByTag("FRAGMENT_ONLINE_GAME");

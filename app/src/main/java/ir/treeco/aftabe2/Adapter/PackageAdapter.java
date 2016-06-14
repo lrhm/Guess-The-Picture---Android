@@ -45,6 +45,7 @@ import ir.treeco.aftabe2.View.Fragment.PackageFragment;
 
 public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHolder> {
     private static final String TAG = "PackageAdapter";
+    public static final String PACKAGE_LEVEL_LIST_TAG = "LevelsActivityNew1";
     private ArrayList<PackageObject> packageObjects;
     private Activity context;
     private Tools tools;
@@ -158,7 +159,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 packageFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, packageFragment, "LevelsActivityNew1");
+                transaction.replace(R.id.fragment_container, packageFragment, PACKAGE_LEVEL_LIST_TAG);
                 transaction.addToBackStack(null);
                 transaction.commitAllowingStateLoss();
             }

@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class Logger {
 
-    private static boolean debug = false;
+    private static boolean debug = true;
     public static void i(String tag, String msg) {
 
         if (debug)

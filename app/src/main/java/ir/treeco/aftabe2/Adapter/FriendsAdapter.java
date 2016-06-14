@@ -239,7 +239,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                         @Override
                         public void onClick(View v) {
 
-                            if (!coinAdapter.spendCoins(100)) {
+                            if (!coinAdapter.spendCoinDiffless(100)) {
                                 return;
                             }
 

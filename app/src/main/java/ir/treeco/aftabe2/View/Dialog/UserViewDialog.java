@@ -308,7 +308,7 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
         DialogAdapter.makeMatchRequestDialog(context, mUser, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!((MainActivity) context).getCoinAdapter().spendCoins(100))
+                if (!((MainActivity) context).getCoinAdapter().spendCoinDiffless(100))
                     return;
 
                 SocketAdapter.requestToAFriend(mUser.getId());

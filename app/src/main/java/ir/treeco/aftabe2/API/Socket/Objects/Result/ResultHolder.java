@@ -15,25 +15,34 @@ public class ResultHolder {
     @Expose
     ScoreResult[] scores;
 
+    @Expose
+    int coin;
+
 
     public ScoreResult[] getScores() {
         return scores;
     }
 
-    public int getMyScoreResult(User myUser){
-        if(myUser.getId().equals(scores[0].getUserId()))
+    public int getMyScoreResult(User myUser) {
+        if (myUser.getId().equals(scores[0].getUserId()))
             return scores[0].getScore();
         return scores[1].getScore();
     }
 
-    public boolean amIWinner(User myUser){
-        if(myUser.getId().equals(scores[0].getUserId()))
+    public boolean amIWinner(User myUser) {
+        if (myUser.getId().equals(scores[0].getUserId()))
             return scores[0].isWinner();
         return scores[1].isWinner();
     }
 
-    public int getOpponentScoreResult(User myUser){
-        if(myUser.getId().equals(scores[1].getUserId()))
+
+    public int getCoin() {
+        return coin;
+    }
+
+
+    public int getOpponentScoreResult(User myUser) {
+        if (myUser.getId().equals(scores[1].getUserId()))
             return scores[0].getScore();
         return scores[1].getScore();
     }

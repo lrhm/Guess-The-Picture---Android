@@ -40,6 +40,14 @@ public class CoinAdapter {
     }
 
     public boolean spendCoins(int amount) {
+        return spendCoinsGeneric(amount, false);
+    }
+
+    public boolean spendCoinDiffless(int amount) {
+        return spendCoinsGeneric(amount, true);
+    }
+
+    private boolean spendCoinsGeneric(int amount, boolean diffless) {
         int nextAmount = getCoinsCount() - amount;
         if (nextAmount < 0) {
 //            ToastMaker.show(context, context.getString(R.string.not_enought_coins), Toast.LENGTH_SHORT);
@@ -60,15 +68,26 @@ public class CoinAdapter {
         }
 
         Logger.d(TAG, "spend coin " + amount);
-        addCoinDiff(-amount);
+        if (!diffless)
+            addCoinDiff(-amount);
         setCoinsCount(nextAmount);
         return true;
     }
 
     public void earnCoins(int amount) {
+        earnCoinsGeneric(amount, false);
+    }
+
+    public void earnCoinDiffless(int amount) {
+        earnCoinsGeneric(amount, true);
+
+    }
+
+    private void earnCoinsGeneric(int amount, boolean diffless) {
         Logger.d(TAG, "earn coin " + amount);
         int nextAmount = getCoinsCount() + amount;
-        addCoinDiff(amount);
+        if (!diffless)
+            addCoinDiff(amount);
         setCoinsCount(nextAmount);
     }
 

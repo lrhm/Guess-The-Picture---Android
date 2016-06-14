@@ -21,6 +21,7 @@ import ir.treeco.aftabe2.View.Fragment.GameFragment;
 import ir.treeco.aftabe2.R;
 
 public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder> {
+    public static final String OFFLINE_GAME_FRAGMENT_TAG = "Offline_Game_Fragment";
     private Context context;
     private int page;
     private int packageId;
@@ -68,7 +69,7 @@ public class LevelsAdapter extends RecyclerView.Adapter<LevelsAdapter.ViewHolder
                 gameFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, gameFragment);
+                transaction.replace(R.id.fragment_container, gameFragment , OFFLINE_GAME_FRAGMENT_TAG);
                 transaction.addToBackStack(null);
                 transaction.commitAllowingStateLoss();
             }
