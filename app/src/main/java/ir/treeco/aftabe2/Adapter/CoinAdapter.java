@@ -3,6 +3,7 @@ package ir.treeco.aftabe2.Adapter;
 import android.app.Activity;
 import android.content.Context;
 
+import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Util.Logger;
 
@@ -12,6 +13,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 
+import ir.treeco.aftabe2.Util.StoreItemHolder;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.View.Dialog.SkipAlertDialog;
 
@@ -56,10 +58,8 @@ public class CoinAdapter {
                 public void onClick(View v) {
 //
 
-                    DeveloperInterface.getInstance(mActivity).showNewVideo(mActivity,
-                            DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE,
-                            DeveloperInterface.DEFAULT_MIN_AWARD,
-                            DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+                    StoreItemHolder.checkTapsellAvailabe(mActivity, true);
+
 
                 }
             }, null).show();

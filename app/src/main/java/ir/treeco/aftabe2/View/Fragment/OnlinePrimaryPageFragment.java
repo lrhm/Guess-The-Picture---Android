@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
+import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.API.Socket.Interfaces.NotifListener;
 import ir.treeco.aftabe2.API.Socket.Objects.Notifs.NotifCountHolder;
@@ -28,6 +29,7 @@ import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
+import ir.treeco.aftabe2.Util.StoreItemHolder;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
@@ -235,10 +237,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
             if (coinAdapter.getCoinsCount() < 100 && OnlineOfferAdapter.getInstance().isThereOfflineOffer()) {
 
-                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
-                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + 1,
-                        DeveloperInterface.DEFAULT_MIN_AWARD,
-                        DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+                StoreItemHolder.checkTapsellAvailabe(getActivity(), false);
+
 
                 return;
             }
@@ -248,11 +248,8 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (v.getId() == R.id.fragment_online_primary_special_offer) {
 
+            StoreItemHolder.checkTapsellAvailabe(getActivity(), false);
 
-            DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
-                    DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + 1,
-                    DeveloperInterface.DEFAULT_MIN_AWARD,
-                    DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
         }
     }
 

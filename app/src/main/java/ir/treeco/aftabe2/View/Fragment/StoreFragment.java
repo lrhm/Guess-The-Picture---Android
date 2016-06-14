@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
@@ -101,11 +102,8 @@ public class StoreFragment extends Fragment {
             public void onClick(View v) {
 
 
+                StoreItemHolder.checkTapsellAvailabe(getActivity(), true);
 
-                DeveloperInterface.getInstance(getActivity()).showNewVideo(getActivity(),
-                        DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE,
-                        DeveloperInterface.DEFAULT_MIN_AWARD,
-                        DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
             }
         });
 

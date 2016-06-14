@@ -1,6 +1,17 @@
 package ir.treeco.aftabe2.Util;
 
+import android.app.Activity;
+import android.content.Context;
+
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+
 import java.util.HashMap;
+
+import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
+import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
+import ir.treeco.aftabe2.Synchronization.Synchronize;
 
 /**
  * Created by al on 5/13/16.
@@ -85,6 +96,37 @@ public class StoreItemHolder {
         }
 
         return skuPrice.get(sku);
+    }
+
+    public static void checkTapsellAvailabe(final Activity activity, final boolean forCoin) {
+        DeveloperInterface.getInstance(activity)
+                .checkCtaAvailability(
+                        activity, DeveloperInterface.DEFAULT_MIN_AWARD,
+                        DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE, new CheckCtaAvailabilityResponseHandler() {
+                            @Override
+                            public void onResponse(Boolean isConnected, Boolean isAvailable) {
+
+
+                                if (Synchronize.isOnline(activity)) {
+
+                                    if (!isAvailable || !isConnected)
+                                        Answers.getInstance().logCustom(new CustomEvent("TapsellError"));
+
+                                    Answers.getInstance().logCustom(new CustomEvent("Tapsell")
+                                            .putCustomAttribute("isAvailable",
+                                                    !isAvailable || !isConnected ? 0 : 100)
+                                            .putCustomAttribute("Availibility",
+                                                    !isAvailable || !isConnected ? "false" : "true"));
+
+                                }
+                                if (Synchronize.isOnline(activity) && !isConnected && isAvailable)
+                                    DeveloperInterface.getInstance(activity).showNewVideo(activity,
+                                            DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + (forCoin ? 0 : 1),
+                                            DeveloperInterface.DEFAULT_MIN_AWARD,
+                                            DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+
+                            }
+                        });
     }
 
 }
