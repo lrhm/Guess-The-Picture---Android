@@ -528,7 +528,7 @@ public class VerticalViewPager extends ViewGroup {
     }
 
     void setCurrentItemInternal(int item, boolean smoothScroll, boolean always) {
-        setCurrentItemInternal(item, smoothScroll, always, 0);
+        setCurrentItemInternal(item, smoothScroll, always, 1000);
     }
 
     void setCurrentItemInternal(int item, boolean smoothScroll, boolean always, int velocity) {

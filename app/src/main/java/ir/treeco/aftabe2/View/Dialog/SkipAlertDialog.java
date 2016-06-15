@@ -14,6 +14,7 @@ import android.widget.TextView;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.FontsHolder;
 import ir.treeco.aftabe2.Util.ImageManager;
+import ir.treeco.aftabe2.Util.Logger;
 import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.UiUtil;
 
@@ -28,6 +29,8 @@ public class SkipAlertDialog extends Dialog {
     Context context;
     private OnDismissListener onDismissListener;
 
+    private boolean showNegative;
+
     public SkipAlertDialog(Context context, String msg, TextView.OnClickListener okListener,
                            TextView.OnClickListener cancelListener) {
         super(context);
@@ -35,6 +38,21 @@ public class SkipAlertDialog extends Dialog {
         message = msg;
         this.okListener = okListener;
         this.cancelListener = cancelListener;
+        showNegative = true;
+
+    }
+
+    public SkipAlertDialog(Context context, String msg) {
+        super(context);
+        this.context = context;
+        message = msg;
+        this.okListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        };
+        showNegative = false;
 
 
     }
@@ -82,9 +100,21 @@ public class SkipAlertDialog extends Dialog {
         noImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.no, size, size));
 
         int space = (int) (SizeManager.getScreenWidth() * 0.05);
-        int leftMargin = (int) (SizeManager.getScreenWidth() * 0.5 - size -space/2 );
-        UiUtil.setLeftMargin(noImageView, leftMargin);
-        UiUtil.setLeftMargin(yesImageView, space);
+        int leftMargin = (int) (SizeManager.getScreenWidth() * 0.5 - size - space / 2);
+
+        if (!showNegative) {
+
+            leftMargin = (SizeManager.getScreenWidth() - size) / 2;
+//            Logger.d("TEST", leftMargin + " is left");
+
+            UiUtil.setLeftMargin(yesImageView, leftMargin);
+            noImageView.setVisibility(View.GONE);
+
+        } else {
+            UiUtil.setLeftMargin(yesImageView, space);
+
+            UiUtil.setLeftMargin(noImageView, leftMargin);
+        }
 
     }
 

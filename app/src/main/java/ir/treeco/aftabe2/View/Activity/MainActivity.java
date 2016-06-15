@@ -95,6 +95,7 @@ import ir.treeco.aftabe2.View.Custom.StarView;
 import ir.treeco.aftabe2.View.Custom.TimerView;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
 import ir.treeco.aftabe2.View.Custom.UserLevelView;
+import ir.treeco.aftabe2.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe2.View.Dialog.ForceUpdateDialog;
 import ir.treeco.aftabe2.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe2.View.Dialog.LoadingDialog;
@@ -186,6 +187,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         HiddenAdapter.getInstance().createHiddenUsr();
 
         AppListAdapter.getInstance(this);
+
+
 
     }
 

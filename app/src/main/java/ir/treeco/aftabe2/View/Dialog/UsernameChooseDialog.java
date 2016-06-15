@@ -7,7 +7,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import ir.treeco.aftabe2.Util.Logger;
+
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -209,6 +211,9 @@ public class UsernameChooseDialog extends Dialog implements TextWatcher, Usernam
                             AftabeAPIAdapter.submitSMSActivationCode(smsToken, name, mActivity);
                         }
                         dismiss();
+
+                        DialogAdapter.makeTutorialDialog(mActivity, "از این به بعد اگه رو اسمتون یا دایره بالاش کلیک کنید پروفایلتون و لیست برترین آفتابه بازارو می بینید.",
+                                "اون عدد وسط دایره هم درجتونه، هرچی بیشتر ببرید درجتون بالاتر میره، رتبه بندی برترین ها هم بر همین اساسه");
                     }
                 }
             });

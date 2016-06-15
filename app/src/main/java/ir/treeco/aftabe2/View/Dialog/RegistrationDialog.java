@@ -135,6 +135,9 @@ public class RegistrationDialog extends Dialog {
 
 
                     dismiss();
+
+                    DialogAdapter.makeTutorialDialog(context, "هروقت خواستید به اسم خودتون حساب بسازید کافیه روی دایره پروفایل کلیک کنید و ساخت حساب و بزنید", "");
+
                 }
             });
         }
