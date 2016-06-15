@@ -2,6 +2,7 @@ package ir.treeco.aftabe2.View.Dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,6 +70,7 @@ public class LoadingDialog extends Dialog implements Runnable,
     long creationTime;
     boolean gotGame = false;
     boolean showCancel;
+    Bitmap lastBitmap;
 
     String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
@@ -238,9 +240,15 @@ public class LoadingDialog extends Dialog implements Runnable,
             return;
         }
 
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
 
+
+        Bitmap curBitmap = imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT);
+        mLoadingImageView.setImageBitmap(curBitmap);
+
+        if(lastBitmap != null)
+            lastBitmap.recycle();
+        lastBitmap = curBitmap;
 
         new Handler().postDelayed(this, 1000);
 
@@ -392,7 +400,7 @@ public class LoadingDialog extends Dialog implements Runnable,
                 return;
 
             mDownloadCount++;
-            if (mDownloadCount == 2) {
+            if (mDownloadCount == 2 && ! mDismissed) {
                 SocketAdapter.setReadyStatus();
             }
         }
