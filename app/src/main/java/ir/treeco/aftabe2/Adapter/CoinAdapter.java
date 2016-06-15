@@ -92,6 +92,7 @@ public class CoinAdapter {
     }
 
     public static int getCoinDiff() {
+
         synchronized (coinLock) {
             return Prefs.getInt(SHARED_PREF_COIN_DIFF, 0);
         }

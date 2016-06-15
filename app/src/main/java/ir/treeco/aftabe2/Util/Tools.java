@@ -173,8 +173,8 @@ public class Tools {
 
     public void checkDB(Context context) {
 //        Logger.e("db", "check");
-        String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db";
-        File data = Environment.getDataDirectory();
+        String currentDBPath = context.getFilesDir().getParent() + "/databases/" + "aftabe.db";
+
         File currentDB = new File(currentDBPath);
 
         if (!currentDB.exists()) {
@@ -184,33 +184,30 @@ public class Tools {
     }
 
     public void restore() {
-//        Logger.e("db", "Restore1");
+
+
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
-//        File data = Environment.getDataDirectory();
-        FileChannel source;
-        FileChannel destination;
-        String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db";
+        String currentDBPath =  context.getFilesDir().getParent() + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/.amk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
-//        Logger.e("aa", currentDB.getPath());
-//        Logger.e("bb", backupDB.getPath());
+
+
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
+
             byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
 
-            backupDB.deleteOnExit();
-            backupDB.createNewFile();
             FileOutputStream fos = new FileOutputStream(currentDB);
             FileInputStream fis = new FileInputStream(backupDB);
 
             CipherInputStream cis = new CipherInputStream(fis, cipher);
 
-            byte[] block = new byte[8];
+            byte[] block = new byte[1024];
             int i;
             while ((i = cis.read(block)) != -1) {
                 fos.write(block, 0, i);
@@ -219,29 +216,20 @@ public class Tools {
             cis.close();
             fis.close();
 //            Logger.e("db", "Restore");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
+        } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
+//            e.printStackTrace();
         }
     }
 
     public void restoreDBJournal() {
-//        Logger.e("db", "Restore1");
+
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
-//        File data = Environment.getDataDirectory();
-        FileChannel source;
-        FileChannel destination;
-        String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db-journal";
+        String currentDBPath =  context.getFilesDir().getParent() + "/databases/" + "aftabe.db-journal";
         String backupDBPath = "Android/.bmk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
-//        Logger.e("aa", currentDB.getPath());
-//        Logger.e("bb", backupDB.getPath());
+
+
         try {
             currentDB.getParentFile().mkdirs();
             currentDB.createNewFile();
@@ -251,14 +239,13 @@ public class Tools {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
 
-            backupDB.deleteOnExit();
-            backupDB.createNewFile();
+
             FileOutputStream fos = new FileOutputStream(currentDB);
             FileInputStream fis = new FileInputStream(backupDB);
 
             CipherInputStream cis = new CipherInputStream(fis, cipher);
 
-            byte[] block = new byte[8];
+            byte[] block = new byte[1024];
             int i;
             while ((i = cis.read(block)) != -1) {
                 fos.write(block, 0, i);
@@ -268,14 +255,8 @@ public class Tools {
             fis.close();
 
 //            Logger.e("db", "Restore blocks " + i);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
+        } catch (IOException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
+//            e.printStackTrace();
         }
     }
 
@@ -296,113 +277,83 @@ public class Tools {
             public void run() {
                 backUpDBAsync(context);
 
+                synchronized (lock) {
+                    isBackupInProgress = false;
+
+                }
             }
         }).start();
 
-        synchronized (lock) {
-            isBackupInProgress = false;
 
-        }
     }
 
     public static void backUpDBAsync(Context context) {
+
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
-//        File data = Environment.getDataDirectory();
-        FileChannel source;
-        FileChannel destination;
-        String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db";
+        String currentDBPath = context.getFilesDir().getParent() + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/.amk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
-//        Logger.e("cc", currentDB.getPath());
-//        Logger.e("dd", backupDB.getPath());
+
+
         try {
             byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
 
-            backupDB.deleteOnExit();
             backupDB.createNewFile();
             FileOutputStream fos = new FileOutputStream(backupDB);
             FileInputStream fis = new FileInputStream(currentDB);
 
             CipherOutputStream cos = new CipherOutputStream(fos, cipher);
 
-            byte[] block = new byte[8];
+            byte[] block = new byte[1024];
             int i;
             while ((i = fis.read(block)) != -1) {
                 cos.write(block, 0, i);
+
             }
             cos.close();
             fis.close();
             fos.close();
 
-//            Logger.e("db", "backup ");
             backUpDBJournal(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
+        } catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e) {
+//            e.printStackTrace();
         }
     }
 
-    private static Object journalLock = new Object();
-
-    private static boolean backupJournalInProgress = false;
 
     public static void backUpDBJournal(final Context context) {
 
-        synchronized (journalLock) {
-            if (backupJournalInProgress)
-                return;
-            backupJournalInProgress = true;
-        }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
                 backUpDBJournalAsync(context);
 
-            }
-        }).start();
-        synchronized (journalLock) {
-            backupJournalInProgress = false;
-        }
     }
 
     public static void backUpDBJournalAsync(Context context) {
+
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
-//        File data = Environment.getDataDirectory();
-        FileChannel source;
-        FileChannel destination;
-        String currentDBPath = context.getFilesDir().getPath() + "/databases/" + "aftabe.db-journal";
+        String currentDBPath = context.getFilesDir().getAbsolutePath() + "/databases/" + "aftabe.db-journal";
         String backupDBPath = "Android/.bmk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
 
-
-//        Logger.e("cc", currentDB.getPath());
-//        Logger.e("dd", backupDB.getPath());
         try {
 
             byte[] keyBytes = getAESKey();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-
-            backupDB.deleteOnExit();
             backupDB.createNewFile();
+
             FileOutputStream fos = new FileOutputStream(backupDB);
             FileInputStream fis = new FileInputStream(currentDB);
 
             CipherOutputStream cos = new CipherOutputStream(fos, cipher);
 
-            byte[] block = new byte[8];
+            byte[] block = new byte[1024];
             int i;
             while ((i = fis.read(block)) != -1) {
                 cos.write(block, 0, i);
@@ -412,14 +363,8 @@ public class Tools {
             fos.close();
 
 //            Logger.e("db", "backup blocks " + i);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException e) {
+//            e.printStackTrace();
         }
     }
 
@@ -551,7 +496,6 @@ public class Tools {
             Prefs.putString(ENCRYPT_KEY, user.getKey());
             storeKey();
             backUpDB(context);
-            backUpDBJournal(context);
             DBAdapter dbAdapter = DBAdapter.getInstance(context);
 
             for (User.PackageInfo info : user.getPackageInfos()) {

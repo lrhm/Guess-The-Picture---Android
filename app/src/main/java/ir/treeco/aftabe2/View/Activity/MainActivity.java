@@ -647,7 +647,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Integer price = StoreItemHolder.getPrice(productId);
         if (price == null)
             price = 500;
-        //TODO check price is never null
+
         Answers.getInstance().logPurchase(new PurchaseEvent()
                 .putItemPrice(BigDecimal.valueOf(price))
                 .putItemId(productId));

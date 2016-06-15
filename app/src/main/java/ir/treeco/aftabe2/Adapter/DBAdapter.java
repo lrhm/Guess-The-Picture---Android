@@ -259,6 +259,23 @@ public class DBAdapter {
         return null;
     }
 
+    public boolean containsCoin(){
+
+        open();
+        Cursor cursor = db.query(COINS,
+                new String[]{COINS_COUNT},
+                COINS_SQL_ID + " = 1",
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int count = cursor.getInt(cursor.getColumnIndex(COINS_COUNT));
+            close();
+            return true;
+        }
+        return false;
+
+    }
+
     public int getCoins() {
 
         Logger.d(TAG, "coin is " + ((coin == null) ? "null" : coin));
@@ -280,6 +297,7 @@ public class DBAdapter {
                 return count;
             }
             close();
+
             return 0;
         }
     }
@@ -301,6 +319,9 @@ public class DBAdapter {
     }
 
     public void insertCoins(int count) {
+
+        if(containsCoin())
+            return;
 
         synchronized (coinLock) {
 
