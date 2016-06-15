@@ -1,17 +1,19 @@
 package ir.treeco.aftabe2.Util;
 
 import android.app.Activity;
-import android.content.Context;
+import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.HashMap;
 
 import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
+import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Synchronization.Synchronize;
+import ir.treeco.aftabe2.View.Custom.ToastMaker;
+import ir.treeco.aftabe2.View.Dialog.DialogAdapter;
 
 /**
  * Created by al on 5/13/16.
@@ -98,7 +100,7 @@ public class StoreItemHolder {
         return skuPrice.get(sku);
     }
 
-    public static void checkTapsellAvailabe(final Activity activity, final boolean forCoin) {
+    public static void checkTapsellAvailabe(final Activity activity, final boolean forCoin, final OnTarbellAvailability onTapsell) {
         DeveloperInterface.getInstance(activity)
                 .checkCtaAvailability(
                         activity, DeveloperInterface.DEFAULT_MIN_AWARD,
@@ -118,15 +120,27 @@ public class StoreItemHolder {
                                             .putCustomAttribute("Availibility",
                                                     !isAvailable || !isConnected ? "false" : "true"));
 
+                                    if (onTapsell != null)
+                                        onTapsell.onAvailable(isAvailable);
+
+                                    if(isConnected && isAvailable)
+                                        DeveloperInterface.getInstance(activity).showNewVideo(activity,
+                                                DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + (forCoin ? 0 : 1),
+                                                DeveloperInterface.DEFAULT_MIN_AWARD,
+                                                DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+
+                                } else {
+                                    DialogAdapter.checkInternetConnection(activity);
                                 }
-                                if (Synchronize.isOnline(activity) && !isConnected && isAvailable)
-                                    DeveloperInterface.getInstance(activity).showNewVideo(activity,
-                                            DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + (forCoin ? 0 : 1),
-                                            DeveloperInterface.DEFAULT_MIN_AWARD,
-                                            DeveloperInterface.VideoPlay_TYPE_NON_SKIPPABLE);
+
+
 
                             }
                         });
     }
 
+
+    public interface OnTarbellAvailability {
+        void onAvailable(boolean avail);
+    }
 }

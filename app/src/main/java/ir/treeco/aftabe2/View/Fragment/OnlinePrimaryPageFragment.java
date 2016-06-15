@@ -41,7 +41,7 @@ import ir.treeco.aftabe2.View.Dialog.RegistrationDialog;
 /**
  * Created by al on 12/25/15.
  */
-public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener, CoinAdapter.CoinsChangedListener {
+public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener, CoinAdapter.CoinsChangedListener, StoreItemHolder.OnTarbellAvailability {
 
     private static final String TAG = "OnlinePrimaryPage";
     private static final String TOP_MARGIN_CACHED = TAG + "_CACHE";
@@ -246,7 +246,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
             if (coinAdapter.getCoinsCount() < 100 && OnlineOfferAdapter.getInstance().isThereOfflineOffer()) {
 
-                StoreItemHolder.checkTapsellAvailabe(getActivity(), false);
+                StoreItemHolder.checkTapsellAvailabe(getActivity(), false, this);
 
 
                 return;
@@ -257,7 +257,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (v.getId() == R.id.fragment_online_primary_special_offer) {
 
-            StoreItemHolder.checkTapsellAvailabe(getActivity(), false);
+            StoreItemHolder.checkTapsellAvailabe(getActivity(), false, this);
 
         }
     }
@@ -280,5 +280,13 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
             specialOffer.setVisibility(View.VISIBLE);
         else
             specialOffer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAvailable(boolean avail) {
+
+        if (!avail)
+            ImageManager.getInstance(getContext()).toGrayscale(specialOffer);
+
     }
 }

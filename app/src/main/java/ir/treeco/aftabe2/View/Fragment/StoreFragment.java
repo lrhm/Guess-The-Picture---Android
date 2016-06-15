@@ -24,6 +24,7 @@ import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.FontsHolder;
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
+import ir.treeco.aftabe2.Util.Logger;
 import ir.treeco.aftabe2.Util.StoreItemHolder;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
@@ -96,13 +97,21 @@ public class StoreFragment extends Fragment {
             });
         }
 
-        View tapsell = layout.findViewById(R.id.tapsell_free_coin);
+        final View tapsell = layout.findViewById(R.id.tapsell_free_coin);
         tapsell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                StoreItemHolder.checkTapsellAvailabe(getActivity(), true);
+                StoreItemHolder.checkTapsellAvailabe(getActivity(), true, new StoreItemHolder.OnTarbellAvailability() {
+                    @Override
+                    public void onAvailable(boolean avail) {
+                        Logger.d("TEST", avail + " tapsell avial");
+
+                        if (!avail)
+                            imageManager.toGrayscale((ImageView) tapsell.findViewById(R.id.item_background));
+                    }
+                });
 
             }
         });

@@ -2,10 +2,14 @@ package ir.treeco.aftabe2.View.Dialog;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
 import ir.treeco.aftabe2.Object.User;
+import ir.treeco.aftabe2.R;
+import ir.treeco.aftabe2.Synchronization.Synchronize;
+import ir.treeco.aftabe2.View.Custom.ToastMaker;
 
 /**
  * Created by root on 5/11/16.
@@ -45,6 +49,14 @@ public class DialogAdapter {
         new SkipAlertDialog(context, text).show();
 
         return true;
+
+    }
+
+    public static boolean checkInternetConnection(Context context) {
+        if (!Synchronize.isOnline(context))
+            ToastMaker.show(context, context.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
+        else return true;
+        return false;
 
     }
 }

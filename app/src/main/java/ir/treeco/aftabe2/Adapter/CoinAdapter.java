@@ -58,7 +58,7 @@ public class CoinAdapter {
                 public void onClick(View v) {
 //
 
-                    StoreItemHolder.checkTapsellAvailabe(mActivity, true);
+                    StoreItemHolder.checkTapsellAvailabe(mActivity, true, null);
 
 
                 }

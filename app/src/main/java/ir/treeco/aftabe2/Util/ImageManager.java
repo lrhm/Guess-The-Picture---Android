@@ -216,4 +216,12 @@ public class ImageManager {
         imageView.setColorFilter(filter);
     }
 
+    public void toNormalscale(ImageView imageView){
+
+        ColorMatrix matrix = new ColorMatrix();
+
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+        imageView.setColorFilter(filter);
+    }
+
 }
