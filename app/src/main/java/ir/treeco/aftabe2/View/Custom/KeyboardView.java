@@ -309,7 +309,7 @@ public class KeyboardView extends RelativeLayout {
                 paramsRight.leftMargin += rightOffset;
 
             }
-            KeyView rightKey = new KeyView(context, KeyView.TYPE_RIGHT,
+            KeyView rightKey = new KeyView(context, (i == length / 2 - 1) ? KeyView.TYPE_RIGHT : KeyView.TYPE_CENTER,
                     KeyView.MODE_ANSWER, state);
 
             state = answer.charAt(length / 2
@@ -319,7 +319,7 @@ public class KeyboardView extends RelativeLayout {
                 leftOffset += answerConverter.mWidth / 2;
                 paramsLeft.leftMargin += leftOffset;
             }
-            KeyView leftKey = new KeyView(context, KeyView.TYPE_LEFT,
+            KeyView leftKey = new KeyView(context, i == length / 2 - 1 ? KeyView.TYPE_LEFT : KeyView.TYPE_CENTER,
                     KeyView.MODE_ANSWER, state);
 
             rightKey.setXY(paramsRight.leftMargin, top);
