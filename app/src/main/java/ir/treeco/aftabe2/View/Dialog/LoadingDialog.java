@@ -71,7 +71,8 @@ public class LoadingDialog extends Dialog implements Runnable,
     boolean gotGame = false;
     boolean showCancel;
     Bitmap lastBitmap;
-
+    boolean grayScaled = false;
+    ImageView cancelImageView;
     String baseUrl = "https://aftabe2.com:2020/api/pictures/level/download/";
 
 
@@ -154,7 +155,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
 
         if (showCancel) {
-            ImageView cancelImageView = (ImageView) findViewById(R.id.loading_dialog_cancel);
+            cancelImageView = (ImageView) findViewById(R.id.loading_dialog_cancel);
             SizeConverter cancelConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.2f, 169, 98);
             cancelImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.cancel, cancelConverter.mWidth, cancelConverter.mHeight));
             cancelImageView.setOnClickListener(this);
@@ -241,12 +242,11 @@ public class LoadingDialog extends Dialog implements Runnable,
         }
 
 
-
         Bitmap curBitmap = imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT);
         mLoadingImageView.setImageBitmap(curBitmap);
 
-        if(lastBitmap != null)
+        if (lastBitmap != null)
             lastBitmap.recycle();
         lastBitmap = curBitmap;
 
@@ -257,11 +257,13 @@ public class LoadingDialog extends Dialog implements Runnable,
     @Override
     public void onBackPressed() {
 
-        if (mDismissed || mRequestCancel)
+        if (mDismissed || mRequestCancel || !showCancel)
             return;
-        mRequestCancel = true;
 
+        mRequestCancel = true;
         SocketAdapter.cancelRequest();
+        checkCancelGray();
+
 
         return;
 
@@ -400,7 +402,7 @@ public class LoadingDialog extends Dialog implements Runnable,
                 return;
 
             mDownloadCount++;
-            if (mDownloadCount == 2 && ! mDismissed) {
+            if (mDownloadCount == 2 && !mDismissed) {
                 SocketAdapter.setReadyStatus();
             }
         }
@@ -436,8 +438,17 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         SocketAdapter.cancelRequest();
 
+        checkCancelGray();
+
     }
 
+    public void checkCancelGray() {
+
+        if (!grayScaled && cancelImageView != null) {
+            grayScaled = true;
+            ImageManager.getInstance(context).toGrayscale(cancelImageView);
+        }
+    }
 
     @Override
     public void onCancelResult(boolean result) {
@@ -452,6 +463,7 @@ public class LoadingDialog extends Dialog implements Runnable,
                     dismiss();
                 }
             });
+
 
     }
 }

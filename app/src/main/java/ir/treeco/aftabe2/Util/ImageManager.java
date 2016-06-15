@@ -6,10 +6,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.util.LruCache;
+import android.widget.ImageView;
 
 import java.io.InputStream;
 
@@ -204,5 +207,13 @@ public class ImageManager {
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
 
+    public void toGrayscale(ImageView imageView)
+    {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+        imageView.setColorFilter(filter);
+    }
 
 }
