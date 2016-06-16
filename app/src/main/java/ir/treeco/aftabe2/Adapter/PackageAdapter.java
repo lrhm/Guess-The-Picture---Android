@@ -88,7 +88,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             UiUtil.setTextViewSize(price, (int) (SizeManager.getScreenWidth() * 0.3), 0.15f);
 
 
-            int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
+            int packageSize = (int) (SizeManager.getScreenWidth() * 0.45);
             imageView.getLayoutParams().height = packageSize;
             imageView.getLayoutParams().width = packageSize;
 

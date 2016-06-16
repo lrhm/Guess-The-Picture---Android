@@ -116,15 +116,6 @@ public class StoreFragment extends Fragment {
             }
         });
 
-        StoreItemHolder.checkTapsellAvailable(getActivity(), true, new StoreItemHolder.OnTapsellAvailability() {
-            @Override
-            public void onAvailable(boolean avail) {
-                Logger.d("TEST", avail + " tapsell avial");
-
-                if (!avail)
-                    imageManager.toGrayscale((ImageView) tapsell.findViewById(R.id.item_background));
-            }
-        });
 
         ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
         Bitmap shopTitleBitmap = imageManager.loadImageFromResource(R.drawable.shoptitle, lengthManager.getShopTitleWidth(), -1);

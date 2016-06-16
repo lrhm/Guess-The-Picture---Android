@@ -41,7 +41,7 @@ public class LoadingActivity extends Activity implements Runnable {
         SizeManager.initSizes(this);
 
         SizeConverter logiConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.7f, 1000, 1000);
-        SizeConverter synergyConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.3f, 357, 100);
+        SizeConverter synergyConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth() * 0.3f, 357,86 );
 
         imageView.setImageBitmap(ImageManager.getInstance(this).loadImageFromResource(R.drawable.logi, logiConverter.mWidth, logiConverter.mHeight));
         synegy.setImageBitmap(ImageManager.getInstance(this).loadImageFromResource(R.drawable.synergy, synergyConverter.mWidth, synergyConverter.mHeight));

@@ -56,10 +56,6 @@ public class IntroActivity extends FragmentActivity implements IntroFragment.OnF
             pager.setCurrentItem(1, true);
             return;
         }
-        if (id == 1) {
-            pager.setCurrentItem(2, true);
-            return;
-        }
 
         Prefs.putBoolean(INTRO_SHOWN, true);
 

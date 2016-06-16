@@ -1229,6 +1229,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onPause() {
+
+        MediaAdapter.getInstance(this).free();
+
         if (mLoadingForGameResultDialog != null)
             mLoadingForGameResultDialog.dismiss();
 
