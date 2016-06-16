@@ -23,6 +23,10 @@ public class CoinAdapter {
     public static final int LETTER_REVEAL_COST = 50;
     public static final int SKIP_LEVEL_COST = 130;
     public static final String SHARED_PREF_COIN_DIFF = "aftabe_wc";
+
+    private static final String LAST_TIME_USER_UPDATE = "last_time_user_upd";
+    private static final String LAST_TIME_DIFF_SENT = "last_time_diff_sent";
+
     private static final String TAG = "CoinAdapter";
     private DBAdapter db;
     private Context context;
@@ -131,4 +135,18 @@ public class CoinAdapter {
         listeners.add(listener);
         listener.changed(getCoinsCount());
     }
+
+    public static void onDiffsent() {
+        Prefs.putLong(LAST_TIME_DIFF_SENT, System.currentTimeMillis());
+    }
+
+    public static void onUserGet() {
+        Prefs.putLong(LAST_TIME_USER_UPDATE, System.currentTimeMillis());
+    }
+
+    public static boolean shouldCheckUser() {
+        return Prefs.getLong(LAST_TIME_USER_UPDATE, 1) > Prefs.getLong(LAST_TIME_DIFF_SENT, 0);
+    }
+
+
 }

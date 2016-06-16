@@ -189,7 +189,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         AppListAdapter.getInstance(this);
 
 
-
     }
 
 
@@ -686,6 +685,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+
         ToastMaker.show(this, getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
 
     }
@@ -724,7 +724,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (mLoadingForRegister != null)
                     mLoadingForRegister.dismiss();
 
-                if (mUser.isFromServer() && mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
+                if (CoinAdapter.shouldCheckUser()
+                        && !AftabeAPIAdapter.isIsUpdateCoinInProgress()
+                        && mUser.isFromServer()
+                        && mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()) {
                     coinAdapter.setCoinsCount(mUser.getCoins());
                     CoinAdapter.addCoinDiff(-CoinAdapter.getCoinDiff());
                 }

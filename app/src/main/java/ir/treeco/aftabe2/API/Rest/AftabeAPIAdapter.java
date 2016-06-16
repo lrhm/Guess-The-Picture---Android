@@ -292,6 +292,8 @@ public class AftabeAPIAdapter {
                     return;
                 }
 
+                CoinAdapter.onUserGet();
+
                 Logger.d(TAG, " is  sucess");
                 Logger.d(TAG, (userFoundListener == null) + " is null ?");
 
@@ -557,6 +559,12 @@ public class AftabeAPIAdapter {
     private static final Object updateCoinLock = new Object();
     private static boolean isUpdateCoinInProgress = false;
 
+    public static boolean isIsUpdateCoinInProgress() {
+        synchronized (updateCoinLock) {
+            return isUpdateCoinInProgress;
+        }
+    }
+
     public static void updateCoin(User myUser) {
 
         synchronized (updateCoinLock) {
@@ -565,11 +573,20 @@ public class AftabeAPIAdapter {
             isUpdateCoinInProgress = true;
         }
 
+
         init();
         final int diff = CoinAdapter.getCoinDiff();
 
-        if (diff == 0)
+        if (diff == 0) {
+
+
+            synchronized (updateCoinLock) {
+                isUpdateCoinInProgress = false;
+            }
             return;
+        }
+
+        CoinAdapter.onDiffsent();
 
         Logger.d(TAG, "coin diff is " + diff);
 
