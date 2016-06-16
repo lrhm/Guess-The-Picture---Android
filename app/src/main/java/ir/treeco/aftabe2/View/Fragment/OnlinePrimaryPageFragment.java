@@ -234,8 +234,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (DialogAdapter.makeTutorialDialog(getContext()
                 , "این بازی رندم (Random ) هستش. شما با یک نفر به صورت تصادفی وارد یک رقابت آفتابه ای می شوید."
-                , "هر رقابت ۲ تا مرحله داره. هرکسی که زود و تعداد مراحل بیشتری رو حل کنه  برنده است.هر بازی ۱۰۰ سکه لازم داره که اگه ببرید ۱۶۰ تا پس میگیرید و اگه مساوی شه ۸۰ تا.")) {
-            // first time showing this
+                , "هر رقابت ۲ تا مرحله داره. هرکسی که زودتر و تعداد مراحل بیشتری رو حل کنه  برنده است.هر بازی ۱۰۰ سکه لازم داره که اگه ببرید ۱۶۰ تا پس میگیرید و اگه مساوی شه ۸۰ تا.")) {  // first time showing this
 
             return;
         }

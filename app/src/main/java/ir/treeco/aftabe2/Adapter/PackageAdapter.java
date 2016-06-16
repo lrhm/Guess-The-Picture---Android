@@ -9,8 +9,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-
-import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.Logger;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,12 +85,12 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             if (SizeManager.getScreenWidth() < 800)
                 price.setShadowLayer(0.5f, 1, 1, Color.BLACK);
             price.setTypeface(FontsHolder.getNumeralSansMedium(v.getContext()));
-            UiUtil.setTextViewSize(price, (int) (SizeManager.getScreenWidth() * 0.3), 0.15f);
+            UiUtil.setTextViewSize(price, (int) (SizeManager.getScreenWidth() * 0.3), 0.13f);
 
 
             int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
-//            imageView.getLayoutParams().height = packageSize;
-//            imageView.getLayoutParams().width = packageSize;
+            imageView.getLayoutParams().height = (int) (packageSize * 0.95);
+            imageView.getLayoutParams().width = packageSize;
 
             UiUtil.setWidth(packagePrice, packageSize);
             UiUtil.setHeight(packagePrice, packageSize);
@@ -132,7 +130,13 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                 new PackagePurchaseDialog(context, packageObject).setYesClick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (coinAdapter.spendCoins(packageObject.getPrice())) {
+
+                        User myUser = Tools.getCachedUser(context);
+
+                        int intPrice = ((myUser != null && myUser.isPackagePurchased(packageObject.getId()))) ? 0 : packageObject.getPrice();
+                        intPrice = PackageSolvedCache.getInstance().isPackagePurchased(packageObject.getId()) ? 0 : intPrice;
+
+                        if (coinAdapter.spendCoins(intPrice)) {
                             AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
                                 @Override
                                 public void onPurchasedBefore() {
@@ -258,20 +262,12 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         DBAdapter dbAdapter = DBAdapter.getInstance(context);
 
-        int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
 
-        String imagePath =  context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
-
-//        Picasso.with(context).load(imagePath).resize( packageSize, packageSize).into(viewHolder.imageView);
-
-        viewHolder.imageView.setImageBitmap(ImageManager.getInstance(context).loadImageFromFilse(imagePath , packageSize , (int) (packageSize * 0.9), ImageManager.ScalingLogic.FIT));
-
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
+        Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
         User myUser = Tools.getCachedUser(context);
 
-        if ((myUser != null && myUser.isPackagePurchased(id))) {
-            viewHolder.price.setText(Tools.numeralStringToPersianDigits("0"));
 
-        }
         File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
 
 
@@ -284,15 +280,15 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         if (!file.exists()) {
 
+            int intPrice = ((myUser != null && myUser.isPackagePurchased(id))) ? 0 : packageObjects.get(i).getPrice();
+            intPrice = PackageSolvedCache.getInstance().isPackagePurchased(id) ? 0 : intPrice;
+
             Picasso.with(context).load(R.drawable.package_price).fit().into(viewHolder.packagePrice);
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
             viewHolder.price.setVisibility(View.VISIBLE);
-            viewHolder.price.setText(Tools.numeralStringToPersianDigits(packageObjects.get(i).getPrice() + ""));
+            viewHolder.price.setText(Tools.numeralStringToPersianDigits(intPrice+ ""));
 
-            if ((myUser != null && myUser.isPackagePurchased(id))) {
-                viewHolder.price.setText(Tools.numeralStringToPersianDigits("0"));
 
-            }
             ColorMatrix matrix = new ColorMatrix();
             matrix.setSaturation(0);
 

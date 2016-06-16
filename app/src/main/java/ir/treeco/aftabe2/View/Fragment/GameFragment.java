@@ -43,6 +43,7 @@ import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.CheatDrawable;
 import ir.treeco.aftabe2.View.Custom.KeyboardView;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
+import ir.treeco.aftabe2.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe2.View.Dialog.FinishDailog;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.View.Dialog.ImageFullScreenDialog;
@@ -122,6 +123,11 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
         setupForOutsideOfCheat(view);
 
+
+        if(packageId == 0 && levelId == 0)
+            DialogAdapter.makeTutorialDialog(getContext(),
+                    "شما توی این بازی یک عبارت تقریبا بی\u200Cربط را از روی عکس هر مرحله حدس می\u200Cزنید. برای مثال در این مرحله یک خر که به رنگ آبی درامده را می بینید. "
+                    , "پس جواب این مرحله می شود \"خرابی\" خر+رنگ آبی");
         return view;
     }
 
