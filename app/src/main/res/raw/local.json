@@ -3,11 +3,11 @@
 		{
   "id": 0,
   "price": 0,
-  "name": "افتابه مسی",
-  "hash": "44d7ef279dad23061eacc9789e712784",
+  "name": "افتابه",
+  "hash": "3b712c630f6b14473b48a85f17d054b4",
   "sku": "sku_big",
   "file": {
-    "name": "offline_p_0.zip"
+    "name": "default_package.zip"
   }
 		}
   ]

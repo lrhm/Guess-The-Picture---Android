@@ -29,6 +29,7 @@ import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Rest.Utils.CountHolder;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.Adapter.NotificationAdapter;
+import ir.treeco.aftabe2.BuildConfig;
 import ir.treeco.aftabe2.Object.Level;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.Object.User;
@@ -65,6 +66,42 @@ public class PackageTools {
 
         isDownloadInProgress = new HashMap<>();
         this.context = context;
+    }
+
+    //for backward compatibility with beta testers that have different package 0
+    public void checkOfflinePackageCompatibility() {
+
+
+        String path = context.getFilesDir().getPath() + File.separator + "offline_p_0.zip";
+
+        File olderFile = new File(path);
+
+
+        // if user deleted the app . and have saved database , check if db is old . if old .
+        if ((olderFile.exists())) {
+
+            olderFile.delete();
+
+            DBAdapter dbAdapter = DBAdapter.getInstance(context);
+
+            dbAdapter.deletePackage(0);
+
+            String newPath = context.getFilesDir().getPath() + "/Packages/package_" + 0 + "/";
+
+            File dir = new File(newPath);
+            if (dir.exists() && dir.isDirectory())
+                for (File file : dir.listFiles())
+                    file.delete();
+            if (dir.exists())
+                dir.delete();
+
+
+                copyLocalpackages();
+
+
+        }
+
+
     }
 
 
@@ -280,16 +317,16 @@ public class PackageTools {
                 String zipFilePath = path + "/p_" + packageObject.getId() + ".zip";
 
 //                TODO uncomment
-//                if (!checkMd5Sum(zipFilePath, packageObject.getHash())) {
-//
-//                    File file = new File(path);
-//                    if (file.exists())
-//                        file.delete();
-//                    notificationAdapter.faildDownload(id, name);
-//                    isDownloadInProgress.put(packageObject.getId(), false);
-//
-//                    return;
-//                }
+                if (!checkMd5Sum(zipFilePath, packageObject.getHash())) {
+
+                    File file = new File(path);
+                    if (file.exists())
+                        file.delete();
+                    notificationAdapter.faildDownload(id, name);
+                    isDownloadInProgress.put(packageObject.getId(), false);
+
+                    return;
+                }
 
                 Zip zip = new Zip();
                 zip.unpackZip(path + "/p_" + packageObject.getId() + ".zip", id, context);

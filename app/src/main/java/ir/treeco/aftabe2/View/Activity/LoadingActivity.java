@@ -108,13 +108,12 @@ public class LoadingActivity extends Activity implements Runnable {
 
         DBAdapter db = DBAdapter.getInstance(getApplication());
 
+        PackageTools.getInstance(this).checkOfflinePackageCompatibility();
 
         if (Prefs.getBoolean("firstAppRun", true)) {
 
             db.insertCoins(500);
             PackageTools.getInstance(this).copyLocalpackages();
-
-
             Prefs.putBoolean("firstAppRun", false);
         }
 

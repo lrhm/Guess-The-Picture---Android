@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import ir.treeco.aftabe2.Util.Logger;
 
 import com.google.gson.Gson;
@@ -147,6 +148,30 @@ public class DBAdapter {
     }
 
 
+    public void deletePackage(int id) {
+
+        open();
+
+        db.delete(PACKAGES, PACKAGE_ID + " = " + id, null);
+
+        close();
+
+        if (getLevels(id) != null) {
+
+            deletePackageLevels(id);
+        }
+
+    }
+
+    private void deletePackageLevels(int id) {
+
+        open();
+
+        db.delete(LEVELS, LEVEL_PACKAGE_ID + " = " + id, null);
+
+        close();
+    }
+
     public void insertPackage(PackageObject packageObject) {
 
         open();
@@ -155,6 +180,8 @@ public class DBAdapter {
         values.put(PACKAGE_GSON, new Gson().toJson(packageObject));
 
         db.insert(PACKAGES, null, values);
+
+
         close();
 
         if (packageObject.getLevels() != null)
@@ -259,7 +286,7 @@ public class DBAdapter {
         return null;
     }
 
-    public boolean containsCoin(){
+    public boolean containsCoin() {
 
         open();
         Cursor cursor = db.query(COINS,
@@ -320,7 +347,7 @@ public class DBAdapter {
 
     public void insertCoins(int count) {
 
-        if(containsCoin())
+        if (containsCoin())
             return;
 
         synchronized (coinLock) {
