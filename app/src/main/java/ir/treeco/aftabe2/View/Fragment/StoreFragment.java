@@ -23,7 +23,7 @@ import ir.treeco.aftabe2.Util.FontsHolder;
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
 import ir.treeco.aftabe2.Util.Logger;
-import ir.treeco.aftabe2.Util.StoreItemHolder;
+import ir.treeco.aftabe2.Util.StoreAdapter;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
@@ -34,6 +34,8 @@ public class StoreFragment extends Fragment {
     private DBAdapter db;
     private ImageManager imageManager;
     private LengthManager lengthManager;
+    CoinAdapter coinAdapter;
+
     public static final String SKU_VERY_SMALL_COIN = "very_small_coin";
     public static final String SKU_SMALL_COIN = "small_coin";
     public static final String SKU_MEDIUM_COIN = "medium_coin";
@@ -52,6 +54,8 @@ public class StoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layout = inflater.inflate(R.layout.fragment_store, container, false);
 
+        coinAdapter = ((MainActivity) getActivity()).getCoinAdapter();
+
         tools = new Tools(getActivity());
         db = DBAdapter.getInstance(getActivity());
         imageManager = ((MainApplication) getActivity().getApplicationContext()).getImageManager();
@@ -66,12 +70,12 @@ public class StoreFragment extends Fragment {
         dialog.setPadding(padding, padding, padding, padding);
 
 
-        for (int i = 0; i < StoreItemHolder.getSKUs().length; i++) {
+        for (int i = 0; i < StoreAdapter.getSKUs().length; i++) {
             final int finalI = i;
             layout.findViewById(buttonIds[i]).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) getActivity()).purchase(StoreItemHolder.getSKUs()[finalI], StoreItemHolder.getPrices()[finalI]);
+                    ((MainActivity) getActivity()).purchase(StoreAdapter.getSKUs()[finalI], StoreAdapter.getPrices()[finalI]);
                 }
             });
         }
@@ -85,12 +89,11 @@ public class StoreFragment extends Fragment {
                 public void onClick(View view) {
                     db.updateReviewed(true);
 
-                    CoinAdapter coinAdapter = new CoinAdapter(getActivity(), getActivity());
 
-                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
+                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe2/?l=fa"));
                     startActivity(browserIntent);
 
-                    coinAdapter.earnCoins(StoreItemHolder.getCommentBazaarAmount());
+                    coinAdapter.earnCoins(StoreAdapter.getCommentBazaarAmount());
 
                     reviewBazaar.setVisibility(View.GONE);
                 }
@@ -103,7 +106,7 @@ public class StoreFragment extends Fragment {
             public void onClick(View v) {
 
 
-                StoreItemHolder.checkTapsellAvailable(getActivity(), true, new StoreItemHolder.OnTapsellAvailability() {
+                StoreAdapter.checkTapsellAvailable(getActivity(), true, new StoreAdapter.OnTapsellAvailability() {
                     @Override
                     public void onAvailable(boolean avail) {
                         Logger.d("TEST", avail + " tapsell avial");
@@ -117,6 +120,8 @@ public class StoreFragment extends Fragment {
         });
 
 
+        setupInstaAndMore();
+
         ImageView shopTitle = (ImageView) layout.findViewById(R.id.shop_title);
         Bitmap shopTitleBitmap = imageManager.loadImageFromResource(R.drawable.shoptitle, lengthManager.getShopTitleWidth(), -1);
 
@@ -129,20 +134,59 @@ public class StoreFragment extends Fragment {
         return layout;
     }
 
+    void setupInstaAndMore() {
+        final View telegram = layout.findViewById(R.id.review_telegram);
+
+        if (StoreAdapter.isTelegramUsed())
+            telegram.setVisibility(View.GONE);
+        else
+            telegram.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (StoreAdapter.startTelegramIntent(getContext())) {
+                        coinAdapter.earnCoins(StoreAdapter.getTelegramAmount());
+                        StoreAdapter.useTelegram();
+                        telegram.setVisibility(View.GONE);
+                    }
+                }
+
+            });
+
+        final View insta = layout.findViewById(R.id.review_insta);
+
+        if (StoreAdapter.isInstaUsed())
+            insta.setVisibility(View.GONE);
+        else
+            insta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (StoreAdapter.startInstaIntent(getContext())) {
+                        coinAdapter.earnCoins(StoreAdapter.getInstaAmount());
+                        StoreAdapter.useTelegram();
+                        insta.setVisibility(View.GONE);
+                    }
+                }
+            });
+    }
+
     private void setupItemsList() {
 
-        int[] revenues = StoreItemHolder.getRevenues();
-        int[] prices = StoreItemHolder.getPrices();
+        int[] revenues = StoreAdapter.getRevenues();
+        int[] prices = StoreAdapter.getPrices();
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);
 
-        FrameLayout[] items = new FrameLayout[6];
-        for (int i = 0; i < 6; i++)
+        FrameLayout[] items = new FrameLayout[8];
+        for (int i = 0; i < items.length; i++)
             items[i] = (FrameLayout) itemsList.getChildAt(i);
 
         for (int i = 0; i < items.length; i++) {
             String persianPrice = "فقط " + tools.numeralStringToPersianDigits("" + prices[i]) + " تومان";
-            int j = i;
+
+            if (i == 7)
+                persianPrice = "فالو اینستا";
+            if (i == 6)
+                persianPrice = "عضو کانال تلگرام";
             if (i == 5)
                 persianPrice = "نظر در بازار";
             if (i == 4) {

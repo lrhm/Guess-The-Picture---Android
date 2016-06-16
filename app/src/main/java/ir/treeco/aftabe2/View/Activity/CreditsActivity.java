@@ -1,11 +1,7 @@
 package ir.treeco.aftabe2.View.Activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,14 +10,13 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
+import ir.treeco.aftabe2.Util.StoreAdapter;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
 
@@ -196,14 +191,14 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
 
         if (v.getId() == R.id.credits_telegram) {
-            startTelegramIntent();
+            StoreAdapter.startTelegramIntent(this);
 
             return;
         }
         if (v.getId() == R.id.credits_insta) {
 
 
-            startInstaIntent();
+            StoreAdapter.startInstaIntent(this);
 
             return;
         }
@@ -226,49 +221,6 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public void startViewPages(String appName, String name, String parse) {
-        boolean isAppInstalled = isAppAvailable(appName);
-        if (isAppInstalled) {
-            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(parse));
-            myIntent.setPackage(appName);
-            startActivity(myIntent);
-        } else {
-
-            ToastMaker.show(this, "نصب نیست " + name, Toast.LENGTH_SHORT);
-        }
-    }
-
-    public void startInstaIntent() {
-        String appName = "com.instagram.android";
-
-        String parse = "http://instagram.com/_u/aftabe2";
-
-        String name = "اینستا";
-
-        startViewPages(appName, name, parse);
-
-
-    }
-
-    public void startTelegramIntent() {
-        String appName = "org.telegram.messenger";
-
-        String parse = "https://telegram.me/aftabe2";
-
-        String name = "تلگرام";
-
-        startViewPages(appName, name, parse);
-    }
-
-    public boolean isAppAvailable(String appName) {
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo(appName, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
 
 
 }

@@ -76,7 +76,7 @@ import ir.treeco.aftabe2.Adapter.FriendsAdapter;
 import ir.treeco.aftabe2.Adapter.HiddenAdapter;
 import ir.treeco.aftabe2.Adapter.MediaAdapter;
 import ir.treeco.aftabe2.MainApplication;
-import ir.treeco.aftabe2.Util.StoreItemHolder;
+import ir.treeco.aftabe2.Util.StoreAdapter;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Service.NotifObjects.ActionHolder;
@@ -95,7 +95,6 @@ import ir.treeco.aftabe2.View.Custom.StarView;
 import ir.treeco.aftabe2.View.Custom.TimerView;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
 import ir.treeco.aftabe2.View.Custom.UserLevelView;
-import ir.treeco.aftabe2.View.Dialog.DialogAdapter;
 import ir.treeco.aftabe2.View.Dialog.ForceUpdateDialog;
 import ir.treeco.aftabe2.View.Dialog.FriendRequestDialog;
 import ir.treeco.aftabe2.View.Dialog.LoadingDialog;
@@ -602,7 +601,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // No such Ad was avaialbe
         } else {
             // user got {award} tomans. pay him!!!!
-            coinAdapter.earnCoins(StoreItemHolder.getTapsellVideoAmount());
+            coinAdapter.earnCoins(StoreAdapter.getTapsellVideoAmount());
 
         }
     }
@@ -643,7 +642,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onProductPurchased(String productId, TransactionDetails details) {
 
 
-        Integer price = StoreItemHolder.getPrice(productId);
+        Integer price = StoreAdapter.getPrice(productId);
         if (price == null)
             price = 500;
 
@@ -653,7 +652,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         MediaAdapter.getInstance(this).playPurchaseSound();
 
-        Integer amount = StoreItemHolder.getSkuAmount(productId);
+        Integer amount = StoreAdapter.getSkuAmount(productId);
         if (amount != null)
             coinAdapter.earnCoins(amount);
 

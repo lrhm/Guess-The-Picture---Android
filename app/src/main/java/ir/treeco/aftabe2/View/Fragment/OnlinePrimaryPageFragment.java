@@ -27,7 +27,7 @@ import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
-import ir.treeco.aftabe2.Util.StoreItemHolder;
+import ir.treeco.aftabe2.Util.StoreAdapter;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
@@ -39,7 +39,7 @@ import ir.treeco.aftabe2.View.Dialog.RegistrationDialog;
 /**
  * Created by al on 12/25/15.
  */
-public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener, CoinAdapter.CoinsChangedListener, StoreItemHolder.OnTapsellAvailability {
+public class OnlinePrimaryPageFragment extends Fragment implements UserFoundListener, View.OnClickListener, NotifListener, CoinAdapter.CoinsChangedListener, StoreAdapter.OnTapsellAvailability {
 
     private static final String TAG = "OnlinePrimaryPage";
     private static final String TOP_MARGIN_CACHED = TAG + "_CACHE";
@@ -243,7 +243,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
             if (coinAdapter.getCoinsCount() < 100 && OnlineOfferAdapter.getInstance().isThereOfflineOffer()) {
 
-                StoreItemHolder.checkTapsellAvailable(getActivity(), false, this);
+                StoreAdapter.checkTapsellAvailable(getActivity(), false, this);
 
 
                 return;
@@ -254,7 +254,7 @@ public class OnlinePrimaryPageFragment extends Fragment implements UserFoundList
 
         if (v.getId() == R.id.fragment_online_primary_special_offer) {
 
-            StoreItemHolder.checkTapsellAvailable(getActivity(), false, this);
+            StoreAdapter.checkTapsellAvailable(getActivity(), false, this);
 
         }
     }

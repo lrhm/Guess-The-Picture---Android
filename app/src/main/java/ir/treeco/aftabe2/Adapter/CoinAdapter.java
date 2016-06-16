@@ -11,7 +11,7 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 
-import ir.treeco.aftabe2.Util.StoreItemHolder;
+import ir.treeco.aftabe2.Util.StoreAdapter;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.View.Dialog.SkipAlertDialog;
 
@@ -60,7 +60,7 @@ public class CoinAdapter {
                 public void onClick(View v) {
 //
 
-                    StoreItemHolder.checkTapsellAvailable(mActivity, true, null);
+                    StoreAdapter.checkTapsellAvailable(mActivity, true, null);
 
 
                 }
