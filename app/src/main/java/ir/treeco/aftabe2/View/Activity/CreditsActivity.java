@@ -43,6 +43,8 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     String[] names;
 
+    boolean[] showedNames;
+
     private long lastTimeClicked = 0;
 
     int clickCount = 0;
@@ -104,9 +106,9 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         facesStatus = new int[imageIds.length];
 
-        names = new String[]{"امیرالا معصومی", "محمد امین مرادی", "علی رحیمی", "سینا شرف زاده"};
+        names = new String[]{"امیرعلا معصومی", "محمد امین مرادی", "علی رحیمی", "سینا شرف زاده"};
         faces = new ImageView[imageIds.length];
-
+        showedNames = new boolean[imageIds.length];
 
         imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 180, 260);
 
@@ -117,6 +119,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
 
         for (int i = 0; i < imageIds.length; i++) {
+            showedNames[i] = false;
             faces[i] = (ImageView) findViewById(imageIds[i]);
             faces[i].setTag(i);
             faces[i].setOnClickListener(this);
@@ -215,9 +218,11 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         setFace(indx, randFace);
 
 
-        if (curTimeClicked - lastTimeClicked > 1500)
-            ToastMaker.show(this, names[indx], Toast.LENGTH_SHORT);
+        if (!showedNames[indx]) {
 
+            ToastMaker.show(this, names[indx], Toast.LENGTH_SHORT);
+            showedNames[indx] = true;
+        }
 
     }
 

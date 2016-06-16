@@ -50,7 +50,10 @@ public class DialogAdapter {
         if (Prefs.contains(text.hashCode() + ""))
             return false;
         Prefs.putBoolean(text.hashCode() + "", true);
-        new SkipAlertDialog(context, text).show();
+        SkipAlertDialog skipAlertDialog = new SkipAlertDialog(context, text);
+        skipAlertDialog.setCanceledOnTouchOutside(false);
+
+        skipAlertDialog.show();
 
         return true;
 
