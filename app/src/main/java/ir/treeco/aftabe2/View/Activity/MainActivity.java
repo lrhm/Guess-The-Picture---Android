@@ -602,7 +602,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // No such Ad was avaialbe
         } else {
             // user got {award} tomans. pay him!!!!
-            coinAdapter.earnCoins(20);
+            coinAdapter.earnCoins(StoreItemHolder.getTapsellVideoAmount());
 
         }
     }

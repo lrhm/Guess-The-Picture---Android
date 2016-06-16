@@ -305,18 +305,18 @@ public class UserViewDialog extends Dialog implements View.OnClickListener {
 
     public void requestMatch() {
 
-        DialogAdapter.makeMatchRequestDialog(context, mUser, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            DialogAdapter.makeMatchRequestDialog(context, mUser, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                if (!((MainActivity) context).getCoinAdapter().spendCoinDiffless(100))
-                    return;
+                    if (!((MainActivity) context).getCoinAdapter().spendCoinDiffless(100))
+                        return;
 
-                SocketAdapter.requestToAFriend(mUser.getId());
+                    SocketAdapter.requestToAFriend(mUser.getId());
 
-                new LoadingForMatchRequestResult(context, mUser).show();
-            }
-        });
+                    new LoadingForMatchRequestResult(context, mUser).show();
+                }
+            });
 
 
     }

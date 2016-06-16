@@ -3,8 +3,6 @@ package ir.treeco.aftabe2.Adapter;
 import android.app.Activity;
 import android.content.Context;
 
-import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
-import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.View;
@@ -62,7 +60,7 @@ public class CoinAdapter {
                 public void onClick(View v) {
 //
 
-                    StoreItemHolder.checkTapsellAvailabe(mActivity, true, null);
+                    StoreItemHolder.checkTapsellAvailable(mActivity, true, null);
 
 
                 }

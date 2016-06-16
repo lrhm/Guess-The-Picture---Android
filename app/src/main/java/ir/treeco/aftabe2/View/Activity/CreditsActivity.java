@@ -35,12 +35,15 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     SizeConverter imageConverter;
     ImageManager imageManager;
 
-    private Timer mTimer;
     private final static int MODE_ANGRY = 0;
     private final static int MODE_NORMAL = 2;
     private final static int MODE_FACE = 1;
 
     int[] facesStatus;
+
+    String[] names;
+
+    private long lastTimeClicked = 0;
 
     int clickCount = 0;
 
@@ -101,7 +104,9 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         facesStatus = new int[imageIds.length];
 
+        names = new String[]{"امیرالا معصومی", "محمد امین مرادی", "علی رحیمی", "سینا شرف زاده"};
         faces = new ImageView[imageIds.length];
+
 
         imageConverter = SizeConverter.SizeConvertorFromWidth(creditsConverter.convertWidth(200), 180, 260);
 
@@ -135,15 +140,12 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
 
-        mTimer = new Timer();
-        mTimer.scheduleAtFixedRate(new CreditsTimerTask(), 2000, 2000);
 
     }
 
     @Override
     protected void onPause() {
-        mTimer.cancel();
-        mTimer.purge();
+
         super.onPause();
     }
 
@@ -205,22 +207,17 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         // clicked on faces
 
-
-        clickCount++;
+        long curTimeClicked = System.currentTimeMillis();
 
         Random random = new Random(System.currentTimeMillis());
         int randFace = random.nextInt(3);
-        int randIndx = random.nextInt(4);
+        int indx = (int) v.getTag();
+        setFace(indx, randFace);
 
-        if (clickCount % 10 == 0) {
 
-            for (int i = 0; i < 3; i++)
-                setFace(i, MODE_ANGRY);
-            ToastMaker.show(this, "نزن !", Toast.LENGTH_SHORT);
-            return;
-        } else {
-            setFace((Integer) v.getTag(), randFace);
-        }
+        if (curTimeClicked - lastTimeClicked > 1500)
+            ToastMaker.show(this, names[indx], Toast.LENGTH_SHORT);
+
 
     }
 
@@ -241,7 +238,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
         String parse = "http://instagram.com/_u/aftabe2";
 
-        String name = "ایسنتا";
+        String name = "اینستا";
 
         startViewPages(appName, name, parse);
 
@@ -268,27 +265,5 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    void run() {
 
-        new Handler(getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Random random = new Random(System.currentTimeMillis());
-                int randFace = random.nextInt(3);
-                int randIndx = random.nextInt(4);
-
-                setFace(randIndx, randFace);
-
-            }
-        });
-    }
-
-    class CreditsTimerTask extends TimerTask {
-
-        @Override
-        public void run() {
-
-            CreditsActivity.this.run();
-        }
-    }
 }

@@ -20,20 +20,24 @@ public class DialogAdapter {
         String msg = "درخواست دوستی";
         String yes = "بفرست";
         String no = "نفرست";
-        new SkipAlertDialog(context, msg, yesClick, null).show();
+
+        if (DialogAdapter.checkInternetConnection(context))
+            new SkipAlertDialog(context, msg, yesClick, null).show();
     }
 
     public static void makeFriendRemoveDialog(Context context, View.OnClickListener yesClick) {
         String msg = "حذف دوستی";
         String yes = "بکن";
         String no = "نکن";
-        new SkipAlertDialog(context, msg, yesClick, null).show();
+        if (DialogAdapter.checkInternetConnection(context))
+            new SkipAlertDialog(context, msg, yesClick, null).show();
 
     }
 
     public static void makeMatchRequestDialog(Context context, User user, View.OnClickListener yesClick) {
 
-        new MatchRequestDialog(context, user, true, yesClick).show();
+        if (DialogAdapter.checkInternetConnection(context))
+            new MatchRequestDialog(context, user, true, yesClick).show();
 
     }
 

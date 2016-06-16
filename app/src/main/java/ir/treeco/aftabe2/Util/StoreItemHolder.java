@@ -1,7 +1,6 @@
 package ir.treeco.aftabe2.Util;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -10,9 +9,7 @@ import java.util.HashMap;
 
 import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
 import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
-import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Synchronization.Synchronize;
-import ir.treeco.aftabe2.View.Custom.ToastMaker;
 import ir.treeco.aftabe2.View.Dialog.DialogAdapter;
 
 /**
@@ -45,11 +42,19 @@ public class StoreItemHolder {
             AMOUNT_SMALL_COIN,
             AMOUNT_MEDIUM_COIN,
             AMOUNT_BIG_COIN,
-            COMMENT_BAZAAR,
-            TAPSELL_VIDEO
+            TAPSELL_VIDEO,
+            COMMENT_BAZAAR
     };
 
     final static int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1};
+
+    public static int getTapsellVideoAmount() {
+        return TAPSELL_VIDEO;
+    }
+
+    public static int getCommentBazaarAmount() {
+        return COMMENT_BAZAAR;
+    }
 
     static final String[] SKUs = new String[]{
             SKU_VERY_SMALL_COIN,
@@ -100,7 +105,7 @@ public class StoreItemHolder {
         return skuPrice.get(sku);
     }
 
-    public static void checkTapsellAvailabe(final Activity activity, final boolean forCoin, final OnTarbellAvailability onTapsell) {
+    public static void checkTapsellAvailable(final Activity activity, final boolean forCoin, final OnTapsellAvailability onTapsell) {
         DeveloperInterface.getInstance(activity)
                 .checkCtaAvailability(
                         activity, DeveloperInterface.DEFAULT_MIN_AWARD,
@@ -123,7 +128,7 @@ public class StoreItemHolder {
                                     if (onTapsell != null)
                                         onTapsell.onAvailable(isAvailable);
 
-                                    if(isConnected && isAvailable)
+                                    if (isConnected && isAvailable)
                                         DeveloperInterface.getInstance(activity).showNewVideo(activity,
                                                 DeveloperInterface.TAPSELL_DIRECT_ADD_REQUEST_CODE + (forCoin ? 0 : 1),
                                                 DeveloperInterface.DEFAULT_MIN_AWARD,
@@ -134,13 +139,12 @@ public class StoreItemHolder {
                                 }
 
 
-
                             }
                         });
     }
 
 
-    public interface OnTarbellAvailability {
+    public interface OnTapsellAvailability {
         void onAvailable(boolean avail);
     }
 }

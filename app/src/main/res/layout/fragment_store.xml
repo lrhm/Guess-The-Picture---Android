@@ -49,12 +49,12 @@
                     layout="@layout/item_store_reversed" />
 
                 <include
-                    android:id="@+id/review_cafebazaar"
-                    layout="@layout/item_store" />
-
-                <include
                     android:id="@+id/tapsell_free_coin"
+                    layout="@layout/item_store" />
+                <include
+                    android:id="@+id/review_cafebazaar"
                     layout="@layout/item_store_reversed" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

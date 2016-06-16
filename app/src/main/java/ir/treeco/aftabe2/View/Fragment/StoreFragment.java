@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import ir.tapsell.tapsellvideosdk.developer.CheckCtaAvailabilityResponseHandler;
-import ir.tapsell.tapsellvideosdk.developer.DeveloperInterface;
 import ir.treeco.aftabe2.Adapter.CoinAdapter;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.MainApplication;
@@ -92,6 +90,8 @@ public class StoreFragment extends Fragment {
                     Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe/?l=fa"));
                     startActivity(browserIntent);
 
+                    coinAdapter.earnCoins(StoreItemHolder.getCommentBazaarAmount());
+
                     reviewBazaar.setVisibility(View.GONE);
                 }
             });
@@ -103,7 +103,7 @@ public class StoreFragment extends Fragment {
             public void onClick(View v) {
 
 
-                StoreItemHolder.checkTapsellAvailabe(getActivity(), true, new StoreItemHolder.OnTarbellAvailability() {
+                StoreItemHolder.checkTapsellAvailable(getActivity(), true, new StoreItemHolder.OnTapsellAvailability() {
                     @Override
                     public void onAvailable(boolean avail) {
                         Logger.d("TEST", avail + " tapsell avial");
@@ -113,6 +113,16 @@ public class StoreFragment extends Fragment {
                     }
                 });
 
+            }
+        });
+
+        StoreItemHolder.checkTapsellAvailable(getActivity(), true, new StoreItemHolder.OnTapsellAvailability() {
+            @Override
+            public void onAvailable(boolean avail) {
+                Logger.d("TEST", avail + " tapsell avial");
+
+                if (!avail)
+                    imageManager.toGrayscale((ImageView) tapsell.findViewById(R.id.item_background));
             }
         });
 
@@ -129,6 +139,7 @@ public class StoreFragment extends Fragment {
     }
 
     private void setupItemsList() {
+
         int[] revenues = StoreItemHolder.getRevenues();
         int[] prices = StoreItemHolder.getPrices();
 
@@ -141,13 +152,11 @@ public class StoreFragment extends Fragment {
         for (int i = 0; i < items.length; i++) {
             String persianPrice = "فقط " + tools.numeralStringToPersianDigits("" + prices[i]) + " تومان";
             int j = i;
-            if (i == 4)
+            if (i == 5)
                 persianPrice = "نظر در بازار";
-            if (i == 5) {
+            if (i == 4) {
                 persianPrice = "تبلیغ ببین سکه ببر";
-                if (db.getCoinsReviewed()) {
-                    j = i - 1;
-                }
+
             }
             setupItem(items[i], persianPrice, revenues[i], i % 2 == 1);
         }
