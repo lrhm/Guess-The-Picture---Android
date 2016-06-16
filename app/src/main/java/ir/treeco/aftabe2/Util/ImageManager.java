@@ -96,6 +96,30 @@ public class ImageManager {
     }
 
 
+    public Bitmap loadImageFromFilse(String path, int outWidth, int outHeight, ScalingLogic scalingLogic) {
+
+
+        ImageKey key = new ImageKey(path, outWidth, outHeight);
+
+        Bitmap him = cache.get(key);
+        if (him != null && !him.isRecycled())
+            return him;
+
+        System.gc();
+
+        Bitmap scaledBitmap;
+        Bitmap unscaledBitmap;
+
+        unscaledBitmap = decodeFile(path, outWidth, outHeight, scalingLogic, context.getResources());
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+
+        cache.put(key, scaledBitmap);
+        return scaledBitmap;
+    }
+
+
+
     public Bitmap loadImageFromResourceNoCache(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
         if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
         if (outHeight == -1)
@@ -199,6 +223,12 @@ public class ImageManager {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         return BitmapFactory.decodeResource(resources, resourceId, options);
+    }
+
+    public Bitmap decodeFile(String file, int dstWidth, int dstHeight, ScalingLogic scalingLogic, Resources resources) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        return BitmapFactory.decodeFile(file , options);
     }
 
     public Bitmap decodeInputStream(InputStream inputStream) {

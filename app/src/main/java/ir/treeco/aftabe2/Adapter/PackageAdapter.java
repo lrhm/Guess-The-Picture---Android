@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+
+import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.Logger;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,9 +90,9 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             UiUtil.setTextViewSize(price, (int) (SizeManager.getScreenWidth() * 0.3), 0.15f);
 
 
-            int packageSize = (int) (SizeManager.getScreenWidth() * 0.45);
-            imageView.getLayoutParams().height = packageSize;
-            imageView.getLayoutParams().width = packageSize;
+            int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
+//            imageView.getLayoutParams().height = packageSize;
+//            imageView.getLayoutParams().width = packageSize;
 
             UiUtil.setWidth(packagePrice, packageSize);
             UiUtil.setHeight(packagePrice, packageSize);
@@ -256,9 +258,14 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         DBAdapter dbAdapter = DBAdapter.getInstance(context);
 
+        int packageSize = (int) (SizeManager.getScreenWidth() * 0.47);
 
-        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
-        Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
+        String imagePath =  context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
+
+//        Picasso.with(context).load(imagePath).resize( packageSize, packageSize).into(viewHolder.imageView);
+
+        viewHolder.imageView.setImageBitmap(ImageManager.getInstance(context).loadImageFromFilse(imagePath , packageSize , (int) (packageSize * 0.9), ImageManager.ScalingLogic.FIT));
+
         User myUser = Tools.getCachedUser(context);
 
         if ((myUser != null && myUser.isPackagePurchased(id))) {
