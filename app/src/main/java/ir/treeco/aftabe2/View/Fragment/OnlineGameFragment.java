@@ -1,5 +1,6 @@
 package ir.treeco.aftabe2.View.Fragment;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -353,7 +354,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAllAnswered(String guess) {
 
-        String solution = level.getAnswer().replace("\\" ,"");
+        String solution = level.getAnswer().replace("\\", "");
 
         if ((guess.replace("آ", "ا")).equals((solution.replace("/",
                 "")).replace("آ", "ا"))) {
@@ -377,7 +378,6 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
             SocketAdapter.setAnswerLevel(answerObject);
 
             startShowingAnimation();
-
 
 
         }
@@ -520,6 +520,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
             }
         });
+
+        if (mRemainingTime < 28 && !MediaAdapter.getInstance(getActivity()).isBombPlaying()) {
+            MediaAdapter.getInstance(getActivity()).playBomb();
+        }
 
 
     }

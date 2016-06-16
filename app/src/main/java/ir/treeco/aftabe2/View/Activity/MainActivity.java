@@ -1074,7 +1074,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Logger.d(TAG, "got user action");
         if (!actionHolder.getUserId().equals(Tools.getCachedUser(this).getId())) {
             UserActionCache.getInstance().addToOpponentList(actionHolder.getAction());
-
+            if(actionHolder.getAction().isCorrect())
+                MediaAdapter.getInstance(this).playEnemyCorrect();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

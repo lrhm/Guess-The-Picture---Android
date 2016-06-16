@@ -61,6 +61,15 @@ public class MediaAdapter {
 
     }
 
+    public boolean isBombPlaying() {
+        int rawId = R.raw.bomb;
+        MediaPlayer mediaPlayer = map.get(rawId);
+        if (mediaPlayer != null) {
+            return mediaPlayer.isPlaying();
+        }
+        return false;
+    }
+
     public void pauseBomb() {
         int rawId = R.raw.bomb;
 
