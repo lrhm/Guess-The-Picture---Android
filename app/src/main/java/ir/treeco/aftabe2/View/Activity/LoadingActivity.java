@@ -104,8 +104,6 @@ public class LoadingActivity extends Activity implements Runnable {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-
-        Log.d(TAG, "onNewIntent");
     }
 
     private void initUtils() {

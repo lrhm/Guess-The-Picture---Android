@@ -1321,8 +1321,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void checkExtras(Bundle bundle) {
 
 
-        Log.d(TAG, "checkExtras");
-
         if (bundle == null)
             return;
 
