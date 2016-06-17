@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import ir.treeco.aftabe2.Util.Logger;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.pixplicity.easyprefs.library.Prefs;
@@ -78,6 +79,10 @@ public class LoadingActivity extends Activity implements Runnable {
 
 
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        Logger.d(TAG, "onCreate LoadingActivity");
+
         if (getIntent() != null && getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
                 Object obj = getIntent().getExtras().get(key);   //later parse it as per your required type
@@ -94,6 +99,14 @@ public class LoadingActivity extends Activity implements Runnable {
         finish();
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+
+        Log.d(TAG, "onNewIntent");
+    }
 
     private void initUtils() {
 

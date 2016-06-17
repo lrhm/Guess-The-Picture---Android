@@ -119,6 +119,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
             SocketAdapter.addSocketListener(this);
 
         }
+        mLoadingImageView.setKeepScreenOn(true);
 
         mTimerView = new TimerView(context);
         mTimerView.setDoOnlyBlue(true);

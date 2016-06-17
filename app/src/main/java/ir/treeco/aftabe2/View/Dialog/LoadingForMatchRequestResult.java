@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.Timer;
@@ -81,15 +82,18 @@ public class LoadingForMatchRequestResult extends Dialog implements Runnable, So
         mLoadingImageView = (ImageView) findViewById(R.id.activity_main_loading_image_view);
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResourceNoCache(mImageLoadingIds[0],
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
+
+        mLoadingImageView.setKeepScreenOn(true);
+
         new Handler().postDelayed(this, 20);
         SocketAdapter.addFriendSocketListener(this);
 
         mTimerView = new TimerView(context);
         mTimerView.setDoOnlyBlue(true);
 
-        FrameLayout container = (FrameLayout) findViewById(R.id.dialog_game_result_loading_container);
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.dialog_game_result_loading_container_relative_layout);
 
-        FrameLayout.LayoutParams timerLP = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams timerLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         timerLP.topMargin = (int) (SizeManager.getScreenHeight() * 0.2f);
         timerLP.leftMargin = (SizeManager.getScreenWidth() - mTimerView.getRealWidth()) / 2;
         container.addView(mTimerView, timerLP);

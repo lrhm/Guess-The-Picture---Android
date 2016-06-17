@@ -77,7 +77,6 @@ public class PackageTools {
         File olderFile = new File(path);
 
 
-
         // if user deleted the app . and have saved database , check if db is old . if old
         if (olderFile.exists()) {
 
@@ -126,11 +125,10 @@ public class PackageTools {
 
         PackageObject[] objects = new Gson().fromJson(jsonString, PackageObjectListHolder.class).objects;
 
-
         for (PackageObject object : objects) {
 
             String zipFileName = object.getFileName().substring(0, object.getFileName().length() - 4);
-            writeRawFiles(object, "package_0_front", "png", object.getId());
+            writeRawFiles(object, "package_" + object.getId() + "_front", "png", object.getId());
             writeRawFiles(object, zipFileName, "zip", object.getId());
         }
     }

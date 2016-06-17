@@ -172,8 +172,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         SizeManager.initSizes(this);
 
-        checkExtras(getIntent().getExtras());
-
 
         SocketAdapter.setContext(this);
         SocketAdapter.addSocketListener(this);
@@ -275,15 +273,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        Intent intent = new Intent(this, RegistrationIntentService.class);
 //        startService(intent);
 
-        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
+//        if (!Prefs.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false)) {
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+//        }
 
 //        coinAdapter.earnCoins(5000);
 
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Logger.d(TAG, "onNewIntent");
+
+        checkExtras(intent.getExtras());
+    }
 
     public void initStars() {
         starViews = new StarView[3];
@@ -364,9 +370,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void setOnlineGameUser(User op) {
 
-        playerOne.setUserName(myUser.getName());
-        playerOne.setUserLevel(myUser.getLevel());
-        playerOne.mUser = myUser;
+        User mUser = Tools.getCachedUser(this);
+
+        playerOne.setUserName(mUser.getName());
+        playerOne.setUserLevel(mUser.getLevel());
+        playerOne.mUser = mUser;
 
         playerTwo.setUserName(op.getName());
         playerTwo.setUserLevel(op.getLevel());
@@ -576,6 +584,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Logger.d(TAG, "onActivityResult");
+
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
@@ -784,7 +794,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 @Override
                 public void run() {
 
-                    if (!isFinishing()) {
+                    if (!isFinishing() && !isPaused) {
 
 
                         MatchRequestDialog dialog = new MatchRequestDialog(MainActivity.this, request.getFriend());
@@ -1215,7 +1225,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (backPressedCount == 2) {
 
                     ((MainApplication) getApplication()).getLastTimeDead().set(System.currentTimeMillis());
-                    finish();
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(startMain);
+
                 } else {
 
                     ToastMaker.show(this, "برای خروج یک بار دیگر بازگشت را بزن", Toast.LENGTH_SHORT);
@@ -1245,6 +1259,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onPause() {
+
+        Logger.d(TAG, "onPAuse");
 
         MediaAdapter.getInstance(this).free();
 
@@ -1284,11 +1300,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onResume();
 
 
-        if (System.currentTimeMillis() -  ((MainApplication) getApplication()).getLastTimeDead().get() < 500) {
+        if (System.currentTimeMillis() - ((MainApplication) getApplication()).getLastTimeDead().get() < 500) {
             finish();
             return;
 
         }
+        checkExtras(getIntent().getExtras());
+
 
         AftabeAPIAdapter.tryToLogin(this);
 
@@ -1308,17 +1326,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void checkExtras(Bundle bundle) {
 
+
+        Log.d(TAG, "checkExtras");
+
         if (bundle == null)
             return;
 
 
         String data = bundle.getString(ServiceConstants.ACTION_DATA_INTENT);
 
-
-        if (data == null)
+        if (data == null || data.equals(""))
             return;
 
         final ActionHolder actionHolder = new Gson().fromJson(data, ActionHolder.class);
+
+        Intent intent = getIntent();
+        intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, "");
+        setIntent(intent);
 
         NotificationManager.dismissNotification(this, actionHolder.getNotificationID());
 
@@ -1349,7 +1373,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         SocketAdapter.responseToMatchRequest(actionHolder.getNotifHolder().getMatchSF().getFriendId(), true);
 
                     }
-                }, 600);
+                }, 1300);
                 new LoadingDialog(this).show();
             } else {
                 new Handler().postDelayed(new Runnable() {
@@ -1358,7 +1382,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         new MatchRequestDialog(MainActivity.this, actionHolder.getNotifHolder().getMatchSF().getFriend()).show();
 
                     }
-                }, 1000);
+                }, 1300);
             }
         }
 

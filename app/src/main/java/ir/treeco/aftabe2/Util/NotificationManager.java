@@ -123,11 +123,22 @@ public class NotificationManager {
     }
 
     private PendingIntent getAcceptPendingIntent(NotifHolder notifHolder, boolean accept, int id) {
-        Intent intent = new Intent(getBaseContext(), ActionEventReceiver.class);
+        Intent intent;
+        if (notifHolder.isFriendRequest())
+            intent = new Intent(getBaseContext(), ActionEventReceiver.class);
+        else {
+
+            intent = new Intent(getBaseContext(), LoadingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_NEW_TASK);
+
+        }
         ActionHolder actionHolder = new ActionHolder(notifHolder, id, accept, accept);
         intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
 
+        if(notifHolder.isFriendRequest())
         return PendingIntent.getBroadcast(getBaseContext(), 45, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getActivity(getBaseContext(),
+                ServiceConstants.MATCH_REQUEST_RQ_ID + 31, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 
@@ -141,6 +152,7 @@ public class NotificationManager {
 
     private PendingIntent getIntentForFriendRequest(NotifHolder notifHolder, int id) {
         Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_NEW_TASK);
         ActionHolder actionHolder = ActionHolder.getNonSpecifiedActionHolder(notifHolder, id);
         intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
 
@@ -152,6 +164,7 @@ public class NotificationManager {
 
     private PendingIntent getIntentForMatchRequest(NotifHolder notifHolder, int id) {
         Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_NEW_TASK);
         ActionHolder actionHolder = ActionHolder.getNonSpecifiedActionHolder(notifHolder, id);
         intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
 

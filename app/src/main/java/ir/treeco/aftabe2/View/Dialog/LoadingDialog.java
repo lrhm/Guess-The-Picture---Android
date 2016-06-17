@@ -152,6 +152,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.search_sc_1,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
+        mLoadingImageView.setKeepScreenOn(true);
 
 
         if (showCancel) {
