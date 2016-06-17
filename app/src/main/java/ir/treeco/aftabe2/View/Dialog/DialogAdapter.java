@@ -59,10 +59,18 @@ public class DialogAdapter {
 
     }
 
+    private static long lastTimeToastShowd = 0;
+
     public static boolean checkInternetConnection(Context context) {
-        if (!Synchronize.isOnline(context))
-            ToastMaker.show(context, context.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
-        else return true;
+        if (!Synchronize.isOnline(context)) {
+
+            long curTime = System.currentTimeMillis();
+            if (curTime - lastTimeToastShowd > 2000) {
+                ToastMaker.show(context, context.getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
+                lastTimeToastShowd = curTime;
+            }
+
+        } else return true;
         return false;
 
     }

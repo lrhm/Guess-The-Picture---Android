@@ -58,7 +58,7 @@ public class StoreAdapter {
     };
 
 
-    final static int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1 , -1 , -1};
+    final static int[] prices = new int[]{1000, 3000, 4000, 10000, -1, -1, -1, -1};
 
     public static int getTelegramAmount() {
         return TELEGRAM;
@@ -142,6 +142,8 @@ public class StoreAdapter {
         return skuPrice.get(sku);
     }
 
+    private static long lastClickTapsellAvailable = 0;
+
     public static void checkTapsellAvailable(final Activity activity, final boolean forCoin, final OnTapsellAvailability onTapsell) {
         DeveloperInterface.getInstance(activity)
                 .checkCtaAvailability(
@@ -153,9 +155,16 @@ public class StoreAdapter {
 
                                 if (Synchronize.isOnline(activity)) {
 
-                                    if (!isAvailable || !isConnected)
+                                    if (!isAvailable || !isConnected) {
+
                                         Answers.getInstance().logCustom(new CustomEvent("TapsellError"));
 
+                                        long curTime = System.currentTimeMillis();
+                                        if (curTime - lastClickTapsellAvailable > 2000) {
+                                            ToastMaker.show(activity, "لطفا چند لحظه بعد تلاش کنید", Toast.LENGTH_SHORT);
+                                            lastClickTapsellAvailable = curTime;
+                                        }
+                                    }
                                     Answers.getInstance().logCustom(new CustomEvent("Tapsell")
                                             .putCustomAttribute("isAvailable",
                                                     !isAvailable || !isConnected ? 0 : 100)

@@ -403,8 +403,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     @Override
     public void onAllAnswered(String guess) {
 
-        if ((guess.replace("آ", "ا")).equals((solution.replace(".",
-                "")).replace("آ", "ا"))) {
+        if ((guess.replace("آ", "ا").replace("/","")).equals((solution.replace(".",
+                "")).replace("آ", "ا").replace("/",""))) {
             MediaAdapter.getInstance(getContext()).playCorrectSound();
 
             if (!level.isResolved()) {

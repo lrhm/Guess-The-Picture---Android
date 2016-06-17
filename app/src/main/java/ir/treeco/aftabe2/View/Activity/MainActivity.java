@@ -447,6 +447,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if (!main.isVisible()) {
                     return;
                 }
+                if (counter == 2 && Prefs.getBoolean("Credits_Hint", true)) {
+
+                    Prefs.putBoolean("Credits_Hint", false);
+                    ToastMaker.show(MainActivity.this, "راه مخفی", Toast.LENGTH_SHORT);
+                }
+
                 long current = System.currentTimeMillis();
 
                 if (current - lastTimeClicked > 1000) {
@@ -1073,7 +1079,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Logger.d(TAG, "got user action");
         if (!actionHolder.getUserId().equals(Tools.getCachedUser(this).getId())) {
             UserActionCache.getInstance().addToOpponentList(actionHolder.getAction());
-            if(actionHolder.getAction().isCorrect())
+            if (actionHolder.getAction().isCorrect())
                 MediaAdapter.getInstance(this).playEnemyCorrect();
             runOnUiThread(new Runnable() {
                 @Override

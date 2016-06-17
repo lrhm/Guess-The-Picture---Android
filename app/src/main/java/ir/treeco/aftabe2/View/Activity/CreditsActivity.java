@@ -42,7 +42,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     private long lastTimeClicked = 0;
 
-    int clickCount = 0;
+    int[] clickCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +100,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         };
 
         facesStatus = new int[imageIds.length];
+        clickCount = new int[imageIds.length];
 
         names = new String[]{"امیرعلا معصومی", "محمد امین مرادی", "علی رحیمی", "سینا شرف زاده"};
         faces = new ImageView[imageIds.length];
@@ -114,6 +115,7 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
 
         for (int i = 0; i < imageIds.length; i++) {
+            clickCount[i] = 0;
             showedNames[i] = false;
             faces[i] = (ImageView) findViewById(imageIds[i]);
             faces[i].setTag(i);
@@ -178,8 +180,15 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
 
     public void setFace(int index, int mode) {
 
+        clickCount[index]++;
         if (facesStatus[index] == mode)
             mode = Math.abs(mode - 1);
+
+        if (clickCount[index] % 5 == 0) {
+            ToastMaker.show(this, "نزن!", Toast.LENGTH_SHORT);
+            mode = MODE_ANGRY;
+
+        }
 
         facesStatus[index] = mode;
         int faceDrawable = facesDrawables[index * (facesDrawables.length / faces.length) + mode];
@@ -213,14 +222,15 @@ public class CreditsActivity extends Activity implements View.OnClickListener {
         setFace(indx, randFace);
 
 
-        if (!showedNames[indx]) {
+        if (!showedNames[indx] && curTimeClicked - lastTimeClicked > 2000) {
 
             ToastMaker.show(this, names[indx], Toast.LENGTH_SHORT);
             showedNames[indx] = true;
+            lastTimeClicked = curTimeClicked;
+
         }
 
     }
-
 
 
 }
