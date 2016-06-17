@@ -22,8 +22,6 @@ public class MainApplication extends Application {
     private final static String TAG = "MainApplication";
 
 
-    AtomicLong mLastTimeDead;
-
     @Override
     public void onCreate() {
 
@@ -41,14 +39,9 @@ public class MainApplication extends Application {
         lengthManager = new LengthManager(this);
         imageManager = ImageManager.getInstance(this);
 
-        mLastTimeDead  = new AtomicLong(0);
 
 
 
-    }
-
-    public AtomicLong getLastTimeDead() {
-        return mLastTimeDead;
     }
 
     public LengthManager getLengthManager() {

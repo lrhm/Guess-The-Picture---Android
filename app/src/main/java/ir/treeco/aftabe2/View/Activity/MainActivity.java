@@ -1224,7 +1224,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 backPressedCount++;
                 if (backPressedCount == 2) {
 
-                    ((MainApplication) getApplication()).getLastTimeDead().set(System.currentTimeMillis());
                     Intent startMain = new Intent(Intent.ACTION_MAIN);
                     startMain.addCategory(Intent.CATEGORY_HOME);
                     startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1300,11 +1299,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onResume();
 
 
-        if (System.currentTimeMillis() - ((MainApplication) getApplication()).getLastTimeDead().get() < 500) {
-            finish();
-            return;
-
-        }
         checkExtras(getIntent().getExtras());
 
 
