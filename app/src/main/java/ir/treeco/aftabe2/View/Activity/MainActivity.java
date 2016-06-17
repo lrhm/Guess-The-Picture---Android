@@ -16,6 +16,7 @@ import ir.treeco.aftabe2.Adapter.Cache.OnlineOfferAdapter;
 import ir.treeco.aftabe2.Synchronization.Synchronize;
 import ir.treeco.aftabe2.Util.Logger;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
@@ -153,6 +155,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     LoadingForGameResultDialog mLoadingForGameResultDialog = null;
     LoadingForGameResultDialog mLoadingForRegister = null;
     private Button creditsButton;
+
+
+    // this is for preventing multiple instances
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -986,6 +992,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (billingProcessor != null)
             billingProcessor.release();
 
+
         super.onDestroy();
     }
 
@@ -1206,6 +1213,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 backPressedCount++;
                 if (backPressedCount == 2) {
+
+                    ((MainApplication) getApplication()).getLastTimeDead().set(System.currentTimeMillis());
                     finish();
                 } else {
 
@@ -1213,6 +1222,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 return;
             }
+
+
             super.onBackPressed();
             return;
         }
@@ -1271,6 +1282,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         super.onResume();
+
+
+        if (System.currentTimeMillis() -  ((MainApplication) getApplication()).getLastTimeDead().get() < 500) {
+            finish();
+            return;
+
+        }
 
         AftabeAPIAdapter.tryToLogin(this);
 

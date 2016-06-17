@@ -56,7 +56,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public ArrayList<User> mSearched;
 
     ArrayList<ArrayList<User>> arrayLists;
-    private final String[] HEADERS = {"یافت شده ها", "درخواست ها", "دوستان آنلاین", "دوستان آفلاین", "مخاطبان"};
+    private final String[] HEADERS = {"یافت شده ها", "درخواست ها", "دوستان آنلاین", "دوستان", "مخاطبان"};
 
     public static final int TYPE_FRIEND = 3;
     public static final int TYPE_SEARCHED = 0;

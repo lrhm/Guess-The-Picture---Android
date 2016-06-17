@@ -137,7 +137,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
         int coin = 0;
         if (mWin)
-            coin = 160;
+            coin = 180;
         if (mDraw)
             coin = 80;
 

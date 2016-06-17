@@ -77,27 +77,29 @@ public class PackageTools {
         File olderFile = new File(path);
 
 
-        // if user deleted the app . and have saved database , check if db is old . if old .
-        if ((olderFile.exists())) {
 
-            olderFile.delete();
+        // if user deleted the app . and have saved database , check if db is old . if old
+        if (olderFile.exists()) {
 
             DBAdapter dbAdapter = DBAdapter.getInstance(context);
 
             dbAdapter.deletePackage(0);
 
             String newPath = context.getFilesDir().getPath() + "/Packages/package_" + 0 + "/";
-
             File dir = new File(newPath);
             if (dir.exists() && dir.isDirectory())
                 for (File file : dir.listFiles())
                     file.delete();
+
             if (dir.exists())
                 dir.delete();
 
 
-                copyLocalpackages();
+            if (olderFile.exists()) {
+                olderFile.delete();
+            }
 
+            copyLocalpackages();
 
         }
 

@@ -5,6 +5,8 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.pixplicity.easyprefs.library.Prefs;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import io.fabric.sdk.android.Fabric;
 
 
@@ -20,6 +22,7 @@ public class MainApplication extends Application {
     private final static String TAG = "MainApplication";
 
 
+    AtomicLong mLastTimeDead;
 
     @Override
     public void onCreate() {
@@ -38,8 +41,14 @@ public class MainApplication extends Application {
         lengthManager = new LengthManager(this);
         imageManager = ImageManager.getInstance(this);
 
+        mLastTimeDead  = new AtomicLong(0);
 
 
+
+    }
+
+    public AtomicLong getLastTimeDead() {
+        return mLastTimeDead;
     }
 
     public LengthManager getLengthManager() {
