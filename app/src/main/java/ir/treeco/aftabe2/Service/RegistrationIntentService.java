@@ -49,9 +49,8 @@ public class RegistrationIntentService extends IntentService {
             // pass along this data
             sendRegistrationToServer(token);
 
-
             // pass along this data
-            sendRegistrationToServer(token);
+
         } catch (IOException e) {
             e.printStackTrace();
             Prefs.putBoolean(SENT_TOKEN_TO_SERVER, false);
