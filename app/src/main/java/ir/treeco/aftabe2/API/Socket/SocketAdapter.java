@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import ir.treeco.aftabe2.API.Socket.Interfaces.CancelRequestListener;
+import ir.treeco.aftabe2.Service.NotifObjects.NotifHolder;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import ir.treeco.aftabe2.API.Socket.Objects.Result.ResultHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.TimeLeftHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.UserAction.UserActionHolder;
 import ir.treeco.aftabe2.R;
+import ir.treeco.aftabe2.Util.NotificationManager;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
@@ -150,8 +152,13 @@ public class SocketAdapter {
 
     private static void initSocket() {
 
-        if (mSocket != null)
+        if (mSocket != null) {
+
+            if (!mSocket.connected())
+                mSocket.connect();
             return;
+
+        }
 
         if (Tools.getCachedUser(mMainActivity) == null)
             return;
@@ -268,7 +275,7 @@ public class SocketAdapter {
                     String msg = args[0].toString();
                     Logger.d(TAG, "timerUpdate is : " + msg);
                     TimeLeftHolder timeLeftHolder = gson.fromJson(msg, TimeLeftHolder.class);
-                    if (timeLefTListener != null)
+                    if (timeLefTListener != null && !checkForPause())
                         timeLefTListener.onTime(timeLeftHolder.left);
 
 
@@ -391,7 +398,14 @@ public class SocketAdapter {
     }
 
     private static void callFriendRequestListeners(FriendRequestHolder holder) {
+        if (checkForPause()) {
 
+            if (!checkForOnlineGame()) {
+                new NotificationManager(mMainActivity).createNotification(new NotifHolder(holder));
+            }
+
+            return;
+        }
 
         synchronized (requestLock) {
             for (FriendRequestListener listener : requestLiseners) {
@@ -406,6 +420,15 @@ public class SocketAdapter {
     }
 
     private static void callMatchRequest(MatchRequestSFHolder responseHolder) {
+
+        if (checkForPause()) {
+
+            if (!checkForOnlineGame()) {
+                new NotificationManager(mMainActivity).createNotification(new NotifHolder(responseHolder));
+            }
+
+            return;
+        }
 
         synchronized (friendsLock) {
 
@@ -426,8 +449,13 @@ public class SocketAdapter {
 
 
     private static void callMatchResult(MatchResultHolder responseHolder) {
-        synchronized (friendsLock) {
 
+        if (checkForPause()) {
+
+            return;
+        }
+
+        synchronized (friendsLock) {
 
             for (SocketFriendMatchListener socket : friendsListeners)
                 socket.onMatchResultToSender(responseHolder);
@@ -435,6 +463,10 @@ public class SocketAdapter {
     }
 
     private static void callFriendStatusChanged(OnlineFriendStatusHolder responseHolder) {
+
+        if (checkForPause())
+            return;
+
         synchronized (friendsLock) {
 
             for (SocketFriendMatchListener socket : friendsListeners)
@@ -445,6 +477,10 @@ public class SocketAdapter {
 
     private static void callGameStart(GameStartObject gameStartObject) {
 
+
+        if (checkForPause())
+            return;
+
         synchronized (lock) {
             for (SocketListener socketListener : listeners)
                 socketListener.onGameStart(gameStartObject);
@@ -453,15 +489,23 @@ public class SocketAdapter {
     }
 
     private static void callGameRequestResult(GameResultHolder gameResultHolder) {
+
+        if (checkForPause()) {
+
+            return;
+        }
+
         synchronized (lock) {
-
-
             for (SocketListener socketListener : listeners)
                 socketListener.onGotGame(gameResultHolder);
         }
     }
 
     private static void callGameResult(ResultHolder resultHolder) {
+
+        if (checkForPause())
+            return;
+
         synchronized (lock) {
             for (SocketListener socketListener : listeners)
                 socketListener.onFinishGame(resultHolder);
@@ -469,10 +513,21 @@ public class SocketAdapter {
     }
 
     private static void callGameActions(UserActionHolder userActionHolder) {
+        if (checkForPause())
+            return;
+
         synchronized (lock) {
             for (SocketListener socketListener : listeners)
                 socketListener.onGotUserAction(userActionHolder);
         }
+    }
+
+    private static boolean checkForOnlineGame() {
+        return mMainActivity != null && mMainActivity.isInOnlineGame();
+    }
+
+    private static boolean checkForPause() {
+        return mMainActivity == null || mMainActivity.isPaused();
     }
 
     public static void setReadyStatus() {

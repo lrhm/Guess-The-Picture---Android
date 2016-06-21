@@ -79,7 +79,7 @@ public class LoadingActivity extends Activity implements Runnable {
 
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         Logger.d(TAG, "onCreate LoadingActivity");
 

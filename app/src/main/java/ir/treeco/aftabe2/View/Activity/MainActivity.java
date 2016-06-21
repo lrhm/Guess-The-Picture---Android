@@ -1260,6 +1260,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private boolean isPaused = false;
     private long pauseTime = 0;
 
+
     @Override
     protected void onPause() {
 
@@ -1275,15 +1276,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         pauseTime = System.currentTimeMillis();
 
-        SocketAdapter.disconnect();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (isPaused && System.currentTimeMillis() - pauseTime >= 2 * 55 * 1000)
-//                    SocketAdapter.disconnect();
-//
-//            }
-//        }, 2 * 60 * 1000);
+//        SocketAdapter.disconnect();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isPaused && System.currentTimeMillis() - pauseTime >= 2 * 55 * 1000)
+                    SocketAdapter.disconnect();
+
+            }
+        }, 2 * 60 * 1000);
 
         isPaused = true;
 
@@ -1316,6 +1317,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void setFriendsAdapter(FriendsAdapter mFriendsAdapter) {
         this.mFriendsAdapter = mFriendsAdapter;
     }
+
+    public boolean isInOnlineGame() {
+        return isInOnlineGame;
+    }
+
 
     public void setIsInOnlineGame(boolean isInOnlineGame) {
         this.isInOnlineGame = isInOnlineGame;
