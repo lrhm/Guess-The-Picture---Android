@@ -110,7 +110,9 @@ public class ContactsAdapter implements BatchUserFoundListener {
             }
 
         }
-        phones.close();
+        if (phones != null) {
+            phones.close();
+        }
 
         Logger.d(TAG, set.size() + " size of set");
         for (ContactsHolder contactsHolder : set)
