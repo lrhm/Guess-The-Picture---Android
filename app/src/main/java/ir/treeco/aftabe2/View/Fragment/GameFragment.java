@@ -69,6 +69,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     private KeyboardView keyboardView;
     private TimeStampAdapter timeStampAdapter;
     private boolean skiped = false;
+    private MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -77,6 +78,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
         Logger.d(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_game, container, false);
+
+        mainActivity = (MainActivity) getActivity();
 
         timeStampAdapter = new TimeStampAdapter();
         tools = new Tools(getContext());
@@ -124,7 +127,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
         setupForOutsideOfCheat(view);
 
 
-        if(packageId == 0 && levelId == 0)
+        if (packageId == 0 && levelId == 0)
             DialogAdapter.makeTutorialDialog(getContext(),
                     "شما توی این بازی یک عبارت تقریبا بی\u200Cربط را از روی عکس هر مرحله حدس می\u200Cزنید. برای مثال در این مرحله یک خر که به رنگ آبی درامده را می بینید. "
                     , "پس جواب این مرحله می شود \"خرابی\" خر+رنگ آبی");
@@ -352,7 +355,9 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
 
     @Override
     public void onDetach() {
-        ((MainActivity) getActivity()).disableCheatButton(true);
+
+        if (mainActivity != null)
+            (mainActivity).disableCheatButton(true);
 
         super.onDetach();
     }
@@ -383,9 +388,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                         GameFragment gameFragment = new GameFragment();
                         gameFragment.setArguments(bundle);
 
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, gameFragment, LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG);
-                        transaction.commitAllowingStateLoss();
+                        if (mainActivity == null && getActivity() != null)
+                            mainActivity = (MainActivity) getActivity();
+                        if (mainActivity != null) {
+                            FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, gameFragment, LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG);
+                            transaction.commitAllowingStateLoss();
+
+                        }
                     }
 
                     @Override
@@ -403,8 +413,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     @Override
     public void onAllAnswered(String guess) {
 
-        if ((guess.replace("آ", "ا").replace("/","")).equals((solution.replace(".",
-                "")).replace("آ", "ا").replace("/",""))) {
+        if ((guess.replace("آ", "ا").replace("/", "")).equals((solution.replace(".",
+                "")).replace("آ", "ا").replace("/", ""))) {
             MediaAdapter.getInstance(getContext()).playCorrectSound();
 
             if (!level.isResolved()) {
