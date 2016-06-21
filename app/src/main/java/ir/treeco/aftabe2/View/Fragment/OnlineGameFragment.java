@@ -69,6 +69,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     private OnGameEndListener mOnGameEndListener = null;
     private static final String TAG = "OnlineGameFragment";
 
+    private MainActivity mActivity;
     private Timer mTimer;
     private Integer mRemainingTime;
     private ImageView imageView;
@@ -104,15 +105,15 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.fragment_game, container, false);
         gameFragment = this;
         state = getArguments().getInt("state");
-
+        mActivity = (MainActivity) getActivity();
 
         if (state == 0) {
             mRemainingTime = 120;
             UserActionCache.getInstance().clearCache();
-            ((MainActivity) getActivity()).playerOne.setOnlineStateClear();
-            ((MainActivity) getActivity()).playerTwo.setOnlineStateClear();
-            ((MainActivity) getActivity()).setStarsDeactive();
-            ((MainActivity) getActivity()).setOriginalBackground(R.drawable.onlinecircles);
+            mActivity.playerOne.setOnlineStateClear();
+            mActivity.playerTwo.setOnlineStateClear();
+            mActivity.setStarsDeactive();
+            mActivity.setOriginalBackground(R.drawable.onlinecircles);
 
         }
         if (gameType == null) {
@@ -141,7 +142,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         ((MainActivity) getActivity()).setOnlineGame(true);
         opponent = mGameResultHolder.getOpponent();
 
-        ((MainActivity) getActivity()).setOnlineGameUser(opponent);
+        mActivity.setOnlineGameUser(opponent);
 
         String solution = level.getAnswer().replace("\\", "");
 
@@ -391,7 +392,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     public void doSkip() {
 
-        getActivity().getSupportFragmentManager().popBackStack();
+        if (mActivity == null)
+            mActivity = (MainActivity) getActivity();
+        if (mActivity == null)
+            return;
+
+        mActivity.getSupportFragmentManager().popBackStack();
 
         answerObject.setSkip();
         SocketAdapter.setAnswerLevel(answerObject);
@@ -450,7 +456,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     public void doLose() {
         if (answerObject == null) {
-            if(mGameResultHolder == null)
+            if (mGameResultHolder == null)
                 return;
             answerObject = new AnswerObject(mGameResultHolder.getLevels()[state].getId());
 
