@@ -208,6 +208,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         digits = (TextView) findViewById(R.id.digits);
         cheatButton = (ImageView) findViewById(R.id.cheat_button);
         logo = (ImageView) findViewById(R.id.logo);
+
+        hideCheatButton();
+
         playerOne = (UserLevelView) findViewById(R.id.player1_online_game);
         playerTwo = (UserLevelView) findViewById(R.id.player2_online_game);
 
@@ -543,9 +546,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void hideCheatButton() {
-        cheatButton.setVisibility(View.INVISIBLE);
-        logo.setVisibility(View.VISIBLE);
-        creditsButton.setVisibility(View.VISIBLE);
+        if (cheatButton != null)
+            cheatButton.setVisibility(View.INVISIBLE);
+        if (logo != null) logo.setVisibility(View.VISIBLE);
+        if (creditsButton != null) creditsButton.setVisibility(View.VISIBLE);
     }
 
     public boolean isCheatsVisible() {
@@ -1315,6 +1319,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void setIsInOnlineGame(boolean isInOnlineGame) {
         this.isInOnlineGame = isInOnlineGame;
+        if (isInOnlineGame)
+            setStarsDeactive();
     }
 
 
