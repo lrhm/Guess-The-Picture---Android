@@ -162,7 +162,7 @@ public class StoreFragment extends Fragment {
                 public void onClick(View v) {
                     if (StoreAdapter.startInstaIntent(getContext())) {
                         coinAdapter.earnCoins(StoreAdapter.getInstaAmount());
-                        StoreAdapter.useTelegram();
+                        StoreAdapter.useInsta();
                         insta.setVisibility(View.GONE);
                     }
                 }
