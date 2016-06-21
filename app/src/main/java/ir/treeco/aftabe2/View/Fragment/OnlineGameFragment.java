@@ -449,7 +449,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     }
 
     public void doLose() {
+        if (answerObject == null) {
+            if(mGameResultHolder == null)
+                return;
+            answerObject = new AnswerObject(mGameResultHolder.getLevels()[state].getId());
 
+        }
         answerObject.setSkip();
         SocketAdapter.setAnswerLevel(answerObject);
 

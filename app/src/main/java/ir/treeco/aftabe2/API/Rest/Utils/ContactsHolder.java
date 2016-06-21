@@ -36,9 +36,8 @@ public class ContactsHolder {
     public int hashCode() {
         String temp = number;
         temp = temp.replace("+", "");
-        if (temp.length() > 1)
-            while (temp.charAt(0) == '0')
-                temp = temp.substring(1);
+        while (temp.length() > 1 && temp.charAt(0) == '0')
+            temp = temp.substring(1);
         if (temp.length() > 2 && temp.substring(0, 2).equals("989"))
             temp = temp.substring(2);
 
