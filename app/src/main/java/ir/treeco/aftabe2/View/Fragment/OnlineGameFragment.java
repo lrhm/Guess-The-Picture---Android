@@ -264,13 +264,14 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
         if (state == 1 || mRemainingTime != null && mRemainingTime == 0 || lost || endedGame) {
             Logger.d(TAG, "onDestroy , set online game false");
-            ((MainActivity) getActivity()).setOnlineGame(false);
+            checkParentActivityNull();
+            (mActivity).setOnlineGame(false);
             MediaAdapter.getInstance(getActivity()).pauseBomb();
 
             synchronized (lock) {
                 if (mGameResult == null) {
                     super.onDestroy();
-                    new LoadingForGameResultDialog(getActivity(), mOnGameEndListener, opponent, mRemainingTime + 10).show();
+                    new LoadingForGameResultDialog(mActivity, mOnGameEndListener, opponent, mRemainingTime + 10).show();
                 } else {
 
 
@@ -279,7 +280,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
 //                    mainActivity.setOnlineGameVisibilityGone();
                     GameResultFragment gameResultFragment = GameResultFragment.newInstance(mGameResult, opponent);
-                    FragmentTransaction transaction = (getActivity()).getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = (mActivity).getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, gameResultFragment);
                     transaction.addToBackStack(null);
                     transaction.commitAllowingStateLoss();
@@ -320,7 +321,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
                 Logger.d(TAG, "Animation End");
 
-                getActivity().getSupportFragmentManager().popBackStack();
+                checkParentActivityNull();
+                mActivity.getSupportFragmentManager().popBackStack();
 
 
                 if (state == 1)
@@ -392,9 +394,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     public void doSkip() {
 
-        if (mActivity == null)
-            mActivity = (MainActivity) getActivity();
-        if (mActivity == null)
+
+        if (!checkParentActivityNull())
             return;
 
         mActivity.getSupportFragmentManager().popBackStack();
@@ -446,8 +447,12 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
         new SkipAlertDialog(getContext(), "میبازی ها !", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doLose();
-                getActivity().getSupportFragmentManager().popBackStack();
+
+                if (checkParentActivityNull()) {
+                    mActivity.getSupportFragmentManager().popBackStack();
+                    doLose();
+
+                }
             }
         }, null).show();
 
@@ -481,6 +486,13 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
     }
 
+    public boolean checkParentActivityNull() {
+        if (mActivity == null && getActivity() != null)
+            mActivity = (MainActivity) getActivity();
+        return mActivity != null;
+
+    }
+
     public void run() {
 
         if (mRemainingTime == 0) {
@@ -496,8 +508,10 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     answerObject.setSkip();
 //                    SocketAdapter.setAnswerLevel(answerObject);
 
-                    if (!((MainActivity) getActivity()).isPaused())
-                        getActivity().getSupportFragmentManager().popBackStack();
+                    checkParentActivityNull();
+                    if (mActivity != null)
+                        if (!mActivity.isPaused())
+                            mActivity.getSupportFragmentManager().popBackStack();
 
                     if (state == 1) {
                         Logger.d(TAG, "return mikonim dg ");
@@ -522,20 +536,23 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 
 
         }
-        mRemainingTime--;
-        getActivity().runOnUiThread(new Runnable() {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if (getActivity() == null)
-                    return;
-                ((MainActivity) getActivity()).setTimer(mRemainingTime);
 
+                if (checkParentActivityNull()) {
+                    (mActivity).setTimer(mRemainingTime);
+
+                }
             }
         });
+        mRemainingTime--;
 
-        if (mRemainingTime < 28 && !MediaAdapter.getInstance(getActivity()).isBombPlaying()) {
-            MediaAdapter.getInstance(getActivity()).playBomb();
-        }
+        if (checkParentActivityNull())
+            if (mRemainingTime < 28 && !MediaAdapter.getInstance(getActivity()).isBombPlaying()) {
+                MediaAdapter.getInstance(getActivity()).playBomb();
+            }
 
 
     }
@@ -591,7 +608,8 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                 if (!mGameResult.amIWinner(Tools.getCachedUser(getContext())) && !answerd)
                     doLose();
                 endedGame = true;
-                mainActivity.getSupportFragmentManager().popBackStack();
+                if (checkParentActivityNull())
+                    mainActivity.getSupportFragmentManager().popBackStack();
 
             }
         }, delay);
