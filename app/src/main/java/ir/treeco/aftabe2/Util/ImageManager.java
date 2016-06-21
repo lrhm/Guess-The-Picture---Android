@@ -21,6 +21,7 @@ import ir.treeco.aftabe2.MainApplication;
 public class ImageManager {
     private Context context;
     private LengthManager lengthManager;
+    private int memoryClass;
 
     private static boolean cacheInited = false;
     private static Object getLock = new Object();
@@ -43,6 +44,10 @@ public class ImageManager {
 
     }
 
+    public int getMemoryClass() {
+        return memoryClass;
+    }
+
     private void initCache(Context context) {
 
         if (cacheInited)
@@ -51,7 +56,7 @@ public class ImageManager {
 
         ActivityManager am = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
-        int memoryClass = am.getMemoryClass();
+        memoryClass = am.getMemoryClass();
 
         int max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.85
                 : (0.70))); // more than 50%
@@ -119,23 +124,24 @@ public class ImageManager {
     }
 
 
-
     public Bitmap loadImageFromResourceNoCache(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
-        if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
-        if (outHeight == -1)
-            outHeight = lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
 
+        return loadImageFromResource(resourceId, outWidth, outHeight, scalingLogic);
 
-        System.gc();
+//        if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
+//        if (outHeight == -1)
+//            outHeight = lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
+//
+//
+//        System.gc();
+//
+//        Bitmap scaledBitmap;
+//        Bitmap unscaledBitmap;
+//
+//        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, context.getResources());
+//        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+//        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
-        Bitmap scaledBitmap;
-        Bitmap unscaledBitmap;
-
-        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, context.getResources());
-        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
-        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
-
-        return scaledBitmap;
     }
 
 
@@ -228,7 +234,7 @@ public class ImageManager {
     public Bitmap decodeFile(String file, int dstWidth, int dstHeight, ScalingLogic scalingLogic, Resources resources) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        return BitmapFactory.decodeFile(file , options);
+        return BitmapFactory.decodeFile(file, options);
     }
 
     public Bitmap decodeInputStream(InputStream inputStream) {
@@ -237,8 +243,7 @@ public class ImageManager {
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
 
-    public void toGrayscale(ImageView imageView)
-    {
+    public void toGrayscale(ImageView imageView) {
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
 
@@ -246,7 +251,7 @@ public class ImageManager {
         imageView.setColorFilter(filter);
     }
 
-    public void toNormalscale(ImageView imageView){
+    public void toNormalscale(ImageView imageView) {
 
         ColorMatrix matrix = new ColorMatrix();
 
