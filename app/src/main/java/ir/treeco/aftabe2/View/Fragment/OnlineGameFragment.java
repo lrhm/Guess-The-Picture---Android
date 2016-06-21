@@ -262,7 +262,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
     public void onDestroy() {
 
 
-        if (state == 1 || mRemainingTime == 0 || lost || endedGame) {
+        if (state == 1 || mRemainingTime != null && mRemainingTime == 0 || lost || endedGame) {
             Logger.d(TAG, "onDestroy , set online game false");
             ((MainActivity) getActivity()).setOnlineGame(false);
             MediaAdapter.getInstance(getActivity()).pauseBomb();
