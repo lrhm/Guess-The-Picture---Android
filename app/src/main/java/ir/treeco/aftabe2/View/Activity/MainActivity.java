@@ -1257,8 +1257,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    private boolean isPaused = false;
-    private long pauseTime = 0;
+    private static boolean isPaused = false;
+    private static long pauseTime = 0;
 
 
     @Override

@@ -491,7 +491,6 @@ public class SocketAdapter {
     private static void callGameRequestResult(GameResultHolder gameResultHolder) {
 
         if (checkForPause()) {
-
             return;
         }
 
@@ -503,8 +502,8 @@ public class SocketAdapter {
 
     private static void callGameResult(ResultHolder resultHolder) {
 
-        if (checkForPause())
-            return;
+//        if (checkForPause())
+//            return;
 
         synchronized (lock) {
             for (SocketListener socketListener : listeners)
@@ -513,8 +512,8 @@ public class SocketAdapter {
     }
 
     private static void callGameActions(UserActionHolder userActionHolder) {
-        if (checkForPause())
-            return;
+//        if (checkForPause())
+//            return;
 
         synchronized (lock) {
             for (SocketListener socketListener : listeners)

@@ -609,11 +609,26 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
                     doLose();
                 endedGame = true;
                 if (checkParentActivityNull())
-                    mainActivity.getSupportFragmentManager().popBackStack();
+                    if (!mainActivity.isPaused())
+                        mainActivity.getSupportFragmentManager().popBackStack();
 
             }
         }, delay);
 
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        if (mRemainingTime <= 0 || lost || endedGame) {
+
+            checkParentActivityNull();
+            mainActivity.getSupportFragmentManager().popBackStack();
+
+        }
     }
 
     @Override
