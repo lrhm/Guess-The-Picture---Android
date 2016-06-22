@@ -39,7 +39,7 @@ public class GameResultFragment extends Fragment implements View.OnClickListener
 
     private static final String ARG_PARAM2 = "param_game_result_holder";
     private static final String ARG_USER_OP = "param_user_oppoenent";
-    private static final String TAG = "GameResultFragment";
+    public static final String TAG = "GameResultFragmentTAG";
 
     private ResultHolder mGameResultHolder;
     private User mOpponent;

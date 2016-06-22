@@ -281,7 +281,7 @@ public class OnlineGameFragment extends Fragment implements View.OnClickListener
 //                    mainActivity.setOnlineGameVisibilityGone();
                     GameResultFragment gameResultFragment = GameResultFragment.newInstance(mGameResult, opponent);
                     FragmentTransaction transaction = (mActivity).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, gameResultFragment);
+                    transaction.replace(R.id.fragment_container, gameResultFragment, GameResultFragment.TAG);
                     transaction.addToBackStack(null);
                     transaction.commitAllowingStateLoss();
                 }

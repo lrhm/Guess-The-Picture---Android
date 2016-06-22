@@ -333,7 +333,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
         GameResultFragment gameResultFragment = GameResultFragment.newInstance(resultHolder, mOpponent);
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, gameResultFragment);
+        transaction.replace(R.id.fragment_container, gameResultFragment , GameResultFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -26,6 +27,7 @@ import ir.treeco.aftabe2.Util.UiUtil;
 import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.DialogDrawable;
 import ir.treeco.aftabe2.View.Custom.UserLevelView;
+import ir.treeco.aftabe2.View.Fragment.GameResultFragment;
 
 
 public class MatchRequestDialog extends Dialog implements View.OnClickListener, Runnable {
@@ -109,7 +111,7 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
                 + SizeManager.getScreenHeight() * 0.03)
         );
 
-        if(!toSend){
+        if (!toSend) {
             setCanceledOnTouchOutside(false);
         }
 
@@ -154,7 +156,14 @@ public class MatchRequestDialog extends Dialog implements View.OnClickListener, 
             MatchRequestCache.getInstance().remove(this);
             MatchRequestCache.getInstance().dismissAll();
         }
+
+        Fragment gameResultFragment = ((MainActivity) context).getSupportFragmentManager().findFragmentByTag(GameResultFragment.TAG);
+        if (gameResultFragment != null)
+            ((MainActivity) context).getSupportFragmentManager().popBackStack();
+
+
         super.dismiss();
+
 
     }
 
