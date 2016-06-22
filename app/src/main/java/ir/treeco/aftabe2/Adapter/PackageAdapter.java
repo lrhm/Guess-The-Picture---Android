@@ -9,7 +9,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+
 import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +56,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     public PackageAdapter(Activity context, PackageObject[] packageObjectss) {
         this.context = context;
         this.packageObjects = new ArrayList<>();
-        Collections.addAll(packageObjects, packageObjectss);
+
+        if (packageObjectss == null)
+            packageObjectss = DBAdapter.getInstance(context).getPackages();
+        if (packageObjectss != null)
+            Collections.addAll(packageObjects, packageObjectss);
         tools = new Tools(context);
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
@@ -286,7 +292,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             Picasso.with(context).load(R.drawable.package_price).fit().into(viewHolder.packagePrice);
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
             viewHolder.price.setVisibility(View.VISIBLE);
-            viewHolder.price.setText(Tools.numeralStringToPersianDigits(intPrice+ ""));
+            viewHolder.price.setText(Tools.numeralStringToPersianDigits(intPrice + ""));
 
 
             ColorMatrix matrix = new ColorMatrix();

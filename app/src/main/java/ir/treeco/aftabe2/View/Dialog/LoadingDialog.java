@@ -316,6 +316,12 @@ public class LoadingDialog extends Dialog implements Runnable,
         Logger.d(TAG, "onGotGame in dialog");
         mGameResultHolder = gameHolder;
         clearFiles();
+
+        if (gameHolder.getLevels().length < 2) {
+
+            return;
+        }
+
         String imagePath = baseUrl + gameHolder.getLevels()[0].getUrl();
         downloadURL(imagePath);
 
