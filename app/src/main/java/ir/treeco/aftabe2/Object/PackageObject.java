@@ -69,6 +69,10 @@ public class PackageObject {
         return "https://aftabe2.com:2020/api/pictures/p/download/" + image.name;
     }
 
+    public URLHolder getImage() {
+        return image;
+    }
+
     public int getPackageSize() {
         return file.size;
     }

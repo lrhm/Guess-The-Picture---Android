@@ -187,7 +187,7 @@ public class Tools {
 
 
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
-        String currentDBPath =  context.getFilesDir().getParent() + "/databases/" + "aftabe.db";
+        String currentDBPath = context.getFilesDir().getParent() + "/databases/" + "aftabe.db";
         String backupDBPath = "Android/.amk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
@@ -224,7 +224,7 @@ public class Tools {
     public void restoreDBJournal() {
 
         File sd = Environment.getExternalStorageDirectory().getAbsoluteFile();
-        String currentDBPath =  context.getFilesDir().getParent() + "/databases/" + "aftabe.db-journal";
+        String currentDBPath = context.getFilesDir().getParent() + "/databases/" + "aftabe.db-journal";
         String backupDBPath = "Android/.bmk";
         File currentDB = new File(currentDBPath);
         File backupDB = new File(sd, backupDBPath);
@@ -328,7 +328,7 @@ public class Tools {
     public static void backUpDBJournal(final Context context) {
 
 
-                backUpDBJournalAsync(context);
+        backUpDBJournalAsync(context);
 
     }
 
@@ -470,6 +470,11 @@ public class Tools {
             Prefs.putString(SHARED_PREFS_TOKEN, gson.toJson(saveHolder.getTokenHolder()));
             Prefs.putString(ENCRYPT_KEY, saveHolder.getKey());
 
+            if (saveHolder.getInstaUsed())
+                StoreAdapter.useInsta();
+            if (saveHolder.getTelegramUsed())
+                StoreAdapter.useTelegram();
+
         } catch (Exception e) {
             return;
         }
@@ -510,7 +515,7 @@ public class Tools {
 
             }
 
-            if(!user.isGuest()) {
+            if (!user.isGuest()) {
                 SocketAdapter.reInitiSocket();
                 AftabeAPIAdapter.getListOfMyFriends(user, ((MainActivity) context).mainFragment.getFriendListFragment());
             }
@@ -537,7 +542,7 @@ public class Tools {
         return tkJson.compareTo("") != 0;
     }
 
-    public static boolean isThereOldUserToken(){
+    public static boolean isThereOldUserToken() {
         String tkJson = Prefs.getString(SHARED_PREFS_TOKEN, "");
         return tkJson.compareTo("") != 0;
 

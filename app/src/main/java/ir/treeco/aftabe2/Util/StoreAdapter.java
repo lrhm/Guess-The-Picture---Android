@@ -33,7 +33,7 @@ public class StoreAdapter {
     public static final int AMOUNT_SMALL_COIN = 2000;
     public static final int AMOUNT_MEDIUM_COIN = 4000;
     public static final int AMOUNT_BIG_COIN = 12500;
-//    public static final int COMMENT_BAZAAR = 50;
+    //    public static final int COMMENT_BAZAAR = 50;
     public static final int TELEGRAM = 50;
     public static final int INSTA = 50;
     public static final int TAPSELL_VIDEO = 20;
@@ -123,10 +123,14 @@ public class StoreAdapter {
 
     public static void useInsta() {
         Prefs.putBoolean("com.instagram.android_view", true);
+
+        Tools.storeKey();
     }
 
     public static void useTelegram() {
         Prefs.putBoolean("org.telegram.messenger_view", true);
+
+        Tools.storeKey();
     }
 
     public static Integer getPrice(String sku) {

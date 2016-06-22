@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.UnsupportedEncodingException;
 
 import ir.treeco.aftabe2.Util.Encryption;
+import ir.treeco.aftabe2.Util.StoreAdapter;
 
 /**
  * Created by al on 3/5/16.
@@ -23,12 +24,24 @@ public class SaveHolder {
     @SerializedName("k")
     String key;
 
+
+    @Expose
+    @SerializedName("1")
+    boolean one;
+
+    @Expose
+    @SerializedName("2")
+    boolean two;
+
+
     public SaveHolder(TokenHolder tokenHolder, String key) {
 
         Gson gson = new Gson();
 
         this.key = Encryption.encryptAES(key, getAESKey());
         this.tokenHolder = Encryption.encryptAES(gson.toJson(tokenHolder), getAESKey());
+        this.one = StoreAdapter.isInstaUsed();
+        this.two = StoreAdapter.isTelegramUsed();
 
     }
 
@@ -45,7 +58,15 @@ public class SaveHolder {
 
     }
 
-    public  byte[] getAESKey() {
+    public boolean getInstaUsed(){
+        return one;
+    }
+
+    public boolean getTelegramUsed(){
+        return two;
+    }
+
+    public byte[] getAESKey() {
 
 
         String str = "aftabe is a awesome game";

@@ -324,6 +324,10 @@ public class PackageTools {
     }
 
     public void downloadPicture(final PackageObject object, final OnNewPackageFoundListener listener) {
+
+        if (object.getImage() == null || object.getImageUrl() == null)
+            return;
+
         String url = object.getImageUrl();
         new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
             @Override
