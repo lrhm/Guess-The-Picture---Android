@@ -33,7 +33,7 @@ public class StoreAdapter {
     public static final int AMOUNT_SMALL_COIN = 2000;
     public static final int AMOUNT_MEDIUM_COIN = 4000;
     public static final int AMOUNT_BIG_COIN = 12500;
-    public static final int COMMENT_BAZAAR = 50;
+//    public static final int COMMENT_BAZAAR = 50;
     public static final int TELEGRAM = 50;
     public static final int INSTA = 50;
     public static final int TAPSELL_VIDEO = 20;
@@ -52,7 +52,7 @@ public class StoreAdapter {
             AMOUNT_MEDIUM_COIN,
             AMOUNT_BIG_COIN,
             TAPSELL_VIDEO,
-            COMMENT_BAZAAR,
+//            COMMENT_BAZAAR,
             TELEGRAM,
             INSTA
     };
@@ -72,9 +72,9 @@ public class StoreAdapter {
         return TAPSELL_VIDEO;
     }
 
-    public static int getCommentBazaarAmount() {
-        return COMMENT_BAZAAR;
-    }
+//    public static int getCommentBazaarAmount() {
+////        return COMMENT_BAZAAR;
+////    }
 
     static final String[] SKUs = new String[]{
             SKU_VERY_SMALL_COIN,

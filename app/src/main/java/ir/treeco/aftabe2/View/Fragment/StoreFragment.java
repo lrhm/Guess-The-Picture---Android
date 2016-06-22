@@ -80,25 +80,25 @@ public class StoreFragment extends Fragment {
             });
         }
 
-        final View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
-        if (db.getCoinsReviewed()) {
-            reviewBazaar.setVisibility(View.GONE);
-        } else {
-            reviewBazaar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    db.updateReviewed(true);
-
-
-                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe2/?l=fa"));
-                    startActivity(browserIntent);
-
-                    coinAdapter.earnCoins(StoreAdapter.getCommentBazaarAmount());
-
-                    reviewBazaar.setVisibility(View.GONE);
-                }
-            });
-        }
+//        final View reviewBazaar = layout.findViewById(R.id.review_cafebazaar);
+//        if (db.getCoinsReviewed()) {
+//            reviewBazaar.setVisibility(View.GONE);
+//        } else {
+//            reviewBazaar.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    db.updateReviewed(true);
+//
+//
+//                    Intent browserIntent = new Intent(Intent.ACTION_EDIT, Uri.parse("http://cafebazaar.ir/app/ir.treeco.aftabe2/?l=fa"));
+//                    startActivity(browserIntent);
+//
+//                    coinAdapter.earnCoins(StoreAdapter.getCommentBazaarAmount());
+//
+//                    reviewBazaar.setVisibility(View.GONE);
+//                }
+//            });
+//        }
 
         final View tapsell = layout.findViewById(R.id.tapsell_free_coin);
         tapsell.setOnClickListener(new View.OnClickListener() {
@@ -176,19 +176,17 @@ public class StoreFragment extends Fragment {
 
         LinearLayout itemsList = (LinearLayout) layout.findViewById(R.id.items_list);
 
-        FrameLayout[] items = new FrameLayout[8];
+        FrameLayout[] items = new FrameLayout[7];
         for (int i = 0; i < items.length; i++)
             items[i] = (FrameLayout) itemsList.getChildAt(i);
 
         for (int i = 0; i < items.length; i++) {
             String persianPrice = "فقط " + tools.numeralStringToPersianDigits("" + prices[i]) + " تومان";
 
-            if (i == 7)
-                persianPrice = "فالو اینستا";
             if (i == 6)
-                persianPrice = "عضو کانال تلگرام";
+                persianPrice = "فالو اینستا";
             if (i == 5)
-                persianPrice = "نظر در بازار";
+                persianPrice = "عضو کانال تلگرام";
             if (i == 4) {
                 persianPrice = "تبلیغ ببین سکه ببر";
 

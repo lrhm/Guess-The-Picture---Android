@@ -148,6 +148,14 @@ public class DBAdapter {
     }
 
 
+    public void deletePackageOnly(int id){
+        open();
+
+        db.delete(PACKAGES, PACKAGE_ID + " = " + id, null);
+
+        close();
+    }
+
     public void deletePackage(int id) {
 
         open();

@@ -35,6 +35,9 @@ public class PackageObject {
     @Expose
     URLHolder image;
 
+//    @Expose
+//    Integer revision;
+
     private ArrayList<Level> levels;
 
     public String getName() {
@@ -102,6 +105,12 @@ public class PackageObject {
         return file;
     }
 
+//    public int getRevision() {
+//        if (revision == null)
+//            revision = 0;
+//
+//        return revision;
+//    }
 
     private class URLHolder {
 

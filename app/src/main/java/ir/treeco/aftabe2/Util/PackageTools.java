@@ -215,6 +215,10 @@ public class PackageTools {
                             }
 
                         }
+//                        else{
+//                            checkPackagesValidity(listener);
+//                        }
+
                         checkLocalPackages();
                     }
                 } else {
@@ -230,6 +234,65 @@ public class PackageTools {
         });
 
 
+    }
+
+    public void checkPackagesValidity(OnNewPackageFoundListener listener) {
+
+        final DBAdapter dbAdapter = DBAdapter.getInstance(context);
+        final PackageObject[] savePackages = dbAdapter.getPackages();
+
+        AftabeAPIAdapter.getAllPackages(new Callback<PackageObject[]>() {
+            @Override
+            public void onResponse(Response<PackageObject[]> response) {
+
+                if (!response.isSuccess() || response.body().length == 0 || savePackages.length == 0)
+                    return;
+
+//                for (PackageObject object : response.body())
+//                    for (PackageObject savePackageObject : savePackages)
+//                        if (object.getId() == savePackageObject.getId() && savePackageObject.getRevision() != object.getRevision()) {
+//                            // package is corrupted
+//                            dbAdapter.deletePackageOnly(savePackageObject.getId());
+//                            onPackageCorrupted(savePackageObject.getId());
+//
+//                        }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void onPackageCorrupted(int id) {
+
+
+        String newPath = context.getFilesDir().getPath() + "/Packages/package_" + id + "/";
+        String imgPath = context.getFilesDir().getPath() + "package_" + id + "_front.png";
+        String zipFilePath = context.getFilesDir().getPath() + "/p_" + id + ".zip";
+
+
+        File img = new File(imgPath);
+
+        if (img.exists())
+            img.delete();
+
+        File zipFile = new File(zipFilePath);
+        if (zipFile.exists())
+            zipFile.delete();
+
+        File dir = new File(newPath);
+        if (dir.exists() && dir.isDirectory())
+            for (File file : dir.listFiles())
+                file.delete();
+
+        if (dir.exists())
+            dir.delete();
+
+        newPackageFound(id, null);
     }
 
     public void newPackageFound(final int id, final OnNewPackageFoundListener listener) {
@@ -442,6 +505,8 @@ public class PackageTools {
         void onDownload(PackageObject packageObject);
 
         void onProgress(PackageObject packageObject, int progress);
+
+//        void onPackageInvalid(PackageObject packageObject);
     }
 
     private class PackageObjectListHolder implements Savior {
