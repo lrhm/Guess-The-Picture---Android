@@ -2,6 +2,8 @@ package ir.treeco.aftabe2.API.Rest.Utils;
 
 import com.google.gson.annotations.Expose;
 
+import ir.treeco.aftabe2.Util.Logger;
+
 /**
  * Created by al on 5/14/16.
  */
@@ -32,7 +34,7 @@ public class ForceObject {
     }
 
     public String getUrl() {
-        return "https://aftabe2.com:2020/api/files/version/download/" + file.name;
+        return Logger.getUrl()+ "api/files/version/download/" + file.name;
     }
 
     public int getSize() {

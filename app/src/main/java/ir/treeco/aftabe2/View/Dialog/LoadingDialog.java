@@ -78,6 +78,8 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     public LoadingDialog(Context context) {
         super(context);
+
+
         this.context = context;
         creationTime = System.currentTimeMillis();
         imageManager = ImageManager.getInstance(context);
@@ -113,6 +115,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         super.onCreate(savedInstanceState);
 
         MainActivity mainActivity = ((MainActivity) context);
+        baseUrl = Logger.getUrl() +"api/pictures/level/download/";
 
 
         String[] tags = new String[]{LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG, PackageAdapter.PACKAGE_LEVEL_LIST_TAG};
@@ -150,8 +153,9 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingImageHeight /= 2;
         mLoadingImageWidth /= 2;
 
-        mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.search_sc_1,
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT, Bitmap.Config.RGB_565));
+        lastBitmap = imageManager.loadImageFromResource(R.drawable.search_sc_1,
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT, Bitmap.Config.RGB_565);
+        mLoadingImageView.setImageBitmap(lastBitmap);
         mLoadingImageView.setKeepScreenOn(true);
 
 

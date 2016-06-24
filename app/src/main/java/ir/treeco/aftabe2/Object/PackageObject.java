@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
+import ir.treeco.aftabe2.Util.Logger;
+
 public class PackageObject {
 
 
@@ -35,8 +37,8 @@ public class PackageObject {
     @Expose
     URLHolder image;
 
-//    @Expose
-//    Integer revision;
+    @Expose
+    Integer revision;
 
     private ArrayList<Level> levels;
 
@@ -54,7 +56,7 @@ public class PackageObject {
 
 
     public String getUrl() {
-        return "https://aftabe2.com:2020/api/files/p/download/" + file.name;
+        return Logger.getUrl() + "api/files/p/download/" + file.name;
     }
 
     public ArrayList<Level> getLevels() {
@@ -66,7 +68,7 @@ public class PackageObject {
     }
 
     public String getImageUrl() {
-        return "https://aftabe2.com:2020/api/pictures/p/download/" + image.name;
+        return Logger.getUrl() + "api/pictures/p/download/" + image.name;
     }
 
     public URLHolder getImage() {
@@ -109,12 +111,12 @@ public class PackageObject {
         return file;
     }
 
-//    public int getRevision() {
-//        if (revision == null)
-//            revision = 0;
-//
-//        return revision;
-//    }
+    public int getRevision() {
+        if (revision == null)
+            revision = 0;
+
+        return revision;
+    }
 
     private class URLHolder {
 

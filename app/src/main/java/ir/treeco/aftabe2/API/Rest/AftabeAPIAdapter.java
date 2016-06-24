@@ -81,8 +81,7 @@ public class AftabeAPIAdapter {
     private static void init() {
         if (retrofit == null) {
 
-            if(Logger.isDebug())
-                baseUrl = "http://server.pakoo.ir:2020/";
+            baseUrl = Logger.getUrl();
 
             OkHttpClient okHttpClient = new OkHttpClient();
             okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);

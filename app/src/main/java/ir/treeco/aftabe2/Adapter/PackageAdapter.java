@@ -65,6 +65,12 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
+    public void removePackage(PackageObject object){
+        packageObjects.remove(object);
+        notifyDataSetChanged();
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DownloadTask.DownloadTaskListener {
         ImageView imageView;
         TextView textView;

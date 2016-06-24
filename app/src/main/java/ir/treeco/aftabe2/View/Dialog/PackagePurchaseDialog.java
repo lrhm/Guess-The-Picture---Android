@@ -93,15 +93,15 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
 
         String price = String.format("%s %s %s", "ناقابل", Tools.numeralStringToPersianDigits(intPrice + ""), "سکه");
 
-        float packageSize = packageObject.getPackageSize() / 1000;
-
-        Logger.d(TAG, "package size " + packageObject.getPackageSize());
+        float packageSize = packageObject.getPackageSize() / (float) (1000000);
 
         String packageS = Tools.numeralStringToPersianDigits(packageSize + "");
+        try {
+            packageS = packageS.substring(0, 4);
+        } catch (Exception e) {
+        }
+        Logger.d(TAG, "package size " + packageObject.getPackageSize() / 1000 + " " + packageS);
 
-        String[] splits = packageS.replace(".", "/").split("/");
-        if (splits.length == 2)
-            packageS = splits[1] + "." + splits[0];
 
         String size = String.format("%s %s %s", "حجم:", packageS, "مگابایت");
 

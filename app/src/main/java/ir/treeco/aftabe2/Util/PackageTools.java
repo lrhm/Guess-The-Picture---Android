@@ -219,6 +219,7 @@ public class PackageTools {
 //                            checkPackagesValidity(listener);
 //                        }
 
+                        checkPackagesValidity(listener);
                         checkLocalPackages();
                     }
                 } else {
@@ -236,7 +237,7 @@ public class PackageTools {
 
     }
 
-    public void checkPackagesValidity(OnNewPackageFoundListener listener) {
+    public void checkPackagesValidity(final OnNewPackageFoundListener listener) {
 
         final DBAdapter dbAdapter = DBAdapter.getInstance(context);
         final PackageObject[] savePackages = dbAdapter.getPackages();
@@ -248,14 +249,16 @@ public class PackageTools {
                 if (!response.isSuccess() || response.body().length == 0 || savePackages.length == 0)
                     return;
 
-//                for (PackageObject object : response.body())
-//                    for (PackageObject savePackageObject : savePackages)
-//                        if (object.getId() == savePackageObject.getId() && savePackageObject.getRevision() != object.getRevision()) {
-//                            // package is corrupted
-//                            dbAdapter.deletePackageOnly(savePackageObject.getId());
-//                            onPackageCorrupted(savePackageObject.getId());
-//
-//                        }
+                for (PackageObject object : response.body())
+                    for (PackageObject savePackageObject : savePackages)
+                        if (object.getId() == savePackageObject.getId() && savePackageObject.getRevision() != object.getRevision()) {
+                            // package is corrupted
+                            listener.onPackageInvalid(savePackageObject);
+
+                            dbAdapter.deletePackage(savePackageObject.getId());
+                            onPackageCorrupted(savePackageObject.getId());
+
+                        }
 
             }
 
@@ -502,6 +505,9 @@ public class PackageTools {
 
     public interface OnNewPackageFoundListener {
         void onNewPackage(PackageObject packageObject);
+
+        void onPackageInvalid(PackageObject packageObject);
+
     }
 
     public interface OnDownloadSuccessListener {
@@ -510,7 +516,6 @@ public class PackageTools {
 
         void onProgress(PackageObject packageObject, int progress);
 
-//        void onPackageInvalid(PackageObject packageObject);
     }
 
     private class PackageObjectListHolder implements Savior {

@@ -54,6 +54,11 @@ public class Synchronize extends BroadcastReceiver {
                     NotificationManager manager = new NotificationManager(context);
                     manager.showNewPackageNotification(packageObject);
                 }
+
+                @Override
+                public void onPackageInvalid(PackageObject packageObject) {
+
+                }
             });
         }
 

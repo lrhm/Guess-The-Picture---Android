@@ -63,4 +63,16 @@ public class PackagesFragment extends Fragment implements PackageTools.OnNewPack
         });
 
     }
+
+    @Override
+    public void onPackageInvalid(final PackageObject packageObject) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.removePackage(packageObject);
+            }
+        });
+    }
 }
