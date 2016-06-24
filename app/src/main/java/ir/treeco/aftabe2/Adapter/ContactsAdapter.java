@@ -122,8 +122,15 @@ public class ContactsAdapter implements BatchUserFoundListener {
 
         doQueue();
 
-        if (contactsHolders.size() != 0)
+        if (contactsHolders.size() != 0) {
+
+            if (mContext != null)
+                if (Tools.mySigCheck(mContext)) {
+
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
             return;
+        }
 
         Date now = Calendar.getInstance().getTime();
         try {

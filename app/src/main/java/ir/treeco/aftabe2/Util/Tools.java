@@ -1,12 +1,15 @@
 package ir.treeco.aftabe2.Util;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -616,5 +619,25 @@ public class Tools {
         return seed;
     }
 
+    public static boolean mySigCheck(Context context) {
+        String sigChk = "B";
+
+        Signature[] signature = new Signature[1];
+
+        try {
+            signature = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures;
+
+            Log.d("yourapp", Integer.toString(signature[0].hashCode())); //<< Prints your signature. Remove once you know this and have changed it below.
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (signature[0].hashCode() == -343553346){ //TODO
+            return true;
+        }
+
+        return false;
+    }
 
 }

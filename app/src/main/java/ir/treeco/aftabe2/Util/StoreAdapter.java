@@ -197,10 +197,14 @@ public class StoreAdapter {
     public static boolean startViewPages(Context context, String appName, String name, String parse) {
         boolean isAppInstalled = isAppAvailable(context, appName);
         if (isAppInstalled) {
-            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(parse));
-            myIntent.setPackage(appName);
-            context.startActivity(myIntent);
+            try {
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(parse));
+                myIntent.setPackage(appName);
+                context.startActivity(myIntent);
 
+            } catch (Exception e) {
+                return false;
+            }
 
         } else {
 
@@ -232,8 +236,9 @@ public class StoreAdapter {
     }
 
     public static boolean isAppAvailable(Context context, String appName) {
-        PackageManager pm = context.getPackageManager();
         try {
+
+            PackageManager pm = context.getPackageManager();
             pm.getPackageInfo(appName, PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
