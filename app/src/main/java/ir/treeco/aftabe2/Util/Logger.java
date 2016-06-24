@@ -9,11 +9,8 @@ public class Logger {
 
     private static boolean debug = true;
 
-    private static boolean test = true;
+    private static boolean test = false;
 
-    public static boolean isTest() {
-        return test;
-    }
 
     private static final String testUrl = "http://server.pakoo.ir:2020/";
     private static final String baseUrl = "https://aftabe2.com:2020/";

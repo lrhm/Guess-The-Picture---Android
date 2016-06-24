@@ -148,7 +148,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                         int intPrice = ((myUser != null && myUser.isPackagePurchased(packageObject.getId()))) ? 0 : packageObject.getPrice();
                         intPrice = PackageSolvedCache.getInstance().isPackagePurchased(packageObject.getId()) ? 0 : intPrice;
 
-                        if (coinAdapter.spendCoins(intPrice)) {
+                        if (coinAdapter.spendCoinDiffless(intPrice)) {
                             AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
                                 @Override
                                 public void onPurchasedBefore() {
@@ -161,7 +161,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                                 }
                             });
                             PackageSolvedCache.getInstance().onBuyPackage(packageObject.getId());
-
+                            price.setText(Tools.numeralStringToPersianDigits("0"));
                             PackageTools.getInstance(context).downloadPackage(packageObject, ViewHolder.this);
                             ToastMaker.show(context, "درحال دانلود....", Toast.LENGTH_SHORT);
                         }
