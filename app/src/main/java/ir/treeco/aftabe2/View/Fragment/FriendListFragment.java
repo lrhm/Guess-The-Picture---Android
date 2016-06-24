@@ -10,7 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import ir.treeco.aftabe2.Util.Logger;
+
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -79,6 +81,31 @@ public class FriendListFragment extends Fragment implements TextWatcher, View.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        User myUser = Tools.getCachedUser(getContext());
+        AftabeAPIAdapter.getListOfFriendRequestsToMe(myUser, new BatchUserFoundListener() {
+            @Override
+            public void onGotUserList(final User[] users) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (User user : users)
+                            mFriendsAdapter.addUser(user, FriendsAdapter.TYPE_REQUEST);
+                    }
+                });
+            }
+
+            @Override
+            public void onGotError() {
+
+            }
+        });
 
     }
 
