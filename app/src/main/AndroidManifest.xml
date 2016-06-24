@@ -26,6 +26,7 @@
         android:name="ir.treeco.aftabe2.MainApplication"
         android:icon="@drawable/aftabe_icon"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:screenOrientation="portrait"
         android:theme="@style/fullScreenTheme">
         <receiver
@@ -40,9 +41,9 @@
         <activity
             android:name="ir.treeco.aftabe2.View.Activity.MainActivity"
             android:label="Aftabe"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTop"
 
             >
 
@@ -113,10 +114,15 @@
             android:name="io.fabric.ApiKey"
             android:value="4150c278d5e47ac44513db398d88c074d628b50e" />
 
-        <activity android:name="ir.tapsell.tapsellvideosdk.VideoPage" android:screenOrientation="landscape"
+        <activity
+            android:name="ir.tapsell.tapsellvideosdk.VideoPage"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-        <activity android:name="ir.tapsell.tapsellvideosdk.DirectAdMiddleActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:screenOrientation="landscape"></activity>
+        <activity
+            android:name="ir.tapsell.tapsellvideosdk.DirectAdMiddleActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+
         <service android:name="ir.tapsell.tapsellvideosdk.services.asynchservices.core.HttpService"></service>
 
     </application>

@@ -151,7 +151,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         mLoadingImageWidth /= 2;
 
         mLoadingImageView.setImageBitmap(imageManager.loadImageFromResource(R.drawable.search_sc_1,
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT));
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT, Bitmap.Config.RGB_565));
         mLoadingImageView.setKeepScreenOn(true);
 
 
@@ -244,7 +244,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
 
         Bitmap curBitmap = imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT);
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT , Bitmap.Config.RGB_565);
         mLoadingImageView.setImageBitmap(curBitmap);
 
         if (lastBitmap != null)

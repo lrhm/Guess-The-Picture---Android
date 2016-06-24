@@ -59,7 +59,7 @@ public class ImageManager {
         memoryClass = am.getMemoryClass();
 
         int max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.85
-                : (0.70))); // more than 50%
+                : (0.666))); // more than 50%
         cache = new LruCache<ImageKey, Bitmap>(max) {
             @Override
             protected int sizeOf(ImageKey key, Bitmap value) {
@@ -76,7 +76,7 @@ public class ImageManager {
 
     static LruCache<ImageKey, Bitmap> cache;
 
-    public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
+    public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic, Bitmap.Config config) {
         if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
         if (outHeight == -1)
             outHeight = lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
@@ -93,7 +93,8 @@ public class ImageManager {
         Bitmap unscaledBitmap;
 
         unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, context.getResources());
-        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic, config);
         if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
         cache.put(key, scaledBitmap);
@@ -116,7 +117,7 @@ public class ImageManager {
         Bitmap unscaledBitmap;
 
         unscaledBitmap = decodeFile(path, outWidth, outHeight, scalingLogic, context.getResources());
-        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic, Bitmap.Config.ARGB_8888);
         if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
         cache.put(key, scaledBitmap);
@@ -124,30 +125,32 @@ public class ImageManager {
     }
 
 
+    public Bitmap loadImageFromResourceNoCache(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic, Bitmap.Config config) {
+
+        return loadImageFromResource(resourceId, outWidth, outHeight, scalingLogic, config);
+
+    }
+
     public Bitmap loadImageFromResourceNoCache(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
 
-        return loadImageFromResource(resourceId, outWidth, outHeight, scalingLogic);
-
-//        if (outWidth == -1) outWidth = lengthManager.getWidthWithFixedHeight(resourceId, outHeight);
-//        if (outHeight == -1)
-//            outHeight = lengthManager.getHeightWithFixedWidth(resourceId, outWidth);
-//
-//
-//        System.gc();
-//
-//        Bitmap scaledBitmap;
-//        Bitmap unscaledBitmap;
-//
-//        unscaledBitmap = decodeFile(resourceId, outWidth, outHeight, scalingLogic, context.getResources());
-//        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, scalingLogic);
-//        if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
+        return loadImageFromResource(resourceId, outWidth, outHeight, scalingLogic, Bitmap.Config.ARGB_8888);
 
     }
+    public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, ScalingLogic scalingLogic) {
 
+        return loadImageFromResource(resourceId, outWidth, outHeight, scalingLogic, Bitmap.Config.ARGB_8888);
+
+    }
 
     public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight) {
-        return loadImageFromResource(resourceId, outWidth, outHeight, ScalingLogic.CROP);
+        return loadImageFromResource(resourceId, outWidth, outHeight, ScalingLogic.CROP, Bitmap.Config.ARGB_8888);
     }
+
+
+    public Bitmap loadImageFromResource(int resourceId, int outWidth, int outHeight, Bitmap.Config config) {
+        return loadImageFromResource(resourceId, outWidth, outHeight, ScalingLogic.CROP, config);
+    }
+
 
     public Bitmap loadImageFromInputStream(InputStream inputStream, int outWidth, int outHeight) {
         System.gc();
@@ -166,7 +169,7 @@ public class ImageManager {
         if (outWidth == -1)
             outWidth = unscaledBitmap.getWidth() * outHeight / unscaledBitmap.getHeight();
 
-        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP);
+        scaledBitmap = createScaledBitmap(unscaledBitmap, outWidth, outHeight, ScalingLogic.CROP, Bitmap.Config.ARGB_8888);
 
         if (!unscaledBitmap.isRecycled()) unscaledBitmap.recycle();
 
@@ -216,10 +219,10 @@ public class ImageManager {
         }
     }
 
-    public Bitmap createScaledBitmap(Bitmap unscaledBitmap, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {
+    public Bitmap createScaledBitmap(Bitmap unscaledBitmap, int dstWidth, int dstHeight, ScalingLogic scalingLogic, Bitmap.Config config) {
         Rect srcRect = calculateSrcRect(unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), dstWidth, dstHeight, scalingLogic);
         Rect dstRect = calculateDstRect(unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), dstWidth, dstHeight, scalingLogic);
-        Bitmap scaledBitmap = Bitmap.createBitmap(dstRect.width(), dstRect.height(), Bitmap.Config.ARGB_8888);
+        Bitmap scaledBitmap = Bitmap.createBitmap(dstRect.width(), dstRect.height(), config);
         Canvas canvas = new Canvas(scaledBitmap);
         canvas.drawBitmap(unscaledBitmap, srcRect, dstRect, new Paint(Paint.FILTER_BITMAP_FLAG));
         return scaledBitmap;
