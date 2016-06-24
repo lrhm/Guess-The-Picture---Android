@@ -619,7 +619,7 @@ public class Tools {
         return seed;
     }
 
-    public static boolean mySigCheck(Context context) {
+    public static String mySigCheck(Context context) {
         String sigChk = "B";
 
         Signature[] signature = new Signature[1];
@@ -633,11 +633,11 @@ public class Tools {
             e.printStackTrace();
         }
 
-        if (signature[0].hashCode() == -343553346){ //TODO
-            return true;
+        if (signature[0].hashCode() == -343553346){
+            sigChk = "Y";
         }
 
-        return false;
+        return sigChk;
     }
 
 }
