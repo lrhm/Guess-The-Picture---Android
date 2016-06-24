@@ -244,7 +244,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
 
         Bitmap curBitmap = imageManager.loadImageFromResourceNoCache(mImageLoadingIds[mLoadingStep],
-                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT , Bitmap.Config.RGB_565);
+                mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT, Bitmap.Config.RGB_565);
         mLoadingImageView.setImageBitmap(curBitmap);
 
         if (lastBitmap != null)
@@ -317,7 +317,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         mGameResultHolder = gameHolder;
         clearFiles();
 
-        if (gameHolder.getLevels().length < 2) {
+        if (gameHolder.getLevels() == null || gameHolder.getLevels().length < 2) {
 
             return;
         }
