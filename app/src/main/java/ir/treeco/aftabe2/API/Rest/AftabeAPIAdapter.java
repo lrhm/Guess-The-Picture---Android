@@ -285,9 +285,10 @@ public class AftabeAPIAdapter {
 
                 if (!response.isSuccess()) {
                     userFoundListener.onGetError();
-//                    FORCE LOGOUT !
 
-                    userFoundListener.onForceLogout();
+//                    FORCE LOGOUT !
+                    if (response.code() == 401)
+                        userFoundListener.onForceLogout();
                     Logger.d(TAG, " is not sucess");
                     return;
                 }
@@ -372,6 +373,11 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<LoginInfo>() {
             @Override
             public void onResponse(Response<LoginInfo> response) {
+                if (!response.isSuccess()) {
+                    userFoundListener.onGetError();
+
+                    return;
+                }
                 Logger.d(TAG, response.toString());
                 Logger.d(TAG, response.body().toString());
                 Logger.d(TAG, response.body().accessToken + " " + response.body().created);
