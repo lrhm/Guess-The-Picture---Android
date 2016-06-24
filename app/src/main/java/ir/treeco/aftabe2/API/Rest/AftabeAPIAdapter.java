@@ -292,6 +292,8 @@ public class AftabeAPIAdapter {
                     Logger.d(TAG, " is not sucess");
                     return;
                 }
+                if(response.code() != 200)
+                    return;
 
                 CoinAdapter.onUserGet();
 
