@@ -58,7 +58,7 @@ public class ImageManager {
                 .getSystemService(Context.ACTIVITY_SERVICE);
         memoryClass = am.getMemoryClass();
 
-        int max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.85
+        int max = (int) ((memoryClass * 1024 * 1024) * ((memoryClass > 100) ? 0.80
                 : (0.666))); // more than 50%
         cache = new LruCache<ImageKey, Bitmap>(max) {
             @Override
