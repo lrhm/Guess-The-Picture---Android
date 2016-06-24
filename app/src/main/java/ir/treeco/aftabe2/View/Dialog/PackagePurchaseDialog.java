@@ -153,7 +153,7 @@ public class PackagePurchaseDialog extends Dialog implements View.OnClickListene
         UiUtil.setHeight(packageImageView, packageConverter.mHeight);
         UiUtil.setWidth(packageImageView, packageConverter.mWidth);
 
-        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + 0 + "_" + "front" + ".png";
+        String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + packageObject.getId() + "_" + "front" + ".png";
         Picasso.with(context).load(imagePath).fit().into(packageImageView);
 
     }

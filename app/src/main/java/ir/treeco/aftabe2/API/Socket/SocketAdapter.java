@@ -167,6 +167,9 @@ public class SocketAdapter {
 
         String url = "https://aftabe2.com:2020";
 
+        if(Logger.isDebug())
+            url = "http://server.pakoo.ir:2020/";
+
 
         IO.Options opts = new IO.Options();
         opts.forceNew = true;

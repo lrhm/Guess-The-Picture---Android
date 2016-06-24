@@ -65,7 +65,7 @@ public class AftabeAPIAdapter {
 
     private static Retrofit retrofit;
     private static AftabeService aftabeService;
-    private final static String baseUrl = "https://aftabe2.com:2020";
+    private  static String baseUrl =  "https://aftabe2.com:2020";
     private static final String TAG = "AftabeAPIAdapter";
     private static Context context;
 
@@ -80,6 +80,9 @@ public class AftabeAPIAdapter {
 
     private static void init() {
         if (retrofit == null) {
+
+            if(Logger.isDebug())
+                baseUrl = "http://server.pakoo.ir:2020/";
 
             OkHttpClient okHttpClient = new OkHttpClient();
             okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
@@ -784,6 +787,9 @@ public class AftabeAPIAdapter {
     }
 
     public static void getListOfFriendRequestsToMe(User myUser, final BatchUserFoundListener listener) {
+
+        if(myUser == null)
+            return;
 
         init();
 
