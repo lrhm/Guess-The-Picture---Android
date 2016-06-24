@@ -374,6 +374,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
             nextLevel();
         } else if (coinAdapter.spendCoins(CoinAdapter.SKIP_LEVEL_COST)) {
             skiped = true;
+            resulved = true;
             nextLevel();
         }
     }

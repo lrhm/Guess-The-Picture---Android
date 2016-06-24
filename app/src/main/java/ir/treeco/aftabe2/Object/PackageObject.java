@@ -38,7 +38,7 @@ public class PackageObject {
     URLHolder image;
 
     @Expose
-    Integer revision;
+    String revision;
 
     private ArrayList<Level> levels;
 
@@ -111,11 +111,27 @@ public class PackageObject {
         return file;
     }
 
-    public int getRevision() {
-        if (revision == null)
-            revision = 0;
 
-        return revision;
+    private int getRevision(int i) {
+
+        try {
+
+            return Integer.parseInt(revision.replace(".", "/").split("/")[i]);
+        } catch (Exception ignored){
+
+        }
+        return 0;
+    }
+
+    public int getRevisionFile() {
+
+        try {
+
+            return Integer.parseInt(revision.replace(".", "/").split("/")[0]);
+        } catch (Exception ignored){
+
+        }
+        return 0;
     }
 
     private class URLHolder {

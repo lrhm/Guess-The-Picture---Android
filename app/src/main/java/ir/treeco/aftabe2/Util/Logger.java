@@ -9,7 +9,7 @@ public class Logger {
 
     private static boolean debug = true;
 
-    private static boolean test = false;
+    private static boolean test = true;
 
 
     private static final String testUrl = "http://server.pakoo.ir:2020/";
