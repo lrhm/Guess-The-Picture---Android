@@ -252,13 +252,20 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
     @Override
     public void onDestroy() {
         ((MainActivity) getActivity()).hideCheatButton();
-        Answers.getInstance().logLevelEnd(new LevelEndEvent()
-                .putLevelName(solution)
-                .putSuccess(resulved)
-                .putCustomAttribute("Solved Before", (level.isResolved() ? 1 : 0))
-                .putCustomAttribute("Package", packageId)
-                .putCustomAttribute("Package Name", "package " + packageId)
-                .putCustomAttribute("Time", timeStampAdapter.getTimeStamp(getActivity())));
+        if (level != null) {
+
+            try {
+                Answers.getInstance().logLevelEnd(new LevelEndEvent()
+                        .putLevelName(solution)
+                        .putSuccess(resulved)
+                        .putCustomAttribute("Solved Before", (level.isResolved() ? 1 : 0))
+                        .putCustomAttribute("Package", packageId)
+                        .putCustomAttribute("Package Name", "package " + packageId)
+                        .putCustomAttribute("Time", timeStampAdapter.getTimeStamp(getActivity())));
+            } catch (Exception e) {
+
+            }
+        }
         super.onDestroy();
 
         Logger.d(TAG, "onDestory");
@@ -417,7 +424,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Keyb
                 "")).replace("آ", "ا").replace("/", ""))) {
             MediaAdapter.getInstance(getContext()).playCorrectSound();
 
-            if (!level.isResolved()) {
+            if (!level.isResolved() && !resulved) {
                 coinAdapter.earnCoins(CoinAdapter.LEVEL_COMPELETED_PRIZE);
                 resulved = true;
 
