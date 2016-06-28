@@ -58,6 +58,19 @@ public class Tools {
     private final static String TAG = "Tools";
 
 
+    private static boolean test = true;
+
+
+    private static final String testUrl = "http://server.pakoo.ir:2020/";
+    private static final String baseUrl = "https://aftabe2.com:2020/";
+
+    public static String getUrl() {
+        if (test)
+            return testUrl;
+        return baseUrl;
+    }
+
+
     public Tools(Context context) {
         this.context = context;
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();

@@ -115,7 +115,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         super.onCreate(savedInstanceState);
 
         MainActivity mainActivity = ((MainActivity) context);
-        baseUrl = Logger.getUrl() +"api/pictures/level/download/";
+        baseUrl = Tools.getUrl() +"api/pictures/level/download/";
 
 
         String[] tags = new String[]{LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG, PackageAdapter.PACKAGE_LEVEL_LIST_TAG};

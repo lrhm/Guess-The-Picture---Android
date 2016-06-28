@@ -81,7 +81,7 @@ public class AftabeAPIAdapter {
     private static void init() {
         if (retrofit == null) {
 
-            baseUrl = Logger.getUrl();
+            baseUrl = Tools.getUrl();
 
             OkHttpClient okHttpClient = new OkHttpClient();
             okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);

@@ -1,6 +1,11 @@
 package ir.treeco.aftabe2.API.Socket.Objects.Notifs;
 
+import android.os.Looper;
+
 import com.google.gson.annotations.Expose;
+
+import ir.treeco.aftabe2.Util.Logger;
+import ir.treeco.aftabe2.Util.Tools;
 
 /**
  * Created by al on 6/28/16.
@@ -29,7 +34,7 @@ public class AdNotification {
     }
 
     public String getImgUrl() {
-        return imgUrl;
+        return Tools.getUrl() + "/notif/download/" + imgUrl;
     }
 
     public String getRedirectURL() {

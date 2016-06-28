@@ -165,7 +165,7 @@ public class SocketAdapter {
 
         Logger.d(TAG, "initilizing socketa");
 
-        String url = Logger.getUrl();
+        String url = Tools.getUrl();
 
 
         IO.Options opts = new IO.Options();

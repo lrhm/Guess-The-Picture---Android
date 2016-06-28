@@ -3,6 +3,7 @@ package ir.treeco.aftabe2.API.Rest.Utils;
 import com.google.gson.annotations.Expose;
 
 import ir.treeco.aftabe2.Util.Logger;
+import ir.treeco.aftabe2.Util.Tools;
 
 /**
  * Created by al on 5/14/16.
@@ -37,11 +38,11 @@ public class ForceObject {
     }
 
     public String getUrl() {
-        return Logger.getUrl() + "api/files/version/download/" + file.name;
+        return Tools.getUrl() + "api/files/version/download/" + file.name;
     }
 
     public String getImageURL() {
-        return Logger.getUrl() + "api/files/version/download/" + image.name;
+        return Tools.getUrl() + "api/files/version/download/" + image.name;
 
     }
 

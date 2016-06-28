@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe2.Util.Logger;
+import ir.treeco.aftabe2.Util.Tools;
 
 public class PackageObject {
 
@@ -41,7 +42,7 @@ public class PackageObject {
     URLHolder image;
 
     @Expose
-    String revision;
+    int revision;
 
     URLHolder offerImage;
 
@@ -61,7 +62,7 @@ public class PackageObject {
 
 
     public String getUrl() {
-        return Logger.getUrl() + "api/files/p/download/" + file.name;
+        return Tools.getUrl() + "api/files/p/download/" + file.name;
     }
 
     public ArrayList<Level> getLevels() {
@@ -73,7 +74,7 @@ public class PackageObject {
     }
 
     public String getImageUrl() {
-        return Logger.getUrl() + "api/pictures/p/download/" + image.name;
+        return Tools.getUrl() + "api/pictures/p/download/" + image.name;
     }
 
     public URLHolder getImage() {
@@ -117,26 +118,11 @@ public class PackageObject {
     }
 
 
-    private int getRevision(int i) {
 
-        try {
-
-            return Integer.parseInt(revision.replace(".", "/").split("/")[i]);
-        } catch (Exception ignored) {
-
-        }
-        return 0;
-    }
 
     public int getRevisionFile() {
 
-        try {
-
-            return Integer.parseInt(revision.replace(".", "/").split("/")[0]);
-        } catch (Exception ignored) {
-
-        }
-        return 0;
+        return revision;
     }
 
     public boolean isPackageDownloaded(Context context) {
@@ -148,7 +134,7 @@ public class PackageObject {
     }
 
     public String getOfferImageURL() {
-        return Logger.getUrl() + "api/pictures/p/download/" + offerImage.name;
+        return Tools.getUrl() + "api/pictures/p/download/" + offerImage.name;
     }
 
     public boolean isOfferDownloaded(Context context) {
