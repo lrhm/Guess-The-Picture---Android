@@ -7,54 +7,72 @@ import ir.treeco.aftabe2.API.Socket.Objects.Friends.FriendRequestHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.Friends.MatchRequestSFHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.Friends.MatchResultHolder;
 import ir.treeco.aftabe2.API.Socket.Objects.Friends.OnlineFriendStatusHolder;
+import ir.treeco.aftabe2.API.Socket.Objects.Notifs.AdNotification;
 
 /**
  * Created by al on 4/28/16.
  */
-public class NotifHolder  {
+public class NotifHolder {
 
-    public NotifHolder(OnlineFriendStatusHolder online){
+    public NotifHolder(OnlineFriendStatusHolder online) {
         this.online = online;
         type = "online";
     }
 
-    public NotifHolder(MatchRequestSFHolder matchRequestSFHolder){
+    public NotifHolder(AdNotification adNotification) {
+        notif = adNotification;
+        type = "notif";
+    }
+
+    public NotifHolder(MatchRequestSFHolder matchRequestSFHolder) {
         matchSF = matchRequestSFHolder;
         type = "matchSF";
     }
 
-    public NotifHolder(MatchResultHolder matchResult){
+    public NotifHolder(MatchResultHolder matchResult) {
         this.matchResult = matchResult;
         type = "matchResult";
     }
 
-    public NotifHolder(FriendRequestHolder friendRequestHolder){
+    public NotifHolder(FriendRequestHolder friendRequestHolder) {
         friendSF = friendRequestHolder;
         type = "friendSF";
     }
 
-    @Expose @SerializedName("online")
+    @Expose
+    @SerializedName("notif")
+    AdNotification notif;
+
+    @Expose
+    @SerializedName("online")
     OnlineFriendStatusHolder online;
 
-    @Expose @SerializedName("matchSF")
+    @Expose
+    @SerializedName("matchSF")
     MatchRequestSFHolder matchSF;
 
-    @Expose @SerializedName("matchResult")
+    @Expose
+    @SerializedName("matchResult")
     MatchResultHolder matchResult;
 
-    @Expose @SerializedName("friendSF")
+    @Expose
+    @SerializedName("friendSF")
     FriendRequestHolder friendSF;
 
-    @Expose @SerializedName("id")
+    @Expose
+    @SerializedName("id")
     String id;
 
-    @Expose @SerializedName("date")
+    @Expose
+    @SerializedName("date")
     String date;
 
-    @Expose @SerializedName("seen")
+    @Expose
+    @SerializedName("seen")
     boolean seen;
 
-    @Expose @SerializedName("type")
+    @Expose
+    @SerializedName("type")
     String type;
 
     public String getType() {
@@ -85,6 +103,9 @@ public class NotifHolder  {
         return type.equals("online");
     }
 
+    public boolean isNotif() {
+        return type.equals("notif");
+    }
 
     public OnlineFriendStatusHolder getOnline() {
         return online;
@@ -102,5 +123,7 @@ public class NotifHolder  {
         return friendSF;
     }
 
-
+    public AdNotification getNotif() {
+        return notif;
+    }
 }

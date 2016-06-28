@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 
 import java.util.Random;
 
+import ir.treeco.aftabe2.API.Socket.Objects.Notifs.AdNotification;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Service.ActionEventReceiver;
@@ -76,6 +77,8 @@ public class NotificationManager {
     }
 
     public void createNotification(NotifHolder notifHolder) {
+
+
         PendingIntent pendingIntent = null;
         String title = null;
         String content = null;
@@ -102,9 +105,17 @@ public class NotificationManager {
             builder = createBasicNotification(title, content, drawable);
             builder.addAction(R.drawable.notif_yes, "باشه", getAcceptPendingIntent(notifHolder, true, notifID));
 
+        } else if (notifHolder.isNotif()) {
+            title = notifHolder.getNotif().getTitle();
+            content = notifHolder.getNotif().getContent();
+            pendingIntent = getNotifPendingInent(notifHolder, notifID);
         }
+
         if (builder == null) builder = createBasicNotification(title, content, drawable);
-        builder.addAction(R.drawable.notif_no, "نه", getRejectPendingIntent(notifHolder, notifID));
+
+        if (!notifHolder.isNotif())
+            builder.addAction(R.drawable.notif_no, "نه", getRejectPendingIntent(notifHolder, notifID));
+
         if (pendingIntent != null) {
             builder.setContentIntent(pendingIntent);
         }
@@ -122,6 +133,17 @@ public class NotificationManager {
 
     }
 
+    private PendingIntent getNotifPendingInent(NotifHolder notifHolder, int id) {
+        Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ActionHolder actionHolder = ActionHolder.getAdNotificationActionHolder(notifHolder, id);
+        intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
+
+        return PendingIntent.getActivity(getBaseContext(),
+                ServiceConstants.FRIEND_REQUEST_RQ_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    }
+
     private PendingIntent getAcceptPendingIntent(NotifHolder notifHolder, boolean accept, int id) {
         Intent intent;
         if (notifHolder.isFriendRequest())
@@ -129,14 +151,14 @@ public class NotificationManager {
         else {
 
             intent = new Intent(getBaseContext(), LoadingActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         }
         ActionHolder actionHolder = new ActionHolder(notifHolder, id, accept, accept);
         intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
 
-        if(notifHolder.isFriendRequest())
-        return PendingIntent.getBroadcast(getBaseContext(), 45, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (notifHolder.isFriendRequest())
+            return PendingIntent.getBroadcast(getBaseContext(), 45, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return PendingIntent.getActivity(getBaseContext(),
                 ServiceConstants.MATCH_REQUEST_RQ_ID + 31, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -152,7 +174,7 @@ public class NotificationManager {
 
     private PendingIntent getIntentForFriendRequest(NotifHolder notifHolder, int id) {
         Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         ActionHolder actionHolder = ActionHolder.getNonSpecifiedActionHolder(notifHolder, id);
         intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
 
@@ -164,7 +186,7 @@ public class NotificationManager {
 
     private PendingIntent getIntentForMatchRequest(NotifHolder notifHolder, int id) {
         Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         ActionHolder actionHolder = ActionHolder.getNonSpecifiedActionHolder(notifHolder, id);
         intent.putExtra(ServiceConstants.ACTION_DATA_INTENT, new Gson().toJson(actionHolder));
 

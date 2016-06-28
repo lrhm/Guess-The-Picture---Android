@@ -7,7 +7,7 @@ import ir.treeco.aftabe2.Util.Savior;
 /**
  * Created by root on 5/6/16.
  */
-public class ActionHolder{
+public class ActionHolder {
 
 
     @Expose
@@ -33,6 +33,16 @@ public class ActionHolder{
 
     @Expose
     boolean isActionSpecified;
+
+    @Expose
+    boolean isAdNotification;
+
+    public static ActionHolder getAdNotificationActionHolder(NotifHolder notifHolder, int notificationID) {
+        ActionHolder actionHolder = new ActionHolder(notifHolder, notificationID, false, false);
+        actionHolder.isAdNotification = true;
+
+        return actionHolder;
+    }
 
 
     public static ActionHolder getRejectedActionHolder(NotifHolder notifHolder, int notificationID) {
