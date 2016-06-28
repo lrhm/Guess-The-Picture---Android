@@ -943,7 +943,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onForceUpdate() {
+    public void onForceUpdate(final ForceObject forceObject) {
 
 
         new Handler().postDelayed(new Runnable() {
@@ -951,7 +951,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             public void run() {
 
                 if (!isFinishing())
-                    new ForceUpdateDialog(MainActivity.this, true).show();
+                    new ForceUpdateDialog(MainActivity.this, forceObject).show();
 
                 else if (!isPaused)
                     new Handler().postDelayed(this, 1000);
@@ -960,14 +960,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onForceDownload() {
+    public void onForceDownload(final ForceObject forceObject) {
 
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!isFinishing())
-                    new ForceUpdateDialog(MainActivity.this, false).show();
+                    new ForceUpdateDialog(MainActivity.this, forceObject).show();
                 else if (!isPaused)
                     new Handler().postDelayed(this, 1000);
             }
