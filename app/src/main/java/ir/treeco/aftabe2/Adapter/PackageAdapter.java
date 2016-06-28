@@ -65,7 +65,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
 
-    public void removePackage(PackageObject object){
+    public void removePackage(PackageObject object) {
         packageObjects.remove(object);
         notifyDataSetChanged();
 
@@ -133,7 +133,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
             File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
 
-            if (!file.exists()) {
+            if (!file.exists()) { // not downloaded
 
 
                 final CoinAdapter coinAdapter = ((MainActivity) context).getCoinAdapter();
@@ -271,13 +271,22 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
 
         int id = packageObjects.get(i).getId();
+        PackageObject packageObject = packageObjects.get(i);
 
         DBAdapter dbAdapter = DBAdapter.getInstance(context);
 
+        User myUser = Tools.getCachedUser(context);
+
+        int intPrice = ((myUser != null && myUser.isPackagePurchased(id))) ? 0 : packageObjects.get(i).getPrice();
+        intPrice = PackageSolvedCache.getInstance().isPackagePurchased(id) ? 0 : intPrice;
 
         String imagePath = "file://" + context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png";
+
+        if (packageObject.isThereOffer() && !packageObject.isPackageDownloaded(context)
+                && intPrice != 0)
+            imagePath = "file://" + packageObject.getOfferImagePathInSD(context);
+
         Picasso.with(context).load(imagePath).fit().into(viewHolder.imageView);
-        User myUser = Tools.getCachedUser(context);
 
 
         File file = new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/");
@@ -292,8 +301,6 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         if (!file.exists()) {
 
-            int intPrice = ((myUser != null && myUser.isPackagePurchased(id))) ? 0 : packageObjects.get(i).getPrice();
-            intPrice = PackageSolvedCache.getInstance().isPackagePurchased(id) ? 0 : intPrice;
 
             Picasso.with(context).load(R.drawable.package_price).fit().into(viewHolder.packagePrice);
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
@@ -309,10 +316,12 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         }
 
-        if (!(new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png").exists())) {
+        if (!(new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png").exists())
+                || packageObject.isThereOffer() && !packageObject.isPackageDownloaded(context)) {
             viewHolder.packagePrice.setVisibility(View.GONE);
             viewHolder.price.setVisibility(View.GONE);
         }
+
 
     }
 

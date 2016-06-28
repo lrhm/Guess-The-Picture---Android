@@ -251,13 +251,21 @@ public class PackageTools {
 
                 for (PackageObject object : response.body())
                     for (PackageObject savePackageObject : savePackages)
-                        if (object.getId() == savePackageObject.getId() && savePackageObject.getRevision() != object.getRevision()) {
-                            // package is corrupted
-                            listener.onPackageInvalid(savePackageObject);
+                        if (object.getId() == savePackageObject.getId()) {
+                            if (savePackageObject.getRevisionFile() != object.getRevisionFile()) {
+                                // package is corrupted
+                                listener.onPackageInvalid(savePackageObject);
 
-                            dbAdapter.deletePackage(savePackageObject.getId());
-                            onPackageCorrupted(savePackageObject.getId());
+                                dbAdapter.deletePackage(savePackageObject.getId());
+                                onPackageCorrupted(savePackageObject.getId());
 
+                            } else if (!savePackageObject.isThereOffer() && object.isThereOffer()
+                                    || !savePackageObject.getOfferImageURL().equals(object.getOfferImageURL())
+                                    ) {
+
+                                onNewOffer(object);
+
+                            }
                         }
 
             }
@@ -268,6 +276,50 @@ public class PackageTools {
             }
         });
 
+    }
+
+    private void onNewOffer(PackageObject object) {
+
+        String newPath = context.getFilesDir().getPath() + "/Packages/package_" + object.getId() + "/";
+
+
+        if (new File(newPath).exists()) // already downloaded
+            return;
+
+        DBAdapter dbAdapter = DBAdapter.getInstance(context);
+        dbAdapter.updatePackage(object);
+
+
+        if (object.getImage() == null || object.getImageUrl() == null)
+            return;
+
+        if (object.isOfferDownloaded(context)) {
+            String offerPath = object.getOfferImagePathInSD(context);
+            File offerImg = new File(offerPath);
+            if (offerImg.exists()) {
+                offerImg.delete();
+
+            }
+        }
+
+        String url = object.getOfferImageURL();
+        new DownloadTask(context, new DownloadTask.DownloadTaskListener() {
+            @Override
+            public void onProgress(int progress) {
+
+            }
+
+            @Override
+            public void onDownloadSuccess() {
+
+            }
+
+            @Override
+            public void onDownloadError(String error) {
+
+                Logger.d(TAG, "download error :( " + error);
+            }
+        }).execute(url, context.getFilesDir().getPath(), "package_" + object.getId() + "_offer.png");
     }
 
     private void onPackageCorrupted(int id) {

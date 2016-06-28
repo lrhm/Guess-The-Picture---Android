@@ -1,7 +1,10 @@
 package ir.treeco.aftabe2.Object;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import ir.treeco.aftabe2.Util.Logger;
@@ -39,6 +42,8 @@ public class PackageObject {
 
     @Expose
     String revision;
+
+    URLHolder offerImage;
 
     private ArrayList<Level> levels;
 
@@ -117,7 +122,7 @@ public class PackageObject {
         try {
 
             return Integer.parseInt(revision.replace(".", "/").split("/")[i]);
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
         return 0;
@@ -128,10 +133,32 @@ public class PackageObject {
         try {
 
             return Integer.parseInt(revision.replace(".", "/").split("/")[0]);
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
         return 0;
+    }
+
+    public boolean isPackageDownloaded(Context context) {
+        return new File(context.getFilesDir().getPath() + "/Packages/package_" + id + "/").exists();
+    }
+
+    public boolean isThereOffer() {
+        return offerImage != null && !offerImage.equals("");
+    }
+
+    public String getOfferImageURL() {
+        return Logger.getUrl() + "api/pictures/p/download/" + offerImage.name;
+    }
+
+    public boolean isOfferDownloaded(Context context) {
+        return new File(getOfferImagePathInSD(context)).exists();
+
+    }
+
+    public String getOfferImagePathInSD(Context context) {
+        return context.getFilesDir().getPath() + "package_" + id + "_offer.png";
+
     }
 
     private class URLHolder {
