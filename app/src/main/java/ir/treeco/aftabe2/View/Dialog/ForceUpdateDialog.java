@@ -2,7 +2,9 @@ package ir.treeco.aftabe2.View.Dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,9 +13,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import ir.treeco.aftabe2.API.Rest.Utils.ForceObject;
+import ir.treeco.aftabe2.API.Socket.Objects.Notifs.AdNotification;
 import ir.treeco.aftabe2.API.Socket.SocketAdapter;
 import ir.treeco.aftabe2.Adapter.ForceAdapter;
 import ir.treeco.aftabe2.R;
@@ -26,18 +33,29 @@ import ir.treeco.aftabe2.View.Activity.MainActivity;
 import ir.treeco.aftabe2.View.Custom.ToastMaker;
 
 public class ForceUpdateDialog extends Dialog implements View.OnClickListener, DownloadTask.DownloadTaskListener {
+
     Context context;
-
-    boolean showButton;
+    ForceObject forceObject;
+    AdNotification adNotification;
     TextView progresTextView;
+    boolean textProgressVisiblity = false;
+    String imageUri;
 
-    public ForceUpdateDialog(Context context, boolean showButton) {
+    public ForceUpdateDialog(Context context, ForceObject object) {
         super(context);
         SocketAdapter.disconnect();
         this.context = context;
-        this.showButton = showButton;
-
+        forceObject = object;
         ForceAdapter.getInstance(context).setListener(this);
+        imageUri = forceObject.getImageURL();
+        textProgressVisiblity = forceObject.isForceDownload();
+    }
+
+    public ForceUpdateDialog(Context context, AdNotification notification) {
+        super(context);
+        adNotification = notification;
+        this.context = context;
+        imageUri = adNotification.getImgUrl();
     }
 
     @Override
@@ -47,25 +65,6 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         setContentView(R.layout.dialog_force_update);
-        TextView textView = (TextView) findViewById(R.id.dialog_force_update_text);
-
-        Button button = (Button) findViewById(R.id.dialog_force_update_button);
-        button.setOnClickListener(this);
-        if (showButton)
-            button.setVisibility(View.VISIBLE);
-
-        button.setText("اینجا کلیک کن");
-        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, SizeManager.getScreenWidth() * 0.04f);
-
-        textView.setText("اپدیت جدید اومده . باید اپدیت کنی");
-        UiUtil.setTextViewSize(textView, (int) (SizeManager.getScreenWidth() * 0.3), 0.2f);
-        textView.setTypeface(FontsHolder.getSansBold(context));
-
-        progresTextView = (TextView) findViewById(R.id.dialog_force_update_progress);
-        UiUtil.setTextViewSize(progresTextView, (int) (SizeManager.getScreenWidth() * 0.3), 0.2f);
-        progresTextView.setTypeface(FontsHolder.getNumeralSansBold(context));
-
-        UiUtil.setTopMargin(progresTextView, (int) (SizeManager.getScreenHeight() * 0.1f));
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
@@ -73,12 +72,36 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
         lp.height = SizeManager.getScreenHeight();
         getWindow().setAttributes(lp);
 
+
+        ImageView imageView = (ImageView) findViewById(R.id.dialog_force_update_image);
+        imageView.setOnClickListener(this);
+        Picasso.with(context).load(Uri.parse(imageUri)).into(imageView);
+
+        if (textProgressVisiblity) {
+            progresTextView.setVisibility(View.VISIBLE);
+
+            progresTextView = (TextView) findViewById(R.id.dialog_force_update_progress);
+            UiUtil.setTextViewSize(progresTextView, (int) (SizeManager.getScreenWidth() * 0.3), 0.2f);
+            progresTextView.setTypeface(FontsHolder.getNumeralSansBold(context));
+
+
+            UiUtil.setTopMargin(progresTextView, (int) (SizeManager.getScreenHeight() * 0.1f));
+        }
     }
 
     @Override
     public void onClick(View view) {
 
-        ForceAdapter.getInstance(context).openCafeBazzarAppPage((MainActivity) context);
+        if (forceObject != null && forceObject.isForceUpdate())
+            ForceAdapter.getInstance(context).openCafeBazzarAppPage((MainActivity) context);
+
+        if (adNotification != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(adNotification.getRedirectURL()));
+            context.startActivity(intent);
+            dismiss();
+
+        }
     }
 
     @Override
@@ -86,7 +109,11 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
 
 
 //        super.onBackPressed();
-        ((MainActivity) context).onBackPressed();
+        if (forceObject != null)
+            ((MainActivity) context).onBackPressed();
+        else
+            super.onBackPressed();
+
     }
 
     @Override

@@ -102,11 +102,11 @@ public class ForceAdapter {
 
         if (object.isForceUpdate()) {
             for (ForceListener listener : listeners)
-                listener.onForceUpdate();
+                listener.onForceUpdate(object);
 
         } else if (object.isForceDownload()) {
             for (ForceListener listener : listeners)
-                listener.onForceDownload();
+                listener.onForceDownload(object);
             downloadAPK(object);
 
         } else {
@@ -226,9 +226,9 @@ public class ForceAdapter {
 
     public interface ForceListener {
 
-        void onForceUpdate();
+        void onForceUpdate(ForceObject forceObject);
 
-        void onForceDownload();
+        void onForceDownload(ForceObject forceObject);
 
         void onShowPopup(ForceObject object);
     }

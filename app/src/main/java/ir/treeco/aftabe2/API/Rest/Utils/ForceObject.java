@@ -25,6 +25,9 @@ public class ForceObject {
     boolean active;
 
 
+    @Expose
+    URLHolder image;
+
     public boolean isActive() {
         return active;
     }
@@ -34,7 +37,12 @@ public class ForceObject {
     }
 
     public String getUrl() {
-        return Logger.getUrl()+ "api/files/version/download/" + file.name;
+        return Logger.getUrl() + "api/files/version/download/" + file.name;
+    }
+
+    public String getImageURL() {
+        return Logger.getUrl() + "api/files/version/download/" + image.name;
+
     }
 
     public int getSize() {
