@@ -1351,6 +1351,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         NotificationManager.dismissNotification(this, actionHolder.getNotificationID());
 
+        if (actionHolder.isAdNotification()) {
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new ForceUpdateDialog(MainActivity.this, actionHolder.getNotifHolder().getNotif()).show();
+
+                }
+            }, 1000);
+
+            return;
+        }
+
 
         if (actionHolder.isFriendRequest()) {
             new Handler().postDelayed(new Runnable() {

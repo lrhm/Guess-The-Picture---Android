@@ -107,6 +107,9 @@ public class ActionHolder {
         return isActionSpecified;
     }
 
+    public boolean isAdNotification() {
+        return isAdNotification;
+    }
 
     public int getNotificationID() {
         return notificationID;
