@@ -29,7 +29,6 @@ import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Rest.Utils.CountHolder;
 import ir.treeco.aftabe2.Adapter.DBAdapter;
 import ir.treeco.aftabe2.Adapter.NotificationAdapter;
-import ir.treeco.aftabe2.BuildConfig;
 import ir.treeco.aftabe2.Object.Level;
 import ir.treeco.aftabe2.Object.PackageObject;
 import ir.treeco.aftabe2.Object.User;
@@ -252,6 +251,11 @@ public class PackageTools {
                 for (PackageObject object : response.body())
                     for (PackageObject savePackageObject : savePackages)
                         if (object.getId() == savePackageObject.getId()) {
+
+                            Logger.d(TAG, "online is " + new Gson().toJson(object));
+
+                            Logger.d(TAG, "saved is " + new Gson().toJson(savePackageObject));
+
                             if (savePackageObject.getRevisionFile() != object.getRevisionFile()) {
                                 // package is corrupted
                                 listener.onPackageInvalid(savePackageObject);
@@ -260,8 +264,8 @@ public class PackageTools {
                                 onPackageCorrupted(savePackageObject.getId());
 
                             } else if (!savePackageObject.isThereOffer() && object.isThereOffer()
-                                    || !savePackageObject.getOfferImageURL().equals(object.getOfferImageURL())
-                                    ) {
+                                    || savePackageObject.getOffer() != null && !savePackageObject.getOfferImageURL().equals(object.getOfferImageURL())
+                                    || savePackageObject.getOffer() != null && !savePackageObject.isOfferDownloaded(context)) {
 
                                 onNewOffer(object);
 
@@ -279,6 +283,8 @@ public class PackageTools {
     }
 
     private void onNewOffer(PackageObject object) {
+
+        Logger.d(TAG, "new Offer " + new Gson().toJson(object));
 
         String newPath = context.getFilesDir().getPath() + "/Packages/package_" + object.getId() + "/";
 
@@ -311,6 +317,7 @@ public class PackageTools {
 
             @Override
             public void onDownloadSuccess() {
+                Logger.d(TAG, "download success :)");
 
             }
 

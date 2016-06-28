@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
 import java.io.File;
 import java.util.ArrayList;
 
-import ir.treeco.aftabe2.Util.Logger;
+import ir.treeco.aftabe2.Adapter.Cache.PackageSolvedCache;
 import ir.treeco.aftabe2.Util.Tools;
 
 public class PackageObject {
@@ -44,7 +44,7 @@ public class PackageObject {
     @Expose
     int revision;
 
-    URLHolder offerImage;
+    URLHolder offer;
 
     private ArrayList<Level> levels;
 
@@ -118,8 +118,6 @@ public class PackageObject {
     }
 
 
-
-
     public int getRevisionFile() {
 
         return revision;
@@ -130,11 +128,15 @@ public class PackageObject {
     }
 
     public boolean isThereOffer() {
-        return offerImage != null && !offerImage.equals("");
+        return offer != null && !offer.equals("");
     }
 
     public String getOfferImageURL() {
-        return Tools.getUrl() + "api/pictures/p/download/" + offerImage.name;
+        return Tools.getUrl() + "api/pictures/offer/download/" + offer.name;
+    }
+
+    public URLHolder getOffer() {
+        return offer;
     }
 
     public boolean isOfferDownloaded(Context context) {
@@ -142,8 +144,16 @@ public class PackageObject {
 
     }
 
+    public int getShownPrice(Context context) {
+
+        User myUser = Tools.getCachedUser(context);
+        int intPrice = ((myUser != null && myUser.isPackagePurchased(id))) ? 0 : getPrice();
+        intPrice = PackageSolvedCache.getInstance().isPackagePurchased(id) ? 0 : intPrice;
+        return intPrice;
+    }
+
     public String getOfferImagePathInSD(Context context) {
-        return context.getFilesDir().getPath() + "package_" + id + "_offer.png";
+        return context.getFilesDir().getPath() + "/package_" + id + "_offer.png";
 
     }
 

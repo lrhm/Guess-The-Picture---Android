@@ -10,6 +10,10 @@ public class Logger {
     private static boolean debug = true;
 
 
+    public static boolean isDebug() {
+        return debug;
+    }
+
     public static void i(String tag, String msg) {
 
         if (debug)

@@ -195,6 +195,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                         textView.setVisibility(View.VISIBLE);
                     textView.setText(Tools.numeralStringToPersianDigits(progress + "") + "%");
 
+                    if (progress == 100)
+                        textView.setVisibility(View.GONE);
                 }
             });
         }
@@ -317,9 +319,13 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
         }
 
         if (!(new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png").exists())
-                || packageObject.isThereOffer() && !packageObject.isPackageDownloaded(context)) {
+                ) {
             viewHolder.packagePrice.setVisibility(View.GONE);
             viewHolder.price.setVisibility(View.GONE);
+        } else if (packageObject.isThereOffer() && packageObject.isPackageDownloaded(context)) {
+
+            viewHolder.packagePrice.setVisibility(View.VISIBLE);
+            viewHolder.price.setVisibility(View.VISIBLE);
         }
 
 

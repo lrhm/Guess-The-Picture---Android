@@ -34,7 +34,7 @@ public class AdNotification {
     }
 
     public String getImgUrl() {
-        return Tools.getUrl() + "/notif/download/" + imgUrl;
+        return Tools.getUrl() + "notif/download/" + imgUrl;
     }
 
     public String getRedirectURL() {

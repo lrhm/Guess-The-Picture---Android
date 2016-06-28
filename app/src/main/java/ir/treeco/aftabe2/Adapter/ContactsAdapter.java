@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 
@@ -57,6 +58,9 @@ public class ContactsAdapter implements BatchUserFoundListener {
         contactsHolders = new LinkedList<>();
         contactsCacheHolder = ContactsCacheHolder.getInstance();
 
+
+        if(Logger.isDebug())
+            return;
         getContacts();
 
     }
@@ -121,6 +125,9 @@ public class ContactsAdapter implements BatchUserFoundListener {
 //        onNewContact(contactsHolders.poll());
 
         doQueue();
+
+
+
 
         if (contactsHolders.size() != 0) {
 
