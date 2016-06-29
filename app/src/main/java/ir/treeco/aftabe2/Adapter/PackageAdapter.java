@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 
+import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.Logger;
 
 import android.view.LayoutInflater;
@@ -338,11 +339,8 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             viewHolder.price.setText(Tools.numeralStringToPersianDigits(intPrice + ""));
 
 
-            ColorMatrix matrix = new ColorMatrix();
-            matrix.setSaturation(0);
-
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-            viewHolder.imageView.setColorFilter(filter);
+            if (!packageObject.isThereOffer())
+                ImageManager.getInstance(context).toGrayscale(viewHolder.imageView);
 
         }
 
