@@ -50,4 +50,8 @@ public class ResultHolder {
             return scores[0].getScore();
         return scores[1].getScore();
     }
+
+    public boolean isTimeOut(){
+        return status.equals("timeout");
+    }
 }

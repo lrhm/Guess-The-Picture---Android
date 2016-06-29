@@ -115,7 +115,7 @@ public class LoadingDialog extends Dialog implements Runnable,
         super.onCreate(savedInstanceState);
 
         MainActivity mainActivity = ((MainActivity) context);
-        baseUrl = Tools.getUrl() +"api/pictures/level/download/";
+        baseUrl = Tools.getUrl() + "api/pictures/level/download/";
 
 
         String[] tags = new String[]{LevelsAdapter.OFFLINE_GAME_FRAGMENT_TAG, PackageAdapter.PACKAGE_LEVEL_LIST_TAG};
@@ -150,8 +150,8 @@ public class LoadingDialog extends Dialog implements Runnable,
         UiUtil.setTopMargin(mLoadingImageView, converter.getTopOffset() / 2);
 
 //        Picasso.with(context).load(R.drawable.search_sc_1).fit().into(mLoadingImageView);
-        mLoadingImageHeight /= 2;
-        mLoadingImageWidth /= 2;
+        mLoadingImageHeight *= 0.4;
+        mLoadingImageWidth *= 0.4;
 
         lastBitmap = imageManager.loadImageFromResource(R.drawable.search_sc_1,
                 mLoadingImageWidth, mLoadingImageHeight, ImageManager.ScalingLogic.FIT, Bitmap.Config.RGB_565);
@@ -172,7 +172,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         mRequestCancel = false;
 
-        new Handler().postDelayed(this, 1000);
+        new Handler().postDelayed(this, 1300);
 
 
     }
@@ -255,7 +255,7 @@ public class LoadingDialog extends Dialog implements Runnable,
             lastBitmap.recycle();
         lastBitmap = curBitmap;
 
-        new Handler().postDelayed(this, 1000);
+        new Handler().postDelayed(this, 1300);
 
     }
 
@@ -349,7 +349,6 @@ public class LoadingDialog extends Dialog implements Runnable,
 
     public void doGameStart(final GameResultHolder gameHolder) {
 
-
         if (!((MainActivity) context).isFinishing()) {
 
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -397,6 +396,11 @@ public class LoadingDialog extends Dialog implements Runnable,
     public void onFinishGame(ResultHolder resultHolder) {
         Logger.d(this.getClass().getName(), "should not happen");
 
+        if (resultHolder.isTimeOut()) {
+
+            coinAdapter.earnCoinDiffless(100);
+            dismiss();
+        }
     }
 
     @Override
@@ -441,6 +445,8 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         if (!result.isAccept()) {
             dismiss();
+            coinAdapter.earnCoinDiffless(100);
+
         }
     }
 

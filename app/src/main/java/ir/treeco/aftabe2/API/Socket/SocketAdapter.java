@@ -170,7 +170,6 @@ public class SocketAdapter {
 
         IO.Options opts = new IO.Options();
         opts.forceNew = true;
-        opts.reconnection = true;
 //        opts.timeout = 30000;
         opts.query = "auth_token=" + Tools.getCachedUser(mMainActivity).getLoginInfo().getAccessToken();
 
@@ -684,5 +683,9 @@ public class SocketAdapter {
         SocketAdapter.timeLefTListener = timeLefTListener;
     }
 
+
+    public static boolean isDisconnected(){
+        return mSocket == null || !mSocket.connected();
+    }
 
 }

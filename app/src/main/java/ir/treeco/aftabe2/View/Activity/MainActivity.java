@@ -1172,9 +1172,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void requestRandomGame() {
 
-        if (myUser == null || !Synchronize.isOnline(this)) {
+        if (myUser == null || !Synchronize.isOnline(this) || SocketAdapter.isDisconnected()) {
             ToastMaker.show(this, getResources().getString(R.string.connection_to_internet_sure), Toast.LENGTH_SHORT);
             AftabeAPIAdapter.tryToLogin(this);
+            SocketAdapter.reconnect();
+
             return;
         }
 

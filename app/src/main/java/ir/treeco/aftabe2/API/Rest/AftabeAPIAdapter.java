@@ -65,9 +65,11 @@ public class AftabeAPIAdapter {
 
     private static Retrofit retrofit;
     private static AftabeService aftabeService;
-    private  static String baseUrl =  "https://aftabe2.com:2020";
+    private static String baseUrl = "https://aftabe2.com:2020";
     private static final String TAG = "AftabeAPIAdapter";
     private static Context context;
+
+    private static final Integer successCode = 200;
 
     public static boolean isNull() {
         return retrofit == null;
@@ -143,7 +145,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<LoginInfo> response) {
 
 
-                if (!response.isSuccess()) {
+                if (!response.isSuccess() || response.code() != successCode) {
                     Logger.d(TAG, "not getGuestUser succfessful");
                     userFoundListener.onGetError();
                     return;
@@ -200,7 +202,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<LoginInfo> response) {
 
 
-                if (!response.isSuccess()) {
+                if (!response.isSuccess() || response.code() != successCode) {
                     userFoundListener.onGetError();
                     return;
                 }
@@ -234,7 +236,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<SMSValidateToken> response) {
 
-                if (response.isSuccess())
+                if (response.isSuccess() && response.code() == successCode)
                     smsValidationListener.onValidatedCode(response.body());
                 else
                     smsValidationListener.onSMSValidationCodeFail();
@@ -260,7 +262,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<SMSValidateToken> response) {
 
-                if (!response.isSuccess()) {
+                if (!response.isSuccess() || response.code() != successCode) {
                     smsValidationListener.onSMSValidationFail();
                 } else
                     smsValidationListener.onSMSValidateSent(response.body());
@@ -285,7 +287,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<User> response) {
 
-                if (!response.isSuccess()) {
+                if (!response.isSuccess() || response.code() != successCode) {
                     userFoundListener.onGetError();
 
 //                    FORCE LOGOUT !
@@ -294,7 +296,7 @@ public class AftabeAPIAdapter {
                     Logger.d(TAG, " is not sucess");
                     return;
                 }
-                if(response.code() != 200)
+                if (response.code() != 200)
                     return;
 
                 CoinAdapter.onUserGet();
@@ -339,7 +341,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<User> response) {
 
-                if (response.isSuccess()) {
+                if (response.isSuccess() && response.code() == successCode) {
 
                     Logger.d(TAG, " is  sucess");
                     Logger.d(TAG, (userFoundListener == null) + " is null ?");
@@ -377,7 +379,7 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<LoginInfo>() {
             @Override
             public void onResponse(Response<LoginInfo> response) {
-                if (!response.isSuccess()) {
+                if (!response.isSuccess() || response.code() != successCode) {
                     userFoundListener.onGetError();
 
                     return;
@@ -406,7 +408,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<UsernameCheck> response) {
 
-                if (!response.isSuccess()) {
+                if (!response.isSuccess() || response.code() != successCode) {
                     usernameCheckListener.onCheckedUsername(false, username);
                     return;
                 }
@@ -478,7 +480,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User[]> response) {
 
 
-                if (response.body().length == 0)
+                if (response.body().length == 0 || response.code() != successCode)
                     userFoundListener.onGetError();
 
                 for (User user : response.body())
@@ -502,7 +504,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User[]> response) {
 
 
-                if (response.body().length == 0)
+                if (response.body().length == 0 || response.code() != successCode)
                     userFoundListener.onGetError();
 
                 for (User user : response.body())
@@ -525,7 +527,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User[]> response) {
 
 
-                if (response.body() == null) {
+                if (response.body() == null || response.code() != successCode) {
                     userFoundListener.onGetError();
                     return;
                 }
@@ -552,7 +554,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<LeaderboardContainer> response) {
 
 
-                if (!response.isSuccess())
+                if (!response.isSuccess() || response.code() != successCode)
                     leaderboardUserListener.onGotError();
                 else
                     leaderboardUserListener.onGotUserList(response.body().getBoard());
@@ -609,7 +611,7 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
-                if (response.isSuccess() && response.body() != null) {
+                if (response.isSuccess() && response.body() != null && response.code() == successCode) {
                     Logger.d(TAG, "new user coin is " + response.body().getCoins());
                     CoinAdapter.addCoinDiff(-diff);
 //                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, );
@@ -648,7 +650,7 @@ public class AftabeAPIAdapter {
                     @Override
                     public void onResponse(Response<User> response) {
 
-                        if (response.isSuccess()) {
+                        if (response.isSuccess() && response.code() == successCode) {
                             AppListAdapter.setUpdateTime(mContext);
                             Logger.d(TAG, "packageList sent");
                         }
@@ -679,7 +681,7 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response) {
-                if (response.isSuccess())
+                if (response.isSuccess() && response.code() == successCode)
                     if (response.body() != null) {
                         Prefs.putBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, true);
                         return;
@@ -707,7 +709,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<FriendRequestSent> response) {
 
-                if (response.isSuccess())
+                if (response.isSuccess() && response.code() == successCode)
                     if (response.body() != null) {
                         if (onFriendRequest != null) {
                             onFriendRequest.onFriendRequestSent();
@@ -787,7 +789,7 @@ public class AftabeAPIAdapter {
 
     public static void getListOfFriendRequestsToMe(User myUser, final BatchUserFoundListener listener) {
 
-        if(myUser == null)
+        if (myUser == null)
             return;
 
         init();
@@ -797,7 +799,7 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<User[]>() {
             @Override
             public void onResponse(Response<User[]> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccess() && response.code() == successCode) {
                     if (response.body().length != 0) {
 
                         for (User user : response.body())
@@ -827,7 +829,7 @@ public class AftabeAPIAdapter {
         call.enqueue(new Callback<User[]>() {
             @Override
             public void onResponse(Response<User[]> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccess() && response.code() == successCode) {
                     if (response.body().length != 0) {
                         for (User user : response.body()) {
                             Logger.d(TAG, "friend is " + new Gson().toJson(user));
@@ -859,7 +861,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<HashMap<String, Object>> response) {
 
-                if (response.isSuccess()) {
+                if (response.isSuccess() && response.code() == successCode) {
                     listener.onSuccess();
                     return;
                 }
@@ -954,7 +956,7 @@ public class AftabeAPIAdapter {
             @Override
             public void onResponse(Response<ArrayList<Integer>> response) {
 
-                if (response.isSuccess())
+                if (response.isSuccess() && response.code() == successCode)
                     if (listener != null) listener.onPurchaseSuccess();
                     else if (listener != null) listener.onPurchasedBefore();
 
@@ -979,7 +981,7 @@ public class AftabeAPIAdapter {
         aftabeService.checkCTS(user.getLoginInfo().getAccessToken()).enqueue(new Callback<User[]>() {
             @Override
             public void onResponse(Response<User[]> response) {
-                if (response.isSuccess() && response.body() != null)
+                if (response.isSuccess() && response.body() != null && response.code() == successCode)
                     listener.onGotUserList(response.body());
                 listener.onGotError();
             }
@@ -1006,7 +1008,7 @@ public class AftabeAPIAdapter {
         aftabeService.verifyGCMOldUser(googleToken).enqueue(new Callback<Veryfier>() {
             @Override
             public void onResponse(Response<Veryfier> response) {
-                if (response.isSuccess())
+                if (response.isSuccess() && response.code() == successCode)
                     if (response.body() != null) {
                         listener.isOldUser(response.body().isOldUser());
                     }
@@ -1037,7 +1039,7 @@ public class AftabeAPIAdapter {
                     @Override
                     public void onResponse(Response<HashMap<String, Object>> response) {
 
-                        if (response.isSuccess()) {
+                        if (response.isSuccess() && response.code() == successCode) {
                             PackageSolvedCache.getInstance().onPackageIndexSent(packageId);
 
                             Logger.d(TAG, "updatet package");

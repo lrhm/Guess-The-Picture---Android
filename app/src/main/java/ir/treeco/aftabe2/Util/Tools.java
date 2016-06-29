@@ -58,7 +58,7 @@ public class Tools {
     private final static String TAG = "Tools";
 
 
-    private static boolean test = true;
+    private static boolean test = false;
 
 
     private static final String testUrl = "http://server.pakoo.ir:2020/";
@@ -646,7 +646,7 @@ public class Tools {
             e.printStackTrace();
         }
 
-        if (signature[0].hashCode() == -343553346){
+        if (signature[0].hashCode() == -343553346) {
             sigChk = "Y";
         }
 
