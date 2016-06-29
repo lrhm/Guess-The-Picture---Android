@@ -185,7 +185,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 //        ToastMaker.show(this, "THIS IS SPARTA ! VERSION " + BuildConfig.VERSION_CODE, Toast.LENGTH_SHORT);
 
-        checkForceUpdate();
 
         HiddenAdapter.getInstance().createHiddenUsr();
 
@@ -1309,6 +1308,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         AftabeAPIAdapter.tryToLogin(this);
+
+        checkForceUpdate();
 
 
         Logger.d(TAG, "super.onResume ended");
