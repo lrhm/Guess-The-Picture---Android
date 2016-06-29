@@ -75,11 +75,25 @@ public class PackageTools {
 
         File olderFile = new File(path);
 
+        boolean hash = true;
+        try {
 
+            hash = checkMd5Sum(context.getFilesDir().getPath() + "/package_0.zip", "e74fabeb3d47ced0a6b36abfe3599ef9");
+        } catch (Exception e) {
+
+        }
         // if user deleted the app . and have saved database , check if db is old . if old
-        if (olderFile.exists()) {
+        if (olderFile.exists() || !hash) {
 
             DBAdapter dbAdapter = DBAdapter.getInstance(context);
+
+            Level[] levels = dbAdapter.getLevels(0);
+            int i = -1;
+            if (levels != null)
+                for (Level l : levels)
+                    if (l.isResolved())
+                        i++;
+
 
             dbAdapter.deletePackage(0);
 
@@ -98,6 +112,10 @@ public class PackageTools {
             }
 
             copyLocalpackages();
+
+            for (int j = 0; j <= i; j++) {
+                dbAdapter.resolveLevel(0, j);
+            }
 
         }
 
