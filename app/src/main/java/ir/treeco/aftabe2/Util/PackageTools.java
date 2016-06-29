@@ -267,7 +267,7 @@ public class PackageTools {
                                     || savePackageObject.getOffer() != null && !savePackageObject.getOfferImageURL().equals(object.getOfferImageURL())
                                     || savePackageObject.getOffer() != null && !savePackageObject.isOfferDownloaded(context)) {
 
-                                onNewOffer(object);
+                                onNewOffer(object, listener);
 
                             }
                         }
@@ -282,7 +282,7 @@ public class PackageTools {
 
     }
 
-    private void onNewOffer(PackageObject object) {
+    private void onNewOffer(final PackageObject object, final OnNewPackageFoundListener listener) {
 
         Logger.d(TAG, "new Offer " + new Gson().toJson(object));
 
@@ -318,6 +318,7 @@ public class PackageTools {
             @Override
             public void onDownloadSuccess() {
                 Logger.d(TAG, "download success :)");
+                if (listener != null) listener.onPackageOffer(object);
 
             }
 
@@ -566,6 +567,8 @@ public class PackageTools {
         void onNewPackage(PackageObject packageObject);
 
         void onPackageInvalid(PackageObject packageObject);
+
+        void onPackageOffer(PackageObject newOffer);
 
     }
 

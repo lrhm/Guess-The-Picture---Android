@@ -71,6 +71,25 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
     }
 
+    public void updatePackage(PackageObject object) {
+        int i;
+        for (i = 0; i < packageObjects.size(); i++)
+            if (packageObjects.get(i).getId() == object.getId())
+                break;
+        try {
+            PackageObject packageObject = packageObjects.get(i);
+            if (packageObject.getId() == object.getId()) {
+                packageObjects.remove(i);
+                packageObjects.add(i, object);
+                notifyDataSetChanged();
+            }
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DownloadTask.DownloadTaskListener {
         ImageView imageView;
         TextView textView;

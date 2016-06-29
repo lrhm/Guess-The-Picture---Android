@@ -75,4 +75,9 @@ public class PackagesFragment extends Fragment implements PackageTools.OnNewPack
             }
         });
     }
+
+    @Override
+    public void onPackageOffer(PackageObject newOffer) {
+        adapter.updatePackage(newOffer);
+    }
 }

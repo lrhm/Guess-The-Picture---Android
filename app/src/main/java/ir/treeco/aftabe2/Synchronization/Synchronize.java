@@ -59,6 +59,11 @@ public class Synchronize extends BroadcastReceiver {
                 public void onPackageInvalid(PackageObject packageObject) {
 
                 }
+
+                @Override
+                public void onPackageOffer(PackageObject newOffer) {
+
+                }
             });
         }
 

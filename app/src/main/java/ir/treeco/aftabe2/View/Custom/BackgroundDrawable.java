@@ -21,7 +21,7 @@ public class BackgroundDrawable extends GradientDrawable {
     private ImageManager imageManager;
     private LengthManager lengthManager;
 
-    public BackgroundDrawable(Context context, int[] colors , int drawable) {
+    public BackgroundDrawable(Context context, int[] colors, int drawable) {
         super(GradientDrawable.Orientation.TOP_BOTTOM, colors);
         imageManager = ((MainApplication) context.getApplicationContext()).getImageManager();
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
@@ -36,18 +36,18 @@ public class BackgroundDrawable extends GradientDrawable {
         int width = lengthManager.getScreenWidth();
         int height = lengthManager.getScreenHeight();
 
-        float scale = 2;
-        if(imageManager.getMemoryClass() < 100 ){
-            scale = 2.5f;
+        float scale = 0.5f;
+        if (imageManager.getMemoryClass() < 100) {
+            scale = 0.4f;
         }
 
-        width /= scale;
-        height /= scale;
+        width *= scale;
+        height *= scale;
 
         background = imageManager.loadImageFromResource(drawable, width, height, ImageManager.ScalingLogic.ALL_TOP);
 
         srcRect = new Rect(0, 0, background.getWidth(), background.getHeight());
-        dstRect = new Rect(0, 0,(int)( background.getWidth() * scale ), (int)(background.getHeight() * scale));
+        dstRect = new Rect(0, 0, (int) (background.getWidth() / scale), (int) (background.getHeight() / scale));
     }
 
     @Override
