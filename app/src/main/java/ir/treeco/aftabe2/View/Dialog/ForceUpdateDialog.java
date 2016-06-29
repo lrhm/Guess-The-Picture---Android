@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import ir.treeco.aftabe2.API.Rest.Utils.ForceObject;
@@ -26,6 +27,8 @@ import ir.treeco.aftabe2.Adapter.ForceAdapter;
 import ir.treeco.aftabe2.R;
 import ir.treeco.aftabe2.Util.DownloadTask;
 import ir.treeco.aftabe2.Util.FontsHolder;
+import ir.treeco.aftabe2.Util.Logger;
+import ir.treeco.aftabe2.Util.SizeConverter;
 import ir.treeco.aftabe2.Util.SizeManager;
 import ir.treeco.aftabe2.Util.Tools;
 import ir.treeco.aftabe2.Util.UiUtil;
@@ -34,6 +37,7 @@ import ir.treeco.aftabe2.View.Custom.ToastMaker;
 
 public class ForceUpdateDialog extends Dialog implements View.OnClickListener, DownloadTask.DownloadTaskListener {
 
+    private static final String TAG = "ForceUpdateDialog";
     Context context;
     ForceObject forceObject;
     AdNotification adNotification;
@@ -49,6 +53,7 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
         ForceAdapter.getInstance(context).setListener(this);
         imageUri = forceObject.getImageURL();
         textProgressVisiblity = forceObject.isForceDownload();
+
     }
 
     public ForceUpdateDialog(Context context, AdNotification notification) {
@@ -56,6 +61,7 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
         adNotification = notification;
         this.context = context;
         imageUri = adNotification.getImgUrl();
+
     }
 
     @Override
@@ -63,6 +69,9 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        Logger.d(TAG, "url is " + imageUri);
+
 
         setContentView(R.layout.dialog_force_update);
 
@@ -75,7 +84,23 @@ public class ForceUpdateDialog extends Dialog implements View.OnClickListener, D
 
         ImageView imageView = (ImageView) findViewById(R.id.dialog_force_update_image);
         imageView.setOnClickListener(this);
-        Picasso.with(context).load(Uri.parse(imageUri)).into(imageView);
+
+        SizeConverter sizeConverter = SizeConverter.SizeConvertorFromWidth(SizeManager.getScreenWidth(), 900, 1600);
+        UiUtil.setWidth(imageView, sizeConverter.mWidth);
+        UiUtil.setHeight(imageView, sizeConverter.mHeight);
+
+        Picasso.with(context).load(Uri.parse(imageUri)).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                Logger.d(TAG, "load image success");
+            }
+
+            @Override
+            public void onError() {
+
+                Logger.d(TAG, "load image success");
+            }
+        });
 
         if (textProgressVisiblity) {
             progresTextView.setVisibility(View.VISIBLE);

@@ -42,7 +42,7 @@ public class ForceObject {
     }
 
     public String getImageURL() {
-        return Tools.getUrl() + "api/files/version/download/" + image.name;
+        return Tools.getUrl() + "api/pictures/version/download/" + image.name;
 
     }
 

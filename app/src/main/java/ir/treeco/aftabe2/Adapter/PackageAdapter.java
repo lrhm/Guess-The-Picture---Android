@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
 import ir.treeco.aftabe2.API.Rest.Interfaces.OnPackageBuyListener;
@@ -61,6 +62,14 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             packageObjectss = DBAdapter.getInstance(context).getPackages();
         if (packageObjectss != null)
             Collections.addAll(packageObjects, packageObjectss);
+
+        Collections.sort(packageObjects, new Comparator<PackageObject>() {
+            @Override
+            public int compare(PackageObject object, PackageObject t1) {
+                return t1.getId() - object.getId();
+            }
+        });
+
         tools = new Tools(context);
         lengthManager = ((MainApplication) context.getApplicationContext()).getLengthManager();
     }
@@ -133,7 +142,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             UiUtil.setHeight(price, (int) (packageSize * 0.22));
 
 
-            price.setText(Tools.numeralStringToPersianDigits("2000"));
+            price.setText(Tools.numeralStringToPersianDigits(""));
             v.setOnClickListener(this);
 
 
