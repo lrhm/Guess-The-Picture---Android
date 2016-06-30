@@ -90,8 +90,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             PackageObject packageObject = packageObjects.get(i);
             if (packageObject.getId() == object.getId()) {
                 packageObjects.remove(i);
-                packageObjects.add(i, object);
-                notifyDataSetChanged();
+                addPackage(object);
             }
 
         } catch (Exception e) {
@@ -177,16 +176,25 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                         int intPrice = ((myUser != null && myUser.isPackagePurchased(packageObject.getId()))) ? 0 : packageObject.getPrice();
                         intPrice = PackageSolvedCache.getInstance().isPackagePurchased(packageObject.getId()) ? 0 : intPrice;
 
-                        if (coinAdapter.spendCoinDiffless(intPrice)) {
+                        if (coinAdapter.spendCoins(intPrice)) {
                             AftabeAPIAdapter.buyPackage(id, new OnPackageBuyListener() {
                                 @Override
                                 public void onPurchasedBefore() {
-                                    //          coinAdapter.earnCoins(packageObject.getPrice());
+
+
+                                    Logger.d(TAG, "before");
                                 }
 
                                 @Override
                                 public void onPurchaseSuccess() {
 
+                                    Logger.d(TAG, "success");
+                                }
+
+                                @Override
+                                public void onFail() {
+
+                                    Logger.d(TAG, "fail");
                                 }
                             });
                             PackageSolvedCache.getInstance().onBuyPackage(packageObject.getId());
@@ -329,11 +337,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             viewHolder.packageDone.setVisibility(View.VISIBLE);
         }
 
+        Picasso.with(context).load(R.drawable.package_price).fit().into(viewHolder.packagePrice);
 
         if (!file.exists()) {
 
 
-            Picasso.with(context).load(R.drawable.package_price).fit().into(viewHolder.packagePrice);
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
             viewHolder.price.setVisibility(View.VISIBLE);
             viewHolder.price.setText(Tools.numeralStringToPersianDigits(intPrice + ""));
@@ -342,14 +350,15 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
             if (!packageObject.isThereOffer())
                 ImageManager.getInstance(context).toGrayscale(viewHolder.imageView);
 
-        }
+        } else
+            viewHolder.packagePrice.setVisibility(View.GONE);
 
         if (!(new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png").exists())
                 ) {
             viewHolder.packagePrice.setVisibility(View.GONE);
             viewHolder.price.setVisibility(View.GONE);
-        } else if (packageObject.isThereOffer() && packageObject.isPackageDownloaded(context)) {
-
+        }
+        if (packageObject.isThereOffer() && !packageObject.isPackageDownloaded(context)) {
             viewHolder.packagePrice.setVisibility(View.VISIBLE);
             viewHolder.price.setVisibility(View.VISIBLE);
         }
@@ -365,8 +374,11 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
     }
 
     public void addPackage(PackageObject packageObject) {
-        packageObjects.add(packageObject);
-        notifyDataSetChanged();
+
+        if (packageObject.shouldShowPackage(context)) {
+            packageObjects.add(packageObject);
+            notifyDataSetChanged();
+        }
 
     }
 }

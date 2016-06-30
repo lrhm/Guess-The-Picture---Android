@@ -172,7 +172,7 @@ public class LoadingDialog extends Dialog implements Runnable,
 
         mRequestCancel = false;
 
-        new Handler().postDelayed(this, 1300);
+        new Handler().postDelayed(this, 1333);
 
 
     }
@@ -255,7 +255,7 @@ public class LoadingDialog extends Dialog implements Runnable,
             lastBitmap.recycle();
         lastBitmap = curBitmap;
 
-        new Handler().postDelayed(this, 1300);
+        new Handler().postDelayed(this, 1333);
 
     }
 
@@ -389,17 +389,22 @@ public class LoadingDialog extends Dialog implements Runnable,
     @Override
     public void onGotUserAction(UserActionHolder actionHolder) {
 
-        Logger.d(this.getClass().getName(), "should not happen");
     }
 
     @Override
     public void onFinishGame(ResultHolder resultHolder) {
-        Logger.d(this.getClass().getName(), "should not happen");
+
 
         if (resultHolder.isTimeOut()) {
 
-            coinAdapter.earnCoinDiffless(100);
-            dismiss();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    coinAdapter.earnCoinDiffless(100);
+                    dismiss();
+
+                }
+            });
         }
     }
 

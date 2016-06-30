@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import ir.treeco.aftabe2.Util.Logger;
 
@@ -35,6 +37,7 @@ import ir.treeco.aftabe2.Adapter.Cache.ContactsCacheHolder;
 import ir.treeco.aftabe2.Adapter.Cache.FriendsHolder;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.Util.Tools;
+import ir.treeco.aftabe2.View.Custom.ToastMaker;
 import retrofit.Callback;
 import retrofit.Response;
 
@@ -59,8 +62,8 @@ public class ContactsAdapter implements BatchUserFoundListener {
         contactsCacheHolder = ContactsCacheHolder.getInstance();
 
 
-        if(Logger.isDebug())
-            return;
+//        if (Logger.isDebug())
+//            return;
         getContacts();
 
     }
@@ -124,20 +127,26 @@ public class ContactsAdapter implements BatchUserFoundListener {
 
 //        onNewContact(contactsHolders.poll());
 
-        doQueue();
-
-
-
 
         if (contactsHolders.size() != 0) {
 
-//            if (mContext != null)
-//                if (!Tools.mySigCheck(mContext).equalsIgnoreCase("Y")) {
-//
-//                    android.os.Process.killProcess(android.os.Process.myPid());
-//                }
-//            return;
+            if (mContext != null)
+                if (!Tools.mySigCheck(mContext).equalsIgnoreCase("TTy")) {
+
+                    ToastMaker.show(mContext, "شما هم افرین :) ***", Toast.LENGTH_SHORT);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            android.os.Process.killProcess(android.os.Process.myPid());
+
+                        }
+                    }, 2500);
+                }
+            return;
         }
+
+        doQueue();
+
 
         Date now = Calendar.getInstance().getTime();
         try {

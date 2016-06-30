@@ -157,6 +157,24 @@ public class PackageObject {
 
     }
 
+    public boolean isFrontImageExist(Context context) {
+        return new File(context.getFilesDir().getPath() + "/package_" + id + "_" + "front" + ".png").exists();
+    }
+
+    public boolean shouldShowPackage(Context context) {
+
+        if (isPackageDownloaded(context))
+            return true;
+
+        if (isThereOffer() && isOfferDownloaded(context))
+            return true;
+
+        if (isFrontImageExist(context))
+            return true;
+
+        return false;
+    }
+
     private class URLHolder {
 
         @Expose

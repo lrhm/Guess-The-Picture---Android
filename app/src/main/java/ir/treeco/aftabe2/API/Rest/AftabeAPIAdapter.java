@@ -949,9 +949,10 @@ public class AftabeAPIAdapter {
         User user = Tools.getCachedUser(context);
         if (user == null)
             user = HiddenAdapter.getInstance().getHiddenUsr();
-
         if (user == null)
             return;
+
+        Logger.d(TAG, "buying package");
         aftabeService.buyPackages(packageId + "", user.getLoginInfo().getAccessToken()).enqueue(new Callback<ArrayList<Integer>>() {
             @Override
             public void onResponse(Response<ArrayList<Integer>> response) {
@@ -960,10 +961,15 @@ public class AftabeAPIAdapter {
                     if (listener != null) listener.onPurchaseSuccess();
                     else if (listener != null) listener.onPurchasedBefore();
 
+                Logger.d(TAG, " buy package response is " + response.message());
             }
 
             @Override
             public void onFailure(Throwable t) {
+
+                Logger.d(TAG, "fail aon buy package");
+                if(listener != null)
+                    listener.onFail();
 
             }
         });

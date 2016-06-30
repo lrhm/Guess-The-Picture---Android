@@ -326,6 +326,11 @@ public class SocketAdapter {
                     Logger.d(TAG, "cancel result " + args[0].toString() + " " +
                             (new JsonParser().parse(args[0].toString()).getAsJsonObject()).get("success").getAsBoolean());
                 }
+            }).on(Socket.EVENT_RECONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Logger.d(TAG, "reconnect event");
+                }
             });
             mSocket.connect();
 

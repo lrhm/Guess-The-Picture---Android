@@ -9,5 +9,7 @@ public interface OnPackageBuyListener {
 
     void onPurchaseSuccess();
 
+    void onFail();
+
 
 }

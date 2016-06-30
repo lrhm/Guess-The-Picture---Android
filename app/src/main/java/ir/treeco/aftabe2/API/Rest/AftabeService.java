@@ -119,13 +119,13 @@ public interface AftabeService {
                                               @Query("access_token") String accessToken, @Body ContactsHolder contactsHolder);
 
 
-    @GET("/api/ps")
+    @GET("/api/p2s")
     Call<PackageObject[]> getAllPackages();
 
-    @GET("/api/ps/{id}")
+    @GET("/api/p2s/{id}")
     Call<PackageObject> getPackage(@Path("id") String id);
 
-    @GET("/api/ps/count")
+    @GET("/api/p2s/count")
     Call<CountHolder> getPackagesCount();
 
     @GET("/api/users/buypackage/{id}")

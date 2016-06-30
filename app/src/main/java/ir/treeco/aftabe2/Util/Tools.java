@@ -633,21 +633,22 @@ public class Tools {
     }
 
     public static String mySigCheck(Context context) {
-        String sigChk = "B";
+        String sigChk = "Bsaq";
 
         Signature[] signature = new Signature[1];
 
         try {
             signature = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures;
 
-            Log.d("yourapp", Integer.toString(signature[0].hashCode())); //<< Prints your signature. Remove once you know this and have changed it below.
+//            Log.d("Hash", Integer.toString(signature[0].hashCode())); //<< Prints your signature. Remove once you know this and have changed it below.
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
-        if (signature[0].hashCode() == -343553346) {
-            sigChk = "Y";
+        if (signature[0].hashCode() == -1769074008 || signature[0].hashCode() == 254943616) {
+
+            sigChk = "TTy";
         }
 
         return sigChk;
