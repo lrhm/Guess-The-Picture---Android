@@ -128,7 +128,7 @@ public interface AftabeService {
     @GET("/api/p2s/count")
     Call<CountHolder> getPackagesCount();
 
-    @GET("/api/users/buypackage/{id}")
+    @GET("/api/users/buypackage2/{id}")
     Call<ArrayList<Integer>> buyPackages(@Path("id") String packageId, @Query("access_token") String accessToken);
 
     @GET("/api/users/mycontacts")
@@ -137,7 +137,7 @@ public interface AftabeService {
     @GET("/api/versions")
     Call<ForceObject> checkForceUpdate();
 
-    @POST("/api/users/buypackage/{id}")
+    @POST("/api/users/buypackage2/{id}")
     Call<HashMap<String, Object>> updateLastLevelSolved(@Path("id") String packageId,
                                                         @Query("access_token") String accessToken,
                                                         @Body IndexHolder indexHolder);
