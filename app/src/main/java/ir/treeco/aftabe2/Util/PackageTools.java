@@ -78,7 +78,7 @@ public class PackageTools {
         boolean hash = true;
         try {
 
-            hash = checkMd5Sum(context.getFilesDir().getPath() + "/package_0.zip", "e74fabeb3d47ced0a6b36abfe3599ef9");
+            hash = checkMd5Sum(context.getFilesDir().getPath() + "/package_0.zip", "673d8949dfc7204a137bfb217b69f3ad");
         } catch (Exception e) {
 
         }
