@@ -24,6 +24,7 @@ public class CoinAdapter {
 
     private static final String LAST_TIME_USER_UPDATE = "last_time_user_upd";
     private static final String LAST_TIME_DIFF_SENT = "last_time_diff_sent";
+    private static final String LAST_TIME_DIFF_TO_SERVER = "last_time_diff_sent2";
 
     private static final String TAG = "CoinAdapter";
     private DBAdapter db;
@@ -138,12 +139,17 @@ public class CoinAdapter {
         Prefs.putLong(LAST_TIME_DIFF_SENT, System.currentTimeMillis());
     }
 
+    public static void onDiffToServer() {
+        Prefs.putLong(LAST_TIME_DIFF_TO_SERVER, System.currentTimeMillis());
+    }
+
     public static void onUserGet() {
         Prefs.putLong(LAST_TIME_USER_UPDATE, System.currentTimeMillis());
     }
 
     public static boolean shouldCheckUser() {
-        return Prefs.getLong(LAST_TIME_USER_UPDATE, 1) > Prefs.getLong(LAST_TIME_DIFF_SENT, 0);
+        return Prefs.getLong(LAST_TIME_USER_UPDATE, 1) > Prefs.getLong(LAST_TIME_DIFF_SENT, 0)
+                && Prefs.getLong(LAST_TIME_USER_UPDATE, 1) > Prefs.getLong(LAST_TIME_DIFF_TO_SERVER, 0);
     }
 
 

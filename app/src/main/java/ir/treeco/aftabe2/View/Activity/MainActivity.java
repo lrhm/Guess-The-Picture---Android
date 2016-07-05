@@ -752,7 +752,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         && !AftabeAPIAdapter.isIsUpdateCoinInProgress()
                         && mUser.isFromServer()
                         && mUser.getCoins() + coinAdapter.getCoinDiff() != coinAdapter.getCoinsCount()
-                        ) {
+                        && mUser.getCoins() >= 0) {
                     coinAdapter.setCoinsCount(mUser.getCoins());
                     CoinAdapter.addCoinDiff(-CoinAdapter.getCoinDiff());
                 }

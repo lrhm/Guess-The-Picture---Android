@@ -613,6 +613,7 @@ public class AftabeAPIAdapter {
             public void onResponse(Response<User> response) {
                 if (response.isSuccess() && response.body() != null && response.code() == successCode) {
                     Logger.d(TAG, "new user coin is " + response.body().getCoins());
+                    CoinAdapter.onDiffToServer();
                     CoinAdapter.addCoinDiff(-diff);
 //                    Prefs.putInt(CoinAdapter.SHARED_PREF_COIN_DIFF, );
 
@@ -968,7 +969,7 @@ public class AftabeAPIAdapter {
             public void onFailure(Throwable t) {
 
                 Logger.d(TAG, "fail aon buy package");
-                if(listener != null)
+                if (listener != null)
                     listener.onFail();
 
             }
