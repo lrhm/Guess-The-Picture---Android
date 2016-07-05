@@ -30,6 +30,7 @@ import ir.treeco.aftabe2.API.Socket.Interfaces.SocketListener;
 import ir.treeco.aftabe2.Adapter.Cache.UserActionCache;
 import ir.treeco.aftabe2.Object.User;
 import ir.treeco.aftabe2.R;
+import ir.treeco.aftabe2.Synchronization.Synchronize;
 import ir.treeco.aftabe2.Util.ImageManager;
 import ir.treeco.aftabe2.Util.LengthManager;
 import ir.treeco.aftabe2.Util.SizeConverter;
@@ -198,6 +199,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
         if (mTimerStep == 0) {
             mTimer.cancel();
             dismiss();
+            DialogAdapter.checkInternetConnection(context);
         }
         mTimerStep--;
 
@@ -333,7 +335,7 @@ public class LoadingForGameResultDialog extends Dialog implements Runnable, Sock
 
         GameResultFragment gameResultFragment = GameResultFragment.newInstance(resultHolder, mOpponent);
         FragmentTransaction transaction = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, gameResultFragment , GameResultFragment.TAG);
+        transaction.replace(R.id.fragment_container, gameResultFragment, GameResultFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }

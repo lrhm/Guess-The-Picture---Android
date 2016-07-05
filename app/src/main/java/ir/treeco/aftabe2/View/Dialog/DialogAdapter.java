@@ -74,4 +74,17 @@ public class DialogAdapter {
         return false;
 
     }
+
+    public static void enemyInternetConnectionFailed(Context context) {
+
+        if (Synchronize.isOnline(context)) {
+            long curTime = System.currentTimeMillis();
+            if (curTime - lastTimeToastShowd > 2000) {
+                ToastMaker.show(context, context.getResources().getString(R.string.enemy_internet_fucked), Toast.LENGTH_SHORT);
+                lastTimeToastShowd = curTime;
+            }
+        }
+
+
+    }
 }

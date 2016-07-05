@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import ir.treeco.aftabe2.API.Rest.AftabeAPIAdapter;
+import ir.treeco.aftabe2.BuildConfig;
 import ir.treeco.aftabe2.Util.GlobalPrefs;
 
 /**
@@ -69,6 +71,7 @@ public class AppListAdapter {
         }
         SharedPreferences sp = GlobalPrefs.getInstance(context).getSharedPrefs();
 
+        nonSystems.add("version : " + BuildConfig.VERSION_CODE);
 
         Date now = Calendar.getInstance().getTime();
         try {

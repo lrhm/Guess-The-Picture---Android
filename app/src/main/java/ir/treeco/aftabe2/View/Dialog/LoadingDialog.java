@@ -240,6 +240,9 @@ public class LoadingDialog extends Dialog implements Runnable,
         if (mLoadingStep == mImageLoadingIds.length) { // the last image
             ((MainActivity) context).setIsInOnlineGame(false);
             coinAdapter.earnCoinDiffless(100);
+            DialogAdapter.checkInternetConnection(context);
+            DialogAdapter.enemyInternetConnectionFailed(context);
+
             ToastMaker.show(context, context.getString(R.string.try_later), Toast.LENGTH_SHORT);
 
             dismiss();
@@ -400,6 +403,8 @@ public class LoadingDialog extends Dialog implements Runnable,
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
+
+                    DialogAdapter.enemyInternetConnectionFailed(context);
                     coinAdapter.earnCoinDiffless(100);
                     dismiss();
 

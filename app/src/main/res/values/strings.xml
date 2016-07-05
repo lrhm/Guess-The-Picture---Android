@@ -21,6 +21,6 @@
     <string name="connection_to_internet_sure">لطفا از اتصال به اینترنت مطمئن شوید</string>
     <string name="try_later">لطفا بعدن تلاش کنید</string>
     <string name="chat_not_available">به زودی !</string>
-    <string name="enemy_internet_fucked"></string>
+    <string name="enemy_internet_fucked">اتصال به اینترنت حریف دچار مشکل شد</string>
 
 </resources>
