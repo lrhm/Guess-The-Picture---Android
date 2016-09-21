@@ -13,5 +13,4 @@ this is a guess based puzzle game . there is a hidden answer in picture that pla
 
 
  ## Demo :
- ![]()
-TODO
+ ![](https://github.com/lrhm/Guess-The-Picture---Android/raw/master/doc_2016-09-21_18-44-56.gif)
