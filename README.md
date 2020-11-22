@@ -2,6 +2,9 @@
 
 this is a guess based puzzle game . there is a hidden answer in picture. player wins by guessing easter egg in the picture.
 
+## Disclaimer
+This is an old, spagetti code aplication, back when there was no architecture design such as MVVM. Not maintained.
+
 ### Features :
  * Integrated with Fabric (Analytics and Crash reporter).
  * 98% Crash Free Users
